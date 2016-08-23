@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   onSubmit(form) {
      if (form.valid) {
        this.authService.login(form.value).subscribe(
-         u => this.router.navigate(['/game']),
+         u => this.router.navigate(['/']),
          err => console.error('login error', err)
        );
     }

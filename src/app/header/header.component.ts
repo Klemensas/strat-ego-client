@@ -12,11 +12,9 @@ import { Observable } from 'rxjs/Observable';
   directives: [ROUTER_DIRECTIVES]
 })
 export class HeaderComponent implements OnInit {
-  isLoggedIn;
   user;
 
   constructor(private authService:AuthService) {
-    setTimeout(() => this.isLoggedIn = true, 5000);
     this.authService.user.subscribe(
       u => {
         this.user = u;

@@ -8,6 +8,7 @@ import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { disableDeprecatedForms, provideForms } from '@angular/forms';
 
 import { AuthService } from './app/auth/auth.service';
+import { GameDataService } from './app/services/game-data.service';
 
 if (environment.production) {
   enableProdMode();
@@ -26,7 +27,8 @@ bootstrap(AppComponent, [
     },
     deps: [Http]
   }),
-  AuthService
+  AuthService,
+  GameDataService,
 
 ])
 .catch(err => console.error(err));

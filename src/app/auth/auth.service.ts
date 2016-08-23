@@ -60,7 +60,10 @@ export class AuthService {
 
       user$.subscribe(
         u => this.user.next(u),
-        err => console.error('get user error', err)
+        err => {
+          this.logout();
+          console.error('get user error', err)
+        }
       );
 
       const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(this.token)).getTime()
