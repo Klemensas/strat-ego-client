@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { GameDataService } from '../services/game-data.service';
 import { Observable } from 'rxjs/Observable';
+import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
   moduleId: module.id,
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.css'],
+  directives: [ROUTER_DIRECTIVES]
   // providers: [GameDataService]
 })
 export class HomeComponent implements OnInit {
@@ -21,10 +23,17 @@ export class HomeComponent implements OnInit {
         this.worlds = worlds;
       });
     this.authService.user.subscribe(
-      u => {
-        this.user = u;
+      user => {
+        this.user = user;
       }
     );
   }
 
+  userOnWorld(world) {
+    console.log(this.user.Worlds.find(w => w._id === world._id))
+    return this.user.Worlds.find(w => w._id === world._id);
+  }
+
 }
+
+

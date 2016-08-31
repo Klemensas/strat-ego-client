@@ -2,7 +2,11 @@
   <h2>Available worlds</h2>
   <ul>
     <li *ngFor="let world of worlds">
-      {{world.name}}
+      <span>{{world.name}}</span>
+      <span *ngIf="user" [ngSwitch]="!!userOnWorld(world)">
+        <button type="button" *ngSwitchCase="true" (click)="play">Play</button>
+        <a [routerLink]="['/world', world.name]" *ngSwitchDefault>Join</a>
+      </span>
     </li>
   </ul>
 </div>

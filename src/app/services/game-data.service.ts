@@ -11,7 +11,18 @@ export class GameDataService {
   constructor(private http:Http, private authHttp:AuthHttp) {}
 
   getActiveWorlds() {
-    return this.http.get(`${API}game/worlds`)
+    return this.http.get(`${API}world`)
+      .map(t => t.json())
+      .cache();
+      // .flatMap(t => {
+      //   localStorage.setItem('jwt', t);
+      //   this.token = t;
+      //   return this.getUser();
+      // });
+  }
+
+  getWorldData(target) {
+    return this.authHttp.get(`${API}world/${target}`)
       .map(t => t.json())
       .cache();
       // .flatMap(t => {

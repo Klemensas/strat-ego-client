@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { GameDataService } from '../services/game-data.service';
 
 @Component({
   moduleId: module.id,
@@ -8,9 +11,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameComponent implements OnInit {
 
-  constructor() {}
+  constructor(private route: ActivatedRoute, private gameData: GameDataService) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      let name = params['name'];
+      this.gameData.getWorldData(name).subscribe(d => {
+        console.log('hi', d)
+      });
+    });
   }
 
 }
