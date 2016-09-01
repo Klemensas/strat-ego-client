@@ -30,8 +30,7 @@ export class HomeComponent implements OnInit {
   }
 
   userOnWorld(world) {
-    console.log(this.user.Worlds.find(w => w._id === world._id))
-    return this.user.Worlds.find(w => w._id === world._id);
+    return this.user.UserWorlds.find(w => w._id === world._id);
   }
 
 }
