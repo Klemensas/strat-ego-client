@@ -3,6 +3,9 @@
   <div *ngSwitchCase="true">
     <div>Welcome <strong>{{ user.name }}</strong></div>
     <a [routerLink]="['/']" (click)="logout()">Logout</a>
+    <div *ngIf="user.role === 'admin'">
+      <a [routerLink]="['/manage']">Manage</a>
+    </div>
   </div>
   <div *ngSwitchCase="false">
     <a [routerLink]="['/login']">Login</a>

@@ -20,6 +20,12 @@ const appRoutes: Routes = [
       { path: 'join', data: { new: true }, component: GameComponent, resolve: { player: PlayerResolver }}, // should a separate path be used for joining?
     ]
   },
+  {
+    path: 'manage',
+    canActivate: [AuthGuard],
+    data: { role: 'admin' },
+    component: HomeComponent
+  },
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

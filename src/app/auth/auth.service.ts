@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   jwtHelper;
   token;
+  tokenData;
   tokenExpirationTimeout
   user = new BehaviorSubject(null);
 
@@ -27,6 +28,7 @@ export class AuthService {
       return false;
     }
     this.token = token;
+    this.tokenData = this.jwtHelper.decodeToken(token);
     this.getUser()
   }
 
