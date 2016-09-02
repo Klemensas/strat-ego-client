@@ -12,6 +12,8 @@ import { routing, routedComponents } from './app.routing';
 import { AuthHttp, provideAuth } from 'angular2-jwt';
 
 import { AuthGuard } from './auth.guard';
+import { PlayerResolver } from './player.resolver';
+
 import { AuthService } from './auth/auth.service';
 import { GameDataService } from './services/game-data.service';
 
@@ -42,6 +44,7 @@ if (environment.production) {
       noJwtError: true
     }),
     AuthGuard,
+    PlayerResolver,
     AuthService,
     GameDataService,
   ],
