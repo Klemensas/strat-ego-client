@@ -5,9 +5,12 @@ import { API, AUTH } from '../config';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/cache';
 
+// TODO: split this service into world and player services
+
 @Injectable()
 export class GameDataService {
   public worldData = this.getActiveWorlds();
+
   constructor(private http:Http, private authHttp:AuthHttp) {}
 
   getActiveWorlds() {
@@ -30,6 +33,18 @@ export class GameDataService {
       //   this.token = t;
       //   return this.getUser();
       // });
+  }
+
+  joinWorld(target) {
+    return this.authHttp.get(`${API}world/${target}/join`)
+      .map(t => t.json())
+      .cache();
+  }
+
+  getPlayerData(target) {
+    return this.authHttp.get(`${API}world/${target}/player`)
+      .map(t => t.json())
+      .cache();
   }
 
 }
