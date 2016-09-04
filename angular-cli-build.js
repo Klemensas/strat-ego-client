@@ -16,7 +16,8 @@ module.exports = function(defaults) {
       'reflect-metadata/**/*.+(ts|js|js.map)',
       'rxjs/**/*.+(js|js.map)',
       '@angular/**/*.+(js|js.map)',
-      'angular2-jwt/*.+(js|js.map)'
+      'angular2-jwt/*.+(js|js.map)',
+      'socket.io-client/*.+(js|js.map)'
     ]
   });
 };

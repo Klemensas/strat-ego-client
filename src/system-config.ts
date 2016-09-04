@@ -9,11 +9,15 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'angular2-jwt': 'vendor/angular2-jwt/angular2-jwt.js'
+  'angular2-jwt': 'vendor/angular2-jwt/angular2-jwt.js',
+  'socket.io-client': 'vendor/socket.io-client/socket.io.js'
 };
 
 /** User packages configuration. */
 const packages: any = {
+  'socket.io-client': {
+    defaultExtension: 'js'
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

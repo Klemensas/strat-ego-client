@@ -10,6 +10,7 @@ export class PlayerResolver implements Resolve<any> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<Object> {
     const target = route.params['name'];
+
     if (route.data['new']) {
       return this.gameData.joinWorld(target);
     }
