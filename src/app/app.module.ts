@@ -16,6 +16,7 @@ import { PlayerResolver } from './player.resolver';
 
 import { AuthService } from './auth/auth.service';
 import { GameDataService } from './services/game-data.service';
+import { SocketService } from './services/socket.service';
 
 if (environment.production) {
   enableProdMode();
@@ -47,6 +48,7 @@ if (environment.production) {
     PlayerResolver,
     AuthService,
     GameDataService,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })
