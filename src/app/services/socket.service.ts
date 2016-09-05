@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+
+import { AuthService } from '../auth/auth.service';
+
 import * as io from 'socket.io-client';
 
 // import { ISocketItem } from "./socket-item.interface";
@@ -7,13 +10,21 @@ import * as io from 'socket.io-client';
 
 @Injectable()
 export class SocketService {
-    private name: string;
-    private host: string = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+    name = 'tmp';
+    host = 'watever';
     socket: SocketIOClient.Socket;
 
-    constructor() {
-console.log(this.socket);
-
+    constructor(public auth: AuthService) {
+        console.log(this.auth);
+        let socketUrl = 'http://localhost:9000/socket.io-client';
+        this.socket = io.connect('http://localhost:9000', {
+            path: '/socket.io-client',
+            query: `token=${this.auth.token}`,
+        });
+        // var ioSocket = io('localhost:9000', {
+        // // Send auth token on connection, you will need to DI the Auth service above
+        // });
+        this.socket.on('connect', () => this.connect());
     }
 
 //      /**
