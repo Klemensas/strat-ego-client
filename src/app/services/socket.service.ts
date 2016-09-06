@@ -15,16 +15,26 @@ export class SocketService {
     socket: SocketIOClient.Socket;
 
     constructor(public auth: AuthService) {
-        console.log(this.auth);
-        let socketUrl = 'http://localhost:9000/socket.io-client';
-        this.socket = io.connect('http://localhost:9000', {
-            path: '/socket.io-client',
-            query: `token=${this.auth.token}`,
-        });
         // var ioSocket = io('localhost:9000', {
         // // Send auth token on connection, you will need to DI the Auth service above
         // });
-        this.socket.on('connect', () => this.connect());
+    }
+
+    public connect(world = 'megapolis') {
+        this.socket = io.connect('http://localhost:9000', {
+            path: '/socket.io-client',
+            query: `token=${this.auth.token}&world=${world}`,
+        });
+
+        this.socket.on('connect', (a) => this.onConnect(a));
+
+        return Observable.create((observer: any) => {
+            this.socket.on('self', (data: any) => observer.next({ type: 'player-data', data }) );
+
+            this.socket.on('test', (data: any) => observer.next({ type: 'test', data }) );
+
+            return () => this.socket.close();
+        });
     }
 
 //      /**
@@ -39,7 +49,7 @@ export class SocketService {
         this.name = name;
         let socketUrl = this.host + "/" + this.name;
         this.socket = io.connect(socketUrl);
-        this.socket.on("connect", () => this.connect());
+        this.socket.on("connect", (a) => this.onConnect(a));
         this.socket.on("disconnect", () => this.disconnect());
         this.socket.on("error", (error: string) => {
             console.log(`ERROR: "${error}" (${socketUrl})`);
@@ -83,11 +93,12 @@ export class SocketService {
      * @method connect
      * @return void
      */
-    private connect() {
-        console.log(`Connected to "${this.name}"`);
+    private onConnect(a) {
+        console.log(`Connected to ${this.name}`);
+        console.log(a, this.socket);
 
         // Request initial list when connected
-        this.socket.emit("list");
+        // this.socket.emit('player');
     }
 
     /**
