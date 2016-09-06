@@ -46,6 +46,7 @@ export class AuthService {
     this.token = null;
     localStorage.removeItem('jwt');
     this.user.next(null);
+    this.router.navigate(['/']);
   }
 
   tokenExpiration() {
