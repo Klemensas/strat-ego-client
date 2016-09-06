@@ -16,8 +16,8 @@ const appRoutes: Routes = [
     path: 'world/:name',
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: GameComponent, resolve: { player: PlayerResolver }}, // should a separate path be used for joining?
-      { path: 'join', data: { new: true }, component: GameComponent, resolve: { player: PlayerResolver }}, // should a separate path be used for joining?
+      { path: '', component: GameComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
+      { path: 'join', data: { new: true }, component: GameComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
     ]
   },
   {
