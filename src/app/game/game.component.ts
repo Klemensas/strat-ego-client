@@ -3,18 +3,20 @@ import { ActivatedRoute } from '@angular/router';
 
 import { GameDataService } from '../services/game-data.service';
 
+
 @Component({
   moduleId: module.id,
   selector: 'app-game',
   templateUrl: 'game.component.html',
-  styleUrls: ['game.component.css']
+  styleUrls: ['game.component.css'],
 })
 export class GameComponent implements OnInit {
 
   private acceptedEvents = {
     'player-data': data => this.updatePlayerData(data),
   };
-  public playerData = {};
+  public playerData = null;
+  public activeRest = null;
 
   constructor(private route: ActivatedRoute, private gameData: GameDataService) { }
 
@@ -38,6 +40,10 @@ export class GameComponent implements OnInit {
   }
 
   updatePlayerData(data) {
+    const restaurants = data.Restaurants;
     this.playerData = data;
+    if (!this.activeRest && restaurants.length) {
+        this.activeRest = restaurants[0];
+    }
   }
 }
