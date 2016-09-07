@@ -3,12 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 
 import { GameDataService } from '../services/game-data.service';
 
+import { RestaurantComponent } from '../restaurant/restaurant.component';
 
 @Component({
   moduleId: module.id,
   selector: 'app-game',
   templateUrl: 'game.component.html',
   styleUrls: ['game.component.css'],
+  directives: [RestaurantComponent]
 })
 export class GameComponent implements OnInit {
 

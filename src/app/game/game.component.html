@@ -1,6 +1,7 @@
-<div>
+<div *ngIf="playerData">
   game works! hay
-  <p>
+   <p>
     {{playerData.name}}
   </p>
+  <restaurant [restData]="activeRest"></restaurant>
 </div>
