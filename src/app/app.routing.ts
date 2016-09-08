@@ -4,7 +4,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/';
 import { LoginComponent } from './auth/login/';
 import { RegisterComponent } from './auth/register/';
-import { GameComponent } from './game/game.component/';
+import { GameComponent } from './game/';
+import { MapComponent } from './map/';
 import { AuthGuard } from './auth.guard';
 import { PlayerResolver } from './player.resolver';
 
@@ -18,7 +19,8 @@ const appRoutes: Routes = [
     children: [
       { path: '', component: GameComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
       { path: 'join', data: { new: true }, component: GameComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
-    ]
+      { path: 'map', component: MapComponent },
+    ],
   },
   {
     path: 'manage',
