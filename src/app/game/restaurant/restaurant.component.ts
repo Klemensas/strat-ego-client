@@ -18,7 +18,7 @@ export class RestaurantComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.manageResources(this.restData.resources);
+    // this.manageResources(this.restData.resources);
   }
 
   manageResources(res) {

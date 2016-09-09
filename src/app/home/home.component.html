@@ -3,9 +3,10 @@
   <ul>
     <li *ngFor="let world of worlds">
       <span>{{world.name}}</span>
-      <span *ngIf="user" [ngSwitch]="!!userOnWorld(world)">
-        <a [routerLink]="['/world', world.name]"  [queryParams]="{ playerId: true }" *ngSwitchCase="true">Play</a>
-        <a [routerLink]="['/world', world.name, 'join']" *ngSwitchDefault>Join</a>
+      <span *ngIf="user">
+        <a [routerLink]="['/world', world.name]">
+        Play
+        </a>
       </span>
     </li>
   </ul>

@@ -44,12 +44,11 @@ const barrels: string[] = [
   'app/auth/login',
   'app/home',
   'app/header',
-  'app/game',
   'app/auth/register',
-  'app/restaurant',
-  'app/resources',
-  'app/map',
   'app/game/game-container',
+  'app/game/restaurant',
+  'app/game/resources',
+  'app/game/map',
   /** @cli-barrel */
 ];
 
