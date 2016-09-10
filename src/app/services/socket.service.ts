@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/cache';
 
 import { AuthService } from '../auth/auth.service';
 
@@ -12,29 +13,33 @@ import * as io from 'socket.io-client';
 export class SocketService {
     name = 'tmp';
     host = 'watever';
-    socket: SocketIOClient.Socket;
+    private socket: SocketIOClient.Socket;
+
+    public events = {
+        player: this.socketObservable('self'),
+        restaurant: this.socketObservable('restaurant'),
+        map: this.socketObservable('map')
+    };
 
     constructor(public auth: AuthService) {
-        // var ioSocket = io('localhost:9000', {
-        // // Send auth token on connection, you will need to DI the Auth service above
-        // });
-    }
-
-    public connect(world = 'megapolis') {
+        const world = 'megapolis' // replace with target world data
+        
         this.socket = io.connect('http://localhost:9000', {
             path: '/socket.io-client',
             query: `token=${this.auth.token}&world=${world}`,
         });
 
         this.socket.on('connect', (a) => this.onConnect(a));
+    }
 
+    public disconnect() {
+        this.socket.close();
+    }
+
+    private socketObservable(event) {
         return Observable.create((observer: any) => {
-            this.socket.on('self', (data: any) => observer.next({ type: 'player-data', data }) );
-
-            this.socket.on('test', (data: any) => observer.next({ type: 'test', data }) );
-
-            return () => this.socket.close();
-        });
+            this.socket.on(event, (data: any) => observer.next({ data }));
+        }).cache();
     }
 
 //      /**
@@ -108,7 +113,7 @@ export class SocketService {
      * @method disconnect
      * @return void
      */
-    private disconnect() {
+    private onDisconnect() {
         console.log(`Disconnected from "${this.name}"`);
     }
 }

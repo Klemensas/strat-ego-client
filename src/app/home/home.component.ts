@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   constructor(private authService:AuthService, private gdService:GameDataService) {}
 
   ngOnInit() {
-    this.gdService.worldData
+    this.gdService.data.world
       .subscribe(worlds => {
         this.worlds = worlds;
       });

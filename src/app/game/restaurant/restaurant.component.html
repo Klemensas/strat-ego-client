@@ -1,5 +1,6 @@
-<div>
+<div *ngIf="restaurant">
   restaurant works!
   <!-- {{restData.name}} -->
-  <!-- <resources [res]="resources"></resources> -->
+  {{ restaurant.name }}
+  <resources [res]="restaurant.resources"></resources>
 </div>

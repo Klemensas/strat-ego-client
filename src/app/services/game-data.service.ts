@@ -10,7 +10,9 @@ import { SocketService } from './socket.service';
 
 @Injectable()
 export class GameDataService {
-  public worldData = this.getActiveWorlds();
+  public data = {
+    world: this.getActiveWorlds()
+  };
 
   constructor(private http:Http, private authHttp:AuthHttp, private socket:SocketService) {}
 
@@ -48,8 +50,12 @@ export class GameDataService {
       .cache();
   }
 
-  init() {
-    return this.socket.connect();
+  // init() {
+  //   Object.assign(this.data, this.socket.connect());
+  // }
+
+  unsubscribe() {
+    this.socket.disconnect();
   }
 
 }

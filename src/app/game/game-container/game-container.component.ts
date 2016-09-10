@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { GameDataService } from '../../services/game-data.service';
-
-// import { RestaurantComponent } from '../restaurant/restaurant.component';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   moduleId: module.id,
@@ -11,7 +10,7 @@ import { GameDataService } from '../../services/game-data.service';
   templateUrl: 'game-container.component.html',
   styleUrls: ['game-container.component.css']
 })
-export class GameContainerComponent implements OnInit {
+export class GameContainerComponent implements OnInit, OnDestroy {
 
   // private acceptedEvents = {
   //   'player-data': data => this.updatePlayerData(data),
@@ -19,11 +18,15 @@ export class GameContainerComponent implements OnInit {
   // public playerData = null;
   // public activeRest = null;
 
-  constructor(private route: ActivatedRoute, private gameData: GameDataService) { }
+  constructor(private route: ActivatedRoute, private gameData: GameDataService, private player: PlayerService) {
+  }
 
   ngOnInit() {
-  //   this.gameData.init()
-  //     .subscribe(event => {
+    // console.log(this.gameData.data);
+    // this.gameData.data['player'].subscribe(event => {
+    //   console.log('eventerino', event);
+    // });
+      // .subscribe(event => {
   //       if (this.acceptedEvents[event.type]) {
   //         this.acceptedEvents[event.type](event.data);
   //       }
@@ -38,6 +41,10 @@ export class GameContainerComponent implements OnInit {
   //   //     console.log('hi', d)
   //   //   });
   //   // });
+  }
+
+  ngOnDestroy() {
+    this.gameData.unsubscribe();
   }
 
   // updatePlayerData(data) {
