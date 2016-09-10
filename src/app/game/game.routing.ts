@@ -1,16 +1,16 @@
 import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard }  from '../auth.guard';
+
 import { GameContainerComponent }    from './game-container';
 import { RestaurantComponent }    from './restaurant';
 import { MapComponent }    from './map';
-// import { HeroDetailComponent }  from './hero-detail.component';
 
 const gameRoutes: Routes = [
-  // { path: 'game', component: GameContainerComponent },
   {
     path: 'world/:name',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: GameContainerComponent,
     children: [
       { path: '', component: RestaurantComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
