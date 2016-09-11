@@ -13,7 +13,6 @@ export class ResourcesComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.res);
   }
 
 }

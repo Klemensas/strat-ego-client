@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ResourcesComponent } from '../resources';
 
 import { PlayerService } from '../services/player.service';
-import { SocketService } from '../../services/socket.service';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   moduleId: module.id,

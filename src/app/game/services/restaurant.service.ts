@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SocketService } from '../../services/socket.service';
+import { SocketService } from './socket.service';
 
 @Injectable()
 export class RestaurantService {

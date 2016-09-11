@@ -5,7 +5,6 @@ import { API, AUTH } from '../config';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/cache';
 
-import { SocketService } from './socket.service';
 // TODO: split this service into world and player services
 
 @Injectable()
@@ -14,7 +13,7 @@ export class GameDataService {
     world: this.getActiveWorlds()
   };
 
-  constructor(private http:Http, private authHttp:AuthHttp, private socket:SocketService) {}
+  constructor(private http:Http, private authHttp:AuthHttp) {}
 
   getActiveWorlds() {
     return this.http.get(`${API}world`)
@@ -49,13 +48,4 @@ export class GameDataService {
       .map(t => t.json())
       .cache();
   }
-
-  // init() {
-  //   Object.assign(this.data, this.socket.connect());
-  // }
-
-  unsubscribe() {
-    this.socket.disconnect();
-  }
-
 }

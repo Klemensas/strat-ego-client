@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/cache';
 
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 import * as io from 'socket.io-client';
 
@@ -100,7 +100,7 @@ export class SocketService {
      */
     private onConnect(a) {
         console.log(`Connected to ${this.name}`);
-        console.log(a, this.socket);
+        // console.log(a, this.socket);
 
         // Request initial list when connected
         // this.socket.emit('player');

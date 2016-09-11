@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { GameDataService } from '../../services/game-data.service';
 import { PlayerService } from '../services/player.service';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   moduleId: module.id,
@@ -18,7 +18,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   // public playerData = null;
   // public activeRest = null;
 
-  constructor(private route: ActivatedRoute, private gameData: GameDataService, private player: PlayerService) {
+  constructor(private route: ActivatedRoute, private socket: SocketService, private player: PlayerService) {
   }
 
   ngOnInit() {
@@ -44,7 +44,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.gameData.unsubscribe();
+    this.socket.disconnect();
   }
 
   // updatePlayerData(data) {
