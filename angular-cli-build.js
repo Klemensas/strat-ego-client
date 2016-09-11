@@ -17,7 +17,8 @@ module.exports = function(defaults) {
       'rxjs/**/*.+(js|js.map)',
       '@angular/**/*.+(js|js.map)',
       'angular2-jwt/*.+(js|js.map)',
-      'socket.io-client/*.+(js|js.map)'
+      'socket.io-client/*.+(js|js.map)',
+      'konva/*.+(ts|js|js.map)',
     ]
   });
 };
