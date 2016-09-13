@@ -11,8 +11,9 @@
 const map: any = {
   'angular2-jwt': 'vendor/angular2-jwt/angular2-jwt.js',
   'socket.io-client': 'vendor/socket.io-client/socket.io.js',
-  'konva': 'vendor/konva/konva.js'
-};
+  'konva': 'vendor/konva/konva.js',
+  'seedrandom': 'vendor/seedrandom/seedrandom.js'
+}
 
 /** User packages configuration. */
 const packages: any = {

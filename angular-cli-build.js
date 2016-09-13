@@ -19,6 +19,7 @@ module.exports = function(defaults) {
       'angular2-jwt/*.+(js|js.map)',
       'socket.io-client/*.+(js|js.map)',
       'konva/*.+(ts|js|js.map)',
+      'seedrandom/**/*.+(ts|js|js.map)',
     ]
   });
 };
