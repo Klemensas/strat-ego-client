@@ -1,10 +1,10 @@
-import { ClientPage } from './app.po';
+import { StratEgoClientPage } from './app.po';
 
-describe('client App', function() {
-  let page: ClientPage;
+describe('strat-ego-client App', function() {
+  let page: StratEgoClientPage;
 
   beforeEach(() => {
-    page = new ClientPage();
+    page = new StratEgoClientPage();
   });
 
   it('should display message saying app works', () => {

@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormControl, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
-  moduleId: module.id,
-  directives: [REACTIVE_FORM_DIRECTIVES],
   selector: 'app-login',
   templateUrl: 'login.component.html',
-  styleUrls: ['login.component.css']
+  styleUrls: ['login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
@@ -22,12 +20,6 @@ export class LoginComponent implements OnInit {
   active = true;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.userModel = {
-      email: new FormControl('test@test.com', Validators.required),
-      password: new FormControl('default', Validators.required)
-    };
-
-    this.form = new FormGroup(this.userModel);
   }
 
   onSubmit(form) {
@@ -40,6 +32,12 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userModel = {
+      email: new FormControl('test@test.com', Validators.required),
+      password: new FormControl('default', Validators.required)
+    };
+
+    this.form = new FormGroup(this.userModel);
   }
 
 }

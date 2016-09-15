@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ResourcesComponent } from '../resources';
+// import { ResourcesComponent } from '../resources';
 
 import { PlayerService } from '../services/player.service';
 import { SocketService } from '../services/socket.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'restaurant',
   templateUrl: 'restaurant.component.html',
-  styleUrls: ['restaurant.component.css'],
+  styleUrls: ['restaurant.component.scss'],
   inputs: ['restData'],
-  directives: [ResourcesComponent]
 })
+
 export class RestaurantComponent implements OnInit {
   restaurant = null;
 

@@ -2,15 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { GameDataService } from '../services/game-data.service';
 import { Observable } from 'rxjs/Observable';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
-  moduleId: module.id,
-  selector: 'app-home',
+  selector: 'home',
   templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css'],
-  directives: [ROUTER_DIRECTIVES]
-  // providers: [GameDataService]
+  styleUrls: ['home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   private worlds;
@@ -30,7 +26,7 @@ export class HomeComponent implements OnInit {
   }
 
   userOnWorld(world) {
-    return this.user.UserWorlds.find(w => w._id === world._id);
+      return this.user.UserWorlds.find(w => w._id === world._id);
   }
 
 }

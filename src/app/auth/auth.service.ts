@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HTTP_PROVIDERS, Http } from '@angular/http';
+import { Http } from '@angular/http';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import 'rxjs/add/operator/cache';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { API, AUTH } from '../config';
@@ -33,6 +34,7 @@ export class AuthService {
   }
 
   login(data) {
+    console.log(data);
     return this.http.post(`${AUTH}local`, data)
       .map(t => t.json().token)
       .flatMap(t => {

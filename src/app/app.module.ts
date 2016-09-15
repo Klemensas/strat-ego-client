@@ -1,27 +1,24 @@
-  import { NgModule, enableProdMode, provide } from '@angular/core'; // ok
-import { BrowserModule } from '@angular/platform-browser'; // browser platform right?
-import { FormsModule } from '@angular/forms'; // forms directives?
-import { HttpModule } from '@angular/http'; // http methods?
-
-import { XHRBackend } from '@angular/http'; // dunno
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 
-import { AppComponent, environment } from './';
+import { AppComponent } from './app.component';
 import { routing, routedComponents } from './app.routing';
 
 import { AuthHttp, provideAuth } from 'angular2-jwt';
 
 import { AuthGuard } from './auth.guard';
-import { PlayerResolver } from './player.resolver';
+// import { PlayerResolver } from './player.resolver';
 
 import { AuthService } from './auth/auth.service';
 import { GameDataService } from './services/game-data.service';
 
 import { GameModule } from './game/game.module';
 
-if (environment.production) {
-  enableProdMode();
-}
+
+import { HeaderComponent} from './header/';
 
 @NgModule({
   imports: [
@@ -33,6 +30,7 @@ if (environment.production) {
   ],
   declarations: [
     AppComponent,
+    HeaderComponent,
     routedComponents
   ],
   providers: [
@@ -46,7 +44,7 @@ if (environment.production) {
       noJwtError: true
     }),
     AuthGuard,
-    PlayerResolver,
+    // PlayerResolver,
     AuthService,
     GameDataService
   ],

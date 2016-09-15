@@ -1,15 +1,12 @@
 import { Component, OnInit, ElementRef, Renderer } from '@angular/core';
-import { Map } from '../directives/map.directive';
 import * as Konva from 'konva';
 import * as seedrandom from 'seedrandom';
 
 console.log(seedrandom);
 @Component({
-  moduleId: module.id,
   selector: 'map',
   templateUrl: 'map.component.html',
-  styleUrls: ['map.component.css'],
-  directives: [Map]
+  styleUrls: ['map.component.scss'],
 })
 export class MapComponent implements OnInit {
   private target;

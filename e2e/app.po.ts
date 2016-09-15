@@ -1,4 +1,6 @@
-export class ClientPage {
+import { browser, element, by } from 'protractor/globals';
+
+export class StratEgoClientPage {
   navigateTo() {
     return browser.get('/');
   }
