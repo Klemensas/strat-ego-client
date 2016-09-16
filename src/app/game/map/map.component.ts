@@ -59,14 +59,14 @@ export class MapComponent implements OnInit {
     ];
 
     const imgs = [
-      '../../../../images/grass.png',
-      '../../../../images/grass2.png',
-      '../../../../images/grass3.png',
-      '../../../../images/grass4.png',
-      '../../../../images/grass5.png',
-      '../../../../images/grass6.png',
-      '../../../../images/grass7.png',
-      '../../../../images/restaurant.png',
+      '../../../../assets/images/grass.png',
+      '../../../../assets/images/grass2.png',
+      '../../../../assets/images/grass3.png',
+      '../../../../assets/images/grass4.png',
+      '../../../../assets/images/grass5.png',
+      '../../../../assets/images/grass6.png',
+      '../../../../assets/images/grass7.png',
+      '../../../../assets/images/restaurant.png',
     ];
     let images = [];
     this.imgPreload(imgs, ims => {
