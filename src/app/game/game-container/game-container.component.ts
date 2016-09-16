@@ -21,6 +21,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log(this.route);
     // console.log(this.gameData.data);
     // this.gameData.data['player'].subscribe(event => {
     //   console.log('eventerino', event);

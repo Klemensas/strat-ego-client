@@ -1,3 +1,3 @@
 export { PlayerService } from './player.service';
-export { RestaurantService } from './restaurant.service';
+export { TownService } from './town.service';
 export { SocketService } from './socket.service';

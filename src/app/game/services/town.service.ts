@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 
 @Injectable()
-export class RestaurantService {
+export class TownService {
   public data = {};
-  public activeRest = null;
+  public activeTown = null;
 
   constructor(private socket: SocketService) {
-    this.observeRestaurant();
+    this.observeTown();
   }
 
-  observeRestaurant() {
-    this.socket.events.restaurant.subscribe(event => {
+  observeTown() {
+    this.socket.events.town.subscribe(event => {
       this.data = event.data;
 
       console.log('data yo', this.data);

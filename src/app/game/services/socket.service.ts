@@ -17,7 +17,7 @@ export class SocketService {
 
     public events = {
         player: this.socketObservable('self'),
-        restaurant: this.socketObservable('restaurant'),
+        town: this.socketObservable('town'),
         map: this.socketObservable('map')
     };
 

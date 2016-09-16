@@ -9,28 +9,27 @@ import { PlayerEvent } from '../models/player';
 @Injectable()
 export class PlayerService {
   public data: PlayerEvent;
-  public activeRest = new BehaviorSubject({});
+  public activeTown = new BehaviorSubject({});
 
-  private hasActiveRest = false;
+  private hasActiveTown = false;
 
   constructor(private socket: SocketService) {
     this.observePlayer();
-    console.log('init ps')
   }
 
   observePlayer() {
     this.socket.events.player.subscribe(event => {
       this.data = event.data;
       console.log('player service', event)
-      if (!this.hasActiveRest) {
-        this.setActiveRest(0);
+      if (!this.hasActiveTown) {
+        this.setActiveTown(0);
       }
     })
   }
 
-  setActiveRest(id) {
-    this.activeRest.next(this.data.Restaurants[id]);
-    this.hasActiveRest = true;
+  setActiveTown(id) {
+    this.activeTown.next(this.data.Towns[id]);
+    this.hasActiveTown = true;
   }
 
 }

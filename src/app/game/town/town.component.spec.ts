@@ -3,9 +3,9 @@
 // import { By }           from '@angular/platform-browser';
 // import { DebugElement } from '@angular/core';
 // import { addProviders, async, inject } from '@angular/core/testing';
-// import { RestaurantComponent } from './restaurant.component';
+// import { TownComponent } from './town.component';
 
-// describe('Component: Restaurant', () => {
+// describe('Component: Town', () => {
 //   it('should create an instance', () => {
 //     let component = new RestaurantComponent();
 //     expect(component).toBeTruthy();

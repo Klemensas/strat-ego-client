@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // import { FormsModule }    from '@angular/forms';
 
-import { PlayerService, RestaurantService, SocketService } from './services/index';
+import { PlayerService, TownService, SocketService } from './services/index';
 
 import { gameRouting, gameComponents } from './game.routing';
+import { ResourcesComponent } from './resources';
+
+import { WorldResolver } from './services/world.resolver';
 
 @NgModule({
   imports: [
@@ -13,12 +16,14 @@ import { gameRouting, gameComponents } from './game.routing';
     gameRouting
   ],
   declarations: [
-    gameComponents
+    gameComponents,
+    ResourcesComponent
   ],
   providers: [
     SocketService,
     PlayerService,
-    RestaurantService
+    TownService,
+    WorldResolver
   ]
 })
 

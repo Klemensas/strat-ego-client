@@ -6,21 +6,22 @@ import { PlayerService } from '../services/player.service';
 import { SocketService } from '../services/socket.service';
 
 @Component({
-  selector: 'restaurant',
-  templateUrl: 'restaurant.component.html',
-  styleUrls: ['restaurant.component.scss'],
-  inputs: ['restData'],
+  selector: 'town',
+  templateUrl: 'town.component.html',
+  styleUrls: ['town.component.scss'],
+  inputs: ['townData'],
 })
 
-export class RestaurantComponent implements OnInit {
-  restaurant = null;
+export class TownComponent implements OnInit {
+  town = null;
 
   constructor(private playerService: PlayerService, private socket: SocketService) {
   }
 
   ngOnInit() {
-    this.playerService.activeRest.subscribe(event => {
-      this.restaurant = event;
+    console.log('watt')
+    this.playerService.activeTown.subscribe(event => {
+      this.town = event;
     });
   }
 

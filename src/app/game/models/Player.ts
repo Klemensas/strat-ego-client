@@ -2,7 +2,7 @@ export class PlayerEvent {
   _id: number;
   UserId: number;
   name: string;
-  Restaurants: Array<Object>;
+  Towns: Array<Object>;
   createdAt: number;
   updatedAt: number;
 }
