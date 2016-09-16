@@ -5,7 +5,6 @@ import { HomeComponent } from './home/';
 import { LoginComponent } from './auth/login/';
 import { RegisterComponent } from './auth/register/';
 import { AuthGuard } from './auth.guard';
-import { PlayerResolver } from './player.resolver';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, /*index: true*/ },

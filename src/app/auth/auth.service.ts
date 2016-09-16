@@ -34,7 +34,6 @@ export class AuthService {
   }
 
   login(data) {
-    console.log(data);
     return this.http.post(`${AUTH}local`, data)
       .map(t => t.json().token)
       .flatMap(t => {

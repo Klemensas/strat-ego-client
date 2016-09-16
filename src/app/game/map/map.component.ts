@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef, Renderer } from '@angular/core';
 import * as Konva from 'konva';
 import * as seedrandom from 'seedrandom';
 
-console.log(seedrandom);
 @Component({
   selector: 'map',
   templateUrl: 'map.component.html',
