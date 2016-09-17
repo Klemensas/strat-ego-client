@@ -6,5 +6,5 @@
     <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
     <button (click)="changeName()">Save</button>
   </div>
-  <resources [res]="town.resources"></resources>
+  <resources [res]="town.resources" [prod]="town.production"></resources>
 </div>

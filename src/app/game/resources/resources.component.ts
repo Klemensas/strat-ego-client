@@ -4,10 +4,11 @@ import { Component, OnInit } from '@angular/core';
   selector: 'resources',
   templateUrl: 'resources.component.html',
   styleUrls: ['resources.component.scss'],
-  inputs: ['res']
+  inputs: ['res', 'prod']
 })
 export class ResourcesComponent implements OnInit {
   res;
+  prod;
 
   constructor() { }
 
