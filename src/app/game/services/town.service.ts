@@ -33,7 +33,7 @@ export class TownService {
     if (this.data.value['resources']) {
       const now = Date.now();
       const time = new Date(this.data.value['updatedAt']).getTime();
-      const timePast = (now - time) / 1000 / 60;
+      const timePast = (now - time) / 1000 / 60 / 60;
       const res = this.data.value['resources'];
 
       res.clay += Math.floor(timePast);
