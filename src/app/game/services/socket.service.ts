@@ -6,9 +6,6 @@ import { AuthService } from '../../auth/auth.service';
 
 import * as io from 'socket.io-client';
 
-// import { ISocketItem } from "./socket-item.interface";
-// import { IMessage } from "../../../models/message.model";
-
 @Injectable()
 export class SocketService {
     name = 'tmp';
@@ -23,7 +20,7 @@ export class SocketService {
 
     constructor(public auth: AuthService) {
         const world = 'megapolis' // replace with target world data
-        
+        console.log('socket constructor active')
         this.socket = io.connect('http://localhost:9000', {
             path: '/socket.io-client',
             query: `token=${this.auth.token}&world=${world}`,
@@ -34,6 +31,10 @@ export class SocketService {
 
     public disconnect() {
         this.socket.close();
+    }
+
+    public changeTownName(town, name) {
+        this.socket.emit('town:name', { town, name });
     }
 
     private socketObservable(event) {
