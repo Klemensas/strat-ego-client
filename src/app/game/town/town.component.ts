@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-// import { ResourcesComponent } from '../resources';
-
-import { PlayerService } from '../services/player.service';
-import { SocketService } from '../services/socket.service';
+import { SocketService, PlayerService, TownService } from '../services';
 
 @Component({
   selector: 'town',
@@ -13,24 +10,33 @@ import { SocketService } from '../services/socket.service';
 })
 
 export class TownComponent implements OnInit {
-  town = null;
+  private nameChange = '';
+  public town = null;
 
-  constructor(private playerService: PlayerService, private socket: SocketService) {
+  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
   }
 
   ngOnInit() {
-    console.log('watt')
-    this.playerService.activeTown.subscribe(event => {
+    // Observes which town is active
+    this.townService.data.subscribe(event => {
       this.town = event;
     });
+
+    // this.townService.data.subscribe()
   }
 
   manageResources(res) {
-    // Object.keys(res).forEach(r => {
+    // Object.keys(res).forEach(r => {  
     //   this.resources[r] = ++res[r];
     // });
 
     // setTimeout(() => this.manageResources(res), 1000);
+  }
+
+  changeName() {
+    if (this.nameChange.length > 3) {
+      this.townService.changeName(this.nameChange);
+    }
   }
 
 }
