@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { FormsModule }    from '@angular/forms';
+import { FormsModule }    from '@angular/forms';
 
 import { PlayerService, TownService, SocketService } from './services/index';
 
@@ -12,7 +12,7 @@ import { WorldResolver } from './services/world.resolver';
 @NgModule({
   imports: [
     CommonModule,
-    // FormsModule,
+    FormsModule,
     gameRouting
   ],
   declarations: [
