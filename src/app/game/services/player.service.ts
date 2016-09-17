@@ -4,11 +4,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { SocketService } from './socket.service';
 
-import { PlayerEvent } from '../models/player';
+import { Player } from '../models/Player';
 
 @Injectable()
 export class PlayerService {
-  public data: PlayerEvent;
+  public data: Player;
   public activeTown = new BehaviorSubject({});
 
   private hasActiveTown = false;
