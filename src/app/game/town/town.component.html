@@ -1,9 +1,9 @@
 <div *ngIf="town">
-  <resources [res]="town.resources" [prod]="town.production"></resources>
+  <resources [resources]="town.resources" [production]="town.production"></resources>
   <div>
     <strong>{{ town.name }}</strong>
     <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
     <button (click)="changeName()">Save</button>
   </div>
-  <buildings [buildings]="town.buildings"></buildings>
+  <buildings></buildings>
 </div>
