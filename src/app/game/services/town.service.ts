@@ -60,7 +60,16 @@ export class TownService {
   }
 
   changeName(name) {
-    this.socket.changeTownName(this.currentTown.value._id, name)
+    this.socket.sendEvent('town:name', { name, town: this.currentTown.value._id});
+  }
+
+  upgradeBuilding(target) {
+    console.log(target);
+    this.socket.sendEvent('town:build', {
+      building: target.building,
+      level: target.level,
+      town: this.currentTown.value._id
+    });
   }
 
 }

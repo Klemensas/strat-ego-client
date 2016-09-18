@@ -33,8 +33,8 @@ export class SocketService {
         this.socket.close();
     }
 
-    public changeTownName(town, name) {
-        this.socket.emit('town:name', { town, name });
+    public sendEvent(event, data) {
+        this.socket.emit(event, data);
     }
 
     private socketObservable(event) {
