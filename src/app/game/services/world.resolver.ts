@@ -15,6 +15,7 @@ export class WorldResolver implements Resolve<any> {
       .map(worlds => {
         const foundWorld = worlds.find(w => w.name.toLowerCase() === target);
         if (foundWorld) {
+          this.gameData.data.activeWorld.next(foundWorld);
           return foundWorld;
         }
         this.router.navigate(['/']);
