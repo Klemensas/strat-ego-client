@@ -9,42 +9,58 @@ import { Town } from '../models/Town';
 
 @Injectable()
 export class TownService {
-  public data = new BehaviorSubject(<Town>{});
+  private townData = {};
+  private lastUpdate: number;
+  private savedRes = null;
+
+  public currentTown = new BehaviorSubject(<Town>null);
+
 
   constructor(private socket: SocketService, private playerService: PlayerService) {
     this.playerService.activeTown.subscribe((town: Town) => {
-      this.data.next(town);
+      if (town) {
+        this.townData[town._id] = town;
+        this.updateCurrent(town);
+      }
     })
     this.observeTown();
+
     this.calculateRes();
   }
 
   observeTown() {
     this.socket.events.town.subscribe(event => {
-      this.data.next(event);
-      console.log('ok?', event)
-      // if (!this.activeRest && this.data.Restaurants.length === 1) {
-      //   this.activeRest = this.data.Restaurants[0];
-      // }
+      // Store town in townData for future use
+      this.townData[event._id] = event;
+
+      // Check if this is the currently active town
+      if (this.currentTown.value._id === event._id) {
+        this.updateCurrent(event);
+      }
     })
   }
 
-  calculateRes() {
-    if (this.data.value['resources']) {
-      const now = Date.now();
-      const time = new Date(this.data.value['updatedAt']).getTime();
-      const timePast = (now - time) / 1000 / 60 / 60;
-      const res = this.data.value['resources'];
+  updateCurrent(town) {
+    this.currentTown.next(town);
+    this.savedRes = Object.assign({}, town.resources);
+    this.lastUpdate = new Date(town.updatedAt).getTime();
+  };
 
-      res.clay += Math.floor(timePast);
-      res.wood += Math.floor(timePast);
-      res.iron += Math.floor(timePast);
+  calculateRes() {
+    if (this.currentTown.value) {
+      const now = Date.now();
+      const timePast = (now - this.lastUpdate) / (1000 * 60 * 60);
+      this.currentTown.value.resources = {
+        clay: this.savedRes.clay + this.currentTown.value.production.clay * timePast,
+        wood: this.savedRes.wood + this.currentTown.value.production.wood * timePast,
+        iron: this.savedRes.iron + this.currentTown.value.production.iron * timePast,
+      };
     }
     setTimeout(() => this.calculateRes(), 1000);
   }
 
   changeName(name) {
-    this.socket.changeTownName(this.data.value._id, name)
+    this.socket.changeTownName(this.currentTown.value._id, name)
   }
 
 }
