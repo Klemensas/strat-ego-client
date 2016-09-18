@@ -1,0 +1,13 @@
+<div>
+  Buildings
+</div>
+<div *ngFor="let i of buildingList;" style="margin-bottom: 4px;">
+  <span>{{i}} - {{buildings[i].level}}</span>
+  <div *ngIf="buildings[i].data[buildings[i].level]">
+    Upgrade:
+    <span>clay {{buildings[i].data[buildings[i].level].costs.clay}}</span>
+    <span>wood {{buildings[i].data[buildings[i].level].costs.wood}}</span>
+    <span>iron {{buildings[i].data[buildings[i].level].costs.iron}}</span>
+    <span>time {{buildings[i].data[buildings[i].level].buildTime}}</span>
+  </div>
+</div>

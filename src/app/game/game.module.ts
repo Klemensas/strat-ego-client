@@ -8,6 +8,7 @@ import { gameRouting, gameComponents } from './game.routing';
 import { ResourcesComponent } from './resources';
 
 import { WorldResolver } from './services/world.resolver';
+import { BuildingsComponent } from './buildings/buildings.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { WorldResolver } from './services/world.resolver';
   ],
   declarations: [
     gameComponents,
-    ResourcesComponent
+    ResourcesComponent, BuildingsComponent
   ],
   providers: [
     SocketService,
