@@ -2,39 +2,32 @@ import { Component, OnInit } from '@angular/core';
 
 import { SocketService, PlayerService, TownService } from '../services';
 
+import { Town } from '../models/Town';
+
 @Component({
   selector: 'town',
   templateUrl: 'town.component.html',
   styleUrls: ['town.component.scss'],
-  inputs: ['townData'],
 })
 
 export class TownComponent implements OnInit {
   private nameChange = '';
-  public town = null;
+  public town: Town;
 
   constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
   }
 
   ngOnInit() {
-    // Observes which town is active
-    this.townService.data.subscribe(event => {
-      this.town = event;
+    // Subscribe to town data updates
+    this.townService.currentTown.subscribe(update => {
+      this.town = update;
+      console.log('Town component: town updated')
     });
-
-    // this.townService.data.subscribe()
   }
 
-  manageResources(res) {
-    // Object.keys(res).forEach(r => {  
-    //   this.resources[r] = ++res[r];
-    // });
-
-    // setTimeout(() => this.manageResources(res), 1000);
-  }
 
   changeName() {
-    if (this.nameChange.length > 3) {
+    if (this.nameChange.length > 3 && this.nameChange !== this.town.name) {
       this.townService.changeName(this.nameChange);
     }
   }
