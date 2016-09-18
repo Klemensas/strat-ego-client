@@ -1,10 +1,9 @@
 <div *ngIf="town">
-  town works!<br>
-  <!-- {{restData.name}} -->
+  <resources [res]="town.resources" [prod]="town.production"></resources>
   <div>
-    <span>{{ town.name }}</span>
+    <strong>{{ town.name }}</strong>
     <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
     <button (click)="changeName()">Save</button>
   </div>
-  <resources [res]="town.resources" [prod]="town.production"></resources>
+  <buildings [buildings]="town.buildings"></buildings>
 </div>
