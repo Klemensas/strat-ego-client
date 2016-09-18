@@ -1,35 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { GameDataService } from '../../services/game-data.service'
+import { TownService } from '../services/town.service'
 
 @Component({
   selector: 'buildings',
   templateUrl: './buildings.component.html',
   styleUrls: ['./buildings.component.scss'],
-  inputs: ['buildings'],
 })
 export class BuildingsComponent implements OnInit {
   buildings;
+  resources;
   private worldData;
+  private buildingData;
   private buildingList = [];
 
-  constructor(private gameData: GameDataService) {
-    this.gameData.data.activeWorld.subscribe(world => {
-      this.worldData = world;
-    });
+  constructor(private townService: TownService, private gameData: GameDataService) {
   }
 
   ngOnInit() {
-    this.buildingList = Object.keys(this.buildings);
-    this.populateBuildingData()
+    this.gameData.data.activeWorld.subscribe(world => {
+      this.worldData = world;
+      this.buildingData = world.buildingData;
+      this.buildingList = Object.keys(world.buildingData);
+    });
+    this.townService.currentTown.subscribe(town => {
+      this.buildings = this.combinedLevel(town.buildings);
+      this.resources = town.resources;
+    })
   }
 
-  populateBuildingData() {
-    this.buildingList.forEach(b => {
-      const level = this.buildings[b];
-      this.buildings[b] = {
-        data: this.worldData.buildingData[b].data,
-        level
-      };
+  combinedLevel(buildings) {
+    return this.buildingList.map(i => {
+      const building = buildings[i];
+      building.name = i;
+      building.combined = building.level + building.queued;
+      return building;
     });
+  }
+
+  canUpgrade(building) {
+    const target = this.buildingData[building.name].data[building.combined].costs;
+    return (
+      target.clay <= this.resources.clay &&
+      target.wood <= this.resources.wood &&
+      target.iron <= this.resources.iron
+    )
+  }
+
+  upgrade(name, building) {
+    this.townService.upgradeBuilding({ building: name, level: building.combined })
   }
 }

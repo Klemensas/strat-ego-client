@@ -1,13 +1,16 @@
 <div>
-  Buildings
-</div>
-<div *ngFor="let i of buildingList;" style="margin-bottom: 4px;">
-  <span>{{i}} - {{buildings[i].level}}</span>
-  <div *ngIf="buildings[i].data[buildings[i].level]">
-    Upgrade:
-    <span>clay {{buildings[i].data[buildings[i].level].costs.clay}}</span>
-    <span>wood {{buildings[i].data[buildings[i].level].costs.wood}}</span>
-    <span>iron {{buildings[i].data[buildings[i].level].costs.iron}}</span>
-    <span>time {{buildings[i].data[buildings[i].level].buildTime}}</span>
+  <strong>Buildings</strong>
+  <div  *ngFor="let building of buildings;" style="margin-bottom: 4px;">
+    <span>{{building.name}} - {{building.level}}</span>
+    <span *ngIf="building.queued">(+ {{building.queued}})</span>
+    <div *ngIf="buildingData[building.name].data[building.combined]">
+      Upgrade:
+      <span>clay {{buildingData[building.name].data[building.combined].costs.clay}}</span>
+      <span>wood {{buildingData[building.name].data[building.combined].costs.wood}}</span>
+      <span>iron {{buildingData[building.name].data[building.combined].costs.iron}}</span>
+      <span>time {{buildingData[building.name].data[building.combined].buildTime}}</span>
+
+      <button *ngIf="canUpgrade(building)" (click)="upgrade(building)">Upgrade</button>
+    </div>
   </div>
 </div>
