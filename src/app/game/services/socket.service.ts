@@ -39,7 +39,7 @@ export class SocketService {
 
     private socketObservable(event) {
         return Observable.create((observer: any) => {
-            this.socket.on(event, (data: any) => observer.next({ data }));
+            this.socket.on(event, (data: any) => observer.next(data));
         }).cache();
     }
 

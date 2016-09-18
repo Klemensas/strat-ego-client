@@ -9,7 +9,7 @@ import { Player } from '../models/Player';
 @Injectable()
 export class PlayerService {
   public data: Player;
-  public activeTown = new BehaviorSubject({});
+  public activeTown = new BehaviorSubject(null);
 
   private hasActiveTown = false;
 
@@ -19,7 +19,7 @@ export class PlayerService {
 
   observePlayer() {
     this.socket.events.player.subscribe(event => {
-      this.data = event.data;
+      this.data = event;
       console.log('player service', event)
       if (!this.hasActiveTown) {
         this.setActiveTown(0);
