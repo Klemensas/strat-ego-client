@@ -64,7 +64,6 @@ export class TownService {
   }
 
   upgradeBuilding(target) {
-    console.log(target);
     this.socket.sendEvent('town:build', {
       building: target.building,
       level: target.level,

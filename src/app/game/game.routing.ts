@@ -8,6 +8,7 @@ import { TownComponent }    from './town';
 import { MapComponent }    from './map';
 
 import { WorldResolver } from './services/world.resolver';
+import { SocketResolver } from './services/socket.resolver';
 
 const gameRoutes: Routes = [
   {
@@ -19,7 +20,8 @@ const gameRoutes: Routes = [
         { path: 'map', component: MapComponent },
     ],
     resolve: {
-      world: WorldResolver
+      world: WorldResolver,
+      socket: SocketResolver
     }
   },
   // { path: 'hero/:id', component: HeroDetailComponent }

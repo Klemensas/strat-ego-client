@@ -19,14 +19,20 @@ export class SocketService {
     };
 
     constructor(public auth: AuthService) {
+    }
+
+    public connect() {
         const world = 'megapolis' // replace with target world data
-        console.log('socket constructor active')
+        console.log('connecting to socket', this.auth.tokenData)
         this.socket = io.connect('http://localhost:9000', {
             path: '/socket.io-client',
             query: `token=${this.auth.token}&world=${world}`,
         });
 
-        this.socket.on('connect', (a) => this.onConnect(a));
+        // TODO: rework returned value into something valid when working with server side socket authentication
+        return Observable.create(observer => {
+            this.socket.on('connect', data => observer.next(this.socket));
+        }).subscribe();
     }
 
     public disconnect() {
