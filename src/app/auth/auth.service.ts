@@ -45,6 +45,7 @@ export class AuthService {
 
   logout() {
     this.token = null;
+    this.tokenData = null;
     localStorage.removeItem('jwt');
     this.user.next(null);
     this.router.navigate(['/']);

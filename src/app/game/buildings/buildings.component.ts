@@ -24,22 +24,22 @@ export class BuildingsComponent implements OnInit {
       this.buildingList = Object.keys(world.buildingData);
     });
     this.townService.currentTown.subscribe(town => {
-      this.buildings = this.combinedLevel(town.buildings);
+      this.buildings = this.combineLevel(town.buildings);
       this.resources = town.resources;
     })
   }
 
-  combinedLevel(buildings) {
+  combineLevel(buildings) {
     return this.buildingList.map(i => {
       const building = buildings[i];
       building.name = i;
-      building.combined = building.level + building.queued;
+      building.next = building.queued || building.level;
       return building;
     });
   }
 
   canUpgrade(building) {
-    const target = this.buildingData[building.name].data[building.combined].costs;
+    const target = this.buildingData[building.name].data[building.next].costs;
     return (
       target.clay <= this.resources.clay &&
       target.wood <= this.resources.wood &&
@@ -47,7 +47,7 @@ export class BuildingsComponent implements OnInit {
     )
   }
 
-  upgrade(name, building) {
-    this.townService.upgradeBuilding({ building: name, level: building.combined })
+  upgrade(building) {
+    this.townService.upgradeBuilding({ building: building.name, level: building.next })
   }
 }
