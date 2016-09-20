@@ -30,6 +30,7 @@ export class TownService {
 
   observeTown() {
     this.socket.events.town.subscribe(event => {
+      console.log('[Socket receive town]', event)
       // Store town in townData for future use
       this.townData[event._id] = event;
 

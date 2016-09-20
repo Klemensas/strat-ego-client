@@ -40,6 +40,7 @@ export class SocketService {
     }
 
     public sendEvent(event, data) {
+        console.log(`[Socket emit: ${event}]`, data);
         this.socket.emit(event, data);
     }
 

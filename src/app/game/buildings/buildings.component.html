@@ -2,7 +2,7 @@
   <strong>Buildings</strong>
   <div  *ngFor="let building of buildings;" style="margin-bottom: 4px;">
     <span>{{building.name}} - {{building.level}}</span>
-    <span *ngIf="building.queued">(+ {{building.queued}})</span>
+    <span *ngIf="building.queued">(building {{building.queued}})</span>
     <div *ngIf="buildingData[building.name].data[building.next]">
       Upgrade:
       <span>clay {{buildingData[building.name].data[building.next].costs.clay}}</span>
