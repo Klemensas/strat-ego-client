@@ -17,11 +17,15 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   // public playerData = null;
   // public activeRest = null;
 
-  constructor(private route: ActivatedRoute, private socket: SocketService, private player: PlayerService) {
+  constructor(private route: ActivatedRoute, private socket: SocketService, private playerService: PlayerService) {
   }
 
   ngOnInit() {
-    console.log(this.route);
+    // Initialize sockets
+    this.playerService.observePlayer();
+
+    // console.log(this.route);
+
     // console.log(this.gameData.data);
     // this.gameData.data['player'].subscribe(event => {
     //   console.log('eventerino', event);

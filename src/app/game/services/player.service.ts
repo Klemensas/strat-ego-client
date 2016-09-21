@@ -14,11 +14,11 @@ export class PlayerService {
   private hasActiveTown = false;
 
   constructor(private socket: SocketService) {
-    this.observePlayer();
   }
 
   observePlayer() {
     this.socket.events.player.subscribe(event => {
+    this.hasActiveTown = false;
       this.data = event;
       console.log('player service', event)
       if (!this.hasActiveTown) {
