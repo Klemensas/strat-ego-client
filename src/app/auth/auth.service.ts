@@ -29,21 +29,23 @@ export class AuthService {
       return false;
     }
     this.token = token;
-    this.tokenData = this.jwtHelper.decodeToken(token);
-    this.getUser()
+    // TODO: upgrade this
+    this.getUser().subscribe()
   }
 
   login(data) {
     return this.http.post(`${AUTH}local`, data)
-      .map(t => t.json().token)
-      .flatMap(t => {
-        localStorage.setItem('jwt', t);
-        this.token = t;
+      .map(token => token.json().token)
+      .flatMap(token => {
+        localStorage.setItem('jwt', token);
+        this.token = token;
+        this.tokenData = this.jwtHelper.decodeToken(token);
         return this.getUser();
       });
   }
 
   logout() {
+    console.log('logout');
     this.token = null;
     this.tokenData = null;
     localStorage.removeItem('jwt');
@@ -52,6 +54,7 @@ export class AuthService {
   }
 
   tokenExpiration() {
+    console.log('token expired');
     this.token = null;
     this.user.next(null);
     localStorage.removeItem('jwt');
@@ -59,22 +62,26 @@ export class AuthService {
   }
 
   getUser() {
-    const user$ = this.authHttp.get(`${API}users/me`)
-      .map(u => u.json())
+    const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(this.token)).getTime()
+    this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
+    return this.authHttp.get(`${API}users/me`)
+      .map(data => data.json())
+      .map(data => {
+        this.user.next(data);
+        return data;
+      })
       .cache();
 
-      user$.subscribe(
-        u => this.user.next(u),
-        err => {
-          this.logout();
-          console.error('get user error', err)
-        }
-      );
+      // user$.subscribe(
+      //   u => this.user.next(u),
+      //   err => {
+      //     this.logout();
+      //     console.error('get user error', err)
+      //   }
+      // );
 
-      const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(this.token)).getTime()
-      this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
 
-      return user$;
+      // return user$;
   }
 
 }
