@@ -12,11 +12,7 @@ export class SocketService {
     host = 'watever';
     private socket: SocketIOClient.Socket;
 
-    public events = {
-        player: this.socketObservable('self'),
-        town: this.socketObservable('town'),
-        map: this.socketObservable('map')
-    };
+    public events = new Map();
 
     constructor(public auth: AuthService) {
     }
@@ -29,10 +25,14 @@ export class SocketService {
             query: `token=${this.auth.token}&world=${world}`,
         });
 
+        this.events.set('player', this.socketObservable('self'));
+        this.events.set('town', this.socketObservable('town'));
+        this.events.set('map', this.socketObservable('map'));
+
         // TODO: rework returned value into something valid when working with server side socket authentication
         return Observable.create(observer => {
             this.socket.on('connect', data => observer.next(this.socket));
-        }).subscribe();
+        });
     }
 
     public disconnect() {

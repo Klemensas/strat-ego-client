@@ -19,17 +19,15 @@ export class TownService {
   constructor(private socket: SocketService, private playerService: PlayerService) {
     this.playerService.activeTown.subscribe((town: Town) => {
       if (town) {
+        console.log('player service event', town)
         this.townData[town._id] = town;
         this.updateCurrent(town);
       }
-    })
-    this.observeTown();
-
-    this.calculateRes();
+    });
   }
 
   observeTown() {
-    this.socket.events.town.subscribe(event => {
+    this.socket.events.get('town').subscribe(event => {
       console.log('[Socket receive town]', event)
       // Store town in townData for future use
       this.townData[event._id] = event;
@@ -39,6 +37,8 @@ export class TownService {
         this.updateCurrent(event);
       }
     })
+
+    this.calculateRes();
   }
 
   updateCurrent(town) {

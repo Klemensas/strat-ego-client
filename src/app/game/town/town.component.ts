@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { SocketService, PlayerService, TownService } from '../services';
 
+import { Subscription } from 'rxjs/Subscription';
+
 import { Town } from '../models/Town';
 
 @Component({
@@ -11,6 +13,7 @@ import { Town } from '../models/Town';
 })
 
 export class TownComponent implements OnInit {
+  private townObserver: Subscription;
   private nameChange = '';
   public town: Town;
 
@@ -19,12 +22,12 @@ export class TownComponent implements OnInit {
 
   ngOnInit() {
     // Subscribe to town data updates
-    this.townService.currentTown.subscribe(update => {
+    this.townService.observeTown();
+    this.townObserver = this.townService.currentTown.subscribe(update => {
       this.town = update;
-      console.log('Town component: town updated')
+      console.log('Town component: town updated', this.townService)
     });
   }
-
 
   changeName() {
     if (this.nameChange.length > 3 && this.nameChange !== this.town.name) {
@@ -32,4 +35,7 @@ export class TownComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.townObserver.unsubscribe();
+  }
 }

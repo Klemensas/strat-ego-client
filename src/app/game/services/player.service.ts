@@ -17,8 +17,8 @@ export class PlayerService {
   }
 
   observePlayer() {
-    this.socket.events.player.subscribe(event => {
     this.hasActiveTown = false;
+    this.socket.events.get('player').subscribe(event => {
       this.data = event;
       console.log('player service', event)
       if (!this.hasActiveTown) {
