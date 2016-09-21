@@ -13,7 +13,10 @@ export class SocketResolver implements Resolve<any> {
 
     // TODO: rework into valid
     // CONSIDER: maybe this would work better as a route guard?
-    return this.socket.connect();
+    return this.socket.connect().subscribe(
+      () => {},
+      err => console.error('socket connect error', err)
+    );
       // .map(worlds => {
       //   const foundWorld = worlds.find(w => w.name.toLowerCase() === target);
       //   if (foundWorld) {

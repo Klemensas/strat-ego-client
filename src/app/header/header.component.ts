@@ -12,8 +12,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(private authService:AuthService) {
     this.authService.user.subscribe(
-      u => {
-        this.user = u;
+      user => {
+        this.user = user;
       }
     );
   }

@@ -22,14 +22,6 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {
   }
 
-  onSubmit(form) {
-     if (form.valid) {
-       this.authService.login(form.value).subscribe(
-         u => this.router.navigate(['/']),
-         err => console.error('login error', err)
-       );
-    }
-  }
 
   ngOnInit() {
     this.userModel = {
@@ -38,6 +30,15 @@ export class LoginComponent implements OnInit {
     };
 
     this.form = new FormGroup(this.userModel);
+  }
+
+  onSubmit(form) {
+     if (form.valid) {
+       this.authService.login(form.value).subscribe(
+         u => this.router.navigate(['/']),
+         err => console.error('login error', err)
+       );
+    }
   }
 
 }
