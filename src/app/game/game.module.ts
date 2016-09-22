@@ -10,6 +10,7 @@ import { ResourcesComponent } from './resources';
 import { WorldResolver } from './services/world.resolver';
 import { SocketResolver } from './services/socket.resolver';
 import { BuildingsComponent } from './buildings/buildings.component';
+import { BuildingQueueComponent } from './building-queue/building-queue.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import { BuildingsComponent } from './buildings/buildings.component';
   ],
   declarations: [
     gameComponents,
-    ResourcesComponent, BuildingsComponent
+    ResourcesComponent, BuildingsComponent, BuildingQueueComponent
   ],
   providers: [
     SocketService,
