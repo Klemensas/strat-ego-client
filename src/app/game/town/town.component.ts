@@ -22,7 +22,6 @@ export class TownComponent implements OnInit {
 
   ngOnInit() {
     // Subscribe to town data updates
-    this.townService.observeTown();
     this.townObserver = this.townService.currentTown.subscribe(update => {
       this.town = update;
       console.log('Town component: town updated', this.townService)

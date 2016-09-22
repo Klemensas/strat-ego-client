@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { PlayerService } from '../services/player.service';
-import { SocketService } from '../services/socket.service';
+import { PlayerService, TownService, SocketService } from '../services';
 
 @Component({
   selector: 'game-container',
@@ -17,12 +16,13 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   // public playerData = null;
   // public activeRest = null;
 
-  constructor(private route: ActivatedRoute, private socket: SocketService, private playerService: PlayerService) {
+  constructor(private route: ActivatedRoute, private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
   }
 
   ngOnInit() {
     // Initialize sockets
     this.playerService.observePlayer();
+    this.townService.observeTown();
 
     // console.log(this.route);
 
