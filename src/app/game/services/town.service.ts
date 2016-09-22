@@ -24,6 +24,9 @@ export class TownService {
         this.updateCurrent(town);
       }
     });
+
+    // CONSIDER: this never stops, should it?
+    this.timeTick();
   }
 
   observeTown() {
@@ -38,7 +41,6 @@ export class TownService {
       }
     })
 
-    this.calculateRes();
   }
 
   updateCurrent(town) {
@@ -47,17 +49,35 @@ export class TownService {
     this.lastUpdate = new Date(town.updatedAt).getTime();
   };
 
-  calculateRes() {
-    if (this.currentTown.value) {
+  timeTick() {
+    const target = this.currentTown.value;
+    if (target) {
       const now = Date.now();
-      const timePast = (now - this.lastUpdate) / (1000 * 60 * 60);
-      this.currentTown.value.resources = {
-        clay: this.savedRes.clay + this.currentTown.value.production.clay * timePast,
-        wood: this.savedRes.wood + this.currentTown.value.production.wood * timePast,
-        iron: this.savedRes.iron + this.currentTown.value.production.iron * timePast,
-      };
+      target.resources = this.updateResources(now, target.production);
+
+      if(target.BuildingQueues.length) {
+        target.BuildingQueues = this.updateBuildingQueue(now, target.BuildingQueues);
+      }
     }
-    setTimeout(() => this.calculateRes(), 1000);
+    setTimeout(() => this.timeTick(), 1000);
+  }
+
+  updateResources(time, production) {
+      const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
+      return {
+        clay: this.savedRes.clay + production.clay * timePast,
+        wood: this.savedRes.wood + production.wood * timePast,
+        iron: this.savedRes.iron + production.iron * timePast,
+      };
+  }
+
+  updateBuildingQueue(time, queue) {
+      const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
+      return queue.map(item => {
+        const ends = new Date(item.endsAt).getTime();
+        item.timeLeft = (ends - time) / 1000;
+        return item;
+      })
   }
 
   changeName(name) {
