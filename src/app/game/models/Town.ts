@@ -1,4 +1,4 @@
-import { Units, Buildings, Resources } from './';
+import { Units, Buildings, Resources, BuildingQueue } from './';
 
 export class Town {
   _id: number;
@@ -10,6 +10,7 @@ export class Town {
   production: Resources;
   resources: Resources;
   units: Units;
+  BuildingQueues: [BuildingQueue];
   createdAt: number;
   updatedAt: number;
 }
