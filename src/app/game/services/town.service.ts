@@ -55,7 +55,7 @@ export class TownService {
       const now = Date.now();
       target.resources = this.updateResources(now, target.production);
 
-      if(target.BuildingQueues.length) {
+      if (target.BuildingQueues && target.BuildingQueues.length) {
         target.BuildingQueues = this.updateBuildingQueue(now, target.BuildingQueues);
       }
     }

@@ -25,7 +25,7 @@ export class SocketService {
             query: `token=${this.auth.token}&world=${world}`,
         });
 
-        this.events.set('player', this.socketObservable('self'));
+        this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));
 
