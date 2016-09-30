@@ -9,8 +9,8 @@ import { TownService } from '../services/town.service'
 })
 export class BuildingsComponent implements OnInit {
   buildings;
-  resources;
   private worldData;
+  private town;
   private buildingData;
   private buildingList = [];
 
@@ -24,9 +24,9 @@ export class BuildingsComponent implements OnInit {
       this.buildingList = Object.keys(world.buildingData);
     });
     this.townService.currentTown.subscribe(town => {
+      this.town = town;
       this.buildings = this.combineLevel(town.buildings);
-      this.resources = town.resources;
-    })
+    });
   }
 
   combineLevel(buildings) {
@@ -41,9 +41,9 @@ export class BuildingsComponent implements OnInit {
   canUpgrade(building) {
     const target = this.buildingData[building.name].data[building.next].costs;
     return (
-      target.clay <= this.resources.clay &&
-      target.wood <= this.resources.wood &&
-      target.iron <= this.resources.iron
+      target.clay <= this.town.resources.clay &&
+      target.wood <= this.town.resources.wood &&
+      target.iron <= this.town.resources.iron
     )
   }
 
