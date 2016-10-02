@@ -1,0 +1,7 @@
+<div *ngFor="let unit of unitData" class="flex">
+  <div>{{ unit.name }}</div>
+  <div class="resource"><div class="resource-icon wood"></div>{{ unit.costs.wood }}</div>
+  <div class="resource"><div class="resource-icon clay"></div>{{ unit.costs.clay }}</div>
+  <div class="resource"><div class="resource-icon iron"></div>{{ unit.costs.iron }}</div>
+  <div *ngIf="canRecruit(unit)">recruit</div>
+</div>
