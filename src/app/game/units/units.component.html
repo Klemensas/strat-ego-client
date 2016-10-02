@@ -1,0 +1,7 @@
+<div>
+  <strong>Units</strong>
+  <div *ngFor="let unit of units">
+    <span>{{ unit.name }} - {{ unit.amount }}</span>
+    <span *ngIf="unit.queued">(+{{ unit.queued }})</span>
+  </div>
+</div>
