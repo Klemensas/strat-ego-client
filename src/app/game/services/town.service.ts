@@ -39,8 +39,8 @@ export class TownService {
       if (this.currentTown.value._id === event._id) {
         this.updateCurrent(event);
       }
-    })
-
+    });
+    return this.currentTown;
   }
 
   updateCurrent(town) {

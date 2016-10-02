@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, animate, trigger, state, style, transition } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PlayerService, TownService, SocketService } from '../services';
@@ -6,15 +6,27 @@ import { PlayerService, TownService, SocketService } from '../services';
 @Component({
   selector: 'game-container',
   templateUrl: 'game-container.component.html',
-  styleUrls: ['game-container.component.scss']
+  styleUrls: ['game-container.component.scss'],
+  animations: [
+    trigger('popupState', [
+      state('active', style({
+        visibility: 'visible',
+        opacity: 1,
+        transform: 'translateX(0)',
+      })),
+      state('inactive', style({
+        visibility: 'hidden',
+        opacity: 0.8,
+        transform: 'translateX(100%)',
+      })),
+      transition('inactive => active', animate('400ms ease-out')),
+      transition('active => inactive', animate('400ms ease-in'))
+    ])
+  ]
 })
 export class GameContainerComponent implements OnInit, OnDestroy {
-
-  // private acceptedEvents = {
-  //   'player-data': data => this.updatePlayerData(data),
-  // };
-  // public playerData = null;
-  // public activeRest = null;
+  private canRecruit = false;
+  private popupActive = 'inactive';
 
   constructor(private route: ActivatedRoute, private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
   }
@@ -22,40 +34,18 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Initialize sockets
     this.playerService.observePlayer();
-    this.townService.observeTown();
+    this.townService.observeTown().subscribe(town => {
+      if (town) {
+        this.canRecruit = !!town.buildings['barracks'].level;
+      }
+    });
+  }
 
-    // console.log(this.route);
-
-    // console.log(this.gameData.data);
-    // this.gameData.data['player'].subscribe(event => {
-    //   console.log('eventerino', event);
-    // });
-      // .subscribe(event => {
-  //       if (this.acceptedEvents[event.type]) {
-  //         this.acceptedEvents[event.type](event.data);
-  //       }
-  //     });
-
-  //   // this.route.data.subscribe(val => {
-  //   //   console.log(val);
-  //   // })
-  //   // this.route.params.subscribe(params => {
-  //   //   let name = params['name'];
-  //   //   this.gameData.getWorldData(name).subscribe(d => {
-  //   //     console.log('hi', d)
-  //   //   });
-  //   // });
+  popupToggle(active) {
+    this.popupActive = active ? 'active' : 'inactive';
   }
 
   ngOnDestroy() {
     this.socket.disconnect();
   }
-
-  // updatePlayerData(data) {
-  //   const restaurants = data.Restaurants;
-  //   this.playerData = data;
-  //   if (!this.activeRest && restaurants.length) {
-  //       this.activeRest = restaurants[0];
-  //   }
-  // }
 }
