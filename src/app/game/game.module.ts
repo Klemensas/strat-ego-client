@@ -11,6 +11,7 @@ import { WorldResolver } from './services/world.resolver';
 import { SocketResolver } from './services/socket.resolver';
 import { BuildingsComponent } from './buildings/buildings.component';
 import { BuildingQueueComponent } from './building-queue/building-queue.component';
+import { UnitsComponent } from './units/units.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { BuildingQueueComponent } from './building-queue/building-queue.componen
   ],
   declarations: [
     gameComponents,
-    ResourcesComponent, BuildingsComponent, BuildingQueueComponent
+    ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent
   ],
   providers: [
     SocketService,
