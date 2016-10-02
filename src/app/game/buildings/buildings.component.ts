@@ -9,41 +9,47 @@ import { TownService } from '../services/town.service'
 })
 export class BuildingsComponent implements OnInit {
   buildings;
-  private worldData;
   private town;
   private buildingData;
-  private buildingList = [];
+  private buildingDataMap = [];
 
   constructor(private townService: TownService, private gameData: GameDataService) {
   }
 
   ngOnInit() {
     this.gameData.data.activeWorld.subscribe(world => {
-      this.worldData = world;
       this.buildingData = world.buildingData;
-      this.buildingList = Object.keys(world.buildingData);
+      this.buildingDataMap = world.buildingDataMap;
     });
     this.townService.currentTown.subscribe(town => {
       this.town = town;
-      this.buildings = this.combineLevel(town.buildings);
+      this.buildings = this.modifyBuildings(town.buildings);
     });
   }
 
-  combineLevel(buildings) {
-    return this.buildingList.map(i => {
-      const building = buildings[i];
-      building.name = i;
+  modifyBuildings(buildings) {
+    return this.buildingData.map(item => {
+      const building = buildings[item.name];
+      building.name = item.name;
       building.next = building.queued || building.level;
+      building.available = true;
+      if (building.next === 0 && item.requirements) {
+        building.available = item.requirements.every(b => b.level <= buildings[b.item].level);
+      }
       return building;
     });
   }
 
   canUpgrade(building) {
-    const target = this.buildingData[building.name].data[building.next].costs;
+    const targetBuilding = this.buildingDataMap[building.name];
+    const targetLevel = targetBuilding.data[building.next].costs;
+    if (building.next === 0 && targetBuilding.requirements) {
+    }
+
     return (
-      target.clay <= this.town.resources.clay &&
-      target.wood <= this.town.resources.wood &&
-      target.iron <= this.town.resources.iron
+      targetLevel.clay <= this.town.resources.clay &&
+      targetLevel.wood <= this.town.resources.wood &&
+      targetLevel.iron <= this.town.resources.iron
     )
   }
 

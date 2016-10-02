@@ -20,7 +20,7 @@ export class GameDataService {
   getActiveWorlds() {
     return this.http.get(`${API}world`)
       .map(t => t.json())
-      .map(this.mapBuildings)
+      // .map(this.mapBuildings)
       .cache();
       // .flatMap(t => {
       //   localStorage.setItem('jwt', t);
