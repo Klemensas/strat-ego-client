@@ -19,8 +19,8 @@ import { PlayerService, TownService, SocketService } from '../services';
         opacity: 0.8,
         transform: 'translateX(100%)',
       })),
-      transition('inactive => active', animate('400ms ease-out')),
-      transition('active => inactive', animate('400ms ease-in'))
+      transition('inactive => active', animate('300ms ease-out')),
+      transition('active => inactive', animate('300ms ease-in'))
     ])
   ]
 })
