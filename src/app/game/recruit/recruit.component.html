@@ -3,5 +3,8 @@
   <div class="resource"><div class="resource-icon wood"></div>{{ unit.costs.wood }}</div>
   <div class="resource"><div class="resource-icon clay"></div>{{ unit.costs.clay }}</div>
   <div class="resource"><div class="resource-icon iron"></div>{{ unit.costs.iron }}</div>
-  <div *ngIf="canRecruit(unit)">recruit</div>
+  <div *ngIf="canRecruit(unit)">
+     <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{ calculateMax(unit.costs) }}
+    <button type="button" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
+  </div>
 </div>

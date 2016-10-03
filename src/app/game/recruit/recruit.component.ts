@@ -9,9 +9,13 @@ import { TownService } from '../services/town.service';
 })
 export class RecruitComponent implements OnInit {
   private units;
-  private buildings;
+  private town;
   private unitData;
   private unitDataMap;
+  private recruitment = {
+    resources: {},
+    units: {}
+  };
 
   constructor(private gameData: GameDataService, private townService: TownService) { }
 
@@ -21,23 +25,44 @@ export class RecruitComponent implements OnInit {
       this.unitDataMap = world.unitDataMap;
     });
     this.townService.currentTown.subscribe(town => {
-      console.log(town);
       if (town) {
-        this.units = town.units;
-        this.buildings = town.buildings;
+        this.town = town;
+        this.recruitment.resources = this.town.resources;
+        // this.units = this.modifyUnits(town.units);
       }
     });
   }
 
+  unitAmountUpdate($event, type) {
+    let change = $event - (this.recruitment.units[type] || 0);
+    if (typeof $event === "number" && $event > 0) {
+      const unitCosts = this.unitDataMap[type].costs;
+      this.recruitment.resources['wood'] -= unitCosts.wood * change;
+      this.recruitment.resources['clay'] -= unitCosts.clay * change;
+      this.recruitment.resources['iron'] -= unitCosts.iron * change;
+    }
+    this.recruitment.units[type] = $event;
+  }
+
+  calculateMax(costs) {
+    return Math.min.apply(null, [
+      Math.floor(this.recruitment.resources['wood'] / costs.wood),
+      Math.floor(this.recruitment.resources['clay'] / costs.clay),
+      Math.floor(this.recruitment.resources['iron'] / costs.iron)
+    ]);
+  }
+
   canRecruit(unit) {
-    if (!unit.requirements || !this.units) {
+    if (!unit.requirements || !this.town) {
       return true;
     }
-    // console.log(unit.name, unit.requirements, this.buildings);
     return unit.requirements.every(req => {
-      console.log(req.level, this.buildings[req.item].level);
-      req.level <= this.buildings[req.item].level
+      req.level <= this.town.buildings[req.item].level
     })
+  }
+
+  recruit(count, type) {
+    console.log
   }
 
 }
