@@ -92,4 +92,10 @@ export class TownService {
     });
   }
 
+  recruit(units) {
+    this.socket.sendEvent('town:recruit', {
+      town: this.currentTown.value._id,
+      units
+    });
+  }
 }

@@ -63,7 +63,9 @@ export class RecruitComponent implements OnInit {
   }
 
   recruit(count, type) {
-    console.log
+    const res = {};
+    res[type] = count;
+    this.townService.recruit(res);
   }
 
 }
