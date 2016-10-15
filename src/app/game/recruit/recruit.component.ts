@@ -62,10 +62,8 @@ export class RecruitComponent implements OnInit {
     })
   }
 
-  recruit(count, type) {
-    const res = {};
-    res[type] = count;
-    this.townService.recruit(res);
+  recruit(amount, type) {
+    this.townService.recruit([{ type, amount}]);
   }
 
 }
