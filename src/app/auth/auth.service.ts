@@ -29,6 +29,7 @@ export class AuthService {
       return false;
     }
     this.token = token;
+    this.tokenData = this.jwtHelper.decodeToken(token);
     // TODO: upgrade this
     this.getUser().subscribe()
   }
@@ -84,4 +85,13 @@ export class AuthService {
       // return user$;
   }
 
+  isLoggedIn() {
+    return !this.jwtHelper.isTokenExpired(this.token);
+  }
+
+  hasRole(role) {
+    return this.tokenData.role === role;
+  }
+
 }
+
