@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, Renderer } from '@angular/core';
+import { MapService } from '../services/map.service';
 import * as Konva from 'konva';
 import * as seedrandom from 'seedrandom';
 
@@ -19,12 +20,8 @@ export class MapComponent implements OnInit {
   private aHeight;
   private hexHeight;
 
-  constructor(private el: ElementRef, private renderer: Renderer) {
-  //   renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'yellow');
-  //   setTimeout(() => {
-  //     console.log(this.width, this.height, this.side, this.radius, this.aHeight, this.hexHeight)
-  //   }, 5000)
-    // console.log(this.el);
+  constructor(private el: ElementRef, private renderer: Renderer, private mapService: MapService) {
+    this.mapService.getMapData()
   }
 
   ngOnInit() {
