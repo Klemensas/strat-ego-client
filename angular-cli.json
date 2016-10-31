@@ -18,6 +18,8 @@
       "prefix": "",
       "mobile": false,
       "styles": [
+        "../node_modules/bootstrap/dist/css/bootstrap-flex.min.css",
+        "../node_modules/font-awesome/css/font-awesome.min.css",
         "styles.scss"
       ],
       "scripts": [],

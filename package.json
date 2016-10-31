@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~2.1.0",
     "@angular/router": "~3.1.0",
     "angular2-jwt": "^0.1.22",
+    "bootstrap": "^4.0.0-alpha.5",
     "core-js": "^2.4.1",
     "konva": "^1.1.4",
     "rxjs": "5.0.0-beta.12",
@@ -30,12 +31,13 @@
     "zone.js": "^0.6.23"
   },
   "devDependencies": {
-    "@types/node": "^6.0.42",
     "@types/jasmine": "^2.2.30",
+    "@types/node": "^6.0.42",
     "@types/seedrandom": "^2.4.26",
     "@types/socket.io-client": "^1.4.26",
     "angular-cli": "^1.0.0-beta.18",
     "codelyzer": "1.0.0-beta.1",
+    "font-awesome": "^4.7.0",
     "jasmine-core": "2.4.1",
     "jasmine-spec-reporter": "2.5.0",
     "karma": "1.2.0",
