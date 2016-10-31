@@ -36,4 +36,8 @@ export class HomeComponent implements OnInit {
       return this.user.UserWorlds.find(w => w._id === world._id);
   }
 
+  logout() {
+    this.authService.logout();
+  }
+
 }
