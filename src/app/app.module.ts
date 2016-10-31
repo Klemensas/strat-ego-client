@@ -18,8 +18,6 @@ import { GameDataService } from './services/game-data.service';
 import { GameModule } from './game/game.module';
 
 
-import { HeaderComponent} from './header/';
-
 @NgModule({
   imports: [
     routing,
@@ -30,7 +28,6 @@ import { HeaderComponent} from './header/';
   ],
   declarations: [
     AppComponent,
-    HeaderComponent,
     routedComponents
   ],
   providers: [
