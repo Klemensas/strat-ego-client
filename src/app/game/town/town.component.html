@@ -1,11 +1,15 @@
 <div *ngIf="town">
-  <resources [resources]="town.resources" [production]="town.production"></resources>
-  <div>
+  <div class="row">
+    <buildings class="col-sm-9"></buildings>
+    <div class="col-sm-3">
+      <resources [resources]="town.resources" [production]="town.production"></resources>
+      <building-queue></building-queue>
+      <units></units>
+    </div>
+  </div>
+  <div class="row mt-2">
     <strong>{{ town.name }}</strong>
     <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
     <button (click)="changeName()">Save</button>
   </div>
-  <buildings></buildings>
-  <building-queue></building-queue>
-  <units></units>
 </div>

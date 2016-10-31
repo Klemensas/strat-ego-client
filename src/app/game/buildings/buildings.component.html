@@ -1,15 +1,17 @@
 <div>
   <strong>Buildings</strong>
-  <div  *ngFor="let building of buildings;" style="margin-bottom: 4px;">
-    <span>{{building.name}} - {{building.level}}</span>
-    <span *ngIf="building.queued">(building {{building.queued}})</span>
-    <div class="flex" *ngIf="buildingDataMap[building.name].data[building.next] && building.available">
-      Upgrade:
+  <div *ngFor="let building of buildings;" class="row mb-1">
+    <div class="col-sm-4">
+      <span>{{building.name}} - {{building.level}}</span>
+      <span *ngIf="building.queued">(building {{building.queued}})</span>
+    </div>
+    <div class="col-sm-5 flex" *ngIf="buildingDataMap[building.name].data[building.next] && building.available">
       <div class="resource"><div class="resource-icon wood"></div>{{buildingDataMap[building.name].data[building.next].costs.clay}}</div>
       <div class="resource"><div class="resource-icon clay"></div>{{buildingDataMap[building.name].data[building.next].costs.wood}}</div>
       <div class="resource"><div class="resource-icon iron"></div>{{buildingDataMap[building.name].data[building.next].costs.iron}}</div>
       <div>time {{buildingDataMap[building.name].data[building.next].buildTime}}</div>
-
+    </div>
+    <div class="col-sm-3">
       <button *ngIf="canUpgrade(building)" (click)="upgrade(building)">Upgrade</button>
     </div>
   </div>
