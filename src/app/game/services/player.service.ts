@@ -20,7 +20,7 @@ export class PlayerService {
     this.hasActiveTown = false;
     this.socket.events.get('player').subscribe(event => {
       this.data = event;
-      console.log('player service', event)
+      // console.log('player service', event)
       if (!this.hasActiveTown) {
         this.setActiveTown(0);
       }

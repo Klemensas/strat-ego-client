@@ -19,7 +19,6 @@ export class TownService {
   constructor(private socket: SocketService, private playerService: PlayerService) {
     this.playerService.activeTown.subscribe((town: Town) => {
       if (town) {
-        console.log('player service event', town)
         this.townData[town._id] = town;
         this.updateCurrent(town);
       }

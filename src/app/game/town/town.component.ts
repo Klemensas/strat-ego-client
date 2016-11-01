@@ -24,7 +24,7 @@ export class TownComponent implements OnInit {
     // Subscribe to town data updates
     this.townObserver = this.townService.currentTown.subscribe(update => {
       this.town = update;
-      console.log('Town component: town updated', this.townService)
+      // console.log('Town component: town updated', this.townService)
     });
   }
 
