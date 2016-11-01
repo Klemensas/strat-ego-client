@@ -19,7 +19,7 @@ export class SocketService {
 
     public connect() {
         const world = 'megapolis' // replace with target world data
-        console.log('connecting to socket', this.auth.tokenData)
+        // console.log('connecting to socket', this.auth.tokenData)
         this.socket = io.connect('http://localhost:9000', {
             path: '/socket.io-client',
             query: `token=${this.auth.token}&world=${world}`,
@@ -40,7 +40,7 @@ export class SocketService {
     }
 
     public sendEvent(event, data) {
-        console.log(`[Socket emit: ${event}]`, data);
+        // console.log(`[Socket emit: ${event}]`, data);
         this.socket.emit(event, data);
     }
 
@@ -76,36 +76,14 @@ export class SocketService {
         });
     }
 
-    /**
-     * Create signal
-     *
-     * @class SocketService
-     * @method create
-     * @param name string
-     * @return void
-     */
     create(name: string) {
         this.socket.emit("create", name);
     }
-    /**
-     * Remove signal
-     *
-     * @class SocketService
-     * @method remove
-     * @param name string
-     * @return void
-     */
+
     remove(name: string) {
         this.socket.emit("remove", name);
     }
 
-    /**
-     * Handle connection opening
-     *
-     * @class SocketService
-     * @method connect
-     * @return void
-     */
     private onConnect(a) {
         console.log(`Connected to ${this.name}`);
         // console.log(a, this.socket);
@@ -114,13 +92,6 @@ export class SocketService {
         // this.socket.emit('player');
     }
 
-    /**
-     * Handle connection closing
-     *
-     * @class SocketService
-     * @method disconnect
-     * @return void
-     */
     private onDisconnect() {
         console.log(`Disconnected from "${this.name}"`);
     }
