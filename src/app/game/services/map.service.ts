@@ -3,6 +3,7 @@ import { SocketService } from './socket.service';
 import { PlayerService } from './player.service';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import * as seedrandom from 'seedrandom';
 
 @Injectable()
 export class MapService {
@@ -27,6 +28,7 @@ export class MapService {
   public images = [];
   public mapData = {};
   public queuedPromise = [];
+  public rng = seedrandom('megapolis');
 
   constructor(private socket: SocketService, private playerService: PlayerService) {
     this.imgPreload(this.mapImages);
