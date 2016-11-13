@@ -175,33 +175,39 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     ];
     const yDiff = Math.ceil(hexEnd[1] / this.mapSettings.aHeight);
     const yCoord = location.y - yDiff;
+    const parityChange = yDiff % 2;
     const y = hexEnd[1] - yDiff * this.mapSettings.aHeight;
-    const xDiff = Math.ceil(hexEnd[0] / this.mapSettings.width);
+    const xDiff = Math.ceil(hexEnd[0] / this.mapSettings.width + parityChange);
     const xCoord = location.x - xDiff;
-    const xChange = location.y % 2 === yCoord % 2 ? 0 : (yCoord % 2 ? -this.mapSettings.width / 2 : this.mapSettings.width / 2);
+    const xChange = parityChange ? (yCoord % 2 ? -this.mapSettings.width / 2 : this.mapSettings.width / 2) : 0;
     const x = hexEnd[0] - xDiff * this.mapSettings.width + xChange;
-    const position = this.coordToPixel(location);
+    const pixelLoc = this.coordToPixel(location);
+    const position = {
+      x: pixelLoc.x - center[0] - Math.abs(x),
+      y: pixelLoc.y - center[1] - Math.abs(y),
+    }
     return { x, y, xCoord, yCoord, position };
   }
 
   private drawMap(offset) {
-    let drawCoords = true;
-    let doneY, doneX = doneY = false;
+    const drawCoords = true;
+    const parity = offset.yCoord % 2;
     const yMax = Math.ceil((this.mapSettings.size.y - offset.y) / this.mapSettings.aHeight);
     // console.log(`Drawin y for ${yMax} rows`);
     for (let y = 0; y < yMax; y++) {
       const yCoord = offset.yCoord + y;
       const yPos = offset.y + y * this.mapSettings.aHeight;
       let xOffset = offset.x;
-      if (y) {
-        xOffset = offset.x;
-        xOffset += yCoord % 2 === offset.yCoord % 2 ? 0 : (yCoord % 2 ? - this.mapSettings.width / 2 : this.mapSettings.width / 2);
+      let x = 0;
+      if (y && yCoord % 2 !== parity) {
+        xOffset += parity ? this.mapSettings.width / 2 : -this.mapSettings.width / 2;
+        x -= parity ? 1 : 0;
       }
       const xMax = Math.ceil((this.mapSettings.size.x - offset.x - xOffset) / this.mapSettings.width);
       // console.log(`Drawin x for ${xMax} columns, when y is ${yCoord}`);
-      for (let x = 0; x < xMax; x++) {
+      for (; x < xMax; x++) {
         const xCoord = offset.xCoord + x;
-        const xPos = /*offset.x + */x * this.mapSettings.width + xOffset;
+        const xPos = x * this.mapSettings.width + xOffset;
         const image = this.mapData[`${xCoord},${yCoord}`] ?
           this.images[this.images.length - 1] :
           this.images[Math.round(this.rng() * (this.images.length - 2))];
