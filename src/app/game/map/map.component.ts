@@ -15,6 +15,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
 
   private mapData;
   private mapOffset;
+  private markedTowns = {};
   private isReady = false;
   private mapSettings = {
     size: { x: 0, y: 0 },
@@ -53,6 +54,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
           console.error('No active town?', data, this.playerService);
           return;
         }
+        this.markedTowns[`${data.location[0]},${data.location[1]}`] = 'rgba(255,225,53, 0.4)';
         this.mapOffset = this.centerOffset({ x: data.location[0], y: data.location[1] });
         this.mapService.getMapData(location).then(mapData => {
           this.mapData = mapData;
@@ -203,7 +205,8 @@ export class MapComponent implements OnInit, AfterViewChecked  {
         const image = this.mapData[`${xCoord},${yCoord}`] ?
           this.images[this.images.length - 1] :
           this.images[Math.round(this.rng() * (this.images.length - 2))];
-        this.drawHex(xPos, yPos, image);
+
+        this.drawHex(xPos, yPos, image, this.markedTowns[`${xCoord},${yCoord}`]);
         if (drawCoords) {
           this.ctx.font = "20pt Calibri";
           this.ctx.fillStyle = "#ff0000";
@@ -216,7 +219,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.mapSettings.shouldDraw = false;
   };
 
-  private drawHex(x, y, image) {
+  private drawHex(x, y, image, fill) {
       this.ctx.save();
       this.ctx.beginPath();
       this.ctx.moveTo(x + this.mapSettings.width / 2, y);
@@ -224,7 +227,13 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       this.ctx.closePath();
       this.ctx.clip();
       this.ctx.drawImage(image, x, y, this.mapSettings.width, this.mapSettings.height);
-      this.ctx.stroke();
       this.ctx.restore();
+      this.ctx.stroke();
+      if (fill) {
+        this.ctx.globalCompositeOperation = 'overlay';
+        this.ctx.fillStyle = fill;
+        this.ctx.fill();
+        this.ctx.globalCompositeOperation = 'source-over';
+      }
   }
 }
