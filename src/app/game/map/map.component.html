@@ -1,5 +1,5 @@
 <div (window:resize)="onResize($event)">
-  <canvas #map (click)="mapClick($event)" [width]="this.mapSettings.size.x" [height]="mapSettings.size.y" style="border: 1px solid red; margin-left: -15px; width: 100vw; height: 93vh;">
+  <canvas #map (click)="mapClick($event)" (mouseup)="dragging(false, $event)" (mousedown)="dragging(true, $event)" [width]="this.mapSettings.size.x" [height]="mapSettings.size.y" style="border: 1px solid red; margin-left: -15px; width: 100vw; height: 93vh;">
     <div>Loading map data</div>
   </canvas>
 </div>

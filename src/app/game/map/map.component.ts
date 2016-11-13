@@ -37,24 +37,23 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.rng = this.mapService.rng;
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.ctx = this.map.nativeElement.getContext('2d');
     this.ctx.lineWidth = 1;
+
     this.setMapSettings({
       x: this.map.nativeElement.offsetWidth,
       y: this.map.nativeElement.offsetHeight
-    })
-    // this.mapUtilityService.setMapSettings(this.map.nativeElement);
+    });
+
     this.playerService.activeTown.subscribe(data => {
         if (!data) {
           console.error('No active town?', data, this.playerService);
           return;
         }
-        const location = { x: data.location[0], y: data.location[1] };
-        this.mapOffset = this.centerOffset(location);
+        this.mapOffset = this.centerOffset({ x: data.location[0], y: data.location[1] });
         this.mapService.getMapData(location).then(mapData => {
           this.mapData = mapData;
           this.mapSettings.shouldDraw = true;
@@ -64,29 +63,40 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   }
 
   ngAfterViewChecked() {
-    if (this.ctx && this.mapSettings.shouldDraw) {
+    if (this.ctx && this.mapSettings.shouldDraw && this.mapData) {
+
       this.drawMap(this.mapOffset);
     }
   }
 
   onResize(event) {
-    // this.setMapSettings({
-    //   x: this.map.nativeElement.offsetWidth,
-    //   y: this.map.nativeElement.offsetHeight,
-    // });
-    // if (this.mapData) {
-    //   this.mapSettings.shouldDraw = true;
-    // }
+    this.setMapSettings({
+      x: this.map.nativeElement.offsetWidth,
+      y: this.map.nativeElement.offsetHeight,
+    });
+    this.mapSettings.shouldDraw = true;
   }
 
   public mapClick(event) {
-    console.log(this, this.pixelToCoord({ x: event.layerX, y: event.layerY }))
+    console.log('click')
+  }
+
+  public dragging(drag, event) {
+    console.log('toggle drag',drag)
+    if (drag) {
+      this.map.nativeElement.addEventListener('mousemove', this.mapDrag);
+    } else {
+      this.map.nativeElement.removeEventListener('mousemove', this.mapDrag);
+    }
+  }
+
+  public mapDrag(event){
+
   }
   
   private coordToPixel(location) {
     const x = location.x;
     const y = location.y;
-    console.log(x,y );
     const xOffset = y % 2 ? -0.5 : 0;
     return {
       x: (x + xOffset) * this.mapSettings.width,
