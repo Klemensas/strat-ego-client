@@ -28,7 +28,6 @@ export class MapService {
   public images = [];
   public mapData = {};
   public queuedPromise = [];
-  public rng = seedrandom('megapolis');
 
   constructor(private socket: SocketService, private playerService: PlayerService) {
     this.imgPreload(this.mapImages);
@@ -41,6 +40,11 @@ export class MapService {
         this.formatMapData(resolve);
       }
     });
+  }
+
+  public rng(seed) {
+    // TODO: use actual active world here
+    return seedrandom.xor4096(`megapolis.${seed}`).quick();
   }
 
   private imgPreload(images) {
