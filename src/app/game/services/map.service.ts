@@ -14,31 +14,41 @@ export class MapService {
   private mapOffset = { x: 0, y: 0 };
   private mapCoords = { x: 0, y: 0 };
 
-  private imagesLoaded = false;
-  private mapImages = [
-    '../../../../assets/images/grass.png',
-    '../../../../assets/images/grass2.png',
-    '../../../../assets/images/grass3.png',
-    '../../../../assets/images/grass4.png',
-    '../../../../assets/images/grass5.png',
-    '../../../../assets/images/grass6.png',
-    '../../../../assets/images/grass7.png',
-    '../../../../assets/images/town.png',
-  ];
+  private imageLoaded = false;
+  private mapImgeLoc = '../assets/images/tiles_small.png';
 
-  public images = [];
+  public mapTiles = {
+    image: null,
+    tiles: [
+      [0, 0], [120, 0], [240, 0], [360, 0], [480, 0], [600, 0],
+      [0, 140], [120, 140], [240, 140], /*[360, 140], [480, 140], [600, 140],*/
+      // [0, 280], [120, 280], [240, 280], [360, 280], [480, 280], [600, 280],
+      // [0, 420], [120, 420], [240, 420], [360, 420], [480, 420], [600, 420],
+      // [0, 560], [120, 560], [240, 560], [360, 560], [480, 560], [600, 560],
+      // [0, 700], [120, 700], [240, 700], [360, 700], [480, 700], [600, 700],
+      // [0, 840], [120, 840], [240, 840], [360, 840], [480, 840], [600, 840],
+      // [0, 980], [120, 980], [240, 980], [360, 980], [480, 980], [600, 980],
+      // [0, 1120], [120, 1120], [240, 1120], [360, 1120], [480, 1120], [600, 1120],
+      // [0, 1260], [120, 1260], [240, 1260], [360, 1260], [480, 1260], [600, 1260],
+    ],
+    object: [360, 140],
+    objectType: {
+      abandoned: [480, 140],
+      owned: [600, 140],
+    },
+    size: [120, 140]
+  };
   public mapData = {};
   public queuedPromise = [];
 
   constructor(private socket: SocketService, private playerService: PlayerService) {
-    this.imgPreload(this.mapImages);
+    this.imgPreload(this.mapImgeLoc);
     // Test version with all available map data
     this.socket.events.get('map').subscribe(event => {
       this.lastUpdate = Date.now();
       Object.assign(this.mapData, event);
-      if (this.queuedPromise.length && this.imagesLoaded) {
-        const resolve = this.queuedPromise.shift()
-        this.formatMapData(resolve);
+      if (this.queuedPromise.length && this.imageLoaded) {
+        this.formatMapData(this.queuedPromise.shift());
       }
     });
   }
@@ -48,7 +58,19 @@ export class MapService {
     return seedrandom.xor4096(`megapolis.${seed}`).quick();
   }
 
-  private imgPreload(images) {
+  private imgPreload(imageURL) {
+    this.mapTiles.image = new Image();
+    this.mapTiles.image.src = imageURL;
+    this.mapTiles.image.onload = () => {
+        console.log('okay?')
+      this.imageLoaded = true;
+      if (this.lastUpdate && this.queuedPromise.length) {
+        this.formatMapData(this.queuedPromise.shift());
+      }
+    }
+  }
+
+/*  private imgPreload(images) {
     let loaded = 0;
     images = Object.prototype.toString.apply(images) === '[object Array]' ? images : [images];
     const inc = (img) => {
@@ -68,7 +90,7 @@ export class MapService {
       this.images[i].onload = inc;
       this.images[i].src = images[i];
     }
-  }
+  }*/
 
   private formatMapData(callback) {
     callback(this.mapData);
