@@ -1,2 +1,3 @@
-export const API = 'http://localhost:9000/api/';
-export const AUTH = 'http://localhost:9000/auth/';
+export const BASE = 'http://192.168.1.116:9000';
+export const API = `${BASE}/api/`;
+export const AUTH = `${BASE}/auth/`;

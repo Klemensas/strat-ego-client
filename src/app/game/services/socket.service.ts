@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/cache';
 
+import { BASE } from '../../config';
 import { AuthService } from '../../auth/auth.service';
 
 import * as io from 'socket.io-client';
@@ -20,7 +21,7 @@ export class SocketService {
     public connect() {
         const world = 'megapolis' // replace with target world data
         // console.log('connecting to socket', this.auth.tokenData)
-        this.socket = io.connect('http://localhost:9000', {
+        this.socket = io.connect(BASE, {
             path: '/socket.io-client',
             query: `token=${this.auth.token}&world=${world}`,
         });
