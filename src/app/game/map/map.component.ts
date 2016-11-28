@@ -14,7 +14,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   public dragging = false;
 
   private drawCoords = true;
-  private images;
+  private mapTiles;
 
   private mapData;
   private mapOffset;
@@ -38,7 +38,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   @ViewChild('map') map;
 
   constructor(private mapService: MapService, private playerService: PlayerService) {
-    this.images = this.mapService.images;
+    this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
 
@@ -78,7 +78,6 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       x: this.map.nativeElement.offsetWidth,
       y: this.map.nativeElement.offsetHeight,
     });
-    // this.mapOffset = this.centerOffset({})
     this.mapSettings.shouldDraw = true;
   }
 
@@ -180,8 +179,9 @@ export class MapComponent implements OnInit, AfterViewChecked  {
 
   private drawHex(x, y, coordString) {
     const data = this.mapData[coordString];
-    const image = data ? this.images[this.images.length - 1] :
-      this.images[Math.round(this.rng(coordString) * (this.images.length - 2))];
+    const image = data ?
+      (data.owner ? this.mapTiles.object : this.mapTiles.objectType.abandoned ) :
+      this.mapTiles.tiles [Math.round(this.rng(coordString) * (this.mapTiles.tiles.length - 1))];
     this.ctx.save();
     this.ctx.beginPath();
     this.ctx.moveTo(+x.plus(this.mapSettings.width.div(2)), +y);
@@ -190,16 +190,35 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     });
     this.ctx.closePath();
     this.ctx.clip();
-    this.ctx.drawImage(image, +x, +y, +this.mapSettings.width, +this.mapSettings.height);
+    this.ctx.drawImage(
+      this.mapTiles.image,
+      image[0], image[1],
+      this.mapTiles.size[0], this.mapTiles.size[1],
+      +x, +y,
+      +this.mapSettings.width, +this.mapSettings.height
+    );
     this.ctx.restore();
+
+    if (data && data.owner) {
+      const type = data.owner ? this.mapTiles.objectType.owned : this.mapTiles.objectType.abandoned;
+      this.ctx.drawImage(
+        this.mapTiles.image,
+        // this.mapTiles.object[0], this.mapTiles.object[1],
+        type[0], type[1],
+        this.mapTiles.size[0], this.mapTiles.size[1],
+        +x, +y,
+        +this.mapSettings.width, +this.mapSettings.height
+      );
+      // this.ctx.globalCompositeOperation = 'multiply';
+      // this.ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
+      // this.ctx.fill();
+      // this.ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // this.ctx.strokeStyle= 'rgba(0,0,0,0.2)';
+    this.ctx.strokeStyle= '#27ae60';
     this.ctx.stroke();
 
-    if (data) {
-      this.ctx.globalCompositeOperation = 'darker';
-      this.ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
-      this.ctx.fill();
-      this.ctx.globalCompositeOperation = 'source-over';
-    }
     if (this.drawCoords) {
       this.ctx.font = "20pt Calibri";
       this.ctx.fillStyle = "#ff0000";
