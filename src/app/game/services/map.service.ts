@@ -62,7 +62,6 @@ export class MapService {
     this.mapTiles.image = new Image();
     this.mapTiles.image.src = imageURL;
     this.mapTiles.image.onload = () => {
-        console.log('okay?')
       this.imageLoaded = true;
       if (this.lastUpdate && this.queuedPromise.length) {
         this.formatMapData(this.queuedPromise.shift());
@@ -116,7 +115,7 @@ export class MapService {
   }
 
 
-  public pixelToCoord(pos, settings) {
+  public pixelToCoord(pos, settings, adjust = false) {
     let coords = {
       x: Big(pos.x).div(settings.width).plus(1).round(0, 0),
       y: Big(pos.y).div(settings.aHeight).plus(1).round(0, 0)
@@ -133,7 +132,8 @@ export class MapService {
       y: coordOffset.y.minus(pos.y).minus(settings.side),
     };
     // Adjust coord if near edge
-    if (realOffset.y.gt(-settings.hexHeight)) {
+    if (adjust && realOffset.y.gt(-settings.hexHeight)) {
+      console.log('adjusting coord for edge')
       coords.y = coords.y.minus(1);
       const parity = +coords.y % 2;
       realOffset.y = realOffset.y.minus(settings.aHeight);
@@ -145,6 +145,7 @@ export class MapService {
         realOffset.x = realOffset.x.minus(settings.radius);
       }
     }
+    // console.log(+coords.x, +coords.y)
     return {
       xCoord: coords.x,
       yCoord: coords.y,
@@ -154,31 +155,56 @@ export class MapService {
       yPx: pos.y
     }
 
-    function odd(coords) {
-      if (offset.y.lt(settings.hexHeight.minus(offset.x).times(settings.edgeGradient))) {
+    function odd(coords) { // A
+      const offsetGradient = offset.x.times(settings.edgeGradient);
+      // console.log('a', +offset.x, +offset.y, +settings.hexHeight, +offsetGradient, offset.y.lt(-settings.hexHeight.plus(offsetGradient)), offset.y.lt(settings.hexHeight.times(-1).plus(offsetGradient)), -settings.hexHeight.plus(offsetGradient));
+      if (offset.y.lt(settings.hexHeight.minus(offsetGradient))) {
         coords.x = coords.x.minus(1);
         coords.y = coords.y.minus(1);
       }
-      if (offset.y.lt(-settings.hexHeight.plus(offset.x).times(settings.edgeGradient))) {
+      if (offset.y.lt(settings.hexHeight.times(-1).plus(offsetGradient))) {
         coords.y = coords.y.minus(1);
       }
       return coords;
     };
 
-    function even(coords) {
+    function even(coords) { // B
+      const offsetGradient = offset.x.times(settings.edgeGradient)
+      // console.log('b', +offset.x, +offset.y, +offsetGradient, +settings.side.minus(offsetGradient));
       if (offset.x.gte(settings.radius)) {
-        if (offset.y.lt(settings.side.minus(offset.x).times(settings.edgeGradient))) {
+        if (offset.y.lt(settings.side.minus(offsetGradient))) {
+        // if (offset.y.lt(settings.side.minus(offset.x).times(settings.edgeGradient))) {
           coords.y = coords.y.minus(1);
         }
         return coords;
       }
 
-      if (offset.y.lt(offset.x.times(settings.edgeGradient))) {
+      if (offset.y.lt(offsetGradient)) {
         coords.y = coords.y.minus(1);
       } else {
         coords.x = coords.x.minus(1);
       }
       return coords;
     }
+  }
+
+  public offsetToCube(coords) {
+    const off = 1;
+    const x = coords.x - Math.trunc((coords.y + off * (coords.y % 2)) / 2);
+    const z = coords.y;
+    return {
+      x, z,
+      y: -x - z
+    }
+  }
+
+  public distanceFromCoord(start, end) {
+    const startCube = this.offsetToCube(start);
+    const endCube = this.offsetToCube(end);
+    return Math.max(
+      Math.abs(startCube.x - endCube.x),
+      Math.abs(startCube.y - endCube.y),
+      Math.abs(startCube.z - endCube.z)
+    );
   }
 }

@@ -1,5 +1,18 @@
-<div (window:resize)="onResize($event)">
-  <canvas #map (click)="mapClick($event)" (mousedown)="startDrag($event)" (mouseup)="dragging = false" (mouseout)="dragging = false" [width]="this.mapSettings.size.x" [height]="mapSettings.size.y" style="margin-left: -15px; width: 100vw; height: 93vh;">
+<div class="map-container" (window:resize)="onResize($event)">
+  <canvas #map (click)="mapClick($event)" (mousedown)="startDrag($event)" (mouseup)="stopDrag()" (mouseout)="stopDrag()" (mousewheel)="onZoom($event)" [width]="mapSettings.size.x" [height]="mapSettings.size.y">
     <div>Loading map data</div>
   </canvas>
+  <div *ngIf="hoverData" class="town-hover" [style.transform]="position.hover">
+    <div><i class="fa fa-home"></i><span>{{hoverData.name}}</span></div>
+    <div><i class="fa fa-user-circle-o"></i><span>{{hoverData.owner || '-' }}</span></div>
+    <div><i class="fa fa-exchange"></i><span>{{hoverData.distance}}</span></div>
+  </div>
+  <div *ngIf="selected" class="town-options" [style.transform]="position.click">
+    <div [style.border-left-width.px]="mapSettings.radius" [style.border-top-width.px]="mapSettings.hexHeight" [style.border-bottom-width.px]="mapSettings.hexHeight"></div>
+    <div [style.border-left-width.px]="mapSettings.radius" [style.border-top-width.px]="mapSettings.hexHeight" [style.border-bottom-width.px]="mapSettings.hexHeight"></div>
+    <div [style.border-left-width.px]="mapSettings.radius" [style.border-top-width.px]="mapSettings.hexHeight" [style.border-bottom-width.px]="mapSettings.hexHeight"></div>
+    <div [style.border-left-width.px]="mapSettings.radius" [style.border-top-width.px]="mapSettings.hexHeight" [style.border-bottom-width.px]="mapSettings.hexHeight"></div>
+    <div [style.border-left-width.px]="mapSettings.radius" [style.border-top-width.px]="mapSettings.hexHeight" [style.border-bottom-width.px]="mapSettings.hexHeight"></div>
+    <div [style.border-left-width.px]="mapSettings.radius" [style.border-top-width.px]="mapSettings.hexHeight" [style.border-bottom-width.px]="mapSettings.hexHeight"></div>
+  </div>
 </div>

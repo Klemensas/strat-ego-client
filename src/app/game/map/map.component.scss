@@ -1,0 +1,78 @@
+.map-container {
+  position: relative;
+  margin-left: -15px;
+  width: 100vw;
+  height: 93vh;
+  canvas {
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .town-hover {
+    height: 14vh;
+    padding: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20vw;
+    background-color: pink;
+    i {
+      margin-right: 6px;
+    }
+  }
+  .town-options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    div {
+      position: absolute;
+      border-style: solid;
+      left: 0;
+      bottom: -60px;
+      transform-origin: bottom left;
+      border-color: transparent transparent transparent rgba(0,0,255,0.75);
+      animation-fill-mode: forwards !important;
+      transform: scale(0);
+    }
+    div:nth-child(1) { animation: .25s scale ease; }
+    div:nth-child(2) { animation: .25s .05s rotate60 ease; }
+    div:nth-child(3) { animation: .25s .1s rotate120 ease; }
+    div:nth-child(4) { animation: .25s .15s rotate180 ease; }
+    div:nth-child(5) { animation: .25s .2s rotate240 ease; }
+    div:nth-child(6) { animation: .25s .25s rotate300 ease; }
+  }
+}
+
+@-webkit-keyframes scale {
+  0% { transform: scale(0); }
+  // 20% { transform: scale(0.4); }
+  100% { transform: scale(1); }
+}
+@-webkit-keyframes rotate60 {
+  0% { transform: scale(0) rotate(0); }
+  // 20% { transform: scale(0.4) rotate(0); }
+  100% { transform: scale(1) rotate(60deg); }
+}
+@-webkit-keyframes rotate120 {
+  0% { transform: scale(0) rotate(0); }
+  // 20% { transform: scale(0.4) rotate(0); }
+  100% { transform: scale(1) rotate(120deg); }
+}
+@-webkit-keyframes rotate180 {
+  0% { transform: scale(0) rotate(0); }
+  // 20% { transform: scale(0.4) rotate(0); }
+  100% { transform: scale(1) rotate(180deg); }
+}
+@-webkit-keyframes rotate240 {
+  0% { transform: scale(0) rotate(0); }
+  // 20% { transform: scale(0.4) rotate(0); }
+  100% { transform: scale(1) rotate(240deg); }
+}
+@-webkit-keyframes rotate300 {
+  0% { transform: scale(0) rotate(0); }
+  // 20% { transform: scale(0.4) rotate(0); }
+  100% { transform: scale(1) rotate(300deg); }
+}
