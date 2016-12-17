@@ -15,7 +15,7 @@ export class MapService {
   private mapCoords = { x: 0, y: 0 };
 
   private imageLoaded = false;
-  private mapImgeLoc = '../assets/images/tiles_small.png';
+  private mapImgeLoc = './assets/images/tiles_small.png';
 
   public mapTiles = {
     image: null,
