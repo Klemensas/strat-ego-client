@@ -5,7 +5,7 @@ import 'rxjs/add/operator/cache';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { API, AUTH } from '../config';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   login(data) {
-    return this.http.post(`${AUTH}local`, data)
+    return this.http.post(`${environment.server.auth}local`, data)
       .map(token => token.json().token)
       .flatMap(token => {
         localStorage.setItem('jwt', token);
@@ -65,7 +65,7 @@ export class AuthService {
   getUser() {
     const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(this.token)).getTime()
     this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
-    return this.authHttp.get(`${API}users/me`)
+    return this.authHttp.get(`${environment.server.api}users/me`)
       .map(data => data.json())
       .map(data => {
         this.user.next(data);

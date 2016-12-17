@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
-import { API, AUTH } from '../config';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/cache';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -18,7 +18,7 @@ export class GameDataService {
   constructor(private http:Http, private authHttp:AuthHttp) {}
 
   getActiveWorlds() {
-    return this.http.get(`${API}world`)
+    return this.http.get(`${environment.server.api}world`)
       .map(t => t.json())
       // .map(this.mapBuildings)
       .cache();
