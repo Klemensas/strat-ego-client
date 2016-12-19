@@ -289,8 +289,8 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     );
     this.ctx.restore();
 
-    if (data && data.owner) {
-      const type = data.owner ? this.mapTiles.objectType.owned : this.mapTiles.objectType.abandoned;
+    if (data && data._id === this.activeTown._id) {
+      const type = this.mapTiles.objectType.owned;
       this.ctx.drawImage(
         this.mapTiles.image,
         // this.mapTiles.object[0], this.mapTiles.object[1],
