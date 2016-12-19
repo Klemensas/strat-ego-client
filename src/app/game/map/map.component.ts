@@ -72,6 +72,8 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       this.mapService.getMapData(location).then(mapData => {
         this.mapData = mapData;
         this.mapSettings.shouldDraw = true;
+        // TODO: Temporary fix
+        this.hoverPauser.next(false);
         console.log('got da data', this.mapSettings.shouldDraw, this, this.mapOffset, this.mapSettings.width);
       });
     });
@@ -81,7 +83,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     const moveEvent = Observable.fromEvent(this.map.nativeElement, 'mousemove').throttleTime(50);
     this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent)
       .subscribe(data => this.onHover(data));
-    this.hoverPauser.next(false);
+    this.hoverPauser.next(true);
   }
 
   ngAfterViewChecked() {
