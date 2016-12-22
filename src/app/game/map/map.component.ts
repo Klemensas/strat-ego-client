@@ -2,13 +2,13 @@ import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild, 
 import { MapService, PlayerService } from '../services';
 import { Observable, Subject } from 'rxjs';
 // import 'rxjs/add/operator/cache';
-import * as cloneDeep from 'lodash/cloneDeep';
+import * as _ from 'lodash';
 import * as Big from 'big.js';
 
 @Component({
   selector: 'map',
-  templateUrl: 'map.component.html',
-  styleUrls: ['map.component.scss'],
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements OnInit, AfterViewChecked  {
@@ -127,7 +127,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   public startDrag(event) {
     console.log('start drag')
     const origin = { x: event.offsetX, y: event.offsetY };
-    const initialOffset = cloneDeep(this.mapOffset);
+    const initialOffset = _.cloneDeep(this.mapOffset);
     this.dragging = 1;
     this.hoverPauser.next(true);
     Observable.fromEvent(this.map.nativeElement, 'mousemove')

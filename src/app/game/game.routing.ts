@@ -17,7 +17,7 @@ const gameRoutes: Routes = [
     canActivate: [AuthGuard],
     component: GameContainerComponent,
     children: [
-      { path: '', redirectTo: 'town' },
+      { path: '', redirectTo: 'town', pathMatch: 'full' },
       { path: 'town', component: TownComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
       { path: 'map', component: MapComponent },
       { path: 'recruit', component: RecruitComponent, outlet: 'popup'}

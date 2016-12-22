@@ -5,8 +5,8 @@ import { PlayerService, TownService, SocketService } from '../services';
 
 @Component({
   selector: 'game-container',
-  templateUrl: 'game-container.component.html',
-  styleUrls: ['game-container.component.scss'],
+  templateUrl: './game-container.component.html',
+  styleUrls: ['./game-container.component.scss'],
   animations: [
     trigger('popupState', [
       state('active', style({

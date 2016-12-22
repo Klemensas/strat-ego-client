@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/cache';
+// import 'rxjs/add/operator/cache';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 // TODO: split this service into world and player services
@@ -20,8 +20,8 @@ export class GameDataService {
   getActiveWorlds() {
     return this.http.get(`${environment.server.api}world`)
       .map(t => t.json())
+// .cache();
       // .map(this.mapBuildings)
-      .cache();
       // .flatMap(t => {
       //   localStorage.setItem('jwt', t);
       //   this.token = t;

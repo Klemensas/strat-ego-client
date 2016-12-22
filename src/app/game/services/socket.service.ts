@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/cache';
+// import 'rxjs/add/operator/cache';
 
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
@@ -48,7 +48,8 @@ export class SocketService {
     private socketObservable(event) {
         return Observable.create((observer: any) => {
             this.socket.on(event, (data: any) => observer.next(data));
-        }).cache();
+        })
+// .cache();
     }
 
 //      /**

@@ -8,8 +8,8 @@ import { Town } from '../models/Town';
 
 @Component({
   selector: 'town',
-  templateUrl: 'town.component.html',
-  styleUrls: ['town.component.scss'],
+  templateUrl: './town.component.html',
+  styleUrls: ['./town.component.scss'],
 })
 
 export class TownComponent implements OnInit {
