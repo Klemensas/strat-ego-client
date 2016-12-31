@@ -12,6 +12,7 @@ import { SocketResolver } from './services/socket.resolver';
 import { BuildingsComponent } from './buildings/buildings.component';
 import { BuildingQueueComponent } from './building-queue/building-queue.component';
 import { UnitsComponent } from './units/units.component';
+import { CommandComponent } from './command/command.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { UnitsComponent } from './units/units.component';
   ],
   declarations: [
     gameComponents,
-    ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent
+    ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent, CommandComponent
   ],
   providers: [
     SocketService,
