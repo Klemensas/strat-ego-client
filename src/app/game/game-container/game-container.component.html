@@ -11,7 +11,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a *ngIf="canRecruit" routerLinkActive="active" class="nav-link" [routerLink]="[{ outlets: { popup: 'recruit' } }]">
+      <a *ngIf="canRecruit" routerLinkActive="active" class="nav-link" [routerLink]="[{ outlets: { popupRight: 'recruit' } }]">
         <i class="fa fa-users" aria-hidden="true"></i> Recruit
       </a>
     </li>
@@ -23,10 +23,19 @@
   <router-outlet></router-outlet>
 </div>
 
-<div class="overlay" [@popupState]="popupActive">
-  <router-outlet name="popup" (activate)="popupToggle(true)" (deactivate)="popupToggle(false)">
-    <div *ngIf="popupActive">
-      <a [routerLink]="[{ outlets: { popup: null } }]">Close</a>
+<div class="overlay left" [@popupState]="popupActive.left">
+  <router-outlet name="popupLeft" (activate)="popupToggle('active', 'left')" (deactivate)="popupToggle('leftInactive', 'left')">
+    <div *ngIf="popupActive.left">
+      <a class="close" [routerLink]="[{ outlets: { popupLeft: null } }]">Close</a>
     </div>
   </router-outlet>
 </div>
+
+<div class="overlay right" [@popupState]="popupActive.right">
+  <router-outlet name="popupRight" (activate)="popupToggle('active', 'right')" (deactivate)="popupToggle('rightInactive', 'right')">
+    <div *ngIf="popupActive.right">
+      <a class="close" [routerLink]="[{ outlets: { popupRight: null } }]">Close</a>
+    </div>
+  </router-outlet>
+</div>
+

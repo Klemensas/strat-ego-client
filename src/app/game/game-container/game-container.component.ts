@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, animate, trigger, state, style, transition } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { PlayerService, TownService, SocketService } from '../services';
 
@@ -14,21 +13,31 @@ import { PlayerService, TownService, SocketService } from '../services';
         opacity: 1,
         transform: 'translateX(0)',
       })),
-      state('inactive', style({
+      state('rightInactive', style({
         visibility: 'hidden',
         opacity: 0.8,
         transform: 'translateX(100%)',
       })),
-      transition('inactive => active', animate('300ms ease-out')),
-      transition('active => inactive', animate('300ms ease-in'))
+      state('leftInactive', style({
+        visibility: 'hidden',
+        opacity: 0.8,
+        transform: 'translateX(-100%)',
+      })),
+      transition('leftInactive => active', animate('300ms ease-out')),
+      transition('rightInactive => active', animate('300ms ease-out')),
+      transition('active => leftInactive', animate('300ms ease-in')),
+      transition('active => rightInactive', animate('300ms ease-in'))
     ])
   ]
 })
 export class GameContainerComponent implements OnInit, OnDestroy {
   private canRecruit = false;
-  private popupActive = 'inactive';
+  private popupActive = {
+    left: 'leftInactive',
+    right: 'rightInactive'
+  };
 
-  constructor(private route: ActivatedRoute, private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
+  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
   }
 
   ngOnInit() {
@@ -41,8 +50,8 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     });
   }
 
-  popupToggle(active) {
-    this.popupActive = active ? 'active' : 'inactive';
+  popupToggle(active, target) {
+    this.popupActive[target] = active;
   }
 
   ngOnDestroy() {
