@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MapService, PlayerService } from '../services';
 import { Observable, Subject } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 // import 'rxjs/add/operator/cache';
 import * as _ from 'lodash';
 import * as Big from 'big.js';
@@ -44,7 +46,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   };
   @ViewChild('map') map;
 
-  constructor(private mapService: MapService, private playerService: PlayerService) {
+  constructor(private mapService: MapService, private playerService: PlayerService, private sanitizer: DomSanitizer, private router: Router, private route: ActivatedRoute) {
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
@@ -100,15 +102,17 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.mapSettings.shouldDraw = true;
   }
 
+  openPopup(target) {
+    this.router.navigate([{ outlets: { popupLeft: target }}], { relativeTo: this.route.parent })
+  }
+
   public mapClick(event) {
     if (this.hoverData === null) {
       this.selected = null;
       return;
     }
-    console.log('test', this.hoverData)
     this.selected = this.hoverData;
-    this.position.click = `translate3d(${this.selected.pos.x.plus(this.mapSettings.radius)}px,${this.selected.pos.y}px,0)`;
-    console.log(this.selected.pos.translate, this.hoverData.pos.translate)
+    this.position.click = this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
   }
 
   public onZoom(event) {
