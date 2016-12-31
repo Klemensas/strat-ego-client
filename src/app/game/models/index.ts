@@ -1,6 +1,7 @@
 export { Player } from './Player';
 export { Town } from './Town';
-export { Buildings } from './Buildings';
-export { Units } from './Units';
+export { Building } from './Building';
 export { Resources } from './Resources';
 export { BuildingQueue } from './BuildingQueue';
+export { Unit } from './Unit';
+export { Combat } from './Combat';
