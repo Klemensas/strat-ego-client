@@ -10,7 +10,7 @@ export class Town {
   resources: Resources;
   buildings: {
     [index: string]: {
-      amount: number;
+      level: number;
       queued: number;
     }
   };
