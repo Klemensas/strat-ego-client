@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, animate, trigger, state, style, transition } from '@angular/core';
 
 import { PlayerService, TownService, SocketService } from '../services';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'game-container',
@@ -37,7 +38,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     right: 'rightInactive'
   };
 
-  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
+  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -56,5 +57,9 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.socket.disconnect();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
