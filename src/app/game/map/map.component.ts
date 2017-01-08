@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MapService, PlayerService } from '../services';
+import { MapService, PlayerService, CommandService } from '../services';
 import { Observable, Subject } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 // import 'rxjs/add/operator/cache';
@@ -46,7 +46,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   };
   @ViewChild('map') map;
 
-  constructor(private mapService: MapService, private playerService: PlayerService, private sanitizer: DomSanitizer, private router: Router, private route: ActivatedRoute) {
+  constructor(private mapService: MapService, private playerService: PlayerService, private commandService: CommandService, private sanitizer: DomSanitizer, private router: Router, private route: ActivatedRoute) {
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
@@ -102,7 +102,8 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.mapSettings.shouldDraw = true;
   }
 
-  openPopup(target) {
+  openPopup(target, data) {
+    this.commandService.targeting = data;
     this.router.navigate([{ outlets: { popupLeft: target }}], { relativeTo: this.route.parent })
   }
 
