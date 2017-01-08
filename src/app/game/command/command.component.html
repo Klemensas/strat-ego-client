@@ -1,3 +1,15 @@
-<p>
-  command works!
-</p>
+<div *ngIf="townUnits">
+  <div *ngFor="let unit of unitData">
+    <label>{{ unit.name }}</label>
+    <input type="number" [max]="townUnits[unit.name].amount" min="0" />
+    <span>{{ townUnits[unit.name].amount }}</span>
+  </div>
+  <div>
+    <div>Target</div>
+    <label>X</label>
+    <input type="number" [value]="target[0]" min="1" max="999" />
+    <label>Y</label>
+    <input type="number" [value]="target[1]" min="1" max="999" /></div>
+  <button type="button" class="btn btn-danger" (click)="sendCommand(false)">Attack</button>
+  <button type="button" class="btn btn-success" (click)="sendCommand(true)">Support</button>
+</div>
