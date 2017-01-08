@@ -23,7 +23,6 @@ export class TownService {
         this.updateCurrent(town);
       }
     });
-
     // CONSIDER: this never stops, should it?
     this.timeTick();
   }

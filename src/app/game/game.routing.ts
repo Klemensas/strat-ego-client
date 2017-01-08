@@ -22,7 +22,7 @@ const gameRoutes: Routes = [
       { path: 'town', component: TownComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
       { path: 'map', component: MapComponent },
       { path: 'recruit', component: RecruitComponent, pathMatch: 'prefix', outlet: 'popupRight'},
-      { path: 'command', component: CommandComponent, pathMatch: 'prefix', outlet: 'popupLeft'}
+      { path: 'command', component: CommandComponent, pathMatch: 'prefix', outlet: 'popupLeft' }
     ],
     resolve: {
       world: WorldResolver,

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }    from '@angular/forms';
 
-import { SocketService, PlayerService, TownService, MapService } from './services/index';
+import { SocketService, PlayerService, TownService, MapService, CommandService } from './services/index';
 
 import { gameRouting, gameComponents } from './game.routing';
 import { ResourcesComponent } from './resources';
@@ -29,6 +29,7 @@ import { CommandComponent } from './command/command.component';
     PlayerService,
     TownService,
     MapService,
+    CommandService,
     WorldResolver,
     SocketResolver
   ]
