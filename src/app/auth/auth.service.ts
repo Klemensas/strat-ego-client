@@ -45,6 +45,17 @@ export class AuthService {
       });
   }
 
+  register(data) {
+    return this.http.post(`${environment.server.api}users`, data)
+      .map(token => token.json().token)
+      .flatMap(token => {
+        localStorage.setItem('jwt', token);
+        this.token = token;
+        this.tokenData = this.jwtHelper.decodeToken(token);
+        return this.getUser();
+      });
+  }
+
   logout() {
     console.log('logout');
     this.token = null;
