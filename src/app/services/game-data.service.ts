@@ -29,18 +29,6 @@ export class GameDataService {
       // });
   }
 
-  mapBuildings(worlds) {
-    const data = worlds.map(world => {
-      const buildings = {};
-      world.buildingData.forEach(build => {
-        buildings[build.name] = build;
-      })
-      world.buildingData = buildings;
-      return world;
-    });
-    return data;
-  }
-
   // getWorldData(target) {
   //   return this.authHttp.get(`${API}world/${target}`)
   //     .map(t => t.json())

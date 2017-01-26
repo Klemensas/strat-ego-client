@@ -28,9 +28,9 @@
   <h2>Available worlds</h2>
   <ul>
     <li *ngFor="let world of worlds">
-      <span>{{world.name}}</span>
+      <span>{{world.config.name}}</span>
       <span *ngIf="user">
-        <a [routerLink]="['/world', world.name]">
+        <a [routerLink]="['/world', world.config.name]">
         Play
         </a>
       </span>

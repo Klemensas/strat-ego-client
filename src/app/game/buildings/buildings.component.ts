@@ -18,8 +18,8 @@ export class BuildingsComponent implements OnInit {
 
   ngOnInit() {
     this.gameData.data.activeWorld.subscribe(world => {
-      this.buildingData = world.buildingData;
-      this.buildingDataMap = world.buildingDataMap;
+      this.buildingData = world.buildings;
+      this.buildingDataMap = world.buildingMap;
     });
     this.townService.currentTown.subscribe(town => {
       this.town = town;

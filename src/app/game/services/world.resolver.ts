@@ -13,7 +13,7 @@ export class WorldResolver implements Resolve<any> {
 
     return this.gameData.data.world
       .map(worlds => {
-        const foundWorld = worlds.find(w => w.name.toLowerCase() === target);
+        const foundWorld = worlds.find(w => w.config.name.toLowerCase() === target);
         if (foundWorld) {
           this.gameData.data.activeWorld.next(foundWorld);
           return foundWorld;
