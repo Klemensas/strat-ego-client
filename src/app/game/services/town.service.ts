@@ -12,7 +12,8 @@ export class TownService {
   private townData = {};
   private lastUpdate: number;
   private savedRes = null;
-
+  private hasCompleteQueue = false;
+  private shouldCheckQueue = true;
   public currentTown = new BehaviorSubject(<Town>null);
 
 
@@ -35,6 +36,8 @@ export class TownService {
 
       // Check if this is the currently active town
       if (this.currentTown.value._id === event._id) {
+        this.shouldCheckQueue = true;
+        this.hasCompleteQueue = false;
         this.updateCurrent(event);
       }
     });
@@ -55,6 +58,11 @@ export class TownService {
       const now = Date.now();
       this.updateValues(target, now);
 
+      if (this.hasCompleteQueue && this.shouldCheckQueue) {
+        this.shouldCheckQueue = false;
+        this.socket.sendEvent('town:update', {
+            town: this.currentTown.value._id
+        });
       }
     }
     setTimeout(() => this.timeTick(), 1000);
@@ -81,8 +89,9 @@ export class TownService {
       return queue.map(item => {
         const ends = new Date(item.endsAt).getTime();
         item.timeLeft = (ends - time) / 1000;
+        this.hasCompleteQueue = this.hasCompleteQueue || item.timeLeft <= 0;
         return item;
-      })
+      });
   }
 
   changeName(name) {
