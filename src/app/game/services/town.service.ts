@@ -42,23 +42,30 @@ export class TownService {
   }
 
   updateCurrent(town) {
-    this.currentTown.next(town);
     this.savedRes = Object.assign({}, town.resources);
     this.lastUpdate = new Date(town.updatedAt).getTime();
+    const time = Date.now();
+    this.updateValues(town, time);
+    this.currentTown.next(town);
   };
 
   timeTick() {
     const target = this.currentTown.value;
     if (target) {
       const now = Date.now();
-      target.resources = this.updateResources(now, target.production);
+      this.updateValues(target, now);
 
-      if (target.BuildingQueues && target.BuildingQueues.length) {
-        target.BuildingQueues = this.updateBuildingQueue(now, target.BuildingQueues);
       }
     }
     setTimeout(() => this.timeTick(), 1000);
   }
+
+  updateValues(town, time) {
+      town.resources = this.updateResources(time, town.production)
+      if (town.BuildingQueues && town.BuildingQueues.length) {
+        town.BuildingQueues = this.updateBuildingQueue(time, town.BuildingQueues);
+      };
+  }  
 
   updateResources(time, production) {
       const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
