@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 import { PlayerService } from './player.service';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'; 
 
 import { Town } from '../models/Town';
 
@@ -36,8 +36,6 @@ export class TownService {
 
       // Check if this is the currently active town
       if (this.currentTown.value._id === event._id) {
-        this.shouldCheckQueue = true;
-        this.hasCompleteQueue = false;
         this.updateCurrent(event);
       }
     });
@@ -45,18 +43,23 @@ export class TownService {
   }
 
   updateCurrent(town) {
+    town.BuildingQueues = town.BuildingQueues || [];
+    town.BuildingQueues.sort((a, b) => new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime()).forEach(item => {
+      item.endsAt = new Date(item.endsAt).getTime();
+    });
+
+    this.shouldCheckQueue = true;
+    this.hasCompleteQueue = false;
     this.savedRes = Object.assign({}, town.resources);
     this.lastUpdate = new Date(town.updatedAt).getTime();
-    const time = Date.now();
-    this.updateValues(town, time);
+    this.updateValues(town);
     this.currentTown.next(town);
   };
 
   timeTick() {
     const target = this.currentTown.value;
     if (target) {
-      const now = Date.now();
-      this.updateValues(target, now);
+      this.updateValues(target);
 
       if (this.hasCompleteQueue && this.shouldCheckQueue) {
         this.shouldCheckQueue = false;
@@ -68,12 +71,11 @@ export class TownService {
     setTimeout(() => this.timeTick(), 1000);
   }
 
-  updateValues(town, time) {
+  updateValues(town) {
+      const time = Date.now();
       town.resources = this.updateResources(time, town.production)
-      if (town.BuildingQueues && town.BuildingQueues.length) {
-        town.BuildingQueues = this.updateBuildingQueue(time, town.BuildingQueues);
-      };
-  }  
+      town.BuildingQueues = this.updateBuildingQueue(time, town.BuildingQueues);
+  }
 
   updateResources(time, production) {
       const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
@@ -87,8 +89,7 @@ export class TownService {
   updateBuildingQueue(time, queue) {
       const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
       return queue.map(item => {
-        const ends = new Date(item.endsAt).getTime();
-        item.timeLeft = (ends - time) / 1000;
+        item.timeLeft = item.endsAt - time;
         this.hasCompleteQueue = this.hasCompleteQueue || item.timeLeft <= 0;
         return item;
       });
