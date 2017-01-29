@@ -13,6 +13,7 @@ import { BuildingsComponent } from './buildings/buildings.component';
 import { BuildingQueueComponent } from './building-queue/building-queue.component';
 import { UnitsComponent } from './units/units.component';
 import { CommandComponent } from './command/command.component';
+import { CountdownPipe } from '../pipes/countdown.pipe';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { CommandComponent } from './command/command.component';
   ],
   declarations: [
     gameComponents,
+    CountdownPipe,
     ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent, CommandComponent
   ],
   providers: [

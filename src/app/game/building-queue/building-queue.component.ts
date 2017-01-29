@@ -25,6 +25,6 @@ export class BuildingQueueComponent implements OnInit {
   ngOnInit() {
     this.townService.currentTown.subscribe((town: Town) => {
       this.queue = town.BuildingQueues;
-    })
+    });
   }
 }

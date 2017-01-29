@@ -22,7 +22,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     headerPrefix: 'bearer',
     tokenName: 'token',
     tokenGetter: (() => localStorage.getItem('jwt')),
-    globalHeaders: [{'Content-Type':'application/json'}],
+    globalHeaders: [{'Content-Type': 'application/json'}],
     noJwtError: true
   }), http, options);
 }
@@ -37,7 +37,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   ],
   declarations: [
     AppComponent,
-    routedComponents
+    routedComponents,
   ],
   providers: [
     {
