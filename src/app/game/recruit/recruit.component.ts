@@ -21,8 +21,8 @@ export class RecruitComponent implements OnInit {
 
   ngOnInit() {
     this.gameData.data.activeWorld.subscribe(world => {
-      this.unitData = world.unitData;
-      this.unitDataMap = world.unitDataMap;
+      this.unitData = world.units;
+      this.unitDataMap = world.unitMap;
     });
     this.townService.currentTown.subscribe(town => {
       if (town) {
@@ -57,9 +57,7 @@ export class RecruitComponent implements OnInit {
     if (!unit.requirements || !this.town) {
       return true;
     }
-    return unit.requirements.every(req => {
-      req.level <= this.town.buildings[req.item].level
-    })
+    return unit.requirements.every(req => req.level <= this.town.buildings[req.item].level)
   }
 
   recruit(amount, type) {
