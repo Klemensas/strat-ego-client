@@ -1,4 +1,4 @@
-Building queues:
+<strong *ngIf="queue.length">Building Queue</strong>
 <div *ngFor="let item of queue">
   {{ item.building }} {{ item.level + 1 }} - {{ item.timeLeft | countdown:'HH:mm:ss' }} - {{ item.endsAt | date:'HH:mm:ss' }}
 </div>
