@@ -6,9 +6,9 @@
       <span *ngIf="building.queued">(building {{building.queued}})</span>
     </div>
     <div class="col-sm-5 flex" *ngIf="buildingDataMap[building.name].data[building.next] && building.available">
-      <div class="resource"><div class="resource-icon wood"></div>{{buildingDataMap[building.name].data[building.next].costs.wood}}</div>
-      <div class="resource"><div class="resource-icon clay"></div>{{buildingDataMap[building.name].data[building.next].costs.clay}}</div>
-      <div class="resource"><div class="resource-icon iron"></div>{{buildingDataMap[building.name].data[building.next].costs.iron}}</div>
+      <div class="resource"><div class="resource-icon wood"></div>{{buildingDataMap[building.name].data[building.next].costs.wood | number:'1.0-0' }}</div>
+      <div class="resource"><div class="resource-icon clay"></div>{{buildingDataMap[building.name].data[building.next].costs.clay | number:'1.0-0'}}</div>
+      <div class="resource"><div class="resource-icon iron"></div>{{buildingDataMap[building.name].data[building.next].costs.iron | number:'1.0-0'}}</div>
       <div>time {{buildingDataMap[building.name].data[building.next].buildTime | countdown:'HH:mm:ss'}}</div>
     </div>
     <div class="col-sm-3">
