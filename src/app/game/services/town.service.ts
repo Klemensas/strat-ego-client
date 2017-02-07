@@ -117,4 +117,14 @@ export class TownService {
       units
     });
   }
+
+  sendUnits(target, units, type) {
+    this.socket.sendEvent('town:moveTroops', {
+      town: this.currentTown.value._id,
+      units,
+      target,
+      type
+    });
+  }
+
 }

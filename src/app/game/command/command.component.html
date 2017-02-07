@@ -1,7 +1,7 @@
 <div *ngIf="townUnits">
   <div *ngFor="let unit of unitData">
     <label>{{ unit.name }}</label>
-    <input type="number" [max]="townUnits[unit.name].amount" min="0" />
+    <input type="number" [max]="townUnits[unit.name].amount" [(ngModel)]="unitsToSend[unit.name]"  min="0" />
     <span>{{ townUnits[unit.name].amount }}</span>
   </div>
   <div>
