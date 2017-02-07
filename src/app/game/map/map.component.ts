@@ -71,7 +71,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       }
       this.activeTown = data;
       this.mapOffset = this.centerOffset({ x: data.location[0], y: data.location[1] });
-      this.mapService.getMapData(location).then(mapData => {
+      this.mapService.getMapData({}).then(mapData => {
         this.mapData = mapData;
         this.mapSettings.shouldDraw = true;
         // TODO: Temporary fix

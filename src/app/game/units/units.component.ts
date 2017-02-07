@@ -25,10 +25,12 @@ export class UnitsComponent implements OnInit {
     const list = Object.keys(units);
     return list.reduce((array, item) => {
       const unit = units[item];
-      if (unit.amount || unit.queued) {
+      if (unit.inside || unit.outside || unit.queued) {
         array.push({
           name: item,
-          amount: unit.amount,
+          outside: unit.outside,
+          inside: unit.inside,
+          amount: unit.outside + unit.inside,
           queued: unit.queued
         });
       }
