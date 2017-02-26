@@ -12,7 +12,7 @@ export class UnitsComponent implements OnInit {
   constructor(private townService: TownService, private gameData: GameDataService) { }
 
   ngOnInit() {
-    // this.gameData.data.activeWorld.subscribe(world => {
+    // this.gameData.data.activeWorld.subscribe(world => {  
     //   this.buildingData = world.buildingData;
     //   this.buildingDataMap = world.buildingDataMap;
     // });

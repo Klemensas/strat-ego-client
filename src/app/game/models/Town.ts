@@ -23,4 +23,6 @@ export class Town {
   BuildingQueues: [BuildingQueue];
   createdAt: number;
   updatedAt: number;
+  MovementDestinationTown: [any];
+  MovementOriginTown: [any];
 }
