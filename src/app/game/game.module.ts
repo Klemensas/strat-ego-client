@@ -14,6 +14,7 @@ import { BuildingQueueComponent } from './building-queue/building-queue.componen
 import { UnitsComponent } from './units/units.component';
 import { CommandComponent } from './command/command.component';
 import { CountdownPipe } from '../pipes/countdown.pipe';
+import { MovementsComponent } from './movements/movements.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { CountdownPipe } from '../pipes/countdown.pipe';
   declarations: [
     gameComponents,
     CountdownPipe,
-    ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent, CommandComponent
+    ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent, CommandComponent, MovementsComponent
   ],
   providers: [
     SocketService,

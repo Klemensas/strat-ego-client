@@ -20,6 +20,11 @@
             <i class="fa fa-users" aria-hidden="true"></i> Recruit
           </a>
         </li>
+        <li class="nav-item">
+          <a *ngIf="canRecruit" routerLinkActive="active" class="nav-link" [routerLink]="[{ outlets: { popupLeft: 'movements' } }]">
+            <i class="fa fa-arrows" aria-hidden="true"></i> Movements
+          </a>
+        </li>
       </ul>
       <div class="d-inline-flex align-items-center">
         <div>

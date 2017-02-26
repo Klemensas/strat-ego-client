@@ -1,3 +1,5 @@
+// TODO: refactor some town elements in to simple presentation components
+
 import { Component, OnInit } from '@angular/core';
 
 import { SocketService, PlayerService, TownService } from '../services';

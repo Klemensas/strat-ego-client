@@ -1,0 +1,39 @@
+<div class="container">
+  <h2>Movements</h2>
+  <div *ngIf="incoming.length">
+    <h3>Incoming attacks</h3>
+    <div *ngFor="let movement of incoming">
+      <div class="row">
+        <div class="col">{{ movement.MovementOriginId }}</div>
+        <div class="col">{{ movement.endsAt | date:'HH:mm:ss' }}</div>
+        <div class="col">
+          {{ movement.type }}
+          <i class="fa fa-angle-double-left"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="outgoing.length">
+    <h3>Your commands</h3>
+    <div *ngFor="let movement of outgoing">
+      <div class="row">
+        <div class="col">
+          <i class="fa" [ngClass]="{ 'fa-caret-right': !movement.isVisible, 'fa-caret-down': movement.isVisible }" (click)="movement.isVisible = !movement.isVisible"></i>
+          {{ movement.MovementDestinationId }}
+          </div>
+        <div class="col">{{ movement.endsAt | date:'HH:mm:ss' }}</div>
+        <div class="col">
+          {{ movement.type }}
+          <i class="fa" [ngClass]="{ 'fa-angle-double-right': movement.type !== 'returning', 'fa-angle-double-left': movement.type === 'returning' }" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div [hidden]="!movement.isVisible">
+        <div class="d-inline-flex">
+          <div *ngFor="let unit of unitTypes">
+            {{ unit.name }} - {{ movement.units[unit.name] || 0 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
