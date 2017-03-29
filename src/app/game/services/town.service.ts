@@ -50,6 +50,12 @@ export class TownService {
     town.UnitQueues.sort((a, b) => new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime()).forEach(item => {
       item.endsAt = new Date(item.endsAt).getTime();
     });
+    town.MovementOriginTown.sort((a, b) => new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime()).forEach(item => {
+      item.endsAt = new Date(item.endsAt).getTime();
+    });
+    town.MovementDestinationTown.sort((a, b) => new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime()).forEach(item => {
+      item.endsAt = new Date(item.endsAt).getTime();
+    });
 
     this.shouldCheckQueue = true;
     this.hasCompleteQueue = false;
@@ -79,6 +85,8 @@ export class TownService {
       town.resources = this.updateResources(time, town.production)
       town.BuildingQueues = this.updateQueueTime(time, town.BuildingQueues);
       town.UnitQueues = this.updateQueueTime(time, town.UnitQueues);
+      town.MovementOriginTown = this.updateMovementTime(time, town.MovementOriginTown);
+      town.MovementDestinationTown = this.updateMovementTime(time, town.MovementDestinationTown);
   }
 
   updateResources(time, production) {
@@ -91,12 +99,18 @@ export class TownService {
   }
 
   updateQueueTime(time, queue) {
-      const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
       return queue.map(item => {
         item.timeLeft = item.endsAt - time;
         this.hasCompleteQueue = this.hasCompleteQueue || item.timeLeft <= 0;
         return item;
       });
+  }
+
+  updateMovementTime(time, movements) {
+    return movements.map(item => {
+      item.timeLeft = item.endsAt - time;
+      return item;
+    })
   }
 
   changeName(name) {

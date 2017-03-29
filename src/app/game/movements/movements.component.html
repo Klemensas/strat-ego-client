@@ -5,7 +5,7 @@
     <div *ngFor="let movement of incoming">
       <div class="row">
         <div class="col">{{ movement.MovementOriginId }}</div>
-        <div class="col">{{ movement.endsAt | date:'HH:mm:ss' }}</div>
+        <div class="col">{{ movement.timeLeft | countdown:'HH:mm:ss' }}</div>
         <div class="col">
           {{ movement.type }}
           <i class="fa fa-angle-double-left"></i>
@@ -21,7 +21,7 @@
           <i class="fa" [ngClass]="{ 'fa-caret-right': !movement.isVisible, 'fa-caret-down': movement.isVisible }" (click)="movement.isVisible = !movement.isVisible"></i>
           {{ movement.MovementDestinationId }}
           </div>
-        <div class="col">{{ movement.endsAt | date:'HH:mm:ss' }}</div>
+        <div class="col">{{ movement.timeLeft | countdown:'HH:mm:ss' }}</div>
         <div class="col">
           {{ movement.type }}
           <i class="fa" [ngClass]="{ 'fa-angle-double-right': movement.type !== 'returning', 'fa-angle-double-left': movement.type === 'returning' }" aria-hidden="true"></i>

@@ -36,7 +36,7 @@ export class RecruitComponent implements OnInit {
   unitAmountUpdate($event, type) {
     $event = $event || 0;
     let change = $event - (this.recruitment.units[type] || 0);
-    if (typeof $event === "number") {
+    if (typeof $event === 'number') {
       const unitCosts = this.unitDataMap[type].costs;
       this.recruitment.resources['wood'] -= unitCosts.wood * change;
       this.recruitment.resources['clay'] -= unitCosts.clay * change;
@@ -63,5 +63,4 @@ export class RecruitComponent implements OnInit {
   recruit(amount, type) {
     this.townService.recruit([{ type, amount}]);
   }
-
 }
