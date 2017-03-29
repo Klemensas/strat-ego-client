@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule }    from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '@angular/material';
 
 import { SocketService, PlayerService, TownService, MapService, CommandService } from './services/index';
 
@@ -18,6 +19,7 @@ import { MovementsComponent } from './movements/movements.component';
 
 @NgModule({
   imports: [
+    MaterialModule,
     CommonModule,
     FormsModule,
     gameRouting

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { routing, routedComponents } from './app.routing';
@@ -30,6 +31,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 @NgModule({
   imports: [
     routing,
+    MaterialModule,
     BrowserModule,
     FormsModule,
     HttpModule,
