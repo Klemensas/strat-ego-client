@@ -1,9 +1,7 @@
-import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapService, PlayerService, CommandService } from '../services';
 import { Observable, Subject } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-// import 'rxjs/add/operator/cache';
 import * as _ from 'lodash';
 import * as Big from 'big.js';
 
@@ -11,9 +9,10 @@ import * as Big from 'big.js';
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements OnInit, AfterViewChecked  {
+  @ViewChild('map') map;
+
   public dragging = 0;
   public activeTown;
 
@@ -44,9 +43,8 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     hover: null,
     click: null
   };
-  @ViewChild('map') map;
 
-  constructor(private mapService: MapService, private playerService: PlayerService, private commandService: CommandService, private sanitizer: DomSanitizer, private router: Router, private route: ActivatedRoute) {
+  constructor(private mapService: MapService, private playerService: PlayerService, private commandService: CommandService, private sanitizer: DomSanitizer) {
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
@@ -102,9 +100,10 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.mapSettings.shouldDraw = true;
   }
 
-  openPopup(target, data) {
+  toggleSidenav(target, data) {
     this.commandService.targeting = data;
-    this.router.navigate([{ outlets: { popupLeft: target }}], { relativeTo: this.route.parent })
+    this.playerService.toggleSidenav(target);
+    console.log('toggle sidenav!')
   }
 
   public mapClick(event) {

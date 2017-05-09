@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameDataService } from '../../services/game-data.service';
 import { TownService } from '../services/town.service';
 
@@ -7,7 +7,7 @@ import { TownService } from '../services/town.service';
   templateUrl: './recruit.component.html',
   styleUrls: ['./recruit.component.scss'],
 })
-export class RecruitComponent implements OnInit {
+export class RecruitComponent implements OnInit, OnDestroy {
   private units;
   private town;
   private unitData;
@@ -16,21 +16,37 @@ export class RecruitComponent implements OnInit {
     resources: {},
     units: {}
   };
+  private recruiting = false;
+  private subscriptions = {
+    gameData: null,
+    currentTown: null,
+    recruitEvents: null
+  }
 
   constructor(private gameData: GameDataService, private townService: TownService) { }
 
   ngOnInit() {
-    this.gameData.data.activeWorld.subscribe(world => {
+    this.subscriptions.gameData = this.gameData.data.activeWorld.subscribe(world => {
       this.unitData = world.units;
       this.unitDataMap = world.unitMap;
     });
-    this.townService.currentTown.subscribe(town => {
+    this.subscriptions.currentTown = this.townService.currentTown.subscribe(town => {
       if (town) {
+        console.log('town upd?')
         this.town = town;
         this.recruitment.resources = this.town.resources;
         // this.units = this.modifyUnits(town.units);
       }
     });
+    this.subscriptions.recruitEvents = this.townService.townEvents.recruit.subscribe(event => {
+      this.recruiting = false;
+    });
+  }
+
+  ngOnDestroy() {
+      this.subscriptions.gameData.unsubscribe();
+      this.subscriptions.currentTown.unsubscribe();
+      this.subscriptions.recruitEvents.unsubscribe();
   }
 
   unitAmountUpdate($event, type) {
@@ -54,6 +70,9 @@ export class RecruitComponent implements OnInit {
   }
 
   canRecruit(unit) {
+    if (this.recruiting) {
+      return false;
+    }
     if (!unit.requirements || !this.town) {
       return true;
     }
@@ -61,6 +80,7 @@ export class RecruitComponent implements OnInit {
   }
 
   recruit(amount, type) {
+    this.recruiting = true;
     this.townService.recruit([{ type, amount}]);
   }
 }

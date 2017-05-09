@@ -1,57 +1,62 @@
-<header>
-  <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+
+<md-sidenav-container class="backdrop-disabled">
+  <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" mode="over" align="start" opened="false">
+    <button md-mini-fab (click)="sidenavLeft.comp = null; sidenavLeft.toggle()">
+      <md-icon>&times;</md-icon>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="nav navbar-nav mr-auto">
-        <li class="nav-item">
-          <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
-            <i class="fa fa-home" aria-hidden="true"></i> Town
-          </a>
-        </li>
-        <li class="nav-item">
-          <a [routerLink]="['./map']" routerLinkActive="active" class="nav-link">
-            <i class="fa fa-globe" aria-hidden="true"></i> Map
-          </a>
-        </li>
-        <li class="nav-item">
-          <a *ngIf="canRecruit" routerLinkActive="active" class="nav-link" [routerLink]="[{ outlets: { popupRight: 'recruit' } }]">
-            <i class="fa fa-users" aria-hidden="true"></i> Recruit
-          </a>
-        </li>
-        <li class="nav-item">
-          <a *ngIf="canRecruit" routerLinkActive="active" class="nav-link" [routerLink]="[{ outlets: { popupLeft: 'movements' } }]">
-            <i class="fa fa-arrows" aria-hidden="true"></i> Movements
-          </a>
-        </li>
-      </ul>
-      <div class="d-inline-flex align-items-center">
-        <div>
-          <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
+    <movements *ngSwitchCase="'movements'"></movements>
+    <command *ngSwitchCase="'command'"></command>
+  </md-sidenav>
+  <md-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" mode="over" align="end" opened="false">
+    <button md-mini-fab (click)="sidenavRight.comp = null; sidenavRight.toggle()">
+      <md-icon>&times;</md-icon>
+    </button>
+    <recruit *ngSwitchCase="'recruit'"></recruit>
+    <reports *ngSwitchCase="'reports'" [reports]="reports"></reports>
+  </md-sidenav>
+  <header>
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+          <li class="nav-item">
+            <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
+              <i class="fa fa-home" aria-hidden="true"></i> Town
+            </a>
+          </li>
+          <li class="nav-item">
+            <a [routerLink]="['./map']" routerLinkActive="active" class="nav-link">
+              <i class="fa fa-globe" aria-hidden="true"></i> Map
+            </a>
+          </li>
+          <li class="nav-item">
+            <a *ngIf="canRecruit" class="nav-link" (click)="sidenavRight.comp = 'recruit'; sidenavRight.toggle()">
+              <i class="fa fa-users" aria-hidden="true"></i> Recruit
+            </a>
+          </li>
+          <li class="nav-item">
+            <a routerLinkActive="active" class="nav-link" (click)="sidenavLeft.comp = 'movements'; sidenavLeft.toggle()">
+              <i class="fa fa-arrows" aria-hidden="true"></i> Movements
+            </a>
+          </li>
+          <li class="nav-item">
+            <a routerLinkActive="active" class="nav-link" (click)="sidenavRight.comp = 'reports'; sidenavRight.toggle()">
+              <i class="fa fa-flag" aria-hidden="true"></i> Reports
+            </a>
+          </li>
+        </ul>
+        <div class="d-inline-flex align-items-center">
+          <div>
+            <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
-</header>
+    </nav>
+  </header>
 
-<div class="container-fluid">
-  <router-outlet></router-outlet>
-</div>
-
-<div class="overlay left" [@popupState]="popupActive.left">
-  <router-outlet name="popupLeft" (activate)="popupToggle('active', 'left')" (deactivate)="popupToggle('leftInactive', 'left')">
-    <div *ngIf="popupActive.left">
-      <a class="close" [routerLink]="[{ outlets: { popupLeft: null } }]">Close</a>
-    </div>
-  </router-outlet>
-</div>
-
-<div class="overlay right" [@popupState]="popupActive.right">
-  <router-outlet name="popupRight" (activate)="popupToggle('active', 'right')" (deactivate)="popupToggle('rightInactive', 'right')">
-    <div *ngIf="popupActive.right">
-      <a class="close" [routerLink]="[{ outlets: { popupRight: null } }]">Close</a>
-    </div>
-  </router-outlet>
-</div>
-
+  <div class="container-fluid">
+    <router-outlet></router-outlet>
+  </div>
+</md-sidenav-container>

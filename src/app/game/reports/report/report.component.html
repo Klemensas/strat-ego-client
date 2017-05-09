@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-12 d-flex">
+    <div>
+      <span class="badge" [ngClass]="{'badge-danger': report.outcome === 'lose', 'badge-success': report.outcome === 'win'}">{{report.type}}</span>
+      <span>{{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}}) attacks {{ report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</span>
+    </div>
+    <i class="fa fa-chevron-down ml-auto" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report._id"></i>
+  </div>
+  <div [id]="'collapse-' + report._id" class="col-12" [ngbCollapse]="!isCollapsed">
+    <section>
+      <header class="font-weight-bold">Defender - {{report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</header>
+      <div class="row">
+        <div class="col">
+          <div>Units</div>
+          <div>Amount</div>
+          <div>Losses</div>
+        </div>
+        <div class="col d-flex flex-column align-items-center" *ngFor="let unit of unitList">
+          <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+          <div>{{ report.destination.units[unit.name] || 0 }}</div>
+          <div class="text-danger">{{ report.destination.losses[unit.name] || 0 }}</div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <header class="font-weight-bold">Attacker - {{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}})</header>
+      <div class="row">
+        <div class="col">
+          <div>Units</div>
+          <div>Amount</div>
+          <div>Losses</div>
+        </div>
+        <div class="col d-flex flex-column align-items-center" *ngFor="let unit of unitList">
+          <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+          <div>{{ report.origin.units[unit.name] || 0 }}</div>
+          <div class="text-danger">{{ report.origin.losses[unit.name] || 0 }}</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

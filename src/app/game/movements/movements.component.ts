@@ -11,6 +11,7 @@ import { GameDataService } from '../../services/game-data.service';
 export class MovementsComponent implements OnInit {
   private outgoing = [];
   private incoming = [];
+  private returning = [];
   private unitTypes = [];
   constructor(private townService: TownService, private gameData: GameDataService) { }
 
@@ -25,7 +26,9 @@ export class MovementsComponent implements OnInit {
   // }
     this.townService.currentTown.subscribe(town => {
       if (town) {
+        console.log('update', town)
         this.outgoing = town.MovementOriginTown;
+        // TODO: separate incoming into attacks and returning
         this.incoming = town.MovementDestinationTown;
       }
     });

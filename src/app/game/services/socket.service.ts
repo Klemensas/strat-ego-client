@@ -29,6 +29,7 @@ export class SocketService {
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));
+        this.events.set('reports', this.socketObservable('reports'));
 
         // TODO: rework returned value into something valid when working with server side socket authentication
         return Observable.create(observer => {

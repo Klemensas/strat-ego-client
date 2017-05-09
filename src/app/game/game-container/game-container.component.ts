@@ -1,44 +1,21 @@
-import { Component, OnInit, OnDestroy, animate, trigger, state, style, transition } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, } from '@angular/core';
 
-import { PlayerService, TownService, SocketService } from '../services';
+import { PlayerService, TownService, SocketService, ReportService } from '../services';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'game-container',
   templateUrl: './game-container.component.html',
-  styleUrls: ['./game-container.component.scss'],
-  animations: [
-    trigger('popupState', [
-      state('active', style({
-        visibility: 'visible',
-        opacity: 1,
-        transform: 'translateX(0)',
-      })),
-      state('rightInactive', style({
-        visibility: 'hidden',
-        opacity: 0.8,
-        transform: 'translateX(100%)',
-      })),
-      state('leftInactive', style({
-        visibility: 'hidden',
-        opacity: 0.8,
-        transform: 'translateX(-100%)',
-      })),
-      transition('leftInactive => active', animate('300ms ease-out')),
-      transition('rightInactive => active', animate('300ms ease-out')),
-      transition('active => leftInactive', animate('300ms ease-in')),
-      transition('active => rightInactive', animate('300ms ease-in'))
-    ])
-  ]
+  styleUrls: ['./game-container.component.scss']
 })
 export class GameContainerComponent implements OnInit, OnDestroy {
-  private canRecruit = false;
-  private popupActive = {
-    left: 'leftInactive',
-    right: 'rightInactive'
-  };
+  @ViewChild('sidenavLeft') sidenavLeft;
+  @ViewChild('sidenavRight') sidenavRight;
 
-  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService, private authService: AuthService) {
+  private reports = [];
+  private canRecruit = false;
+
+  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService, private authService: AuthService, private reportService: ReportService) {
   }
 
   ngOnInit() {
@@ -49,10 +26,17 @@ export class GameContainerComponent implements OnInit, OnDestroy {
         this.canRecruit = !!town.buildings['barracks'].level;
       }
     });
+    this.playerService.sidenavEvents.subscribe(target => this.sidenavToggle(this.sidenavLeft, target));
+    this.reportService.observeReports().subscribe(reports => {
+      this.reports = reports;
+      console.log('report?', reports)
+    })
   }
 
-  popupToggle(active, target) {
-    this.popupActive[target] = active;
+  sidenavToggle(nav, component) {
+    // console.log('got da event', target, state)
+    nav.comp = component;
+    nav.open();
   }
 
   ngOnDestroy() {

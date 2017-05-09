@@ -26,3 +26,9 @@ export class Town {
   MovementDestinationTown: [any];
   MovementOriginTown: [any];
 }
+
+export class TownMinData {
+  _id: number;
+  name: string;
+  location: [number];
+}

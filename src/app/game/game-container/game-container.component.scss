@@ -20,19 +20,11 @@ nav {
   }
 }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  background-color: white;
-  box-shadow: 0 0 1px 1px black;
-  // transform: translateX(-100%);
-  &.left {
-    left: 0;
-    width: 60%;
-  }
-  &.right {
-    right: 0;
-    width: 40%;
+.mat-sidenav-container {
+  min-height: 100vh;
+
+  .mat-sidenav {
+    background-color: white;
+    width: 50%;
   }
 }

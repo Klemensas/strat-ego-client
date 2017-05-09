@@ -12,7 +12,7 @@
       <!-- <a class="map-icon attack" routerLinkActive="active" [routerLink]="['../', { outlets: { popupLeft: 'command' } }]"> -->
       <!-- <a class="map-icon attack" routerLinkActive="active" [routerLink]="[{ outlets: { popupLeft: 'command' } }]"> -->
       <!-- <a class="map-icon attack" routerLinkActive="active" [routerLink]="['./', { outlets: { popupLeft: 'command' } }]"> -->
-      <a class="map-icon attack" (click)="openPopup('command', hoverData.location)">
+      <a  class="map-icon attack" (click)="toggleSidenav('command', hoverData.location)">
         A
       </a>
       <a class="map-icon village">V</a>

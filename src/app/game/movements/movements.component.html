@@ -27,11 +27,10 @@
           <i class="fa" [ngClass]="{ 'fa-angle-double-right': movement.type !== 'returning', 'fa-angle-double-left': movement.type === 'returning' }" aria-hidden="true"></i>
         </div>
       </div>
-      <div [hidden]="!movement.isVisible">
-        <div class="d-inline-flex">
-          <div *ngFor="let unit of unitTypes">
-            {{ unit.name }} - {{ movement.units[unit.name] || 0 }}
-          </div>
+      <div class="row" [hidden]="!movement.isVisible">
+        <div class="col d-flex flex-row" *ngFor="let unit of unitTypes">
+          <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+          <div>{{ movement.units[unit.name] || 0 }}</div>
         </div>
       </div>
     </div>

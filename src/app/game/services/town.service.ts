@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 import { PlayerService } from './player.service';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'; 
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 import { Town } from '../models/Town';
 
@@ -15,11 +16,19 @@ export class TownService {
   private hasCompleteQueue = false;
   private shouldCheckQueue = true;
   public currentTown = new BehaviorSubject(<Town>null);
+  public townEvents = {
+    build: new Subject(),
+    recruit: new Subject(),
+    name: new Subject(),
+    movement: new Subject(),
+    update: new Subject()
+  };
 
 
   constructor(private socket: SocketService, private playerService: PlayerService) {
     this.playerService.activeTown.subscribe((town: Town) => {
       if (town) {
+        console.log('iniy town', town)
         this.townData[town._id] = town;
         this.updateCurrent(town);
       }
@@ -29,14 +38,15 @@ export class TownService {
   }
 
   observeTown() {
-    this.socket.events.get('town').subscribe(event => {
-      console.log('[Socket receive town]', event)
+    this.socket.events.get('town').subscribe(({ event, town }) => {
+      console.log('[Socket receive town]', event, Object.assign({}, town))
       // Store town in townData for future use
-      this.townData[event._id] = event;
+      this.townData[event._id] = town;
 
       // Check if this is the currently active town
-      if (this.currentTown.value._id === event._id) {
-        this.updateCurrent(event);
+      if (this.currentTown.value._id === town._id) {
+        this.townEvents[event.type].next(true);
+        this.updateCurrent(town);
       }
     });
     return this.currentTown;
@@ -81,6 +91,7 @@ export class TownService {
   }
 
   updateValues(town) {
+    console.log();
       const time = Date.now();
       town.resources = this.updateResources(time, town.production)
       town.BuildingQueues = this.updateQueueTime(time, town.BuildingQueues);
@@ -110,7 +121,7 @@ export class TownService {
     return movements.map(item => {
       item.timeLeft = item.endsAt - time;
       return item;
-    })
+    });
   }
 
   changeName(name) {
