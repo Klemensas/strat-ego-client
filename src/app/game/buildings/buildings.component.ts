@@ -9,9 +9,9 @@ import { TownService } from '../services/town.service'
 })
 export class BuildingsComponent implements OnInit {
   buildings;
-  private town;
-  private buildingData;
-  private buildingDataMap = [];
+  public town;
+  public buildingData;
+  public buildingDataMap = [];
 
   constructor(private townService: TownService, private gameData: GameDataService) {
   }
@@ -44,6 +44,10 @@ export class BuildingsComponent implements OnInit {
     const targetBuilding = this.buildingDataMap[building.name];
     const targetLevel = targetBuilding.data[building.next].costs;
     if (building.next === 0 && targetBuilding.requirements) {
+      const meetsReqs = targetBuilding.requirements.every(({ item, level }) => this.town.buildings[item].level >= level)
+      if (!meetsReqs) {
+        return false;
+      }
     }
 
     return (
