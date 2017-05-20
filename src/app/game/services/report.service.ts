@@ -36,12 +36,12 @@ export class ReportService {
 
   private formatReport(report) {
     const type = report.ReportDestinationPlayerId === this.playerId ? 'defense' : 'attack';
-    const outcome = report.outcome === 'attack' && type === 'attack' ? 'win' : 'lose';
+    const result = report.outcome === 'attack' && type === 'attack' ? 'win' : 'lose';
 
     return {
       ...report,
       type,
-      outcome,
+      result,
     }
   }
 
