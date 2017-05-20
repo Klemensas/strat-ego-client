@@ -1,21 +1,21 @@
 <div class="container">
-  <div  [hidden]="submitted">
+  <div>
     <h1>Register Form</h1>
-    <form *ngIf="active" (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+    <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="loginForm.name">
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="loginForm.name" required>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="loginForm.email">
+        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="loginForm.email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" [(ngModel)]="loginForm.password">
+        <input type="password" class="form-control" id="password" name="password" [(ngModel)]="loginForm.password" required>
       </div>
       <button type="submit" class="btn btn-default" [disabled]="!loginForm.form.valid">Submit</button>
+      <span class="text-danger" *ngIf="loginForm.errors">{{loginForm.errors.errorMessage}}</span>
     </form>
   </div>
 </div>
-  

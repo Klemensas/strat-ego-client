@@ -10,10 +10,10 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
-  jwtHelper;
-  token;
-  tokenData;
-  tokenExpirationTimeout
+  jwtHelper: JwtHelper;
+  token: string;
+  tokenData: any;
+  tokenExpirationTimeout;
   user = new BehaviorSubject(null);
 
   constructor(private http:Http, private authHttp:AuthHttp, private router:Router) {
@@ -73,7 +73,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  getUser() {
+  getUser(): Observable<any> {
     const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(this.token)).getTime()
     this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
     return this.authHttp.get(`${environment.server.api}users/me`)
@@ -96,11 +96,11 @@ export class AuthService {
       // return user$;
   }
 
-  isLoggedIn() {
-    return !this.jwtHelper.isTokenExpired(this.token);
+  isLoggedIn(): boolean {
+    return this.token && !this.jwtHelper.isTokenExpired(this.token);
   }
 
-  hasRole(role) {
+  hasRole(role): boolean {
     return this.tokenData.role === role;
   }
 
