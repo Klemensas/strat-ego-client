@@ -17,6 +17,7 @@ export class RecruitComponent implements OnInit, OnDestroy {
     units: {}
   };
   private recruiting = false;
+  private hasRecruitmentQueue = false;
   private subscriptions = {
     gameData: null,
     currentTown: null,
@@ -32,10 +33,10 @@ export class RecruitComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.currentTown = this.townService.currentTown.subscribe(town => {
       if (town) {
-        console.log('town upd?')
         this.town = town;
         this.recruitment.resources = this.town.resources;
         // this.units = this.modifyUnits(town.units);
+        this.hasRecruitmentQueue = this.town.UnitQueues.length;
       }
     });
     this.subscriptions.recruitEvents = this.townService.townEvents.recruit.subscribe(event => {

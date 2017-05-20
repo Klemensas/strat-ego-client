@@ -1,27 +1,51 @@
-<div *ngFor="let unit of unitData" class="row">
-  <div class="col d-flex">
-    <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
-    <span>{{unit.name}}</span>
+<div class="container">
+  <h2>Recruitment</h2>
+  <div *ngFor="let unit of unitData" class="row">
+    <ng-template #unitTooltip>
+      {{unit | json}}
+    </ng-template>
+    <div class="col d-flex" [ngbTooltip]="unitTooltip">
+      <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
+      <span>{{unit.name}}</span>
+    </div>
+    <div class="col d-flex">
+      <div class="resource">
+        <div class="resource-icon wood"></div>
+        {{unit.costs.wood | number:'1.0-0'}}
+      </div>
+      <div class="resource">
+        <div class="resource-icon clay"></div>
+        {{unit.costs.clay | number:'1.0-0'}}
+      </div>
+      <div class="resource">
+        <div class="resource-icon iron"></div>
+        {{unit.costs.iron | number:'1.0-0'}}
+      </div>
+      <div>{{unit.recruitTime | countdown:'HH:mm:ss'}}</div>
+    </div>
+    <div class="col">
+      <div  *ngIf="canRecruit(unit)">
+        <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
+        <button type="button" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
+      </div>
+    </div>
   </div>
-  <div class="col d-flex">
-    <div class="resource">
-      <div class="resource-icon wood"></div>
-      {{unit.costs.wood | number:'1.0-0'}}
-    </div>
-    <div class="resource">
-      <div class="resource-icon clay"></div>
-      {{unit.costs.clay | number:'1.0-0'}}
-    </div>
-    <div class="resource">
-      <div class="resource-icon iron"></div>
-      {{unit.costs.iron | number:'1.0-0'}}
-    </div>
-    <div>{{unit.recruitTime | countdown:'HH:mm:ss'}}</div>
-  </div>
-  <div class="col">
-    <div  *ngIf="canRecruit(unit)">
-      <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
-      <button type="button" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
+  <div *ngIf="hasRecruitmentQueue">
+    <h3>Ongoing recruiting</h3>
+    <div *ngFor="let queue of town.UnitQueues" class="row">
+      <div class="col d-flex">
+        <i class="unit-icon mr-1" [attr.data-unit]="queue.unit"></i>
+        <span>{{queue.unit}}</span>
+      </div>
+      <div class="col">
+        {{queue.amount}}
+      </div>
+      <div class="col">
+        {{queue.recruitTime}}
+      </div>
+      <div class="col">
+        {{queue.timeLeft | countdown:'HH:mm:ss' }}
+      </div>
     </div>
   </div>
 </div>
