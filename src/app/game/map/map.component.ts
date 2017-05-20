@@ -59,14 +59,9 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       x: this.map.nativeElement.offsetWidth,
       y: this.map.nativeElement.offsetHeight
     });
-    // const t = this.mapService.pixelToCoord({ x: Big(51971.92307692308), y: Big(45422.39183161144) }, this.mapSettings)
-    // console.log(t, +t.xCoord, +t.yCoord, +t.x, +t.y)
 
     this.playerService.activeTown.subscribe(data => {
-      if (!data) {
-        console.error('No active town?', data, this.playerService);
-        return;
-      }
+      if (!data) { return; }
       this.activeTown = data;
       this.mapOffset = this.centerOffset({ x: data.location[0], y: data.location[1] });
       this.mapService.getMapData({}).then(mapData => {
@@ -101,7 +96,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   }
 
   toggleSidenav(target, data) {
-    this.commandService.targeting = data;
+    this.commandService.targeting.next(data);
     this.playerService.toggleSidenav(target);
     console.log('toggle sidenav!')
   }
@@ -111,21 +106,22 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       this.selected = null;
       return;
     }
-    this.selected = this.hoverData;
-    this.position.click = this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
+    this.toggleSidenav('command', this.hoverData.location);
+    // this.selected = this.hoverData;
+    // this.position.click = this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
   }
 
   public onZoom(event) {
     event.preventDefault();
-    const zoomChange = event.deltaY === 0 ? 0 : (event.deltaY > 0 ? -1 : 1);
-    if (zoomChange === 0) {
-      console.error('no zoom', event)
-      return;
-    }
-    this.zoom += zoomChange / 10;
-    this.setMapSettings(this.mapSettings.size, this.zoom);
-    this.mapSettings.shouldDraw = true;
-    console.log('zoom', event);
+    // const zoomChange = event.deltaY === 0 ? 0 : (event.deltaY > 0 ? -1 : 1);
+    // if (zoomChange === 0) {
+    //   console.error('no zoom', event)
+    //   return;
+    // }
+    // this.zoom += zoomChange / 10;
+    // this.setMapSettings(this.mapSettings.size, this.zoom);
+    // this.mapSettings.shouldDraw = true;
+    // console.log('zoom', event);
   }
 
   public startDrag(event) {
@@ -191,17 +187,17 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     );
 
     // Fill
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(+mouse.x.plus(this.mapSettings.width.div(2)).plus(coord.x), +mouse.y.plus(coord.y));
-    this.mapSettings.points.forEach(point => {
-      this.ctx.lineTo(+point.x.plus(mouse.x).plus(coord.x), +point.y.plus(mouse.y).plus(coord.y));
-    });
-    this.ctx.closePath();
-    this.ctx.fillStyle = 'rgba(255,0,0,0.1)';
-    this.ctx.fill();
-    this.ctx.clip();
-    this.ctx.restore();
+    // this.ctx.save();
+    // this.ctx.beginPath();
+    // this.ctx.moveTo(+mouse.x.plus(this.mapSettings.width.div(2)).plus(coord.x), +mouse.y.plus(coord.y));
+    // this.mapSettings.points.forEach(point => {
+    //   this.ctx.lineTo(+point.x.plus(mouse.x).plus(coord.x), +point.y.plus(mouse.y).plus(coord.y));
+    // });
+    // this.ctx.closePath();
+    // this.ctx.fillStyle = 'rgba(255,0,0,0.1)';
+    // this.ctx.fill();
+    // this.ctx.clip();
+    // this.ctx.restore();
     // Fill end
 
   }

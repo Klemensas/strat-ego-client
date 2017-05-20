@@ -98,6 +98,9 @@ export class MapService {
   public getMapData(coords) {
     return new Promise((resolve, reject) => {
       this.mapCoords = coords;
+      if (this.lastUpdate) {
+        return this.formatMapData(resolve);
+      }
       this.queuedPromise.push(resolve);
       this.socket.sendEvent('map', {});
     });
