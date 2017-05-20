@@ -1,6 +1,6 @@
 nav {
   padding: 0;
-  height: 7vh;
+  min-height: 7vh;
   .nav-item {
     padding: 0;
     margin: 0;
@@ -17,6 +17,10 @@ nav {
         border-top: 3px solid #22ff00;
       }
     }
+  }
+  .collapse.show .nav-item {
+    min-width: 40%;
+    text-align: center;
   }
 }
 

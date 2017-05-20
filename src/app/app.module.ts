@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 
@@ -35,7 +36,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     BrowserModule,
     FormsModule,
     HttpModule,
-    GameModule
+    GameModule,
+    NgbModule.forRoot(),
   ],
   declarations: [
     AppComponent,

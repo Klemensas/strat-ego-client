@@ -1,4 +1,3 @@
-
 <md-sidenav-container class="backdrop-disabled">
   <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" mode="over" align="start" opened="false">
     <button md-mini-fab (click)="sidenavLeft.comp = null; sidenavLeft.toggle()">
@@ -16,11 +15,11 @@
   </md-sidenav>
   <header>
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler navbar-toggler-right" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="nav navbar-nav mr-auto">
+      <div class="collapse navbar-collapse" [ngbCollapse]="!isVisible">
+        <ul class="nav navbar-nav align-items-center mr-auto">
           <li class="nav-item">
             <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
               <i class="fa fa-home" aria-hidden="true"></i> Town
@@ -47,8 +46,8 @@
             </a>
           </li>
         </ul>
-        <div class="d-inline-flex align-items-center">
-          <div>
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="nav-item">
             <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
           </div>
         </div>

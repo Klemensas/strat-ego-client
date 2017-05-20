@@ -8,8 +8,10 @@
     </div>
   </div>
   <div class="row mt-2">
-    <strong>{{ town.name }}</strong>
-    <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
-    <button (click)="changeName()">Save</button>
+    <div class="col">
+      <strong>{{ town.name }}</strong>
+      <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
+      <button (click)="changeName()">Save</button>
+    </div>
   </div>
 </div>
