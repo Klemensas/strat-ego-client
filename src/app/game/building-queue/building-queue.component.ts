@@ -11,9 +11,9 @@ import { Town } from '../models/Town';
   styleUrls: ['./building-queue.component.scss']
 })
 export class BuildingQueueComponent implements OnInit {
-  private worldData;
-  private queue;
-  private buildingDetails;
+  public worldData;
+  public queue;
+  public buildingDetails;
 
   constructor(private townService: TownService, private gameData: GameDataService) {
     this.buildingDetails = this.gameData.buildingData;

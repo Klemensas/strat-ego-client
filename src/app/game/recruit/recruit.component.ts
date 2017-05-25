@@ -9,18 +9,18 @@ import { TownService } from '../services/town.service';
 })
 export class RecruitComponent implements OnInit, OnDestroy {
   public unitDetails;
-  private units;
-  private town;
-  private unitData;
-  private unitDataMap;
-  private recruitment = {
+  public units;
+  public town;
+  public unitData;
+  public unitDataMap;
+  public recruitment = {
     resources: {},
     units: {},
     population: 0,
   };
-  private recruiting = false;
-  private hasRecruitmentQueue = false;
-  private subscriptions = {
+  public recruiting = false;
+  public hasRecruitmentQueue = false;
+  public subscriptions = {
     gameData: null,
     currentTown: null,
     recruitEvents: null

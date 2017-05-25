@@ -9,10 +9,10 @@ import { MapService } from '../services';
   styleUrls: ['./movements.component.scss']
 })
 export class MovementsComponent implements OnInit {
-  private outgoing = [];
-  private incoming = [];
-  private returning = [];
-  private unitTypes = [];
+  public outgoing = [];
+  public incoming = [];
+  public returning = [];
+  public unitTypes = [];
   constructor(private townService: TownService, private gameData: GameDataService, private mapService: MapService) {
     console.log(mapService);
   }

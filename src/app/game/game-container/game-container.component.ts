@@ -12,8 +12,9 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenavLeft') sidenavLeft;
   @ViewChild('sidenavRight') sidenavRight;
 
-  private reports = [];
-  private canRecruit = false;
+  public reports = [];
+  public canRecruit = false;
+  public isVisible;
 
   constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService, private authService: AuthService, private reportService: ReportService) {
   }

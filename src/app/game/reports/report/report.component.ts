@@ -9,9 +9,9 @@ import { Report } from '../../models';
 export class ReportComponent implements OnInit, OnDestroy {
   @Input() public report: Report;
   @Input() public unitList = [];
+  public isCollapsed;
 
   ngOnInit() {
-    console.log('woosh I am report', this.report);
   }
 
   ngOnDestroy() {}

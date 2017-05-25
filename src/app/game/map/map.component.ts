@@ -20,14 +20,14 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     y: 80,
   };
 
-  private drawCoords = false;
-  private mapTiles;
+  public drawCoords = false;
+  public mapTiles;
 
-  private selected;
-  private zoom = 1;
-  private mapData;
-  private mapOffset;
-  private mapSettings = {
+  public selected;
+  public zoom = 1;
+  public mapData;
+  public mapOffset;
+  public mapSettings = {
     size: { x: 0, y: 0 },
     width: <any>0,
     height: <any>0,
@@ -39,11 +39,11 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     points: [],
     shouldDraw: false,
   };
-  private ctx;
-  private rng;
-  private hoverPauser = new Subject();
-  private hoverData;
-  private position = {
+  public ctx;
+  public rng;
+  public hoverPauser = new Subject();
+  public hoverData;
+  public position = {
     hover: null,
     click: null
   };

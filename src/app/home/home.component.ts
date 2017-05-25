@@ -10,10 +10,10 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  private worlds;
-  private user;
-  private userSubScription: Subscription;
-  private isCollapsed = true;
+  public worlds;
+  public user;
+  public userSubScription: Subscription;
+  public isCollapsed = true;
 
   constructor(private authService:AuthService, private gdService:GameDataService) {
     this.userSubScription = this.authService.user.subscribe(

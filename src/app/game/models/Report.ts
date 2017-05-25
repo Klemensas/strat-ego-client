@@ -18,7 +18,9 @@ export class Report {
   haul: {
     haul: Resources;
     maxHaul: number;
-  }
+  };
+  isCollapsed?: boolean;
+  result: any;
   ReportOriginPlayerId: number;
   ReportDestinationPlayerId?: number;
   ReportOriginTownId: number;
