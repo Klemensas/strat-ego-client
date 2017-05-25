@@ -1,8 +1,9 @@
-<div *ngIf="town">
+<div *ngIf="town" class="px-2 py-2 mb-3">
   <div class="row">
     <buildings class="col-sm-9"></buildings>
     <div class="col-sm-3">
-      <resources [resources]="town.resources" [production]="town.production"></resources>
+      <resources [resources]="town.resources" [production]="town.production" [maxRes]="town.storage"></resources>
+      <div class="py-1">Population: <b>{{town.population.used}}/{{town.population.total}}</b></div>
       <units></units>
       <building-queue></building-queue>
     </div>

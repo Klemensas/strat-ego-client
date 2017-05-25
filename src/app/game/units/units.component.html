@@ -3,6 +3,6 @@
   <div class="unit d-flex" *ngFor="let unit of units">
     <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
     <span>{{ unit.name }} - {{unit.inside}}/{{ unit.amount }}</span>
-    <span *ngIf="unit.queued">(+{{ unit.queued }})</span>
+    <span *ngIf="unit.queued">&nbsp;(+{{ unit.queued }})</span>
   </div>
 </div>

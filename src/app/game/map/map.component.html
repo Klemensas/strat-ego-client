@@ -2,7 +2,7 @@
   <canvas #map (click)="mapClick($event)" (mousedown)="startDrag($event)" (mouseup)="stopDrag()" (mouseout)="stopDrag()" (mousewheel)="onZoom($event)" [width]="mapSettings.size.x" [height]="mapSettings.size.y">
     <div>Loading map data</div>
   </canvas>
-  <div *ngIf="hoverData" class="town-hover" [style.transform]="position.hover">
+  <div *ngIf="hoverData" class="town-hover" [style.transform]="position.hover" [style.width]="boxSize.x" [style.height]="boxSize.y">
     <div><i class="fa fa-home"></i><span>{{hoverData.name}}</span></div>
     <div><i class="fa fa-user-circle-o"></i><span>{{hoverData.owner || '-' }}</span></div>
     <div><i class="fa fa-exchange"></i><span>{{hoverData.distance}}</span></div>

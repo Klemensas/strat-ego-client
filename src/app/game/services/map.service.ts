@@ -136,7 +136,6 @@ export class MapService {
     };
     // Adjust coord if near edge
     if (adjust && realOffset.y.gt(-settings.hexHeight)) {
-      console.log('adjusting coord for edge')
       coords.y = coords.y.minus(1);
       const parity = +coords.y % 2;
       realOffset.y = realOffset.y.minus(settings.aHeight);

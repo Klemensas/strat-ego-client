@@ -1,0 +1,14 @@
+{
+  "name": "Strat Ego",
+  "short_name": "StratEgo",
+  "start_url": "./login",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#fff",
+  "description": "Browser based multiplayer game.",
+  "icons": [{
+    "src": "assets/images/defender.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}

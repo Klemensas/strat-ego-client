@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { GameDataService } from '../../services/game-data.service';
 import { SocketService } from './socket.service';
 import { PlayerService } from './player.service';
 
@@ -23,15 +24,18 @@ export class TownService {
     movement: new Subject(),
     update: new Subject()
   };
+  public worldData;
 
-
-  constructor(private socket: SocketService, private playerService: PlayerService) {
+  constructor(private socket: SocketService, private playerService: PlayerService, private gameData: GameDataService) {
     this.playerService.activeTown.subscribe((town: Town) => {
       if (town) {
         console.log('iniy town', town)
         this.townData[town._id] = town;
         this.updateCurrent(town);
       }
+    });
+    this.gameData.data.activeWorld.subscribe((world) => {
+      this.worldData = world;
     });
     // CONSIDER: this never stops, should it?
     this.timeTick();
@@ -66,6 +70,9 @@ export class TownService {
     town.MovementDestinationTown.sort((a, b) => new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime()).forEach(item => {
       item.endsAt = new Date(item.endsAt).getTime();
     });
+    town.population = this.calculateTownPopulation(town);
+    town.storage = this.worldData.buildingMap.storage.data[town.buildings.storage.level].storage;
+    town.recruitmentModifier = this.worldData.buildingMap.barracks.data[town.buildings.barracks.level].recruitment;
 
     this.shouldCheckQueue = true;
     this.hasCompleteQueue = false;
@@ -91,21 +98,24 @@ export class TownService {
   }
 
   updateValues(town) {
-    console.log();
-      const time = Date.now();
-      town.resources = this.updateResources(time, town.production)
-      town.BuildingQueues = this.updateQueueTime(time, town.BuildingQueues);
-      town.UnitQueues = this.updateQueueTime(time, town.UnitQueues);
-      town.MovementOriginTown = this.updateMovementTime(time, town.MovementOriginTown);
-      town.MovementDestinationTown = this.updateMovementTime(time, town.MovementDestinationTown);
+    const time = Date.now();
+    town.resources = this.updateResources(time, town.production, town.storage);
+    town.BuildingQueues = this.updateQueueTime(time, town.BuildingQueues);
+    town.UnitQueues = this.updateQueueTime(time, town.UnitQueues);
+    town.MovementOriginTown = this.updateMovementTime(time, town.MovementOriginTown);
+    town.MovementDestinationTown = this.updateMovementTime(time, town.MovementDestinationTown);
   }
 
-  updateResources(time, production) {
+  updateResources(time, production, storage) {
       const timePast = (time - this.lastUpdate) / (1000 * 60 * 60);
+      const clay = this.savedRes.clay + production.clay * timePast;
+      const wood = this.savedRes.wood + production.wood * timePast;
+      const iron = this.savedRes.iron + production.iron * timePast;
+
       return {
-        clay: this.savedRes.clay + production.clay * timePast,
-        wood: this.savedRes.wood + production.wood * timePast,
-        iron: this.savedRes.iron + production.iron * timePast,
+        clay: clay < storage ? clay : storage,
+        wood: wood < storage ? wood : storage,
+        iron: iron < storage ? iron : storage,
       };
   }
 
@@ -120,6 +130,7 @@ export class TownService {
   updateMovementTime(time, movements) {
     return movements.map(item => {
       item.timeLeft = item.endsAt - time;
+        this.hasCompleteQueue = this.hasCompleteQueue || item.timeLeft <= 0;
       return item;
     });
   }
@@ -150,6 +161,19 @@ export class TownService {
       target,
       type
     });
+  }
+
+  calculateTownPopulation(town) {
+    const farmPopulation = this.worldData.buildingMap.farm.data[town.buildings.farm.level].population;
+    const usedPopulation = this.worldData.units.reduce((total, unit) => {
+      const count = Object.values(town.units[unit.name]).reduce((a, b) => a + b);
+      return total + count;
+    }, 0);
+    return {
+      total: farmPopulation,
+      used: usedPopulation,
+      available: farmPopulation - usedPopulation,
+    };
   }
 
 }

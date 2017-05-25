@@ -13,8 +13,10 @@ import { Town } from '../models/Town';
 export class BuildingQueueComponent implements OnInit {
   private worldData;
   private queue;
+  private buildingDetails;
 
   constructor(private townService: TownService, private gameData: GameDataService) {
+    this.buildingDetails = this.gameData.buildingData;
     this.gameData.data.activeWorld.subscribe(world => {
       this.worldData = world;
       // this.buildingData = world.buildingData;

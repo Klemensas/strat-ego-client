@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TownService } from '../services/';
 import { GameDataService } from '../../services/game-data.service';
-
+import { MapService } from '../services';
 
 @Component({
   selector: 'movements',
@@ -13,7 +13,9 @@ export class MovementsComponent implements OnInit {
   private incoming = [];
   private returning = [];
   private unitTypes = [];
-  constructor(private townService: TownService, private gameData: GameDataService) { }
+  constructor(private townService: TownService, private gameData: GameDataService, private mapService: MapService) {
+    console.log(mapService);
+  }
 
   ngOnInit() {
     this.gameData.data.activeWorld.subscribe(world => {

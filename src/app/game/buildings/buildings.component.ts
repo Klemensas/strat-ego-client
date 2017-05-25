@@ -12,8 +12,10 @@ export class BuildingsComponent implements OnInit {
   public town;
   public buildingData;
   public buildingDataMap = [];
+  public buildingDetails;
 
   constructor(private townService: TownService, private gameData: GameDataService) {
+    this.buildingDetails = this.gameData.buildingData;
   }
 
   ngOnInit() {

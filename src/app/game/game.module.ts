@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { TourNgBootstrapModule } from 'ng2-tour';
 
 import { SocketService, PlayerService, TownService, MapService, CommandService, ReportService } from './services/index';
 
@@ -27,6 +28,7 @@ import { ReportComponent } from './reports/report/report.component';
     FormsModule,
     gameRouting,
     NgbModule,
+    TourNgBootstrapModule.forRoot(),
   ],
   declarations: [
     gameComponents,
@@ -42,8 +44,13 @@ import { ReportComponent } from './reports/report/report.component';
     CommandService,
     ReportService,
     WorldResolver,
-    SocketResolver
+    SocketResolver,
+    NgbTooltipConfig
   ]
 })
 
-export class GameModule {}
+export class GameModule {
+  constructor(config: NgbTooltipConfig) {
+    config.triggers = 'hover';
+  }
+}

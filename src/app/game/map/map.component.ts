@@ -15,8 +15,12 @@ export class MapComponent implements OnInit, AfterViewChecked  {
 
   public dragging = 0;
   public activeTown;
+  public boxSize = {
+    x: 260,
+    y: 80,
+  };
 
-  private drawCoords = true;
+  private drawCoords = false;
   private mapTiles;
 
   private selected;
@@ -125,7 +129,6 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   }
 
   public startDrag(event) {
-    console.log('start drag')
     const origin = { x: event.offsetX, y: event.offsetY };
     const initialOffset = _.cloneDeep(this.mapOffset);
     this.dragging = 1;
@@ -162,7 +165,6 @@ export class MapComponent implements OnInit, AfterViewChecked  {
 
   private onHover(event) {
     const mouse = { x: Big(event.offsetX), y: Big(event.offsetY) };
-    // console.log(+mouse.x, +mouse.y)
     const position = {
       x: this.mapOffset.xPx.plus(mouse.x),
       y: this.mapOffset.yPx.plus(mouse.y),
@@ -176,11 +178,17 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     // this.hoverPos = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,calc(${+mouse.y.plus(coord.y)}px - 100%),0)`;
     // console.log(this.hoverPos, , );
     if (!town) { return; }
+    let xPos = mouse.x.plus(coord.x).plus(this.mapSettings.radius);
+    let yPos = mouse.y.plus(coord.y);
+
+
     this.hoverData.pos = {
-      x: mouse.x.plus(coord.x),
-      y: mouse.y.plus(coord.y)
+      x: xPos.plus(this.boxSize.x).gte(this.mapSettings.size.x) ? xPos.minus(this.boxSize.x) : xPos,
+      // y: yPos,
+      y: yPos.minus(this.boxSize.y).lte(0) ? yPos.plus(this.mapSettings.height) : yPos.minus(this.mapSettings.aHeight)
     };
-    this.position.hover = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,${+mouse.y.plus(coord.y).minus(this.mapSettings.aHeight  )}px,0)`;
+    this.position.hover = `translate3d(${+this.hoverData.pos.x}px,${+this.hoverData.pos.y}px,0)`;
+    // this.position.hover = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,${+mouse.y.plus(coord.y).minus(this.mapSettings.aHeight  )}px,0)`;
     this.hoverData.distance = this.mapService.distanceFromCoord(
       { x: this.activeTown.location[0], y: this.activeTown.location[1] },
       { x: +coord.xCoord, y: +coord.yCoord }

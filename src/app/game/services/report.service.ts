@@ -29,7 +29,7 @@ export class ReportService {
   updateReports(...reports) {
     const formattedReports = reports
       .map(report => this.formatReport(report))
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     this._reports = formattedReports;
     this.reports.next(formattedReports);
   }

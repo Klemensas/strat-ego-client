@@ -5,9 +5,15 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CountdownPipe implements PipeTransform {
   transform(value: any, format: string): any {
-    const sec = Math.floor(value / 1000) % 60;
-    const min = Math.floor(value / 1000 / 60) % 60;
-    const h = Math.floor(value / 1000 / 60 / 60);
+    let sec = Math.floor(value / 1000) % 60;
+    let min = Math.floor(value / 1000 / 60) % 60;
+    let h = Math.floor(value / 1000 / 60 / 60);
+
+    if (sec < 0 || min < 0 || h < 0) {
+      sec = 0;
+      min = 0;
+      h = 0;
+    }
 
     const timeData = {
       'HH': ('0' + h).slice(-2),

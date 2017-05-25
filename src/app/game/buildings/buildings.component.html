@@ -1,18 +1,42 @@
 <div>
   <strong>Buildings</strong>
-  <div *ngFor="let building of buildings;" class="row mb-1">
-    <div class="col-sm-4">
-      <span>{{building.name}} - {{building.level}}</span>
-      <span *ngIf="building.queued">(building {{building.queued}})</span>
+  <div *ngFor="let building of buildings;" class="py-1">
+    <div class="row align-items-center">
+      <div class="col-sm-4" style="cursor: pointer;" (click)="building.visible = !building.visible">
+        <i class="fa pr-1" [ngClass]="{'fa-chevron-right': !building.visible, 'fa-chevron-down': building.visible}"></i>
+        <span class="pr-2">{{buildingDetails[building.name].name}} - {{building.level}}</span>
+        <span *ngIf="building.queued">(building {{building.queued}})</span>
+      </div>
+      <div class="col-sm-5 flex" *ngIf="buildingDataMap[building.name].data[building.next] && building.available">
+        <div class="resource"><div class="resource-icon wood"></div>{{buildingDataMap[building.name].data[building.next].costs.wood | number:'1.0-0' }}</div>
+        <div class="resource"><div class="resource-icon clay"></div>{{buildingDataMap[building.name].data[building.next].costs.clay | number:'1.0-0'}}</div>
+        <div class="resource"><div class="resource-icon iron"></div>{{buildingDataMap[building.name].data[building.next].costs.iron | number:'1.0-0'}}</div>
+        <div>time {{buildingDataMap[building.name].data[building.next].buildTime | countdown:'HH:mm:ss'}}</div>
+      </div>
+      <div class="col-sm-5 flex" *ngIf="!building.available">
+        <strong class="text-warning">Requires: {{buildingDataMap[building.name].requirements[0].item}} - {{buildingDataMap[building.name].requirements[0].level}}</strong>
+      </div>
+      <div class="col-sm-3" *ngIf="building.available">
+        <button class="btn btn-success" style="cursor: pointer;" *ngIf="canUpgrade(building)" (click)="upgrade(building)">Upgrade</button>
+        <strong *ngIf="!canUpgrade(building) text-warning">Missing resources.</strong>
+      </div>
     </div>
-    <div class="col-sm-5 flex" *ngIf="buildingDataMap[building.name].data[building.next] && building.available">
-      <div class="resource"><div class="resource-icon wood"></div>{{buildingDataMap[building.name].data[building.next].costs.wood | number:'1.0-0' }}</div>
-      <div class="resource"><div class="resource-icon clay"></div>{{buildingDataMap[building.name].data[building.next].costs.clay | number:'1.0-0'}}</div>
-      <div class="resource"><div class="resource-icon iron"></div>{{buildingDataMap[building.name].data[building.next].costs.iron | number:'1.0-0'}}</div>
-      <div>time {{buildingDataMap[building.name].data[building.next].buildTime | countdown:'HH:mm:ss'}}</div>
-    </div>
-    <div class="col-sm-3">
-      <button *ngIf="canUpgrade(building)" (click)="upgrade(building)">Upgrade</button>
+    <div class="row my-1" [ngbCollapse]="!building.visible">
+      <div class="col">
+        <div class="card p-3" *ngIf="buildingDetails[building.name]">
+          <div>{{buildingDetails[building.name].description}}</div>
+          <div class="row pt-2" *ngIf="buildingDetails[building.name].details">
+            <div class="col">Current level
+            {{buildingDetails[building.name].detailText}}:
+            {{buildingDataMap[building.name].data[building.level][buildingDetails[building.name].details]}}</div>
+            <div class="col">Next level
+            {{buildingDetails[building.name].detailText}}:
+            {{buildingDataMap[building.name].data[building.level+1][buildingDetails[building.name].details]}}</div>
+          </div>
+        </div>
+        <!--<div class="card-body">
+        </div>-->
+      </div>
     </div>
   </div>
 </div>

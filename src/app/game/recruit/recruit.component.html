@@ -1,38 +1,69 @@
-<div class="container">
+<div class="container pb-4">
   <h2>Recruitment</h2>
-  <div *ngFor="let unit of unitData" class="row">
-    <ng-template #unitTooltip>
-      {{unit | json}}
-    </ng-template>
-    <div class="col d-flex" [ngbTooltip]="unitTooltip">
-      <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
-      <span>{{unit.name}}</span>
+  <div class="pb-1 text-warning" *ngIf="!town.population.available">Max population reached, upgrade your farm to recruit new troops.</div>
+  <div *ngFor="let unit of unitData" class="py-1">
+    <div class="row align-items-center">
+      <div class="col d-flex" style="cursor: pointer;" (click)="unit.visible = !unit.visible">
+        <i class="fa pr-1 align-items-center d-flex" [ngClass]="{'fa-chevron-right': !unit.visible, 'fa-chevron-down': unit.visible}"></i>
+        <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
+        <span>{{unitDetails[unit.name].name}}</span>
+      </div>
+      <div class="col d-flex">
+        <div class="resource">
+          <div class="resource-icon wood"></div>
+          {{unit.costs.wood | number:'1.0-0'}}
+        </div>
+        <div class="resource">
+          <div class="resource-icon clay"></div>
+          {{unit.costs.clay | number:'1.0-0'}}
+        </div>
+        <div class="resource">
+          <div class="resource-icon iron"></div>
+          {{unit.costs.iron | number:'1.0-0'}}
+        </div>
+        <div>{{unit.recruitTime * town.recruitmentModifier | countdown:'HH:mm:ss'}}</div>
+      </div>
+      <div class="col">
+        <div  *ngIf="canRecruit(unit)">
+          <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
+          <button type="button" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
+        </div>
+      </div>
     </div>
-    <div class="col d-flex">
-      <div class="resource">
-        <div class="resource-icon wood"></div>
-        {{unit.costs.wood | number:'1.0-0'}}
-      </div>
-      <div class="resource">
-        <div class="resource-icon clay"></div>
-        {{unit.costs.clay | number:'1.0-0'}}
-      </div>
-      <div class="resource">
-        <div class="resource-icon iron"></div>
-        {{unit.costs.iron | number:'1.0-0'}}
-      </div>
-      <div>{{unit.recruitTime | countdown:'HH:mm:ss'}}</div>
-    </div>
-    <div class="col">
-      <div  *ngIf="canRecruit(unit)">
-        <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
-        <button type="button" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
+    <div class="row my-1" [ngbCollapse]="!unit.visible">
+      <div class="col">
+        <div class="card p-3" *ngIf="unitDetails[unit.name]">
+          <div>{{unitDetails[unit.name].description}}</div>
+          <div class="row">
+            <div class="col-xl-6">Attack: {{unitDataMap[[unit.name]].combat.attack}} {{unitDataMap[unit.name].attackType}}</div>
+            <div class="col-xl-6">
+              Defense: {{unitDataMap[[unit.name]].combat.defense.general}} general, {{unitDataMap[[unit.name]].combat.defense.cavalry}} cavalry, {{unitDataMap[[unit.name]].combat.defense.archer}} archer</div>
+            <div class="col-xl-6">Haul: {{unitDataMap[[unit.name]].haul}}</div>
+            <div class="col-xl-6">Speed per field: {{unitDataMap[[unit.name]].speed}}</div>
+          </div>
+
+          <!--</div>-->
+        <!--Defense: {{unitDataMap[[unit.name]].combat.defense}}-->
+                    <!--<div class="col">Current level
+            {{buildingDetails[building.name].detailText}}:
+            {{buildingDataMap[building.name].data[building.level][buildingDetails[building.name].details]}}</div>
+            <div class="col">Next level
+            {{buildingDetails[building.name].detailText}}:
+            {{buildingDataMap[building.name].data[building.level+1][buildingDetails[building.name].details]}}</div>-->
+          <!--</div>-->
+        </div>
       </div>
     </div>
   </div>
   <div *ngIf="hasRecruitmentQueue">
     <h3>Ongoing recruiting</h3>
-    <div *ngFor="let queue of town.UnitQueues" class="row">
+    <div class="row">
+      <div class="col d-flex">Unit</div>
+      <div class="col d-flex">Amount</div>
+      <div class="col d-flex">End time</div>
+      <div class="col d-flex">Time left</div>
+    </div>
+    <div *ngFor="let queue of town.UnitQueues" class="row py-2">
       <div class="col d-flex">
         <i class="unit-icon mr-1" [attr.data-unit]="queue.unit"></i>
         <span>{{queue.unit}}</span>
@@ -41,10 +72,10 @@
         {{queue.amount}}
       </div>
       <div class="col">
-        {{queue.recruitTime}}
+        {{queue.endsAt | date:'HH:mm:ss'}}
       </div>
       <div class="col">
-        {{queue.timeLeft | countdown:'HH:mm:ss' }}
+        {{queue.timeLeft | countdown:'HH:mm:ss'}}
       </div>
     </div>
   </div>
