@@ -6,8 +6,8 @@
 export const environment = {
   production: false,
   server: {
-    base: 'http://78.62.199.169:9000',
-    api: 'http://78.62.199.169:9000/api/',
-    auth: 'http://78.62.199.169:9000/auth/'
+    base: 'http://207.154.199.66',
+    api: 'http://207.154.199.66/api/',
+    auth: 'http://207.154.199.66/auth/'
   }
 };

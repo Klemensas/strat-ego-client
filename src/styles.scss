@@ -3,11 +3,6 @@ $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-
-body {
-  // overflow: hidden;
-}
-
 .flex {
   display: flex;
 }
@@ -91,4 +86,8 @@ $icon-size: 24px;
 
 .backdrop-disabled .mat-sidenav-backdrop.mat-sidenav-shown {
   visibility: hidden;
+}
+
+game-container .mat-sidenav-content {
+  overflow: inherit;
 }

@@ -26,10 +26,10 @@
         <div class="card p-3" *ngIf="buildingDetails[building.name]">
           <div>{{buildingDetails[building.name].description}}</div>
           <div class="row pt-2" *ngIf="buildingDetails[building.name].details">
-            <div class="col">Current level
+            <div class="col-md-6">Current level
             {{buildingDetails[building.name].detailText}}:
             {{buildingDataMap[building.name].data[building.level][buildingDetails[building.name].details]}}</div>
-            <div class="col">Next level
+            <div class="col-md-6">Next level
             {{buildingDetails[building.name].detailText}}:
             {{buildingDataMap[building.name].data[building.level+1][buildingDetails[building.name].details]}}</div>
           </div>

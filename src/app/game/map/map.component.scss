@@ -2,7 +2,7 @@
   position: relative;
   margin-left: -15px;
   width: 100vw;
-  height: 93vh;
+  height: calc(100vh - 43px);
   overflow: hidden;
   canvas {
     width: 100%;
@@ -13,12 +13,12 @@
     user-select: none;
   }
   .town-hover {
-    height: 14vh;
+    // height: 14vh;
     padding: 8px;
     position: absolute;
     top: 0;
     left: 0;
-    width: 20vw;
+    // width: 20vw;
     background-color: pink;
     i {
       margin-right: 6px;

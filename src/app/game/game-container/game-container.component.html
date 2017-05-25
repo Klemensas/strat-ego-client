@@ -1,12 +1,12 @@
 <md-sidenav-container class="backdrop-disabled">
-  <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" mode="over" align="start" opened="false">
+  <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
     <button md-mini-fab (click)="sidenavLeft.comp = null; sidenavLeft.toggle()">
       <md-icon>&times;</md-icon>
     </button>
     <movements *ngSwitchCase="'movements'"></movements>
     <command *ngSwitchCase="'command'"></command>
   </md-sidenav>
-  <md-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" mode="over" align="end" opened="false">
+  <md-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
     <button md-mini-fab (click)="sidenavRight.comp = null; sidenavRight.toggle()">
       <md-icon>&times;</md-icon>
     </button>

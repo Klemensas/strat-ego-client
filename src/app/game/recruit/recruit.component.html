@@ -1,14 +1,14 @@
-<div class="container pb-4">
+<div class="container-fluid pb-4">
   <h2>Recruitment</h2>
   <div class="pb-1 text-warning" *ngIf="!town.population.available">Max population reached, upgrade your farm to recruit new troops.</div>
   <div *ngFor="let unit of unitData" class="py-1">
     <div class="row align-items-center">
-      <div class="col d-flex" style="cursor: pointer;" (click)="unit.visible = !unit.visible">
+      <div class="col-sm-6 d-flex" style="cursor: pointer;" (click)="unit.visible = !unit.visible">
         <i class="fa pr-1 align-items-center d-flex" [ngClass]="{'fa-chevron-right': !unit.visible, 'fa-chevron-down': unit.visible}"></i>
         <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
         <span>{{unitDetails[unit.name].name}}</span>
       </div>
-      <div class="col d-flex">
+      <div class="col-sm-6 d-flex">
         <div class="resource">
           <div class="resource-icon wood"></div>
           {{unit.costs.wood | number:'1.0-0'}}
@@ -23,8 +23,8 @@
         </div>
         <div>{{unit.recruitTime * town.recruitmentModifier | countdown:'HH:mm:ss'}}</div>
       </div>
-      <div class="col">
-        <div  *ngIf="canRecruit(unit)">
+      <div class="col-6">
+        <div *ngIf="canRecruit(unit)" class="py-2">
           <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
           <button type="button" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
         </div>
@@ -41,16 +41,6 @@
             <div class="col-xl-6">Haul: {{unitDataMap[[unit.name]].haul}}</div>
             <div class="col-xl-6">Speed per field: {{unitDataMap[[unit.name]].speed}}</div>
           </div>
-
-          <!--</div>-->
-        <!--Defense: {{unitDataMap[[unit.name]].combat.defense}}-->
-                    <!--<div class="col">Current level
-            {{buildingDetails[building.name].detailText}}:
-            {{buildingDataMap[building.name].data[building.level][buildingDetails[building.name].details]}}</div>
-            <div class="col">Next level
-            {{buildingDetails[building.name].detailText}}:
-            {{buildingDataMap[building.name].data[building.level+1][buildingDetails[building.name].details]}}</div>-->
-          <!--</div>-->
         </div>
       </div>
     </div>
@@ -66,7 +56,7 @@
     <div *ngFor="let queue of town.UnitQueues" class="row py-2">
       <div class="col d-flex">
         <i class="unit-icon mr-1" [attr.data-unit]="queue.unit"></i>
-        <span>{{queue.unit}}</span>
+        <span>{{unitDetails[queue.unit].name}}</span>
       </div>
       <div class="col">
         {{queue.amount}}

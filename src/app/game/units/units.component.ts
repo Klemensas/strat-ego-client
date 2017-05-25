@@ -9,10 +9,13 @@ import { TownService } from '../services/town.service'
 })
 export class UnitsComponent implements OnInit {
   units;
-  constructor(private townService: TownService, private gameData: GameDataService) { }
+  public unitDetails;
+  constructor(private townService: TownService, private gameData: GameDataService) {
+    this.unitDetails = this.gameData.unitData;
+  }
 
   ngOnInit() {
-    // this.gameData.data.activeWorld.subscribe(world => {  
+    // this.gameData.data.activeWorld.subscribe(world => {
     //   this.buildingData = world.buildingData;
     //   this.buildingDataMap = world.buildingDataMap;
     // });

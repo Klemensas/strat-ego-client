@@ -79,7 +79,11 @@ export class MapComponent implements OnInit, AfterViewChecked  {
 
 
     // this.hoverPauser = Observable.fromEvent(this.map.nativeElement, 'mousemove').pausable(this.hoverPauser);
-    const moveEvent = Observable.fromEvent(this.map.nativeElement, 'mousemove').throttleTime(50);
+    const moveEvent = Observable.merge(
+      Observable.fromEvent(this.map.nativeElement, 'mousemove'),
+      Observable.fromEvent(this.map.nativeElement, 'touchmove')
+    ).throttleTime(50);
+    // const moveEvent = Observable.fromEvent(this.map.nativeElement, 'mousemove').throttleTime(50);
     this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent)
       .subscribe(data => this.onHover(data));
     this.hoverPauser.next(true);
@@ -129,11 +133,19 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   }
 
   public startDrag(event) {
-    const origin = { x: event.offsetX, y: event.offsetY };
+    const origin = {
+      x: event.offsetX || event.touches[0].pageX - event.touches[0].target.offsetLeft,
+      y: event.offsetY || event.touches[0].pageY - event.touches[0].target.offsetTop,
+    };
     const initialOffset = _.cloneDeep(this.mapOffset);
     this.dragging = 1;
     this.hoverPauser.next(true);
-    Observable.fromEvent(this.map.nativeElement, 'mousemove')
+    console.log('welp da darag should start')
+    // Observable.fromEvent(this.map.nativeElement, 'mousemove')
+    Observable.merge(
+      Observable.fromEvent(this.map.nativeElement, 'mousemove'),
+      Observable.fromEvent(this.map.nativeElement, 'touchmove')
+    )
       .takeWhile(() => !!this.dragging)
       .throttleTime(10)
       .subscribe(data => this.mapDrag(origin, data, initialOffset))
@@ -145,9 +157,10 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   }
 
   public mapDrag(origin, event, offset) {
+    console.log('sup drag', origin, event.offsetX, event.offsetY, offset);
     const difference = {
-      x: origin.x - event.offsetX,
-      y: origin.y - event.offsetY
+      x: origin.x - (event.offsetX || event.touches[0].pageX - event.touches[0].target.offsetLeft),
+      y: origin.y - (event.offsetY || event.touches[0].pageY - event.touches[0].target.offsetTop)
     };
     this.dragging = 2;
 
