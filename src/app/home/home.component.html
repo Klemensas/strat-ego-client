@@ -10,7 +10,7 @@
           <a class="nav-link" [routerLink]="['/']">Home</a>
         </li>
       </ul>
-      <div class="d-flex justify-content-center align-items-center" *ngIf="!!user">
+      <div class="d-flex justify-content-center align-items-center" *ngIf="user">
         <span>Welcome <strong>{{ user.name }}</strong></span>
         <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
       </div>
@@ -25,10 +25,10 @@
 <div class="container py-5">
   <h2>Available worlds</h2>
   <ul>
-    <li *ngFor="let world of worlds">
-      <span>{{world.config.name}}</span>
+    <li *ngFor="let world of worlds$ | async">
+      <span>{{world.world.name}}</span>
       <span *ngIf="user">
-        <a [routerLink]="['/world', world.config.name]">
+         <a [routerLink]="['/world', world.world.name]">
         Play
         </a>
       </span>

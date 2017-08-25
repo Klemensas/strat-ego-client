@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/operator/cache';
+import { Store } from '@ngrx/store';
+import * as io from 'socket.io-client';
 
 import { environment } from '../../../environments/environment';
-import { AuthService } from '../../auth/auth.service';
-
-import * as io from 'socket.io-client';
+import { StoreState } from '../../store';
+import { AuthActions } from '../../store/auth';
+import { PlayerActions } from '../../store/player';
+import { TownActions } from '../../store/town';
+import { MapActions } from '../../store/map';
+import { ReportActions } from '../../store/report';
 
 @Injectable()
 export class SocketService {
@@ -15,17 +20,21 @@ export class SocketService {
 
     public events = new Map();
 
-    constructor(public auth: AuthService) {
+    constructor(private store: Store<StoreState>) {
     }
 
-    public connect() {
+    public connect(token): Observable<any> {
         const world = 'megapolis' // replace with target world data
         // console.log('connecting to socket', this.auth.tokenData)
         this.socket = io.connect(environment.server.base, {
             path: '/socket.io-client',
-            query: `token=${this.auth.token}&world=${world}`,
+            query: `token=${token}&world=${world}`,
         });
 
+        this.socket.on('player', (data) => this.store.dispatch({ type: PlayerActions.UPDATE, payload: data }))
+        this.socket.on('town', (data) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload: data }))
+        this.socket.on('map', (data) => this.store.dispatch({ type: MapActions.UPDATE, payload: data }))
+        this.socket.on('report', (data) => this.store.dispatch({ type: ReportActions.UPDATE, payload: data }))
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));
@@ -33,7 +42,7 @@ export class SocketService {
 
         // TODO: rework returned value into something valid when working with server side socket authentication
         return Observable.create(observer => {
-            this.socket.on('connect', data => observer.next(this.socket));
+          this.socket.on('connect', data => observer.next(this.socket));
         });
     }
 
@@ -48,54 +57,47 @@ export class SocketService {
 
     private socketObservable(event) {
         return Observable.create((observer: any) => {
-            this.socket.on(event, (data: any) => observer.next(data));
+            this.socket.on(event, (data: any) => {
+              console.log('wup', event, data);
+              observer.next(data)
+            });
         })
-// .cache();
+        // .cache();
     }
 
-//      /**
-//       * Get items observable
-//       *
-//       * @class SocketService
-//       * @method get
-//       * @param name string
-//       * @return Observable<any>
-//       */
-    get(name: string): Observable<any> {
-        this.name = name;
-        let socketUrl = this.host + "/" + this.name;
-        this.socket = io.connect(socketUrl);
-        this.socket.on("connect", (a) => this.onConnect(a));
-        this.socket.on("disconnect", () => this.disconnect());
-        this.socket.on("error", (error: string) => {
-            console.log(`ERROR: "${error}" (${socketUrl})`);
-        });
+    // get(name: string): Observable<any> {
+    //     this.name = name;
+    //     let socketUrl = this.host + "/" + this.name;
+    //     this.socket = io.connect(socketUrl);
+    //     this.socket.on("connect", (a) => this.onConnect(a));
+    //     this.socket.on("disconnect", () => this.disconnect());
+    //     this.socket.on("error", (error: string) => {
+    //         console.log(`ERROR: "${error}" (${socketUrl})`);
+    //     });
 
-        // Return observable which follows "create" and "remove" signals from socket stream
-        return Observable.create((observer: any) => {
-            this.socket.on("create", (item: any) => observer.next({ action: "create", item: item }) );
-            this.socket.on("remove", (item: any) => observer.next({ action: "remove", item: item }) );
-            return () => this.socket.close();
-        });
-    }
+    //     // Return observable which follows "create" and "remove" signals from socket stream
+    //     return Observable.create((observer: any) => {
+    //         this.socket.on("create", (item: any) => observer.next({ action: "create", item: item }) );
+    //         this.socket.on("remove", (item: any) => observer.next({ action: "remove", item: item }) );
+    //         return () => this.socket.close();
+    //     });
+    // }
 
-    create(name: string) {
-        this.socket.emit("create", name);
-    }
+    // create(name: string) {
+    //     this.socket.emit('create', name);
+    // }
 
-    remove(name: string) {
-        this.socket.emit("remove", name);
-    }
+    // remove(name: string) {
+    //     this.socket.emit('remove', name);
+    // }
 
-    private onConnect(a) {
-        console.log(`Connected to ${this.name}`);
-        // console.log(a, this.socket);
+    // private onConnect(a) {
+    //     console.log(`Connected to ${this.name}`);
+    //     // Request initial list when connected
+    //     // this.socket.emit('player');
+    // }
 
-        // Request initial list when connected
-        // this.socket.emit('player');
-    }
-
-    private onDisconnect() {
-        console.log(`Disconnected from "${this.name}"`);
-    }
+    // private onDisconnect() {
+    //     console.log(`Disconnected from "${this.name}"`);
+    // }
 }

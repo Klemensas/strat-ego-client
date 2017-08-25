@@ -101,7 +101,7 @@ export class MapService {
       if (this.lastUpdate) {
         return this.formatMapData(resolve);
       }
-      this.queuedPromise.push(resolve);
+    this.queuedPromise.push(resolve);
       this.socket.sendEvent('map', {});
     });
   }
@@ -159,7 +159,6 @@ export class MapService {
 
     function odd(coords) { // A
       const offsetGradient = offset.x.times(settings.edgeGradient);
-      // console.log('a', +offset.x, +offset.y, +settings.hexHeight, +offsetGradient, offset.y.lt(-settings.hexHeight.plus(offsetGradient)), offset.y.lt(settings.hexHeight.times(-1).plus(offsetGradient)), -settings.hexHeight.plus(offsetGradient));
       if (offset.y.lt(settings.hexHeight.minus(offsetGradient))) {
         coords.x = coords.x.minus(1);
         coords.y = coords.y.minus(1);

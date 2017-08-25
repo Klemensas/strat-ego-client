@@ -4,6 +4,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 
+
+import { AppStore } from './store';
+
 import { AppComponent } from './app.component';
 import { routing, routedComponents } from './app.routing';
 
@@ -11,6 +14,7 @@ import { Http, HttpModule, RequestOptions } from '@angular/http';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 import { AuthGuard } from './auth.guard';
+import { SocketGuard } from './game/services/socket.guard';
 // import { PlayerResolver } from './player.resolver';
 
 import { AuthService } from './auth/auth.service';
@@ -38,6 +42,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     HttpModule,
     GameModule,
     NgbModule.forRoot(),
+    AppStore,
   ],
   declarations: [
     AppComponent,
@@ -50,6 +55,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       deps: [Http, RequestOptions]
     },
     AuthGuard,
+    SocketGuard,
     // PlayerResolver,
     AuthService,
     GameDataService
@@ -57,7 +63,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
+  constructor(/* private authService: AuthService */) {
     (window.screen as any).orientation.lock('landscape')
       .then(() => {})
       .catch(() => {});

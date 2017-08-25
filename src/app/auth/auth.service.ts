@@ -5,18 +5,20 @@ import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import { StoreState } from '../store';
+import { AuthActions } from '../store/auth';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthService {
   jwtHelper: JwtHelper;
-  token: string;
-  tokenData: any;
   tokenExpirationTimeout;
   user = new BehaviorSubject(null);
 
-  constructor(private http:Http, private authHttp:AuthHttp, private router:Router) {
+  constructor(private http: Http, private authHttp: AuthHttp, private router: Router, private store: Store<StoreState>) {
     this.jwtHelper = new JwtHelper();
     this.getToken();
   }
@@ -28,60 +30,47 @@ export class AuthService {
       localStorage.removeItem('jwt');
       return false;
     }
-    this.token = token;
-    this.tokenData = this.jwtHelper.decodeToken(token);
-    // TODO: upgrade this
-    this.getUser().subscribe()
+    // this.tokenData = this.jwtHelper.decodeToken(token);
+    this.store.dispatch({ type: AuthActions.LOGIN_SUCCESS, payload: token });
+  }
+
+  storeToken(token) {
+    const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(token)).getTime()
+    this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
+    localStorage.setItem('jwt', token);
+    return token;
+  }
+
+  removeToken() {
+    clearTimeout(this.tokenExpirationTimeout);
+    localStorage.removeItem('jwt');
   }
 
   login(data) {
     return this.http.post(`${environment.server.auth}local`, data)
       .map(token => token.json().token)
-      .flatMap(token => {
-        localStorage.setItem('jwt', token);
-        this.token = token;
-        this.tokenData = this.jwtHelper.decodeToken(token);
-        return this.getUser();
-      });
+      .map(token => this.storeToken(token));
   }
 
   register(data) {
     return this.http.post(`${environment.server.api}users`, data)
       .map(token => token.json().token)
-      .flatMap(token => {
-        localStorage.setItem('jwt', token);
-        this.token = token;
-        this.tokenData = this.jwtHelper.decodeToken(token);
-        return this.getUser();
-      });
+      .map(token => this.storeToken(token));
   }
 
   logout() {
-    console.log('logout');
-    this.token = null;
-    this.tokenData = null;
-    localStorage.removeItem('jwt');
-    this.user.next(null);
-    this.router.navigate(['/']);
+    this.removeToken();
+    this.store.dispatch({ type: AuthActions.LOGOUT })
   }
 
   tokenExpiration() {
     console.log('token expired');
-    this.token = null;
-    this.user.next(null);
-    localStorage.removeItem('jwt');
-    this.router.navigate(['/login']);
+    this.logout();
   }
 
   getUser(): Observable<any> {
-    const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(this.token)).getTime()
-    this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
     return this.authHttp.get(`${environment.server.api}users/me`)
       .map(data => data.json())
-      .map(data => {
-        this.user.next(data);
-        return data;
-      })
       // .cache();
 
       // user$.subscribe(
@@ -95,14 +84,5 @@ export class AuthService {
 
       // return user$;
   }
-
-  isLoggedIn(): boolean {
-    return this.token && !this.jwtHelper.isTokenExpired(this.token);
-  }
-
-  hasRole(role): boolean {
-    return this.tokenData.role === role;
-  }
-
 }
 

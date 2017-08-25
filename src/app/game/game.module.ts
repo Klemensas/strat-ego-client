@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { TourNgBootstrapModule } from 'ng2-tour';
 
 import { SocketService, PlayerService, TownService, MapService, CommandService, ReportService } from './services/index';
 
 import { gameRouting, gameComponents } from './game.routing';
 import { ResourcesComponent } from './resources';
 
-import { WorldResolver } from './services/world.resolver';
-import { SocketResolver } from './services/socket.resolver';
+import { WorldGuard } from './services/world.guard';
+import { FullGuard } from '../full.guard';
 import { BuildingsComponent } from './buildings/buildings.component';
 import { BuildingQueueComponent } from './building-queue/building-queue.component';
 import { UnitsComponent } from './units/units.component';
@@ -28,12 +27,17 @@ import { ReportComponent } from './reports/report/report.component';
     FormsModule,
     gameRouting,
     NgbModule,
-    TourNgBootstrapModule.forRoot(),
   ],
   declarations: [
     gameComponents,
     CountdownPipe,
-    ResourcesComponent, BuildingsComponent, BuildingQueueComponent, UnitsComponent, CommandComponent, MovementsComponent, ReportsComponent,
+    ResourcesComponent,
+    BuildingsComponent,
+    BuildingQueueComponent,
+    UnitsComponent,
+    CommandComponent,
+    MovementsComponent,
+    ReportsComponent,
     ReportComponent,
   ],
   providers: [
@@ -43,9 +47,9 @@ import { ReportComponent } from './reports/report/report.component';
     MapService,
     CommandService,
     ReportService,
-    WorldResolver,
-    SocketResolver,
-    NgbTooltipConfig
+    WorldGuard,
+    FullGuard,
+    NgbTooltipConfig,
   ]
 })
 

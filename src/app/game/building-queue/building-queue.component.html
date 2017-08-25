@@ -1,4 +1,6 @@
-<strong *ngIf="queue.length">Building Queue</strong>
-<div *ngFor="let item of queue">
-  {{ buildingDetails[item.building].name }} {{ item.level + 1 }} - {{ item.timeLeft | countdown:'HH:mm:ss' }} - {{ item.endsAt | date:'HH:mm:ss' }}
+<div *ngIf="queue$ | async; let queue">
+  <strong>Building Queue</strong>
+  <div *ngFor="let item of queue">
+    {{ buildingDetails[item.building].name }} {{ item.level + 1 }} - {{ item.timeLeft | countdown:'HH:mm:ss' }} - {{ item.endsAt | date:'HH:mm:ss' }}
+  </div>
 </div>

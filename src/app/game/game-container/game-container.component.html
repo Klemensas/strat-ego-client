@@ -1,4 +1,4 @@
-<md-sidenav-container class="backdrop-disabled">
+ <md-sidenav-container class="backdrop-disabled">
   <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
     <button md-mini-fab (click)="sidenavLeft.comp = null; sidenavLeft.toggle()">
       <md-icon>&times;</md-icon>
@@ -10,7 +10,7 @@
     <button md-mini-fab (click)="sidenavRight.comp = null; sidenavRight.toggle()">
       <md-icon>&times;</md-icon>
     </button>
-    <recruit *ngSwitchCase="'recruit'"></recruit>
+    <recruit *ngSwitchCase="'recruit'" [town]="ts$ | async" [worldData]="worldData$ | async"></recruit>
     <reports *ngSwitchCase="'reports'" [reports]="reports"></reports>
   </md-sidenav>
   <header>
@@ -31,7 +31,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a *ngIf="canRecruit" class="nav-link" (click)="sidenavRight.comp = 'recruit'; sidenavRight.toggle()">
+            <a *ngIf="canRecruit$ | async" class="nav-link" (click)="sidenavRight.comp = 'recruit'; sidenavRight.toggle()">
               <i class="fa fa-users" aria-hidden="true"></i> Recruit
             </a>
           </li>

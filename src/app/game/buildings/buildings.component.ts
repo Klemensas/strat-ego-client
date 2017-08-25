@@ -1,65 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import { GameDataService } from '../../services/game-data.service'
-import { TownService } from '../services/town.service'
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+
+import { resourceTime } from '../utils';
+import { buildingData } from '../staticData';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'buildings',
   templateUrl: './buildings.component.html',
   styleUrls: ['./buildings.component.scss'],
 })
-export class BuildingsComponent implements OnInit {
-  buildings;
-  public town;
-  public buildingData;
-  public buildingDataMap = [];
-  public buildingDetails;
+export class BuildingsComponent implements OnChanges {
+  @Input() public town;
+  @Input() public worldData;
+  @Output() public upgradeBuilding: EventEmitter<any> = new EventEmitter();
 
-  constructor(private townService: TownService, private gameData: GameDataService) {
-    this.buildingDetails = this.gameData.buildingData;
-  }
+  public buildings = [];
+  public buildingDetails = buildingData;
 
-  ngOnInit() {
-    this.gameData.data.activeWorld.subscribe(world => {
-      this.buildingData = world.buildings;
-      this.buildingDataMap = world.buildingMap;
-    });
-    this.townService.currentTown.subscribe(town => {
-      this.town = town;
-      this.buildings = this.modifyBuildings(town.buildings);
-    });
-  }
-
-  modifyBuildings(buildings) {
-    return this.buildingData.map(item => {
-      const building = buildings[item.name];
-      building.name = item.name;
-      building.next = building.queued || building.level;
-      building.available = true;
-      if (building.next === 0 && item.requirements) {
-        building.available = item.requirements.every(b => b.level <= buildings[b.item].level);
+  public ngOnChanges(changes) {
+    this.buildings = Object.entries(this.town.buildings).map(([name, building]) => {
+      const next = building.queued || building.level;
+      const targetBuilding = this.worldData.buildingMap[name];
+      const requirements = targetBuilding.requirements;
+      const nextLevel = targetBuilding.data[next];
+      const availableIn = resourceTime(this.town.resources, nextLevel.costs, this.town.production);
+      let available = true;
+      if (!next && requirements) {
+        available = requirements.every((req) => req.level <= this.town.buildings[req.item].level)
       }
-      return building;
+      return {
+        ...building,
+        ...nextLevel,
+        name,
+        next,
+        requirements,
+        available,
+        availableIn,
+      };
     });
   }
 
-  canUpgrade(building) {
-    const targetBuilding = this.buildingDataMap[building.name];
-    const targetLevel = targetBuilding.data[building.next].costs;
-    if (building.next === 0 && targetBuilding.requirements) {
-      const meetsReqs = targetBuilding.requirements.every(({ item, level }) => this.town.buildings[item].level >= level)
-      if (!meetsReqs) {
-        return false;
-      }
-    }
+  // canUpgrade(building) {
+  //   const targetBuilding = this.buildingDataMap[building.name];
+  //   const targetLevel = targetBuilding.data[building.next].costs;
+  //   if (building.next === 0 && targetBuilding.requirements) {
+  //     const meetsReqs = targetBuilding.requirements.every(({ item, level }) => this.town.buildings[item].level >= level)
+  //     if (!meetsReqs) {
+  //       return false;
+  //     }
+  //   }
 
-    return (
-      targetLevel.clay <= this.town.resources.clay &&
-      targetLevel.wood <= this.town.resources.wood &&
-      targetLevel.iron <= this.town.resources.iron
-    )
-  }
+  //   return (
+  //     targetLevel.clay <= this.town.resources.clay &&
+  //     targetLevel.wood <= this.town.resources.wood &&
+  //     targetLevel.iron <= this.town.resources.iron
+  //   )
+  // }
 
-  upgrade(building) {
-    this.townService.upgradeBuilding({ building: building.name, level: building.next })
+  public upgrade(building) {
+    this.upgradeBuilding.emit({ building: building.name, level: building.level });
   }
 }

@@ -1,5 +1,5 @@
-<div *ngIf="resources">
-  <div class="resource"><div class="resource-icon wood"></div>{{resources.wood | number:'1.0-0'}}/{{maxRes}} (+{{production.wood | number:'1.0-0'}})</div>
-  <div class="resource"><div class="resource-icon clay"></div>{{resources.clay | number:'1.0-0'}}/{{maxRes}} (+{{production.clay | number:'1.0-0'}})</div>
-  <div class="resource"><div class="resource-icon iron"></div>{{resources.iron | number:'1.0-0'}}/{{maxRes}} (+{{production.iron | number:'1.0-0'}})</div>
+<div *ngIf="availableResources$ | async; let res">
+  <div class="resource"><div class="resource-icon wood"></div>{{res.wood | number:'1.0-0'}}/{{maxRes}} (+{{production.wood | number:'1.0-0'}})</div>
+  <div class="resource"><div class="resource-icon clay"></div>{{res.clay | number:'1.0-0'}}/{{maxRes}} (+{{production.clay | number:'1.0-0'}})</div>
+  <div class="resource"><div class="resource-icon iron"></div>{{res.iron | number:'1.0-0'}}/{{maxRes}} (+{{production.iron | number:'1.0-0'}})</div>
 </div>

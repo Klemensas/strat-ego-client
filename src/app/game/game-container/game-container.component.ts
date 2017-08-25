@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { MdSidenav } from '@angular/material';
 
-import { PlayerService, TownService, SocketService, ReportService } from '../services';
-import { AuthService } from '../../auth/auth.service';
+import { getActiveTown } from '../../store/town';
+import { getActiveWorld } from '../../store/world';
+import { AuthActions } from '../../store/auth';
+import { StoreState } from '../../store';
 
 @Component({
   selector: 'game-container',
@@ -13,25 +17,31 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenavRight') sidenavRight;
 
   public reports = [];
-  public canRecruit = false;
+  public ts$ = this.store.select(getActiveTown).map((d) => { console.log('woop woop', d); return d; })
+  public worldData$ = this.store.select(getActiveWorld);
+  public canRecruit$ = this.store.select(getActiveTown)
+    .map((town) => town && !!town.buildings.barracks.level);
   public isVisible;
 
-  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService, private authService: AuthService, private reportService: ReportService) {
-  }
+  constructor(
+    private store: Store<StoreState>
+  ) {}
 
   ngOnInit() {
+    // this.store.select()
+    console.log('wat');
     // Initialize sockets
-    this.playerService.observePlayer();
-    this.townService.observeTown().subscribe(town => {
-      if (town) {
-        this.canRecruit = !!town.buildings['barracks'].level;
-      }
-    });
-    this.playerService.sidenavEvents.subscribe(target => this.sidenavToggle(this.sidenavLeft, target));
-    this.reportService.observeReports().subscribe(reports => {
-      this.reports = reports;
-      console.log('report?', reports)
-    })
+    // this.playerService.observePlayer();
+    // this.townService.observeTown().subscribe(town => {
+    //   if (town) {
+    //     this.canRecruit = !!town.buildings['barracks'].level;
+    //   }
+    // });
+    // this.playerService.sidenavEvents.subscribe(target => this.sidenavToggle(this.sidenavLeft, target));
+    // this.reportService.observeReports().subscribe(reports => {
+    //   this.reports = reports;
+    //   console.log('report?', reports)
+    // })
   }
 
   sidenavToggle(nav, component) {
@@ -41,10 +51,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.socket.disconnect();
+    // this.socket.disconnect();
   }
 
   logout() {
-    this.authService.logout();
+    this.store.dispatch({ type: AuthActions.LOGOUT });
+    // this.authService.logout();
   }
 }

@@ -1,16 +1,27 @@
-import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MapService, PlayerService, CommandService } from '../services';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/never';
+import 'rxjs/add/operator/takeWhile';
+import 'rxjs/add/operator/throttleTime';
+import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
 import * as Big from 'big.js';
+import { Store } from '@ngrx/store';
+
+import { StoreState } from '../../store';
+import { getActiveTown } from '../../store/town';
+import { MapService, PlayerService, CommandService } from '../services';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit, AfterViewChecked  {
+export class MapComponent implements AfterViewInit, AfterViewChecked  {
   @ViewChild('map') map;
 
   public dragging = 0;
@@ -48,14 +59,19 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     click: null
   };
 
-  constructor(private mapService: MapService, private playerService: PlayerService, private commandService: CommandService, private sanitizer: DomSanitizer) {
+  constructor(
+    private mapService: MapService,
+    private store: Store<StoreState>,
+    private commandService: CommandService,
+    private sanitizer: DomSanitizer
+  ) {
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
+
+    // this.store.select(getActiveTown)
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.ctx = this.map.nativeElement.getContext('2d');
     this.ctx.lineWidth = 1;
 
@@ -64,18 +80,19 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       y: this.map.nativeElement.offsetHeight
     });
 
-    this.playerService.activeTown.subscribe(data => {
-      if (!data) { return; }
-      this.activeTown = data;
-      this.mapOffset = this.centerOffset({ x: data.location[0], y: data.location[1] });
-      this.mapService.getMapData({}).then(mapData => {
-        this.mapData = mapData;
-        this.mapSettings.shouldDraw = true;
-        // TODO: Temporary fix
-        this.hoverPauser.next(false);
-        console.log('got da data', this.mapSettings.shouldDraw, this, this.mapOffset, this.mapSettings.width);
-      });
-    });
+    // this.playerService.activeTown.subscribe(data => {
+    //   if (!data) { return; }
+    //   this.activeTown = data;
+    //   this.mapOffset = this.centerOffset({ x: data.location[0],
+    //     y: data.location[1] });
+    //   this.mapService.getMapData({}).then(mapData => {
+    //     this.mapData = mapData;
+    //     this.mapSettings.shouldDraw = true;
+    //     // TODO: Temporary fix
+    //     this.hoverPauser.next(false);
+    //     console.log('got da data', this.mapSettings.shouldDraw, this, this.mapOffset, this.mapSettings.width);
+    //   });
+    // });
 
 
     // this.hoverPauser = Observable.fromEvent(this.map.nativeElement, 'mousemove').pausable(this.hoverPauser);
@@ -89,7 +106,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.hoverPauser.next(true);
   }
 
-  ngAfterViewChecked() {
+  public ngAfterViewChecked() {
     if (this.ctx && this.mapSettings.shouldDraw && this.mapData) {
       this.drawMap(this.mapOffset);
     }
@@ -105,7 +122,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
 
   toggleSidenav(target, data) {
     this.commandService.targeting.next(data);
-    this.playerService.toggleSidenav(target);
+    // this.playerService.toggleSidenav(target);
     console.log('toggle sidenav!')
   }
 
@@ -275,7 +292,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       let xOffset = offset.x;
       let x = 0;
       if (y && +yCoord % 2 !== parity) {
-        const offsetModifier = parity ? 1: -1;
+        const offsetModifier = parity ? 1 : -1;
         xOffset = xOffset.plus(this.mapSettings.width.times(offsetModifier).div(2));
         x -= parity;
       }
@@ -333,8 +350,8 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.ctx.stroke();
 
     if (this.drawCoords) {
-      this.ctx.font = "14pt Calibri";
-      this.ctx.fillStyle = "#ff0000";
+      this.ctx.font = '14pt Calibri';
+      this.ctx.fillStyle = '#ff0000';
       this.ctx.lineWidth = 1;
       this.ctx.strokeText(coordString, +x, +y + this.mapSettings.height / 2);
       this.ctx.fillText(coordString, +x, +y + this.mapSettings.height / 2);

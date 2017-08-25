@@ -6,8 +6,8 @@
 export const environment = {
   production: false,
   server: {
-    base: 'http://207.154.199.66',
-    api: 'http://207.154.199.66/api/',
-    auth: 'http://207.154.199.66/auth/'
+    base: 'http://localhost:9000',
+    api: 'http://localhost:9000/api/',
+    auth: 'http://localhost:9000/auth/'
   }
 };

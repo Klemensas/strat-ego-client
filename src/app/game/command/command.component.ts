@@ -21,28 +21,28 @@ export class CommandComponent implements OnInit {
   public unitDetails;
 
   constructor(private townService: TownService, private commandService: CommandService, private gameData: GameDataService, private mapService: MapService) {
-    this.unitDetails = this.gameData.unitData;
-    this.commandService.targeting.subscribe(target => {
-      this.target = target;
-      this.targetCoords = target
-    });
-    this.townService.townEvents.movement.subscribe(update => {
-      this.sending = false;
-      this.sent = true;
-    });
+    // this.unitDetails = this.gameData.unitData;
+    // this.commandService.targeting.subscribe(target => {
+    //   this.target = target;
+    //   this.targetCoords = target
+    // });
+    // this.townService.townEvents.movement.subscribe(update => {
+    //   this.sending = false;
+    //   this.sent = true;
+    // });
   }
 
   ngOnInit() {
-    this.gameData.data.activeWorld.subscribe(world => {
-      this.unitData = world.units;
-      this.unitDataMap = world.unitMap;
-    });
-    this.townService.currentTown.subscribe(town => {
-      if (town) {
-        this.townId = town._id;
-        this.townUnits = town.units;
-      }
-    });
+    // this.gameData.data.activeWorld.subscribe(world => {
+    //   this.unitData = world.units;
+    //   this.unitDataMap = world.unitMap;
+    // });
+    // this.townService.currentTown.subscribe(town => {
+    //   if (town) {
+    //     this.townId = town._id;
+    //     this.townUnits = town.units;
+    //   }
+    // });
   }
 
   sendCommand(isSupport, form) {

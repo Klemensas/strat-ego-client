@@ -1,16 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnChanges, OnDestroy, Input } from '@angular/core';
+
 import { GameDataService } from '../../services/game-data.service';
 import { TownService } from '../services/town.service';
+import { unitData } from '../staticData';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'recruit',
   templateUrl: './recruit.component.html',
   styleUrls: ['./recruit.component.scss'],
 })
-export class RecruitComponent implements OnInit, OnDestroy {
-  public unitDetails;
+export class RecruitComponent implements OnChanges, OnDestroy {
+  @Input() public town;
+  @Input() public worldData;
+  public unitDetails = unitData;
   public units;
-  public town;
+  // public town;
   public unitData;
   public unitDataMap;
   public recruitment = {
@@ -28,24 +33,24 @@ export class RecruitComponent implements OnInit, OnDestroy {
 
   constructor(private gameData: GameDataService, private townService: TownService) { }
 
-  ngOnInit() {
-    this.unitDetails = this.gameData.unitData;
-    this.subscriptions.gameData = this.gameData.data.activeWorld.subscribe(world => {
-      this.unitData = world.units;
-      this.unitDataMap = world.unitMap;
-      console.log('sup', this.unitDataMap);
-    });
-    this.subscriptions.currentTown = this.townService.currentTown.subscribe(town => {
-      if (town) {
-        this.town = town;
-        this.recruitment.resources = this.town.resources;
-        // this.units = this.modifyUnits(town.units);
-        this.hasRecruitmentQueue = this.town.UnitQueues.length;
-      }
-    });
-    this.subscriptions.recruitEvents = this.townService.townEvents.recruit.subscribe(event => {
-      this.recruiting = false;
-    });
+  ngOnChanges() {
+    this.unitData = this.worldData.units;
+    // this.subscriptions.gameData = this.gameData.data.activeWorld.subscribe(world => {
+    //   this.unitData = world.units;
+    //   this.unitDataMap = world.unitMap;
+    //   console.log('sup', this.unitDataMap);
+    // });
+    // this.subscriptions.currentTown = this.townService.currentTown.subscribe(town => {
+    //   if (town) {
+    //     this.town = town;
+    //     this.recruitment.resources = this.town.resources;
+    //     // this.units = this.modifyUnits(town.units);
+    //     this.hasRecruitmentQueue = this.town.UnitQueues.length;
+    //   }
+    // });
+    // this.subscriptions.recruitEvents = this.townService.townEvents.recruit.subscribe(event => {
+    //   this.recruiting = false;
+    // });
   }
 
   ngOnDestroy() {
