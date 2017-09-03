@@ -1,8 +1,8 @@
 <div class="container-fluid pb-4">
   <h2>Movements</h2>
-  <div *ngIf="incoming.length">
+  <div *ngIf="town.MovementDestinationTown.length">
     <h3>Incoming movements</h3>
-    <div *ngFor="let movement of incoming">
+    <div *ngFor="let movement of town.MovementDestinationTown">
       <div class="row">
         <div class="col">{{ movement.MovementOriginId }}</div>
         <div class="col">{{ movement.timeLeft | countdown:'HH:mm:ss' }}</div>
@@ -13,9 +13,9 @@
       </div>
     </div>
   </div>
-  <div *ngIf="outgoing.length">
+  <div *ngIf="town.MovementOriginTown.length">
     <h3>Your commands</h3>
-    <div *ngFor="let movement of outgoing">
+    <div *ngFor="let movement of town.MovementOriginTown">
       <div class="row">
         <div class="col">
           <i class="fa" [ngClass]="{ 'fa-caret-right': !movement.isVisible, 'fa-caret-down': movement.isVisible }" (click)="movement.isVisible = !movement.isVisible"></i>
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="row" [hidden]="!movement.isVisible">
-        <div class="col d-flex flex-row" *ngFor="let unit of unitTypes">
+        <div class="col d-flex flex-row" *ngFor="let unit of worldData.units">
           <div class="unit-icon" [attr.data-unit]="unit.name"></div>
           <div>{{ movement.units[unit.name] || 0 }}</div>
         </div>

@@ -9,6 +9,7 @@ export class TownActions {
   public static SET_ACTIVE_TOWN = '[Town] SET_ACTIVE_TOWN';
   public static CHANGE_NAME = '[Town] CHANGE_NAME';
   public static UPGRADE_BUILDING = '[Town] UPGRADE_BUILDING';
+  public static RECRUIT = '[Town] RECRUIT';
   // public static LOGIN_SUCCESS: string = '[Town] LOGIN Success';
   // public static LOGIN_FAIL: string = '[Town] LOGIN Fail';
 }

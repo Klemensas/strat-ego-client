@@ -1,5 +1,5 @@
 <div class="container-fluid pb-5">
   <h2>Reports</h2>
-  <report [report]="report" [unitList]="unitArray" *ngFor="let report of reports"></report>
+  <report [report]="report" [unitList]="worldData.units" *ngFor="let report of reports"></report>
   <div *ngIf="!reports.length">There are no reports.</div>
 </div>

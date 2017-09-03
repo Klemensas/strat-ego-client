@@ -1,6 +1,26 @@
 import { User } from '../user/';
 import { Resources } from '../world';
 
+export interface TownActionState {
+  name: boolean;
+  build: boolean;
+  movement: boolean;
+  recruit: boolean;
+}
+
+export interface TownPopulation {
+  total: number;
+  used: number;
+  available: number;
+}
+
+export const TownDefaultActionState: TownActionState = {
+  build: false,
+  name: false,
+  movement: false,
+  recruit: false,
+}
+
 export interface TownUnit {
   inside: number;
   outside: number;
@@ -20,6 +40,9 @@ export interface Town {
   loaylty: number;
   location: [number, number];
   production: Resources;
+  population: TownPopulation;
+  storage: number;
+  recruitmentModifier: number;
   resources: Resources;
   units: {
     [name: string]: TownUnit
@@ -40,4 +63,5 @@ export interface Town {
   UnitQueues: any[];
   createdAt: string;
   updatedAt: string;
+  _actionState: TownActionState;
 };

@@ -9,15 +9,15 @@ import { GameDataService } from '../../services/game-data.service';
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   @Input() public reports;
+  @Input() public worldData;
   public unitArray;
 
   constructor(private gameDataService: GameDataService) {}
 
   ngOnInit() {
-    this.gameDataService.data.activeWorld.subscribe(data => {
-      console.log('game data?');
-      this.unitArray = data.units;
-    });
+    // this.gameDataService.data.activeWorld.subscribe(data => {
+    //   this.unitArray = data.units;
+    // });
   }
 
   ngOnDestroy() {}

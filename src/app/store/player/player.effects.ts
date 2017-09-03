@@ -14,11 +14,11 @@ import { StoreState } from '../';
 
 @Injectable()
 export class PlayerEffects {
-  @Effect()
-  public update$: Observable<Action> = this.actions$
-    .ofType(PlayerActions.UPDATE)
-    .map(toPayload)
-    .map((data) => ({ type: TownActions.SET_PLAYER_TOWNS, payload: data.Towns }))
+  // @Effect()
+  // public update$: Observable<Action> = this.actions$
+  //   .ofType(PlayerActions.UPDATE)
+  //   .map(toPayload)
+  //   .map((data) => ({ type: TownActions.SET_PLAYER_TOWNS, payload: data.Towns }))
     // .switchMap((credentials) => this.store.disp(credentials)
   //     .map((user) => ({ type: AuthActions.LOGIN_SUCCESS, payload: user }))
   //     .catch((error) => of({ type: AuthActions.LOGIN_FAIL, payload: error }))

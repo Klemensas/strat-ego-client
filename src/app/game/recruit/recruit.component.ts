@@ -1,8 +1,12 @@
-import { Component, OnChanges, OnDestroy, Input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, Input  } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
 import { GameDataService } from '../../services/game-data.service';
 import { TownService } from '../services/town.service';
 import { unitData } from '../staticData';
+import { StoreState } from '../../store';
+import { TownActions, Town } from '../../store/town';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -11,11 +15,10 @@ import { unitData } from '../staticData';
   styleUrls: ['./recruit.component.scss'],
 })
 export class RecruitComponent implements OnChanges, OnDestroy {
-  @Input() public town;
+  @Input() public town: Town;
   @Input() public worldData;
   public unitDetails = unitData;
   public units;
-  // public town;
   public unitData;
   public unitDataMap;
   public recruitment = {
@@ -23,30 +26,28 @@ export class RecruitComponent implements OnChanges, OnDestroy {
     units: {},
     population: 0,
   };
-  public recruiting = false;
   public hasRecruitmentQueue = false;
   public subscriptions = {
     gameData: null,
     currentTown: null,
     recruitEvents: null
   }
+  public queue$: Observable<any>;
 
-  constructor(private gameData: GameDataService, private townService: TownService) { }
+  constructor(
+    private gameData: GameDataService,
+    private townService: TownService,
+    private store: Store<StoreState>,
+  ) {}
 
   ngOnChanges() {
     this.unitData = this.worldData.units;
-    // this.subscriptions.gameData = this.gameData.data.activeWorld.subscribe(world => {
-    //   this.unitData = world.units;
-    //   this.unitDataMap = world.unitMap;
-    //   console.log('sup', this.unitDataMap);
-    // });
     // this.subscriptions.currentTown = this.townService.currentTown.subscribe(town => {
-    //   if (town) {
-    //     this.town = town;
-    //     this.recruitment.resources = this.town.resources;
-    //     // this.units = this.modifyUnits(town.units);
-    //     this.hasRecruitmentQueue = this.town.UnitQueues.length;
-    //   }
+    if (this.town) {
+      this.recruitment.resources = this.town.resources;
+      // this.units = this.modifyUnits(town.units);
+      this.hasRecruitmentQueue = !!this.town.UnitQueues.length;
+    }
     // });
     // this.subscriptions.recruitEvents = this.townService.townEvents.recruit.subscribe(event => {
     //   this.recruiting = false;
@@ -54,16 +55,16 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-      this.subscriptions.gameData.unsubscribe();
-      this.subscriptions.currentTown.unsubscribe();
-      this.subscriptions.recruitEvents.unsubscribe();
+      // this.subscriptions.gameData.unsubscribe();
+      // this.subscriptions.currentTown.unsubscribe();
+      // this.subscriptions.recruitEvents.unsubscribe();
   }
 
   unitAmountUpdate($event, type) {
     $event = Math.max($event, 0) || 0;
-    let change = $event - (this.recruitment.units[type] || 0);
+    const change = $event - (this.recruitment.units[type] || 0);
     if (typeof $event === 'number') {
-      const unitCosts = this.unitDataMap[type].costs;
+      const unitCosts = this.worldData.unitMap[type].costs;
       this.recruitment.resources['wood'] -= unitCosts.wood * change;
       this.recruitment.resources['clay'] -= unitCosts.clay * change;
       this.recruitment.resources['iron'] -= unitCosts.iron * change;
@@ -82,7 +83,7 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   }
 
   canRecruit(unit) {
-    if (this.recruiting || !this.town.population.available) {
+    if (this.town._actionState.recruit || !this.town.population.available) {
       return false;
     }
     if (!unit.requirements || !this.town) {
@@ -92,7 +93,7 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   }
 
   recruit(amount, type) {
-    this.recruiting = true;
-    this.townService.recruit([{ type, amount}]);
+    this.store.dispatch({ type: TownActions.RECRUIT, payload: [{ type, amount }] })
+    // this.townService.recruit([{ type, amount}]);
   }
 }

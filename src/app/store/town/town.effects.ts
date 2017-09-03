@@ -9,6 +9,7 @@ import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { TownActions, getActiveTown } from './';
+import { PlayerActions } from '../player';
 import { StoreState } from '../';
 import { SocketService } from '../../game/services';
 import { getActiveWorld } from '../world';
@@ -18,30 +19,30 @@ export class TownEffects {
   public townTimeouts = {};
 
   @Effect()
-  public setPlayerTowns$: Observable<Action> = this.actions$
+  public setActiveTown$: Observable<Action> = this.actions$
     .ofType(TownActions.SET_PLAYER_TOWNS)
     .map(toPayload)
     .withLatestFrom(this.store)
     .filter(([towns, store]: [Action, StoreState]) => !store.town.activeTown)
-    .map(([towns, store]) => ({
+    .map(([{ towns }, store]) => ({
       type: TownActions.SET_ACTIVE_TOWN,
       payload: towns[0]._id
     }));
 
   @Effect()
-  public fillTownData$: Observable<Action> = this.actions$
-    .ofType(TownActions.SET_PLAYER_TOWNS)
+  public setPlayerTowns$: Observable<Action> = this.actions$
+    .ofType(PlayerActions.UPDATE)
     .map(toPayload)
-    // .map((...towns) => towns)
+    .map((player) => player.Towns)
     .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([towns, world]) => this.updateAction(world, towns));
+    .map(([towns, world]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
 
   @Effect()
   public townUpdateEvent$: Observable<Action> = this.actions$
     .ofType(TownActions.UPDATE_EVENT)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([{ town, event }, world]) => this.updateAction(world, [town]));
+    .map(([{ town, event }, world]) => this.updateAction(world, [town], TownActions.UPDATE, event.type));
 
   @Effect({ dispatch: false })
   public changeTownName$: Observable<any> = this.actions$
@@ -58,19 +59,33 @@ export class TownEffects {
     .map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town._id }))
 
   @Effect({ dispatch: false })
+  public recruit$: Observable<any> = this.actions$
+    .ofType(TownActions.RECRUIT)
+    .map(toPayload)
+    .withLatestFrom(this.store.select(getActiveTown))
+    .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town._id }))
+
+  @Effect({ dispatch: false })
   public scheduleUpdate$: Observable<any> = this.actions$
     .ofType(TownActions.SCHEDULE_UPDATE)
     .map(toPayload)
     .map((id) => this.socketService.sendEvent('town:update', { town: id }));
 
-  public updateAction(world, towns): Action {
-    towns.forEach(  (town) => this.scheduleUpdate(town));
-    const payload = towns.map((town) => ({
+  public updateAction(world, towns, type, event?): Action {
+    towns.forEach((town) => this.scheduleUpdate(town));
+    const townPayload = towns.map((town) => ({
       ...town,
       population: this.calculatePopulation(town, world.buildingMap.farm.data),
       storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
+      recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment
     }));
-    return { type: TownActions.UPDATE, payload };
+    return {
+      type,
+      payload: {
+        event,
+        towns: townPayload
+      }
+    };
   }
 
   public calculatePopulation(town, farmData) {
@@ -105,7 +120,7 @@ export class TownEffects {
     };
   }
 
-  public findSoonestItem(queues) {
+  public findSoonestItem(queues = []) {
     return queues.reduce((soonest, queue) => Math.min(soonest, new Date(queue.endsAt).getTime()), Infinity) % Infinity;
   }
 

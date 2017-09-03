@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
+import { Component, AfterContentInit, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 
 import { StoreState } from '../../store';
 import { getActiveTown } from '../../store/town';
-import { MapService, PlayerService, CommandService } from '../services';
+import { MapService, CommandService } from '../services';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -21,8 +21,9 @@ import { MapService, PlayerService, CommandService } from '../services';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements AfterViewInit, AfterViewChecked  {
+export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit  {
   @ViewChild('map') map;
+  public town$ = this.store.select(getActiveTown);
 
   public dragging = 0;
   public activeTown;
@@ -53,6 +54,7 @@ export class MapComponent implements AfterViewInit, AfterViewChecked  {
   public ctx;
   public rng;
   public hoverPauser = new Subject();
+  // public hoverData: Observable;
   public hoverData;
   public position = {
     hover: null,
@@ -67,11 +69,9 @@ export class MapComponent implements AfterViewInit, AfterViewChecked  {
   ) {
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
-
-    // this.store.select(getActiveTown)
   }
 
-  public ngAfterViewInit() {
+  public ngAfterContentInit() {
     this.ctx = this.map.nativeElement.getContext('2d');
     this.ctx.lineWidth = 1;
 
@@ -80,34 +80,31 @@ export class MapComponent implements AfterViewInit, AfterViewChecked  {
       y: this.map.nativeElement.offsetHeight
     });
 
-    // this.playerService.activeTown.subscribe(data => {
-    //   if (!data) { return; }
-    //   this.activeTown = data;
-    //   this.mapOffset = this.centerOffset({ x: data.location[0],
-    //     y: data.location[1] });
-    //   this.mapService.getMapData({}).then(mapData => {
-    //     this.mapData = mapData;
-    //     this.mapSettings.shouldDraw = true;
-    //     // TODO: Temporary fix
-    //     this.hoverPauser.next(false);
-    //     console.log('got da data', this.mapSettings.shouldDraw, this, this.mapOffset, this.mapSettings.width);
-    //   });
-    // });
-
-
-    // this.hoverPauser = Observable.fromEvent(this.map.nativeElement, 'mousemove').pausable(this.hoverPauser);
     const moveEvent = Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
       Observable.fromEvent(this.map.nativeElement, 'touchmove')
     ).throttleTime(50);
-    // const moveEvent = Observable.fromEvent(this.map.nativeElement, 'mousemove').throttleTime(50);
-    this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent)
-      .subscribe(data => this.onHover(data));
-    this.hoverPauser.next(true);
+    const pausableMove = this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent);
+    pausableMove.subscribe(data => this.onHover(data));
+    this.hoverPauser.next(false);
+  }
+
+  public ngOnInit() {
+    this.town$.subscribe(town => {
+      if (!town) { return; }
+      this.activeTown = town;
+      this.mapOffset = this.centerOffset({ x: town.location[0], y: town.location[1] });
+
+      this.mapService.getMapData({}).then(mapData => {
+        this.mapData = mapData;
+        this.mapSettings.shouldDraw = true;
+        console.log('huh', this.mapData)
+      })
+    });
   }
 
   public ngAfterViewChecked() {
-    if (this.ctx && this.mapSettings.shouldDraw && this.mapData) {
+    if (this.ctx && this.mapSettings.shouldDraw && this.mapData && this.activeTown) {
       this.drawMap(this.mapOffset);
     }
   }
@@ -122,7 +119,6 @@ export class MapComponent implements AfterViewInit, AfterViewChecked  {
 
   toggleSidenav(target, data) {
     this.commandService.targeting.next(data);
-    // this.playerService.toggleSidenav(target);
     console.log('toggle sidenav!')
   }
 
@@ -190,7 +186,8 @@ export class MapComponent implements AfterViewInit, AfterViewChecked  {
       this.mapSettings,
       true
     );
-    this.mapSettings.shouldDraw = true;
+    // this.mapSettings.shouldDraw = true;
+    this.drawMap(this.mapOffset);
   }
 
   private onHover(event) {
@@ -266,6 +263,7 @@ export class MapComponent implements AfterViewInit, AfterViewChecked  {
         { x: Big(0), y: hexHeight },
       ]
     };
+    console.log('map settings set');
   }
 
   private centerOffset(location) {

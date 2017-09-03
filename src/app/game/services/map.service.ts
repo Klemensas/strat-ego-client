@@ -69,28 +69,6 @@ export class MapService {
     }
   }
 
-/*  private imgPreload(images) {
-    let loaded = 0;
-    images = Object.prototype.toString.apply(images) === '[object Array]' ? images : [images];
-    const inc = (img) => {
-      loaded += 1;
-      if (loaded === images.length) {
-        this.imagesLoaded = true;
-        if (this.lastUpdate && this.queuedPromise.length) {
-          const resolve = this.queuedPromise.shift();
-          this.formatMapData(resolve);
-        }
-      }
-    };
-    for (let i = 0; i < images.length; i++) {
-      this.images[i] = new Image();
-      this.images[i].onabort = inc;
-      this.images[i].onerror = inc;
-      this.images[i].onload = inc;
-      this.images[i].src = images[i];
-    }
-  }*/
-
   private formatMapData(callback) {
     callback(this.mapData);
   }
@@ -101,7 +79,7 @@ export class MapService {
       if (this.lastUpdate) {
         return this.formatMapData(resolve);
       }
-    this.queuedPromise.push(resolve);
+      this.queuedPromise.push(resolve);
       this.socket.sendEvent('map', {});
     });
   }

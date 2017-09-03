@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TownService } from '../services/';
 import { GameDataService } from '../../services/game-data.service';
 import { MapService } from '../services';
@@ -9,6 +9,9 @@ import { MapService } from '../services';
   styleUrls: ['./movements.component.scss']
 })
 export class MovementsComponent implements OnInit {
+  @Input() public town;
+  @Input() public worldData;
+
   public outgoing = [];
   public incoming = [];
   public returning = [];
@@ -18,22 +21,22 @@ export class MovementsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gameData.data.activeWorld.subscribe(world => {
-      // this.worldData = world;
-      this.unitTypes  = world.units;
-      console.log('woosh', world, this.unitTypes);
-      // this.buildingData = world.buildingData;
-      // this.buildingList = Object.keys(world.buildingData);
-    });
+    // this.gameData.data.activeWorld.subscribe(world => {
+    //   // this.worldData = world;
+    //   this.unitTypes  = world.units;
+    //   console.log('woosh', world, this.unitTypes);
+    //   // this.buildingData = world.buildingData;
+    //   // this.buildingList = Object.keys(world.buildingData);
+    // });
   // }
-    this.townService.currentTown.subscribe(town => {
-      if (town) {
-        console.log('update', town)
-        this.outgoing = town.MovementOriginTown;
-        // TODO: separate incoming into attacks and returning
-        this.incoming = town.MovementDestinationTown;
-      }
-    });
+    // this.townService.currentTown.subscribe(town => {
+    //   if (town) {
+    //     console.log('update', town)
+    //     this.outgoing = town.MovementOriginTown;
+    //     // TODO: separate incoming into attacks and returning
+    //     this.incoming = town.MovementDestinationTown;
+    //   }
+    // });
   }
 
 }

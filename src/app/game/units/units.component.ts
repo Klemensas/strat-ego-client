@@ -1,6 +1,7 @@
 import { Component, OnChanges, Input } from '@angular/core';
 
 import { TownUnit } from '../../store/town';
+import { unitData } from '../staticData';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -10,7 +11,7 @@ import { TownUnit } from '../../store/town';
 })
 export class UnitsComponent implements OnChanges {
   @Input() public units: { [name: string]: TownUnit };
-
+  public unitDetails = unitData;
   public townUnits: TownUnit[] = [];
 
   public ngOnChanges(changes) {
