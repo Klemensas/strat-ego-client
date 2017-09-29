@@ -9,7 +9,7 @@ import { StoreState } from '../../store';
 import { AuthActions } from '../../store/auth';
 import { PlayerActions } from '../../store/player';
 import { TownActions } from '../../store/town';
-import { MapActions } from '../../store/map';
+import { MapActions } from '../../store/map/map.actions';
 import { ReportActions } from '../../store/report';
 
 @Injectable()

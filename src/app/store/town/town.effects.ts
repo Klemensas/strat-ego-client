@@ -8,11 +8,11 @@ import 'rxjs/add/operator/filter';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
-import { TownActions, getActiveTown } from './';
+import { TownActions, getActiveTown, Town } from './';
 import { PlayerActions } from '../player';
 import { StoreState } from '../';
 import { SocketService } from '../../game/services';
-import { getActiveWorld } from '../world';
+import { getActiveWorld, WorldData } from '../world';
 
 @Injectable()
 export class TownEffects {
@@ -35,7 +35,7 @@ export class TownEffects {
     .map(toPayload)
     .map((player) => player.Towns)
     .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([towns, world]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
+    .map(([towns, world]: [Town, WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
 
   @Effect()
   public townUpdateEvent$: Observable<Action> = this.actions$
@@ -66,6 +66,14 @@ export class TownEffects {
     .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town._id }))
 
   @Effect({ dispatch: false })
+  public sendTroops$: Observable<any> = this.actions$
+    .ofType(TownActions.SEND_TROOPS)
+    .map(toPayload)
+    .withLatestFrom(this.store.select(getActiveTown))
+    .map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town._id }))
+
+
+  @Effect({ dispatch: false })
   public scheduleUpdate$: Observable<any> = this.actions$
     .ofType(TownActions.SCHEDULE_UPDATE)
     .map(toPayload)
@@ -92,7 +100,7 @@ export class TownEffects {
     const total = farmData[town.buildings.farm.level].population;
     const used = Object.entries(town.units).reduce((count, [name, unit]) => {
       return count + unit.inside + unit.outside + unit.queued;
-    }, 0);
+      }, 0);
     return {
       total,
       used,
@@ -101,7 +109,7 @@ export class TownEffects {
   }
 
   public scheduleUpdate(town) {
-    const soonest = this.findSoonestItem(town.BuildingQueues);
+    const soonest = this.findSoonestItem(town.BuildingQueues, town.UnitQueues);
     let townTimeout = this.townTimeouts[town._id];
     if (!soonest) {
       if (townTimeout) {
@@ -120,8 +128,11 @@ export class TownEffects {
     };
   }
 
-  public findSoonestItem(queues = []) {
-    return queues.reduce((soonest, queue) => Math.min(soonest, new Date(queue.endsAt).getTime()), Infinity) % Infinity;
+  public findSoonestItem(...queues) {
+    return queues.reduce((soonest, queue) => {
+      const queueSoonest = queue.reduce((qSoonest, item) => Math.min(qSoonest, new Date(item.endsAt).getTime()), Infinity);
+      return Math.min(soonest, queueSoonest);
+    }, Infinity) % Infinity;
   }
 
   public callUpdate(id) {

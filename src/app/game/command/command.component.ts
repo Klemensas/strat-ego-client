@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+
 import { GameDataService } from '../../services/game-data.service';
 import { TownService, CommandService, MapService } from '../services/';
+import { unitData } from '../staticData';
+import { StoreState } from '../../store';
+import { TownActions, Town } from '../../store/town';
 
 @Component({
   selector: 'command',
@@ -8,31 +13,35 @@ import { TownService, CommandService, MapService } from '../services/';
   styleUrls: ['./command.component.scss']
 })
 export class CommandComponent implements OnInit {
+  @Input() public town: Town;
+  @Input() public worldData;
   // TODO: convert this to a real form with validation
-  public townUnits;
-  public unitData;
-  public unitDataMap;
-  public target;
+  // public townUnits;
+  public unitDetails = unitData;
+  public target = [];
   public targetCoords;
   public unitsToSend = {};
   public sending = false;
   public sent;
   public townId;
-  public unitDetails;
+  // public unitDetails;
 
-  constructor(private townService: TownService, private commandService: CommandService, private gameData: GameDataService, private mapService: MapService) {
-    // this.unitDetails = this.gameData.unitData;
-    // this.commandService.targeting.subscribe(target => {
-    //   this.target = target;
-    //   this.targetCoords = target
-    // });
-    // this.townService.townEvents.movement.subscribe(update => {
-    //   this.sending = false;
-    //   this.sent = true;
-    // });
+  constructor(
+    private townService: TownService,
+    private commandService: CommandService,
+    private gameData: GameDataService,
+    private mapService: MapService,
+    private store: Store<StoreState>,
+  ) {
+    this.commandService.targeting.subscribe(target => {
+      this.target = target;
+      this.targetCoords = target
+    });
   }
 
   ngOnInit() {
+    setInterval(() => console.log('wat', this.unitsToSend), 1000)
+    // setInterval(() => console.log('this', this.townUnits), 1000);
     // this.gameData.data.activeWorld.subscribe(world => {
     //   this.unitData = world.units;
     //   this.unitDataMap = world.unitMap;
@@ -46,30 +55,32 @@ export class CommandComponent implements OnInit {
   }
 
   sendCommand(isSupport, form) {
-    const target = this.mapService.mapData[this.target.join(',')]
-    const type = isSupport ? 'support' : 'attack';
+    // TODO: fill actual town data
+    // const target = this.mapService.mapData[this.target.join(',')]
 
-    if (target._id === this.townId) {
+    // if (!target) {
+      //   form.form.setErrors({ errorMessage: 'Invalid town coordinates.'})
+      //   return;
+      // }
+    if (this.target === this.town.location) {
       form.form.setErrors({ errorMessage: 'A town can\'t attack itself.'})
       return;
     }
 
+    const type = isSupport ? 'support' : 'attack';
     const units = Object.entries(form.value).filter(([unit, amount]) => !!+amount);
     const validUnits = units.length ?
-      units.every(([unit, amount]) => this.townUnits[unit].inside >= amount) :
+      units.every(([unit, amount]) => this.town.units[unit].inside >= amount) :
       false;
 
     if (!validUnits) {
       form.form.setErrors({ errorMessage: 'Incorrectly entered units.'})
       return;
     }
-    if (!target) {
-      form.form.setErrors({ errorMessage: 'Invalid town coordinates.'})
-      return;
-    }
 
-    this.sending = true;
-    this.townService.sendUnits(target._id, this.unitsToSend, type);
+    this.store.dispatch({ type: TownActions.SEND_TROOPS, payload: { units, type, target: this.target } })
+    // this.sending = true;
+    // this.townService.sendUnits(target._id, this.unitsToSend, type);
   }
 
 }

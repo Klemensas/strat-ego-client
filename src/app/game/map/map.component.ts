@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/never';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/throttleTime';
 import { Subject } from 'rxjs/Subject';
@@ -12,7 +13,9 @@ import * as Big from 'big.js';
 import { Store } from '@ngrx/store';
 
 import { StoreState } from '../../store';
-import { getActiveTown } from '../../store/town';
+import { getMapData, Map, MapActions } from '../../store/map';
+import { PlayerActions } from '../../store/player';
+import { getActiveTown, Town } from '../../store/town';
 import { MapService, CommandService } from '../services';
 
 @Component({
@@ -23,8 +26,10 @@ import { MapService, CommandService } from '../services';
 })
 export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit  {
   @ViewChild('map') map;
-  public town$ = this.store.select(getActiveTown);
-
+  public town$: Observable<Town> = this.store.select(getActiveTown);
+  public map$: Observable<Map> = this.store.select(getMapData);
+  public imagesLoaded$: Observable<Boolean> = this.mapService.imagesLoaded;
+  public mapUpdate$ = Observable.combineLatest(this.map$, this.imagesLoaded$);
   public dragging = 0;
   public activeTown;
   public boxSize = {
@@ -75,11 +80,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
     this.ctx = this.map.nativeElement.getContext('2d');
     this.ctx.lineWidth = 1;
 
-    this.setMapSettings({
-      x: this.map.nativeElement.offsetWidth,
-      y: this.map.nativeElement.offsetHeight
-    });
-
     const moveEvent = Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
       Observable.fromEvent(this.map.nativeElement, 'touchmove')
@@ -90,17 +90,22 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
   }
 
   public ngOnInit() {
+    this.store.dispatch({ type: MapActions.LOAD_MAP })
     this.town$.subscribe(town => {
       if (!town) { return; }
       this.activeTown = town;
+      this.setMapSettings({
+        x: this.map.nativeElement.offsetWidth,
+        y: this.map.nativeElement.offsetHeight
+      });
       this.mapOffset = this.centerOffset({ x: town.location[0], y: town.location[1] });
-
-      this.mapService.getMapData({}).then(mapData => {
-        this.mapData = mapData;
-        this.mapSettings.shouldDraw = true;
-        console.log('huh', this.mapData)
-      })
     });
+    this.mapUpdate$.subscribe(([map, imagesLoaded]) => {
+      if (map && imagesLoaded) {
+        this.mapData = map;
+        this.mapSettings.shouldDraw = true;
+      }
+    })
   }
 
   public ngAfterViewChecked() {
@@ -119,6 +124,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
 
   toggleSidenav(target, data) {
     this.commandService.targeting.next(data);
+    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side: 'left', name: 'command' }]});
     console.log('toggle sidenav!')
   }
 
@@ -128,7 +134,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
       return;
     }
     this.toggleSidenav('command', this.hoverData.location);
-    // this.selected = this.hoverData;
+    this.selected = this.hoverData;
     // this.position.click = this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
   }
 
@@ -208,7 +214,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
     let xPos = mouse.x.plus(coord.x).plus(this.mapSettings.radius);
     let yPos = mouse.y.plus(coord.y);
 
-
     this.hoverData.pos = {
       x: xPos.plus(this.boxSize.x).gte(this.mapSettings.size.x) ? xPos.minus(this.boxSize.x) : xPos,
       // y: yPos,
@@ -263,7 +268,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
         { x: Big(0), y: hexHeight },
       ]
     };
-    console.log('map settings set');
   }
 
   private centerOffset(location) {
@@ -344,7 +348,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
     }
 
     // this.ctx.strokeStyle= 'rgba(0,0,0,0.2)';
-    this.ctx.strokeStyle= '#27ae60';
+    this.ctx.strokeStyle = '#27ae60';
     this.ctx.stroke();
 
     if (this.drawCoords) {

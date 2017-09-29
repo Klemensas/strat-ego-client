@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy, ViewChild, } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MdSidenav } from '@angular/material';
 
-import { getActiveTown } from '../../store/town';
 import { getActiveWorld } from '../../store/world';
+import { PlayerActions, getSidenavs } from '../../store/player';
+import { getActiveTown } from '../../store/town';
 import { AuthActions } from '../../store/auth';
 import { StoreState } from '../../store';
 
@@ -17,17 +18,21 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenavRight') sidenavRight;
 
   public reports = [];
+  public sidebars = {};
   public ts$ = this.store.select(getActiveTown).map((d) => { console.log('woop woop', d); return d; })
   public worldData$ = this.store.select(getActiveWorld);
   public canRecruit$ = this.store.select(getActiveTown)
     .map((town) => town && !!town.buildings.barracks.level);
   public isVisible;
+  public sidenavSubscription$;
 
   constructor(
     private store: Store<StoreState>
   ) {}
 
   ngOnInit() {
+    this.sidenavSubscription$ = this.store.select(getSidenavs)
+    .subscribe(sidenavs => this.updateSidenavs(sidenavs));
     // this.store.select()
     console.log('wat');
     // Initialize sockets
@@ -44,10 +49,25 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     // })
   }
 
-  sidenavToggle(nav, component) {
-    // console.log('got da event', target, state)
-    nav.comp = component;
-    nav.open();
+  updateSidenavs(sidenavs) {
+    // this.sidenavLeft
+    this.sidenavLeft.comp = sidenavs.left;
+    this.sidenavRight.comp = sidenavs.right;
+    if (sidenavs.left) {
+      this.sidenavLeft.open();
+    } else {
+      this.sidenavLeft.close();
+    }
+
+    if (sidenavs.right) {
+      this.sidenavRight.open();
+    } else {
+      this.sidenavRight.close();
+    }
+  }
+
+  sidenavToggle(side, name) {
+    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side, name }]})
   }
 
   ngOnDestroy() {

@@ -11,6 +11,12 @@ export const PlayerReducer: ActionReducer<PlayerState> = (state = initialPlayerS
     case PlayerActions.UPDATE:
       return { ...state, inProgress: false, playerData: action.payload };
 
+      case PlayerActions.SET_SIDENAV: {
+        const sidenavs = { ...state.sidenavs };
+        action.payload.forEach(({ side, name }) => sidenavs[side] = name);
+        return { ...state, sidenavs };
+      }
+
     default: {
       return state;
     }

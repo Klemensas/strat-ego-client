@@ -1,13 +1,13 @@
  <md-sidenav-container class="backdrop-disabled">
   <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
-    <button md-mini-fab (click)="sidenavLeft.comp = null; sidenavLeft.toggle()">
+    <button md-mini-fab (click)="sidenavToggle('left', null)">
       <md-icon>&times;</md-icon>
     </button>
     <movements *ngSwitchCase="'movements'" [town]="ts$ | async" [worldData]="worldData$ | async"></movements>
-    <command *ngSwitchCase="'command'"></command>
+    <command *ngSwitchCase="'command'" [town]="ts$ | async" [worldData]="worldData$ | async"></command>
   </md-sidenav>
   <md-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
-    <button md-mini-fab (click)="sidenavRight.comp = null; sidenavRight.toggle()">
+    <button md-mini-fab (click)="sidenavToggle('right', null)">
       <md-icon>&times;</md-icon>
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="ts$ | async" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
@@ -31,17 +31,17 @@
             </a>
           </li>
           <li class="nav-item">
-            <a *ngIf="canRecruit$ | async" class="nav-link" (click)="sidenavRight.comp = 'recruit'; sidenavRight.toggle()">
+            <a *ngIf="canRecruit$ | async" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
               <i class="fa fa-users" aria-hidden="true"></i> Recruit
             </a>
           </li>
           <li class="nav-item">
-            <a routerLinkActive="active" class="nav-link" (click)="sidenavLeft.comp = 'movements'; sidenavLeft.toggle()">
+            <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movements')">
               <i class="fa fa-arrows" aria-hidden="true"></i> Movements
             </a>
           </li>
           <li class="nav-item">
-            <a routerLinkActive="active" class="nav-link" (click)="sidenavRight.comp = 'reports'; sidenavRight.toggle()">
+            <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'reports')">
               <i class="fa fa-flag" aria-hidden="true"></i> Reports
             </a>
           </li>

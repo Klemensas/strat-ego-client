@@ -1,11 +1,11 @@
 <div class="container">
   <h2>Send troops</h2>
-  <form #commandForm="ngForm" *ngIf="townUnits">
-    <div class="d-flex" *ngFor="let unit of unitData">
+  <form #commandForm="ngForm" *ngIf="town.units && worldData.units">
+    <div class="d-flex" *ngFor="let unit of worldData.units">
       <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
       <label class="pr-1">{{ unitDetails[unit.name].name }}</label>
-      <input type="number" [name]="unit.name" [max]="townUnits[unit.name].inside" [(ngModel)]="unitsToSend[unit.name]" min="0" />
-      <span class="pl-2">/{{ townUnits[unit.name].inside }}</span>
+      <input type="number" [name]="unit.name" [max]="town.units[unit.name].inside" [(ngModel)]="unitsToSend[unit.name]" min="0" />
+      <span class="pl-2">/{{ town.units[unit.name].inside }}</span>
     </div>
     <div>
       <div>Target</div>
@@ -14,7 +14,7 @@
       <label>Y</label>
       <input type="number" [(ngModel)]="target[1]" min="1" max="999" [ngModelOptions]="{standalone: true}" />
     </div>
-    <div *ngIf="!sending">
+    <div *ngIf="!town._actionState.movement">
       <button type="button" class="btn btn-danger" (click)="sendCommand(false, commandForm)" [disabled]="commandForm.pristine || commandForm.errors">Attack</button>
       <!--<button type="button" class="btn btn-success" (click)="sendCommand(true)">Support</button>-->
       <span *ngIf="commandForm.errors" class="text-danger">{{commandForm.errors.errorMessage}}</span>

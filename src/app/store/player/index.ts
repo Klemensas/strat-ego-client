@@ -5,4 +5,5 @@ export { PlayerReducer } from './player.reducer';
 export {
   getPlayerState,
   getPlayerData,
+  getSidenavs,
 } from './player.selectors';

@@ -34,6 +34,20 @@ export const TownReducer: ActionReducer<TownState> = (state = initialTownState, 
       return { ...state, playerTowns };
     }
 
+    case TownActions.RECRUIT: {
+      const playerTowns = [...state.playerTowns];
+      const recruitingTown = playerTowns.findIndex(t => t._id === state.activeTown);
+      playerTowns[recruitingTown]._actionState.recruit = true;
+      return { ...state, playerTowns };
+    }
+
+    case TownActions.SEND_TROOPS: {
+      const playerTowns = [...state.playerTowns];
+      const recruitingTown = playerTowns.findIndex(t => t._id === state.activeTown);
+      playerTowns[recruitingTown]._actionState.movement = true;
+      return { ...state, playerTowns };
+    }
+
     case TownActions.SET_PLAYER_TOWNS:
     case TownActions.UPDATE_EVENT:
     case TownActions.RECRUIT:
