@@ -1,23 +1,31 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { GameDataService } from '../../services/game-data.service';
-// import { TownService } from '../services/town.service';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+
+import { Town } from '../../store/town';
+import { WorldData } from '../../store/world';
 
 @Component({
   selector: 'reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
 })
-export class ReportsComponent implements OnInit, OnDestroy {
-  @Input() public reports;
-  @Input() public worldData;
-  public unitArray;
+export class ReportsComponent implements OnChanges, OnDestroy {
+  @Input() public town: Town;
+  @Input() public worldData: WorldData;
+  public reports = [];
 
-  constructor(private gameDataService: GameDataService) {}
+  constructor() {}
 
-  ngOnInit() {
-    // this.gameDataService.data.activeWorld.subscribe(data => {
-    //   this.unitArray = data.units;
-    // });
+  ngOnChanges() {
+    this.reports = [...this.town.ReportOriginTown, ...this.town.ReportDestinationTown].map(report => {
+      const type = report.ReportDestinationTownId === this.town._id ? 'defense' : 'attack';
+      const result = report.outcome === 'attack' && type === 'attack' ? 'win' : 'lose';
+
+      return {
+        ...report,
+        type,
+        result,
+      }
+    }).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
   }
 
   ngOnDestroy() {}

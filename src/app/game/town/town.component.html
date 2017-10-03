@@ -3,7 +3,7 @@
     <buildings class="col-md-9" [town]="town" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></buildings>
     <div class="col-md-3">
        <div class="py-1">Population: <b>{{town.population.used}}/{{town.population.total}}</b></div>
-       <resources [resources]="town.resources" [production]="town.production" [maxRes]="town.storage" [lastUpdate]="town.updatedAt"></resources>
+       <resources [town]="town"></resources>
        <units [units]="town.units"></units>
        <building-queue [buildingQueue]="town.BuildingQueues"></building-queue>
     </div>

@@ -11,7 +11,7 @@
       <md-icon>&times;</md-icon>
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="ts$ | async" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
-    <reports *ngSwitchCase="'reports'" [reports]="reports" [worldData]="worldData$ | async"></reports>
+    <reports *ngSwitchCase="'reports'" [town]="ts$ | async" [worldData]="worldData$ | async"></reports>
   </md-sidenav>
   <header>
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">

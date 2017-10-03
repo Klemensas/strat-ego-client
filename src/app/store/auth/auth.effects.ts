@@ -32,6 +32,11 @@ export class AuthEffects {
       .catch((error) => of({ type: AuthActions.LOAD_PROFILE_FAIL, payload: error }))
     );
 
+  @Effect({ dispatch: false })
+  public loginError$: Observable<any> = this.actions$
+    .ofType(AuthActions.LOAD_PROFILE_FAIL)
+    .map(() => this.authService.removeToken());
+
   public register$: Observable<Action> = this.actions$
     .ofType(AuthActions.REGISTER)
     .map(toPayload)

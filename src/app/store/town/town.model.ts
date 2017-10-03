@@ -60,7 +60,7 @@ export interface Town {
     createdAt: string;
     updatedAt: string;
   }
-  ReportDesinationTown: any[];
+  ReportDestinationTown: any[];
   ReportOriginTown: any[];
   UnitQueues: any[];
   createdAt: string;

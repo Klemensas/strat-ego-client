@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule   } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { SocketService, PlayerService, TownService, MapService, CommandService, ReportService } from './services/index';
@@ -28,6 +29,7 @@ import { UnitQueueComponent } from './unit-queue/unit-queue.component';
     FormsModule,
     gameRouting,
     NgbModule,
+    BrowserAnimationsModule,
   ],
   declarations: [
     gameComponents,

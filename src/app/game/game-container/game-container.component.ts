@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { MdSidenav } from '@angular/material';
+import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { MdSidenav, MdSnackBar } from '@angular/material';
 
 import { getActiveWorld } from '../../store/world';
 import { PlayerActions, getSidenavs } from '../../store/player';
-import { getActiveTown } from '../../store/town';
+import { getActiveTown, TownActions } from '../../store/town';
 import { AuthActions } from '../../store/auth';
 import { StoreState } from '../../store';
 
@@ -27,12 +28,19 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public sidenavSubscription$;
 
   constructor(
-    private store: Store<StoreState>
+    private store: Store<StoreState>,
+    private snackBar: MdSnackBar,
+    private actions$: Actions,
   ) {}
 
   ngOnInit() {
     this.sidenavSubscription$ = this.store.select(getSidenavs)
-    .subscribe(sidenavs => this.updateSidenavs(sidenavs));
+      .subscribe(sidenavs => this.updateSidenavs(sidenavs));
+
+    this.actions$.ofType(TownActions.UPDATE_EVENT)
+      .map(toPayload)
+      .map(({ town, event }) => event.type)
+      .subscribe((event) => this.handleEvent(event))
     // this.store.select()
     console.log('wat');
     // Initialize sockets
@@ -77,5 +85,9 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   logout() {
     this.store.dispatch({ type: AuthActions.LOGOUT });
     // this.authService.logout();
+  }
+
+  private handleEvent(event) {
+    this.snackBar.open(event)
   }
 }
