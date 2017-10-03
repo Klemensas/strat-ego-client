@@ -86,7 +86,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
     ).throttleTime(50);
     const pausableMove = this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent);
     pausableMove.subscribe(data => this.onHover(data));
-    this.hoverPauser.next(false);
+    this.hoverPauser.next(!this.mapData);
   }
 
   public ngOnInit() {
@@ -102,6 +102,9 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
     });
     this.mapUpdate$.subscribe(([map, imagesLoaded]) => {
       if (map && imagesLoaded) {
+        if (!this.mapData) {
+          this.hoverPauser.next(false);
+        }
         this.mapData = map;
         this.mapSettings.shouldDraw = true;
       }
@@ -109,7 +112,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit 
   }
 
   public ngAfterViewChecked() {
-    if (this.ctx && this.mapSettings.shouldDraw && this.mapData && this.activeTown) {
+    if (this.ctx && this.mapSettings.shouldDraw && this.activeTown) {
       this.drawMap(this.mapOffset);
     }
   }

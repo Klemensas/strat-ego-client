@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
 import { TownService } from '../services/';
 import { GameDataService } from '../../services/game-data.service';
 import { MapService } from '../services';
@@ -8,10 +10,12 @@ import { MapService } from '../services';
   templateUrl: './movements.component.html',
   styleUrls: ['./movements.component.scss']
 })
-export class MovementsComponent implements OnInit {
+export class MovementsComponent implements OnInit, OnChanges {
   @Input() public town;
   @Input() public worldData;
 
+  public movements = [];
+  public queue$: Observable<any>;
   public outgoing = [];
   public incoming = [];
   public returning = [];
@@ -21,6 +25,12 @@ export class MovementsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.queue$ = Observable.timer(0, 1000)
+      .timestamp()
+      .map(({ timestamp }) => this.movements.map(queue => {
+        queue.timeLeft = new Date(queue.endsAt).getTime() - timestamp;
+        return queue;
+      }));
     // this.gameData.data.activeWorld.subscribe(world => {
     //   // this.worldData = world;
     //   this.unitTypes  = world.units;
@@ -39,4 +49,8 @@ export class MovementsComponent implements OnInit {
     // });
   }
 
+  ngOnChanges(changes) {
+    this.movements = [...this.town.MovementOriginTown, ...this.town.MovementDestinationTown].sort((a, b) =>
+      new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime() )
+  }
 }
