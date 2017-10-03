@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 import { User } from '../user/';
 import { Resources } from '../world';
 
@@ -63,5 +65,6 @@ export interface Town {
   UnitQueues: any[];
   createdAt: string;
   updatedAt: string;
+  availableResources$: Observable<Resources>;
   _actionState: TownActionState;
 };

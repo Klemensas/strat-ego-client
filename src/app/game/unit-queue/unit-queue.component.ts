@@ -15,7 +15,7 @@ export class UnitQueueComponent implements OnInit, OnChanges {
   public unitDetails = unitData;
 
   public ngOnInit() {
-    this.queue$ = Observable.timer(1000, 1000)
+    this.queue$ = Observable.timer(0, 1000)
       .timestamp()
       .map(({ timestamp }) => this.unitQueue.map((queue) => ({
         ...queue,

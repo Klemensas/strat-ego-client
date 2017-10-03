@@ -17,7 +17,7 @@ export class BuildingQueueComponent implements OnInit, OnChanges {
   public buildingDetails = buildingData;
 
   public ngOnInit() {
-    this.queue$ = Observable.timer(1000, 1000)
+    this.queue$ = Observable.timer(0, 1000)
       .timestamp()
       .map(({ timestamp }) => this.buildingQueue.map((queue) => ({
         ...queue,

@@ -13,6 +13,7 @@ import { PlayerActions } from '../player';
 import { StoreState } from '../';
 import { SocketService } from '../../game/services';
 import { getActiveWorld, WorldData } from '../world';
+import { availableResources } from '../../game/utils';
 
 @Injectable()
 export class TownEffects {
@@ -35,7 +36,7 @@ export class TownEffects {
     .map(toPayload)
     .map((player) => player.Towns)
     .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([towns, world]: [Town, WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
+    .map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
 
   @Effect()
   public townUpdateEvent$: Observable<Action> = this.actions$
@@ -79,14 +80,18 @@ export class TownEffects {
     .map(toPayload)
     .map((id) => this.socketService.sendEvent('town:update', { town: id }));
 
-  public updateAction(world, towns, type, event?): Action {
+  public updateAction(world, towns: Town[], type, event?): Action {
     towns.forEach((town) => this.scheduleUpdate(town));
-    const townPayload = towns.map((town) => ({
-      ...town,
-      population: this.calculatePopulation(town, world.buildingMap.farm.data),
-      storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
-      recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment
-    }));
+    const townPayload = towns.map((town) => {
+      const fullTown = {
+        ...town,
+        population: this.calculatePopulation(town, world.buildingMap.farm.data),
+        storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
+        recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
+      };
+      fullTown.availableResources$ = availableResources(fullTown);
+      return fullTown;
+    });
     return {
       type,
       payload: {
@@ -96,7 +101,7 @@ export class TownEffects {
     };
   }
 
-  public calculatePopulation(town, farmData) {
+  public calculatePopulation(town: Town, farmData) {
     const total = farmData[town.buildings.farm.level].population;
     const used = Object.entries(town.units).reduce((count, [name, unit]) => {
       return count + unit.inside + unit.outside + unit.queued;
@@ -108,8 +113,8 @@ export class TownEffects {
     };
   }
 
-  public scheduleUpdate(town) {
-    const soonest = this.findSoonestItem(town.BuildingQueues, town.UnitQueues);
+  public scheduleUpdate(town: Town) {
+    const soonest = this.findSoonestItem(town.BuildingQueues, town.UnitQueues, town.MovementDestinationTown, town.MovementOriginTown);
     let townTimeout = this.townTimeouts[town._id];
     if (!soonest) {
       if (townTimeout) {
