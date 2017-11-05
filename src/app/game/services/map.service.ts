@@ -26,7 +26,8 @@ export class MapService {
     object: [360, 140],
     objectType: {
       abandoned: [480, 140],
-      owned: [600, 140],
+      ownedActive: [600, 140],
+      owned: [0, 280],
     },
     size: [120, 140]
   };

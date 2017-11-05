@@ -2,10 +2,11 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { MatSidenav, MatSnackBar } from '@angular/material';
+import { Subscription } from 'rxjs/Subscription';
 
 import { getActiveWorld } from '../../store/world';
 import { PlayerActions, getSidenavs, getPlayerReports } from '../../store/player';
-import { getActiveTown, TownActions } from '../../store/town';
+import { getTownState, getActiveTown, TownActions, TownState, Town } from '../../store/town';
 import { AuthActions } from '../../store/auth';
 import { StoreState } from '../../store';
 
@@ -18,13 +19,16 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenavLeft') sidenavLeft;
   @ViewChild('sidenavRight') sidenavRight;
 
-  public ts$ = this.store.select(getActiveTown).map((d) => { console.log('woop woop', d); return d; })
+  public townList: Town[];
+  public activeTown: Town;
+  public canRecruit: boolean;
+
+  public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
-  public canRecruit$ = this.store.select(getActiveTown)
-    .map((town) => town && !!town.buildings.barracks.level);
   public isVisible;
-  public sidenavSubscription$;
+  public sidenavSubscription: Subscription;
+  public townStateSubscription: Subscription;
 
   constructor(
     private store: Store<StoreState>,
@@ -33,31 +37,21 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.sidenavSubscription$ = this.store.select(getSidenavs)
+    this.townStateSubscription = this.townState$.subscribe((townState: TownState) => {
+      this.townList = townState.playerTowns;
+      this.activeTown = townState.playerTowns.find((town) => town._id === townState.activeTown);
+      this.canRecruit = this.activeTown && !!this.activeTown.buildings.barracks.level;
+    });
+    this.sidenavSubscription = this.store.select(getSidenavs)
       .subscribe(sidenavs => this.updateSidenavs(sidenavs));
 
     this.actions$.ofType(TownActions.UPDATE_EVENT)
       .map(toPayload)
       .map(({ town, event }) => event.type)
       .subscribe((event) => this.handleEvent(event))
-    // this.store.select()
-    console.log('wat');
-    // Initialize sockets
-    // this.playerService.observePlayer();
-    // this.townService.observeTown().subscribe(town => {
-    //   if (town) {
-    //     this.canRecruit = !!town.buildings['barracks'].level;
-    //   }
-    // });
-    // this.playerService.sidenavEvents.subscribe(target => this.sidenavToggle(this.sidenavLeft, target));
-    // this.reportService.observeReports().subscribe(reports => {
-    //   this.reports = reports;
-    //   console.log('report?', reports)
-    // })
   }
 
   updateSidenavs(sidenavs) {
-    // this.sidenavLeft
     this.sidenavLeft.comp = sidenavs.left;
     this.sidenavRight.comp = sidenavs.right;
     if (sidenavs.left) {
@@ -79,11 +73,16 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // this.socket.disconnect();
+    this.sidenavSubscription.unsubscribe();
+    this.townStateSubscription.unsubscribe();
   }
 
   logout() {
     this.store.dispatch({ type: AuthActions.LOGOUT });
-    // this.authService.logout();
+  }
+
+  selectTown(townId: number) {
+    this.store.dispatch({ type: TownActions.SET_ACTIVE_TOWN, payload: townId });
   }
 
   private handleEvent(event) {

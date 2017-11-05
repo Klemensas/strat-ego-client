@@ -1,4 +1,13 @@
 <div *ngIf="town$ | async; let town" class="px-2 py-2 mb-3">
+  <div class="row my-2">
+    <div class="col">
+      <strong>{{ town.name }}</strong>
+      <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
+      <button (click)="changeName(nameChange, town.name)">Save</button>
+
+      <strong *ngIf="town.loyalty !== 100" class="ml-4 text-danger">Loyalty: {{town.loyalty}}</strong>
+    </div>
+  </div>
   <div class="row">
     <buildings class="col-md-9" [town]="town" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></buildings>
     <div class="col-md-3">
@@ -6,13 +15,6 @@
        <resources [town]="town"></resources>
        <units [units]="town.units"></units>
        <building-queue [buildingQueue]="town.BuildingQueues"></building-queue>
-    </div>
-  </div>
-  <div class="row mt-2">
-    <div class="col">
-      <strong>{{ town.name }}</strong>
-      <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
-      <button (click)="changeName(nameChange, town.name)">Save</button>
     </div>
   </div>
 </div>

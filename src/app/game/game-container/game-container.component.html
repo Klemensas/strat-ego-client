@@ -3,19 +3,19 @@
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
     </button>
-    <movements *ngSwitchCase="'movements'" [town]="ts$ | async" [worldData]="worldData$ | async"></movements>
-    <command *ngSwitchCase="'command'" [town]="ts$ | async" [worldData]="worldData$ | async"></command>
+    <movements *ngSwitchCase="'movements'" [town]="activeTown" [worldData]="worldData$ | async"></movements>
+    <command *ngSwitchCase="'command'" [town]="activeTown" [worldData]="worldData$ | async"></command>
   </mat-sidenav>
   <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
     <button mat-mini-fab (click)="sidenavToggle('right', null)">
       <mat-icon>&times;</mat-icon>
     </button>
-    <recruit *ngSwitchCase="'recruit'" [town]="ts$ | async" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
+    <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
   </mat-sidenav>
   <header>
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-      <button class="navbar-toggler navbar-toggler-right" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
+    <nav class="navbar navbar-expand-md navbar-light bg-faded">
+      <button class="navbar-toggler" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" [ngbCollapse]="!isVisible">
@@ -31,7 +31,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a *ngIf="canRecruit$ | async" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
+            <a *ngIf="canRecruit" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
               <i class="fa fa-users" aria-hidden="true"></i> Recruit
             </a>
           </li>
@@ -50,9 +50,7 @@
           <div ngbDropdown class="nav-item mr-3">
             <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
             <div ngbDropdownMenu aria-labelledby="active-town">
-              <button class="dropdown-item">Action - 1</button>
-              <button class="dropdown-item">Another Action</button>
-              <button class="dropdown-item">Something else is here</button>
+              <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown._id === town._id }" (click)="activeTown._id !== town._id ? selectTown(town._id) : false" class="dropdown-item">{{town.name}}</button>
             </div>
           </div>
           <div class="nav-item">
