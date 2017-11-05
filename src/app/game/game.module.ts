@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule   } from '@angular/forms';
-import { MaterialModule } from '@angular/material';
+import { MatSidenavModule, MatSnackBarModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
@@ -24,7 +24,11 @@ import { UnitQueueComponent } from './unit-queue/unit-queue.component';
 
 @NgModule({
   imports: [
-    MaterialModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatButtonModule,
     CommonModule,
     FormsModule,
     gameRouting,

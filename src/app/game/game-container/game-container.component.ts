@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-import { MdSidenav, MdSnackBar } from '@angular/material';
+import { MatSidenav, MatSnackBar } from '@angular/material';
 
 import { getActiveWorld } from '../../store/world';
-import { PlayerActions, getSidenavs } from '../../store/player';
+import { PlayerActions, getSidenavs, getPlayerReports } from '../../store/player';
 import { getActiveTown, TownActions } from '../../store/town';
 import { AuthActions } from '../../store/auth';
 import { StoreState } from '../../store';
@@ -18,9 +18,8 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenavLeft') sidenavLeft;
   @ViewChild('sidenavRight') sidenavRight;
 
-  public reports = [];
-  public sidebars = {};
   public ts$ = this.store.select(getActiveTown).map((d) => { console.log('woop woop', d); return d; })
+  public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
   public canRecruit$ = this.store.select(getActiveTown)
     .map((town) => town && !!town.buildings.barracks.level);
@@ -29,7 +28,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<StoreState>,
-    private snackBar: MdSnackBar,
+    private snackBar: MatSnackBar,
     private actions$: Actions,
   ) {}
 
@@ -88,6 +87,23 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   private handleEvent(event) {
-    this.snackBar.open(event)
+    let message;
+    switch (event) {
+      case 'name':
+        message = 'Town name changed';
+        break;
+      case 'movement':
+        message = 'Movement started';
+        break;
+      case 'recruit':
+        message = 'Recruitment queued';
+        break;
+      case 'build':
+        message = 'Building queued';
+        break;
+      default:
+        return;
+    }
+    this.snackBar.open(message, null, { duration: 3000 })
   }
 }

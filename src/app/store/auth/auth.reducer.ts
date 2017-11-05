@@ -2,8 +2,9 @@ import { ActionReducer, Action } from '@ngrx/store';
 
 import { AuthState, initialAuthState } from './auth.state';
 import { AuthActions } from './auth.actions';
+import { ActionWithPayload } from '../util';
 
-export const AuthReducer: ActionReducer<AuthState> = (state = initialAuthState, action: Action) => {
+export const AuthReducer: ActionReducer<AuthState> = (state = initialAuthState, action: ActionWithPayload) => {
   switch (action.type) {
     case AuthActions.LOGIN:
     case AuthActions.REGISTER:

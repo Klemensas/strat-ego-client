@@ -9,7 +9,7 @@ import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/throttleTime';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
-import * as Big from 'big.js';
+import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
 
 import { StoreState } from '../../store';

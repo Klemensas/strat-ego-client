@@ -29,22 +29,23 @@ export class FullGuard implements CanActivate {
           this.router.navigate(['login']);
           return Observable.of(false);
         }
-        this.store.dispatch({ type: PlayerActions.SET_PROGRESS })
-        this.socket.connect(token);
-        return this.worldGuard(target);
+        // this.store.dispatch({ type: PlayerActions.SET_PROGRESS })
+        return this.worldGuard(target, token);
       });
-  }
+    }
 
-  public worldGuard(target) {
-    return this.store.select(getWorld(target))
-      .combineLatest(this.store.select(getPlayerState))
-      .filter(([world, player]) => !player.inProgress)
-      .map(([world, player]) => {
-        if (!world) {
-          this.router.navigate(['/']);
-          return false;
-        }
-        this.store.dispatch({ type: WorldActions.SELECT_WORLD, payload: world.world.name });
+    public worldGuard(target, token) {
+      return this.store.select(getWorld(target))
+      // .combineLatest(this.store.select(getPlayerState))
+      // .filter(([world, player]) => !player.inProgress)
+      // .map(([world, player]) => {
+        .map((world) => {
+          if (!world) {
+            this.router.navigate(['/']);
+            return false;
+          }
+          this.store.dispatch({ type: WorldActions.SELECT_WORLD, payload: world.world.name });
+          this.socket.connect(token);
         return true;
       });
   }

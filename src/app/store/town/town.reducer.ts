@@ -1,10 +1,11 @@
-import { ActionReducer, Action } from '@ngrx/store';
+import { ActionReducer } from '@ngrx/store';
 
+import { ActionWithPayload } from '../util';
 import { TownDefaultActionState } from './town.model';
 import { TownState, initialTownState } from './town.state';
 import { TownActions } from './town.actions';
 
-export const TownReducer: ActionReducer<TownState> = (state = initialTownState, action: Action) => {
+export const TownReducer: ActionReducer<TownState> = (state = initialTownState, action: ActionWithPayload) => {
   switch (action.type) {
     case TownActions.UPDATE: {
       const playerTowns = [ ...state.playerTowns];

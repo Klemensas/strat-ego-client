@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from '@angular/material';
-
 
 import { AppStore } from './store';
 
@@ -35,14 +33,13 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 
 @NgModule({
   imports: [
+    AppStore,
     routing,
-    MaterialModule,
     BrowserModule,
     FormsModule,
     HttpModule,
     GameModule,
     NgbModule.forRoot(),
-    AppStore,
   ],
   declarations: [
     AppComponent,

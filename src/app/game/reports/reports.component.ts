@@ -1,31 +1,44 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 
 import { Town } from '../../store/town';
+import { Report } from '../../store/report';
 import { WorldData } from '../../store/world';
+
+export interface ReportMapped extends Report {
+  type: string;
+  result: string;
+}
 
 @Component({
   selector: 'reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
 })
+
 export class ReportsComponent implements OnChanges, OnDestroy {
-  @Input() public town: Town;
+  @Input() public reports: {
+    ReportOrigin: Report[],
+    ReportDestination: Report[],
+  };
   @Input() public worldData: WorldData;
-  public reports = [];
+  public reportsMapped: ReportMapped[] = [];
 
   constructor() {}
 
   ngOnChanges() {
-    this.reports = [...this.town.ReportOriginTown, ...this.town.ReportDestinationTown].map(report => {
-      const type = report.ReportDestinationTownId === this.town._id ? 'defense' : 'attack';
-      const result = report.outcome === 'attack' && type === 'attack' ? 'win' : 'lose';
+    this.reportsMapped = [
+      ...this.mapReports(this.reports.ReportOrigin, 'attack'),
+      ...this.mapReports(this.reports.ReportDestination, 'defense'),
+    ]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  }
 
-      return {
-        ...report,
-        type,
-        result,
-      }
-    }).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+  mapReports(reports: Report[], type: string): ReportMapped[] {
+    return reports.map((report) => ({
+      ...report,
+      type,
+      result: report.outcome === type ? 'win' : 'lose',
+    }))
   }
 
   ngOnDestroy() {}

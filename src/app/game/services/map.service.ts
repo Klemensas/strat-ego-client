@@ -4,7 +4,7 @@ import { PlayerService } from './player.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import * as seedrandom from 'seedrandom';
-import * as Big from 'big.js';
+import { Big } from 'big.js';
 
 @Injectable()
 export class MapService {

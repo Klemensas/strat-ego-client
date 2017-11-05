@@ -1,18 +1,18 @@
- <md-sidenav-container class="backdrop-disabled">
-  <md-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
-    <button md-mini-fab (click)="sidenavToggle('left', null)">
-      <md-icon>&times;</md-icon>
+ <mat-sidenav-container class="backdrop-disabled">
+  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
+    <button mat-mini-fab (click)="sidenavToggle('left', null)">
+      <mat-icon>&times;</mat-icon>
     </button>
     <movements *ngSwitchCase="'movements'" [town]="ts$ | async" [worldData]="worldData$ | async"></movements>
     <command *ngSwitchCase="'command'" [town]="ts$ | async" [worldData]="worldData$ | async"></command>
-  </md-sidenav>
-  <md-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
-    <button md-mini-fab (click)="sidenavToggle('right', null)">
-      <md-icon>&times;</md-icon>
+  </mat-sidenav>
+  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
+    <button mat-mini-fab (click)="sidenavToggle('right', null)">
+      <mat-icon>&times;</mat-icon>
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="ts$ | async" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
-    <reports *ngSwitchCase="'reports'" [town]="ts$ | async" [worldData]="worldData$ | async"></reports>
-  </md-sidenav>
+    <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
+  </mat-sidenav>
   <header>
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
       <button class="navbar-toggler navbar-toggler-right" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
@@ -47,6 +47,14 @@
           </li>
         </ul>
         <div class="d-flex justify-content-center align-items-center">
+          <div ngbDropdown class="nav-item mr-3">
+            <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
+            <div ngbDropdownMenu aria-labelledby="active-town">
+              <button class="dropdown-item">Action - 1</button>
+              <button class="dropdown-item">Another Action</button>
+              <button class="dropdown-item">Something else is here</button>
+            </div>
+          </div>
           <div class="nav-item">
             <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
           </div>
@@ -58,4 +66,4 @@
   <div class="container-fluid">
     <router-outlet></router-outlet>
   </div>
-</md-sidenav-container>
+</mat-sidenav-container>

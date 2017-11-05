@@ -10,10 +10,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class GameDataService {
-  public data = {
-    world: this.getActiveWorlds(),
-    activeWorld: new BehaviorSubject(null)
-  };
+  // public data = {
+  //   world: this.getActiveWorlds(),
+  //   activeWorld: new BehaviorSubject(null)
+  // };
 
   constructor(private http:Http, private authHttp:AuthHttp) {}
 

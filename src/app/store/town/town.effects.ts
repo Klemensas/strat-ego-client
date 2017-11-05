@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/filter';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
+import { ActionWithPayload } from '../util';
 import { TownActions, getActiveTown, Town } from './';
 import { PlayerActions } from '../player';
 import { StoreState } from '../';
-import { SocketService } from '../../game/services';
+import { SocketService } from '../../game/services/socket.service';
 import { getActiveWorld, WorldData } from '../world';
 import { availableResources } from '../../game/utils';
 
@@ -20,18 +20,18 @@ export class TownEffects {
   public townTimeouts = {};
 
   @Effect()
-  public setActiveTown$: Observable<Action> = this.actions$
+  public setActiveTown$: Observable<ActionWithPayload> = this.actions$
     .ofType(TownActions.SET_PLAYER_TOWNS)
     .map(toPayload)
     .withLatestFrom(this.store)
-    .filter(([towns, store]: [Action, StoreState]) => !store.town.activeTown)
+    .filter(([towns, store]: [ActionWithPayload, StoreState]) => !store.town.activeTown)
     .map(([{ towns }, store]) => ({
       type: TownActions.SET_ACTIVE_TOWN,
       payload: towns[0]._id
     }));
 
   @Effect()
-  public setPlayerTowns$: Observable<Action> = this.actions$
+  public setPlayerTowns$: Observable<ActionWithPayload> = this.actions$
     .ofType(PlayerActions.UPDATE)
     .map(toPayload)
     .map((player) => player.Towns)
@@ -39,7 +39,7 @@ export class TownEffects {
     .map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
 
   @Effect()
-  public townUpdateEvent$: Observable<Action> = this.actions$
+  public townUpdateEvent$: Observable<ActionWithPayload> = this.actions$
     .ofType(TownActions.UPDATE_EVENT)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveWorld))
@@ -80,7 +80,7 @@ export class TownEffects {
     .map(toPayload)
     .map((id) => this.socketService.sendEvent('town:update', { town: id }));
 
-  public updateAction(world, towns: Town[], type, event?): Action {
+  public updateAction(world, towns: Town[], type, event?): ActionWithPayload {
     towns.forEach((town) => this.scheduleUpdate(town));
     const townPayload = towns.map((town) => {
       const fullTown = {

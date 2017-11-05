@@ -34,7 +34,7 @@ export class SocketService {
         this.socket.on('player', (data) => this.store.dispatch({ type: PlayerActions.UPDATE, payload: data }))
         this.socket.on('town', (data) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload: data }))
         this.socket.on('map', (data) => this.store.dispatch({ type: MapActions.UPDATE, payload: data }))
-        this.socket.on('report', (data) => this.store.dispatch({ type: ReportActions.UPDATE, payload: data }))
+        this.socket.on('report', (data) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload: data }))
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));

@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 
 import { GameDataService } from '../../services/game-data.service';
-import { TownService } from '../services/town.service';
 import { unitData } from '../staticData';
 import { StoreState } from '../../store';
 import { TownActions, Town } from '../../store/town';
@@ -53,7 +52,6 @@ export class RecruitComponent implements OnChanges, OnDestroy {
 
   constructor(
     private gameData: GameDataService,
-    private townService: TownService,
     private store: Store<StoreState>,
   ) {}
 
@@ -129,6 +127,5 @@ export class RecruitComponent implements OnChanges, OnDestroy {
 
   recruit(amount, type) {
     this.store.dispatch({ type: TownActions.RECRUIT, payload: [{ type, amount }] })
-    // this.townService.recruit([{ type, amount}]);
   }
 }

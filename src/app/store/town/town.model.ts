@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { User } from '../user/';
 import { Resources } from '../world';
+import { Report } from '../report';
 
 export interface TownActionState {
   name: boolean;
@@ -60,8 +61,8 @@ export interface Town {
     createdAt: string;
     updatedAt: string;
   }
-  ReportDestinationTown: any[];
-  ReportOriginTown: any[];
+  ReportDestinationTown: Report;
+  ReportOriginTown: Report;
   UnitQueues: any[];
   createdAt: string;
   updatedAt: string;

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { StoreModule, combineReducers } from '@ngrx/store';
+import { StoreModule, ActionReducerMap } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -18,46 +18,43 @@ export interface StoreState {
   map: map.MapState,
 };
 
-const reducers = {
+const reducers: ActionReducerMap<StoreState> = {
   auth: auth.AuthReducer,
   world: world.WorldReducer,
   player: player.PlayerReducer,
   town: town.TownReducer,
   map: map.MapReducer,
-}
+};
 const actions = [
   auth.AuthActions,
   world.WorldActions,
   player.PlayerActions,
   town.TownActions,
   map.MapActions,
-]
+];
 const effects = [
-  EffectsModule.run(auth.AuthEffects),
-  EffectsModule.run(world.WorldEffects),
-  EffectsModule.run(player.PlayerEffects),
-  EffectsModule.run(town.TownEffects),
-  EffectsModule.run(map.MapEffects),
-]
-
-const rootReducer = (state: any, action: any) => combineReducers(reducers)(state, action);
+  auth.AuthEffects,
+  world.WorldEffects,
+  player.PlayerEffects,
+  town.TownEffects,
+  map.MapEffects,
+];
 
 // Reset state on logout
-export function productionReducer(state, action) {
-  if (action.type === auth.AuthActions.LOGOUT) {
-    state = undefined;
-  }
-  return rootReducer(state, action);
-}
+// export function productionReducer(state, action) {
+//   if (action.type === auth.AuthActions.LOGOUT) {
+//     state = undefined;
+//   }
+//   return rootReducer(state, action);
+// }
 
 const devTools = !environment.production ?
-  [StoreDevtoolsModule.instrumentOnlyWithExtension()] :
-  [];
+  [StoreDevtoolsModule.instrument({ maxAge: 50 })] : [];
 
 @NgModule({
   imports: [
-    StoreModule.provideStore(productionReducer),
-    effects,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
     ...devTools,
   ],
   providers: [ ...actions ]

@@ -1,9 +1,10 @@
-import { ActionReducer, Action } from '@ngrx/store';
+import { ActionReducer } from '@ngrx/store';
 
+import { ActionWithPayload } from '../util';
 import { ReportState, initialReportState } from './report.state';
 import { ReportActions } from './report.actions';
 
-export const ReportReducer: ActionReducer<ReportState> = (state = initialReportState, action: Action) => {
+export const ReportReducer: ActionReducer<ReportState> = (state = initialReportState, action: ActionWithPayload) => {
   switch (action.type) {
     case ReportActions.UPDATE:
       return { ...state, reportData: action.payload };

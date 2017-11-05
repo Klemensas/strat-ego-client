@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { StoreState } from '../store';
-import { AuthActions } from '../store/auth';
+import { AuthActions } from '../store/auth/auth.actions';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -20,7 +20,6 @@ export class AuthService {
 
   constructor(private http: Http, private authHttp: AuthHttp, private router: Router, private store: Store<StoreState>) {
     this.jwtHelper = new JwtHelper();
-    this.getToken();
   }
 
   getToken() {

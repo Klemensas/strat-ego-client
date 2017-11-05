@@ -27,18 +27,18 @@ export class TownService {
   public worldData;
 
   constructor(private socket: SocketService, private playerService: PlayerService, private gameData: GameDataService) {
-    this.playerService.activeTown.subscribe((town: Town) => {
-      if (town) {
-        console.log('iniy town', town)
-        this.townData[town._id] = town;
-        this.updateCurrent(town);
-      }
-    });
-    this.gameData.data.activeWorld.subscribe((world) => {
-      this.worldData = world;
-    });
-    // CONSIDER: this never stops, should it?
-    this.timeTick();
+    // this.playerService.activeTown.subscribe((town: Town) => {
+    //   if (town) {
+    //     console.log('iniy town', town)
+    //     this.townData[town._id] = town;
+    //     this.updateCurrent(town);
+    //   }
+    // });
+    // // this.gameData.data.activeWorld.subscribe((world) => {
+    // //   this.worldData = world;
+    // // });
+    // // CONSIDER: this never stops, should it?
+    // this.timeTick();
   }
 
   observeTown() {
