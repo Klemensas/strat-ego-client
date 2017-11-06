@@ -4,7 +4,7 @@ export class Player {
   _id: number;
   UserId: number;
   name: string;
-  Towns: Array<Town>;
+  Towns: [Town];
   createdAt: number;
   updatedAt: number;
 }

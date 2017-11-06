@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-12 d-flex">
+    <div>
+      <span class="badge" [ngClass]="{'badge-danger': report.result === 'lose', 'badge-success': report.result === 'win'}">{{report.type}}</span>
+      <span>{{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}}) attacks {{ report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</span>
+      <span class="text-muted">{{report.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
+    </div>
+    <i class="fa fa-chevron-down ml-auto" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report._id"></i>
+  </div>
+  <div [id]="'collapse-' + report._id" class="col-12 py-2 px-1" [ngbCollapse]="!isCollapsed">
+    <section>
+      <header class="font-weight-bold">Defender - {{report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</header>
+      <div class="row">
+        <div class="col">
+          <div>Units</div>
+          <div>Amount</div>
+          <div>Losses</div>
+        </div>
+        <div class="col d-flex flex-column align-items-center" *ngFor="let unit of unitList">
+          <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+          <div>{{ report.destination.units[unit.name] || 0 }}</div>
+          <div class="text-danger">{{ report.destination.losses[unit.name] || 0 }}</div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <header class="font-weight-bold">Attacker - {{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}})</header>
+      <div class="row">
+        <div class="col">
+          <div>Units</div>
+          <div>Amount</div>
+          <div>Losses</div>
+        </div>
+        <div class="col d-flex flex-column align-items-center" *ngFor="let unit of unitList">
+          <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+          <div>{{ report.origin.units[unit.name] || 0 }}</div>
+          <div class="text-danger">{{ report.origin.losses[unit.name] || 0 }}</div>
+        </div>
+      </div>
+    </section>
+    <section class="d-flex justify-content-end" *ngIf="report.outcome === 'attack'">
+      <div>Haul:</div>
+      <div class="d-flex">
+        <div class="resource">
+          <div class="resource-icon wood"></div>
+          {{report.haul.haul.wood | number:'1.0-0'}}
+        </div>
+        <div class="resource">
+          <div class="resource-icon clay"></div>
+          {{report.haul.haul.clay | number:'1.0-0'}}
+        </div>
+        <div class="resource">
+          <div class="resource-icon iron"></div>
+          {{report.haul.haul.iron | number:'1.0-0'}}
+        </div>
+      </div>
+      <div>/{{report.haul.maxHaul}}</div>
+    </section>
+  </div>
+</div>

@@ -1,16 +1,34 @@
-import { Units, Buildings, Resources, BuildingQueue } from './';
+import { Unit, Building, Resources, BuildingQueue } from './';
 
 export class Town {
   _id: number;
   PlayerId: number;
   name: string;
-  location: Array<number>;
+  location: [number];
   moneyPercent: number;
-  buildings: Buildings;
   production: Resources;
   resources: Resources;
-  units: Units;
+  buildings: {
+    [index: string]: {
+      level: number;
+      queued: number;
+    }
+  };
+  units: {
+    [index: string]: {
+      amount: number;
+      queued: number;
+    }
+  };
   BuildingQueues: [BuildingQueue];
   createdAt: number;
   updatedAt: number;
+  MovementDestinationTown: [any];
+  MovementOriginTown: [any];
+}
+
+export class TownMinData {
+  _id: number;
+  name: string;
+  location: [number];
 }

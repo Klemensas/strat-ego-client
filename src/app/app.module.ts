@@ -1,6 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+
+import { AppStore } from './store';
 
 import { AppComponent } from './app.component';
 import { routing, routedComponents } from './app.routing';
@@ -9,6 +12,7 @@ import { Http, HttpModule, RequestOptions } from '@angular/http';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 import { AuthGuard } from './auth.guard';
+import { SocketGuard } from './game/services/socket.guard';
 // import { PlayerResolver } from './player.resolver';
 
 import { AuthService } from './auth/auth.service';
@@ -22,22 +26,24 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     headerPrefix: 'bearer',
     tokenName: 'token',
     tokenGetter: (() => localStorage.getItem('jwt')),
-    globalHeaders: [{'Content-Type':'application/json'}],
+    globalHeaders: [{'Content-Type': 'application/json'}],
     noJwtError: true
   }), http, options);
 }
 
 @NgModule({
   imports: [
+    AppStore,
     routing,
     BrowserModule,
     FormsModule,
     HttpModule,
-    GameModule
+    GameModule,
+    NgbModule.forRoot(),
   ],
   declarations: [
     AppComponent,
-    routedComponents
+    routedComponents,
   ],
   providers: [
     {
@@ -46,10 +52,17 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       deps: [Http, RequestOptions]
     },
     AuthGuard,
+    SocketGuard,
     // PlayerResolver,
     AuthService,
     GameDataService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(/* private authService: AuthService */) {
+    (window.screen as any).orientation.lock('landscape')
+      .then(() => {})
+      .catch(() => {});
+  }
+}

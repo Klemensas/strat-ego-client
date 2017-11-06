@@ -1,59 +1,64 @@
-import { Component, OnInit } from '@angular/core';
-import { GameDataService } from '../../services/game-data.service'
-import { TownService } from '../services/town.service'
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/takeLast';
+
+import { resourceTime, availableResources } from '../utils';
+import { buildingData } from '../staticData';
+import { Resources } from '../../store/world';
 
 @Component({
   selector: 'buildings',
   templateUrl: './buildings.component.html',
   styleUrls: ['./buildings.component.scss'],
 })
-export class BuildingsComponent implements OnInit {
-  buildings;
-  private town;
-  private buildingData;
-  private buildingDataMap = [];
+export class BuildingsComponent implements OnChanges {
+  @Input() public town;
+  @Input() public worldData;
+  @Output() public upgradeBuilding: EventEmitter<any> = new EventEmitter();
 
-  constructor(private townService: TownService, private gameData: GameDataService) {
+  public buildings = [];
+  public buildingDetails = buildingData;
+  public updateAvailability$: Subscription;
+
+  public ngOnChanges(changes?) {
+    this.town.availableResources$
+      .timestamp()
+      .take(1)
+      .subscribe(({ value, timestamp }) => {
+        this.buildings = Object.entries(this.town.buildings).map(([name, building]) => {
+          const next = building.queued || building.level;
+          const targetBuilding = this.worldData.buildingMap[name];
+          const requirements = targetBuilding.requirements;
+          const nextLevel = targetBuilding.data[next];
+          const availableIn = resourceTime(value, nextLevel.costs, this.town.production);
+          let available = true;
+          if (!next && requirements) {
+            available = requirements.every((req) => req.level <= this.town.buildings[req.item].level);
+          }
+          return {
+            ...building,
+            ...nextLevel,
+            name,
+            next,
+            requirements,
+            available,
+            availableIn,
+          };
+        });
+        const soonestAvailable = this.buildings.reduce((availableNext, { available, availableIn, name }) =>
+          available && availableIn > 0 ? Math.min(availableNext, availableIn) : availableNext, Infinity);
+        if (soonestAvailable !== Infinity) {
+          if (this.updateAvailability$) {
+            this.updateAvailability$.unsubscribe();
+          }
+        this.updateAvailability$ = Observable.timer(soonestAvailable).subscribe(() => this.ngOnChanges());
+        }
+      });
   }
 
-  ngOnInit() {
-    this.gameData.data.activeWorld.subscribe(world => {
-      this.buildingData = world.buildingData;
-      this.buildingDataMap = world.buildingDataMap;
-    });
-    this.townService.currentTown.subscribe(town => {
-      this.town = town;
-      this.buildings = this.modifyBuildings(town.buildings);
-    });
-  }
-
-  modifyBuildings(buildings) {
-    return this.buildingData.map(item => {
-      const building = buildings[item.name];
-      building.name = item.name;
-      building.next = building.queued || building.level;
-      building.available = true;
-      if (building.next === 0 && item.requirements) {
-        building.available = item.requirements.every(b => b.level <= buildings[b.item].level);
-      }
-      return building;
-    });
-  }
-
-  canUpgrade(building) {
-    const targetBuilding = this.buildingDataMap[building.name];
-    const targetLevel = targetBuilding.data[building.next].costs;
-    if (building.next === 0 && targetBuilding.requirements) {
-    }
-
-    return (
-      targetLevel.clay <= this.town.resources.clay &&
-      targetLevel.wood <= this.town.resources.wood &&
-      targetLevel.iron <= this.town.resources.iron
-    )
-  }
-
-  upgrade(building) {
-    this.townService.upgradeBuilding({ building: building.name, level: building.next })
+  public upgrade(building) {
+    this.upgradeBuilding.emit({ building: building.name, level: building.level });
   }
 }

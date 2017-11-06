@@ -10,10 +10,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class GameDataService {
-  public data = {
-    world: this.getActiveWorlds(),
-    activeWorld: new BehaviorSubject(null)
-  };
+  // public data = {
+  //   world: this.getActiveWorlds(),
+  //   activeWorld: new BehaviorSubject(null)
+  // };
 
   constructor(private http:Http, private authHttp:AuthHttp) {}
 
@@ -27,18 +27,6 @@ export class GameDataService {
       //   this.token = t;
       //   return this.getUser();
       // });
-  }
-
-  mapBuildings(worlds) {
-    const data = worlds.map(world => {
-      const buildings = {};
-      world.buildingData.forEach(build => {
-        buildings[build.name] = build;
-      })
-      world.buildingData = buildings;
-      return world;
-    });
-    return data;
   }
 
   // getWorldData(target) {

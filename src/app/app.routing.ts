@@ -7,18 +7,10 @@ import { RegisterComponent } from './auth/register/';
 import { AuthGuard } from './auth.guard';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, /*index: true*/ },
+  { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  // {
-  //   path: 'world/:name',
-  //   canActivate: [AuthGuard],
-  //   children: [
-  //     { path: '', component: GameComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
-  //     { path: 'join', data: { new: true }, component: GameComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
-  //     { path: 'map', component: MapComponent },
-  //   ],
-  // },
+  { path: 'register', component:
+  RegisterComponent },
   {
     path: 'manage',
     canActivate: [AuthGuard],

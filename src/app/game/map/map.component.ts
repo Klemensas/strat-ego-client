@@ -1,28 +1,54 @@
-import { Component, OnInit, AfterViewChecked , ElementRef, Renderer, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { MapService, PlayerService } from '../services';
-import { Observable, Subject } from 'rxjs';
-// import 'rxjs/add/operator/cache';
+import { Component, AfterContentInit, OnInit, OnDestroy, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/never';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/takeWhile';
+import 'rxjs/add/operator/throttleTime';
+import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
-import * as Big from 'big.js';
+import { Big } from 'big.js';
+import { Store } from '@ngrx/store';
+
+import { StoreState } from '../../store';
+import { getMapData, Map, MapActions } from '../../store/map';
+import { PlayerActions } from '../../store/player';
+import { getTownState, Town, TownState } from '../../store/town';
+import { MapService, CommandService } from '../services';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapComponent implements OnInit, AfterViewChecked  {
+export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit, OnDestroy  {
+  @ViewChild('map') map;
+  public townState: Observable<TownState> = this.store.select(getTownState);
+  public mapUpdate = Observable.combineLatest(
+    this.store.select(getMapData),
+    this.mapService.imagesLoaded
+  );
   public dragging = 0;
-  public activeTown;
+  public activeTown: Town;
+  public playerTowns: Town[];
+  public playerTownIds: number[];
+  public boxSize = {
+    x: 260,
+    y: 80,
+  };
 
-  private drawCoords = true;
-  private mapTiles;
+  public drawCoords = false;
+  public mapTiles;
 
-  private selected;
-  private zoom = 1;
-  private mapData;
-  private mapOffset;
-  private mapSettings = {
+  public selected;
+  public zoom = 1;
+  public mapData;
+  public mapOffset;
+  public mapSettings = {
     size: { x: 0, y: 0 },
     width: <any>0,
     height: <any>0,
@@ -34,60 +60,75 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     points: [],
     shouldDraw: false,
   };
-  private ctx;
-  private rng;
-  private hoverPauser = new Subject();
-  private hoverData;
-  private position = {
+  public ctx;
+  public rng;
+  public hoverPauser = new Subject();
+  // public hoverData: Observable;
+  public hoverData;
+  public position = {
     hover: null,
     click: null
   };
-  @ViewChild('map') map;
 
-  constructor(private mapService: MapService, private playerService: PlayerService) {
+  public townSubscription: Subscription;
+  public mapSubscription: Subscription;
+
+  constructor(
+    private mapService: MapService,
+    private store: Store<StoreState>,
+    private commandService: CommandService,
+    private sanitizer: DomSanitizer
+  ) {
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
+  public ngAfterContentInit() {
     this.ctx = this.map.nativeElement.getContext('2d');
     this.ctx.lineWidth = 1;
 
-    this.setMapSettings({
-      x: this.map.nativeElement.offsetWidth,
-      y: this.map.nativeElement.offsetHeight
-    });
-    // const t = this.mapService.pixelToCoord({ x: Big(51971.92307692308), y: Big(45422.39183161144) }, this.mapSettings)
-    // console.log(t, +t.xCoord, +t.yCoord, +t.x, +t.y)
-
-    this.playerService.activeTown.subscribe(data => {
-      if (!data) {
-        console.error('No active town?', data, this.playerService);
-        return;
-      }
-      this.activeTown = data;
-      this.mapOffset = this.centerOffset({ x: data.location[0], y: data.location[1] });
-      this.mapService.getMapData(location).then(mapData => {
-        this.mapData = mapData;
-        this.mapSettings.shouldDraw = true;
-        // TODO: Temporary fix
-        this.hoverPauser.next(false);
-        console.log('got da data', this.mapSettings.shouldDraw, this, this.mapOffset, this.mapSettings.width);
-      });
-    });
-
-
-    // this.hoverPauser = Observable.fromEvent(this.map.nativeElement, 'mousemove').pausable(this.hoverPauser);
-    const moveEvent = Observable.fromEvent(this.map.nativeElement, 'mousemove').throttleTime(50);
-    this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent)
-      .subscribe(data => this.onHover(data));
-    this.hoverPauser.next(true);
+    const moveEvent = Observable.merge(
+      Observable.fromEvent(this.map.nativeElement, 'mousemove'),
+      Observable.fromEvent(this.map.nativeElement, 'touchmove')
+    ).throttleTime(50);
+    const pausableMove = this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent);
+    pausableMove.subscribe(data => this.onHover(data));
+    this.hoverPauser.next(!this.mapData);
   }
 
-  ngAfterViewChecked() {
-    if (this.ctx && this.mapSettings.shouldDraw && this.mapData) {
+  public ngOnInit() {
+    this.store.dispatch({ type: MapActions.LOAD_MAP })
+    this.townSubscription = this.townState.subscribe(townState => {
+      if (!townState.activeTown) { return; }
+      this.activeTown = townState.playerTowns.find((town) => town._id === townState.activeTown);
+      this.playerTowns = townState.playerTowns;
+      this.playerTownIds = townState.playerTowns.map((town) => town._id);
+
+      this.setMapSettings({
+        x: this.map.nativeElement.offsetWidth,
+        y: this.map.nativeElement.offsetHeight
+      });
+      this.mapOffset = this.centerOffset({ x: this.activeTown.location[0], y: this.activeTown.location[1] });
+      this.mapSettings.shouldDraw = !!this.mapData;
+    });
+    this.mapSubscription = this.mapUpdate.subscribe(([map, imagesLoaded]) => {
+      if (map && imagesLoaded) {
+        if (!this.mapData) {
+          this.hoverPauser.next(false);
+        }
+        this.mapData = map;
+        this.mapSettings.shouldDraw = true;
+      }
+    })
+  }
+
+  public ngOnDestroy() {
+    this.townSubscription.unsubscribe();
+    this.mapSubscription.unsubscribe();
+  }
+
+  public ngAfterViewChecked() {
+    if (this.ctx && this.mapSettings.shouldDraw && this.activeTown) {
       this.drawMap(this.mapOffset);
     }
   }
@@ -100,37 +141,49 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     this.mapSettings.shouldDraw = true;
   }
 
+  toggleSidenav(target, data) {
+    this.commandService.targeting.next(data);
+    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side: 'left', name: 'command' }]});
+    console.log('toggle sidenav!')
+  }
+
   public mapClick(event) {
     if (this.hoverData === null) {
       this.selected = null;
       return;
     }
-    console.log('test', this.hoverData)
+    this.toggleSidenav('command', this.hoverData.location);
     this.selected = this.hoverData;
-    this.position.click = `translate3d(${this.selected.pos.x.plus(this.mapSettings.radius)}px,${this.selected.pos.y}px,0)`;
-    console.log(this.selected.pos.translate, this.hoverData.pos.translate)
+    // this.position.click = this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
   }
 
   public onZoom(event) {
     event.preventDefault();
-    const zoomChange = event.deltaY === 0 ? 0 : (event.deltaY > 0 ? -1 : 1);
-    if (zoomChange === 0) {
-      console.error('no zoom', event)
-      return;
-    }
-    this.zoom += zoomChange / 10;
-    this.setMapSettings(this.mapSettings.size, this.zoom);
-    this.mapSettings.shouldDraw = true;
-    console.log('zoom', event);
+    // const zoomChange = event.deltaY === 0 ? 0 : (event.deltaY > 0 ? -1 : 1);
+    // if (zoomChange === 0) {
+    //   console.error('no zoom', event)
+    //   return;
+    // }
+    // this.zoom += zoomChange / 10;
+    // this.setMapSettings(this.mapSettings.size, this.zoom);
+    // this.mapSettings.shouldDraw = true;
+    // console.log('zoom', event);
   }
 
   public startDrag(event) {
-    console.log('start drag')
-    const origin = { x: event.offsetX, y: event.offsetY };
+    const origin = {
+      x: event.offsetX || event.touches[0].pageX - event.touches[0].target.offsetLeft,
+      y: event.offsetY || event.touches[0].pageY - event.touches[0].target.offsetTop,
+    };
     const initialOffset = _.cloneDeep(this.mapOffset);
     this.dragging = 1;
     this.hoverPauser.next(true);
-    Observable.fromEvent(this.map.nativeElement, 'mousemove')
+    console.log('welp da darag should start')
+    // Observable.fromEvent(this.map.nativeElement, 'mousemove')
+    Observable.merge(
+      Observable.fromEvent(this.map.nativeElement, 'mousemove'),
+      Observable.fromEvent(this.map.nativeElement, 'touchmove')
+    )
       .takeWhile(() => !!this.dragging)
       .throttleTime(10)
       .subscribe(data => this.mapDrag(origin, data, initialOffset))
@@ -142,9 +195,10 @@ export class MapComponent implements OnInit, AfterViewChecked  {
   }
 
   public mapDrag(origin, event, offset) {
+    console.log('sup drag', origin, event.offsetX, event.offsetY, offset);
     const difference = {
-      x: origin.x - event.offsetX,
-      y: origin.y - event.offsetY
+      x: origin.x - (event.offsetX || event.touches[0].pageX - event.touches[0].target.offsetLeft),
+      y: origin.y - (event.offsetY || event.touches[0].pageY - event.touches[0].target.offsetTop)
     };
     this.dragging = 2;
 
@@ -157,12 +211,12 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       this.mapSettings,
       true
     );
-    this.mapSettings.shouldDraw = true;
+    // this.mapSettings.shouldDraw = true;
+    this.drawMap(this.mapOffset);
   }
 
   private onHover(event) {
     const mouse = { x: Big(event.offsetX), y: Big(event.offsetY) };
-    // console.log(+mouse.x, +mouse.y)
     const position = {
       x: this.mapOffset.xPx.plus(mouse.x),
       y: this.mapOffset.yPx.plus(mouse.y),
@@ -176,28 +230,33 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     // this.hoverPos = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,calc(${+mouse.y.plus(coord.y)}px - 100%),0)`;
     // console.log(this.hoverPos, , );
     if (!town) { return; }
+    const xPos = mouse.x.plus(coord.x).plus(this.mapSettings.radius);
+    const yPos = mouse.y.plus(coord.y);
+
     this.hoverData.pos = {
-      x: mouse.x.plus(coord.x),
-      y: mouse.y.plus(coord.y)
+      x: xPos.plus(this.boxSize.x).gte(this.mapSettings.size.x) ? xPos.minus(this.boxSize.x) : xPos,
+      // y: yPos,
+      y: yPos.minus(this.boxSize.y).lte(0) ? yPos.plus(this.mapSettings.height) : yPos.minus(this.mapSettings.aHeight)
     };
-    this.position.hover = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,${+mouse.y.plus(coord.y).minus(this.mapSettings.aHeight  )}px,0)`;
+    this.position.hover = `translate3d(${+this.hoverData.pos.x}px,${+this.hoverData.pos.y}px,0)`;
+    // this.position.hover = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,${+mouse.y.plus(coord.y).minus(this.mapSettings.aHeight  )}px,0)`;
     this.hoverData.distance = this.mapService.distanceFromCoord(
       { x: this.activeTown.location[0], y: this.activeTown.location[1] },
       { x: +coord.xCoord, y: +coord.yCoord }
     );
 
     // Fill
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(+mouse.x.plus(this.mapSettings.width.div(2)).plus(coord.x), +mouse.y.plus(coord.y));
-    this.mapSettings.points.forEach(point => {
-      this.ctx.lineTo(+point.x.plus(mouse.x).plus(coord.x), +point.y.plus(mouse.y).plus(coord.y));
-    });
-    this.ctx.closePath();
-    this.ctx.fillStyle = 'rgba(255,0,0,0.1)';
-    this.ctx.fill();
-    this.ctx.clip();
-    this.ctx.restore();
+    // this.ctx.save();
+    // this.ctx.beginPath();
+    // this.ctx.moveTo(+mouse.x.plus(this.mapSettings.width.div(2)).plus(coord.x), +mouse.y.plus(coord.y));
+    // this.mapSettings.points.forEach(point => {
+    //   this.ctx.lineTo(+point.x.plus(mouse.x).plus(coord.x), +point.y.plus(mouse.y).plus(coord.y));
+    // });
+    // this.ctx.closePath();
+    // this.ctx.fillStyle = 'rgba(255,0,0,0.1)';
+    // this.ctx.fill();
+    // this.ctx.clip();
+    // this.ctx.restore();
     // Fill end
 
   }
@@ -254,7 +313,7 @@ export class MapComponent implements OnInit, AfterViewChecked  {
       let xOffset = offset.x;
       let x = 0;
       if (y && +yCoord % 2 !== parity) {
-        const offsetModifier = parity ? 1: -1;
+        const offsetModifier = parity ? 1 : -1;
         xOffset = xOffset.plus(this.mapSettings.width.times(offsetModifier).div(2));
         x -= parity;
       }
@@ -291,8 +350,9 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     );
     this.ctx.restore();
 
-    if (data && data._id === this.activeTown._id) {
-      const type = this.mapTiles.objectType.owned;
+    if (data && this.playerTownIds.includes(data._id)) {
+      const type = this.activeTown._id === data._id ?
+        this.mapTiles.objectType.ownedActive : this.mapTiles.objectType.owned;
       this.ctx.drawImage(
         this.mapTiles.image,
         // this.mapTiles.object[0], this.mapTiles.object[1],
@@ -308,12 +368,12 @@ export class MapComponent implements OnInit, AfterViewChecked  {
     }
 
     // this.ctx.strokeStyle= 'rgba(0,0,0,0.2)';
-    this.ctx.strokeStyle= '#27ae60';
+    this.ctx.strokeStyle = '#27ae60';
     this.ctx.stroke();
 
     if (this.drawCoords) {
-      this.ctx.font = "14pt Calibri";
-      this.ctx.fillStyle = "#ff0000";
+      this.ctx.font = '14pt Calibri';
+      this.ctx.fillStyle = '#ff0000';
       this.ctx.lineWidth = 1;
       this.ctx.strokeText(coordString, +x, +y + this.mapSettings.height / 2);
       this.ctx.fillText(coordString, +x, +y + this.mapSettings.height / 2);

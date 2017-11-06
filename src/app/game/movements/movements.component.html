@@ -1,0 +1,22 @@
+<div class="container-fluid pb-4">
+  <h2>Movements</h2>
+  <div *ngFor="let queue of queue$ | async">
+    <div class="row">
+      <div class="col">
+        <i class="fa" *ngIf="queue.units" [ngClass]="{ 'fa-caret-right': !queue.isVisible, 'fa-caret-down': queue.isVisible }" (click)="queue.isVisible = !queue.isVisible"></i>
+        {{ queue.MovementOriginId }}
+      </div>
+      <div class="col">{{ queue.timeLeft | countdown:'HH:mm:ss' }}</div>
+      <div class="col">
+        {{ queue.type }}
+        <i class="fa fa-angle-double-left"></i>
+      </div>
+    </div>
+    <div class="row" [hidden]="!queue.isVisible">
+      <div class="col d-flex flex-row" *ngFor="let unit of worldData.units">
+        <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+        <div>{{ queue.units[unit.name] || 0 }}</div>
+      </div>
+    </div>
+  </div>
+</div>

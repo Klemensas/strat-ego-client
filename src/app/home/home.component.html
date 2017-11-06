@@ -1,34 +1,34 @@
 <header>
-  <div class="navbar navbar-light bg-faded">
+  <nav class="navbar navbar-expand-md navbar-light bg-faded" ngbDropdown>
     <a class="navbar-brand" href="#">Strat-ego</a>
-    <ul class="nav navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/']">Home</a>
-      </li>
-      <li *ngIf="!!user && user.role === 'admin'" class="nav-item">
-        <a class="nav-link" [routerLink]="['/manage']">Manage</a>
-      </li>
-    </ul>
-
-    <div class="float-sm-right">
-      <div *ngIf="!!user">
+    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-lg-between" [ngbCollapse]="isCollapsed">
+      <ul class="nav navbar-nav align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/']">Home</a>
+        </li>
+      </ul>
+      <div class="d-flex justify-content-center align-items-center" *ngIf="user">
         <span>Welcome <strong>{{ user.name }}</strong></span>
         <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
       </div>
-      <div *ngIf="!user">
+      <div class="d-flex justify-content-center align-items-center" *ngIf="!user">
         <a class="nav-link" [routerLink]="['/login']">Login</a>
+        <span>or</span>
+        <a class="nav-link" [routerLink]="['/register']">register</a>
       </div>
     </div>
-  </div>
+  </nav>
 </header>
-
-<div>
+<div class="container py-5">
   <h2>Available worlds</h2>
   <ul>
-    <li *ngFor="let world of worlds">
-      <span>{{world.name}}</span>
+    <li *ngFor="let world of worlds$ | async">
+      <span>{{world.world.name}}</span>
       <span *ngIf="user">
-        <a [routerLink]="['/world', world.name]">
+         <a [routerLink]="['/world', world.world.name]">
         Play
         </a>
       </span>
@@ -36,4 +36,4 @@
   </ul>
 </div>
 
-<div style="position: absolute; bottom: 1vh; right: 0; padding-right: 2vw">Client version: 0.1.0</div>
+<div style="position: absolute; bottom: 1vh; right: 0; padding-right: 2vw">Client version: <a target="_blank" href="https://github.com/Klemensas/strat-ego-client/blob/master/CHANGELOG.md">0.1.0</a></div>

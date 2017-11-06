@@ -1,7 +1,8 @@
-<div>
+<div *ngIf="townUnits.length">
   <strong>Units</strong>
-  <div *ngFor="let unit of units">
-    <span>{{ unit.name }} - {{ unit.amount }}</span>
-    <span *ngIf="unit.queued">(+{{ unit.queued }})</span>
+  <div class="unit d-flex" *ngFor="let unit of townUnits">
+    <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
+    <span>{{ unitDetails[unit.name].name }} - {{unit.inside}}/{{ unit.amount }}</span>
+    <span *ngIf="unit.queued">&nbsp;(+{{ unit.queued }})</span>
   </div>
 </div>

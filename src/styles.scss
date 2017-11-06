@@ -1,20 +1,21 @@
-body {
-  overflow: hidden;
-}
+@import "~bootstrap/scss/bootstrap";
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 .flex {
   display: flex;
 }
 
+$icon-size: 24px;
 .resource {
   display: flex;
-  justify-content: center;
   align-items: center;
   position: relative;
   margin-right: 8px;
   .resource-icon {
-    width: 24px;
-    height: 24px;
+    width: $icon-size;
+    height: $icon-size;
     margin-right: 2px;
     background-image: url(./assets/images/resources.png);
     background-size: cover;
@@ -29,4 +30,64 @@ body {
       background-position: 0 100%;
     }
   }
+}
+
+.unit-icon {
+  background-image: url(./assets/images/units.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: $icon-size;
+  height: $icon-size;
+
+  &[data-unit="axe"] {
+    background-position: 0 0;
+  }
+
+  &[data-unit="sword"] {
+    background-position: 0 (-$icon-size);
+  }
+
+  &[data-unit="mace"] {
+    background-position: 0 (-$icon-size * 2);
+  }
+
+  &[data-unit="archer"] {
+    background-position: 0 (-$icon-size * 3);
+  }
+
+  &[data-unit="lightCavalry"] {
+    background-position: 0 (-$icon-size * 4);
+  }
+
+  &[data-unit="scout"] {
+    background-position: 0 (-$icon-size * 5);
+  }
+
+  &[data-unit="heavyCavalry"] {
+    background-position: 0 (-$icon-size * 6);
+  }
+
+  &[data-unit="mountedArcher"] {
+    background-position: 0 (-$icon-size * 7);
+  }
+
+  &[data-unit="trebuchet"] {
+    background-position: 0 (-$icon-size * 8);
+  }
+
+  &[data-unit="noble"] {
+    background-position: 0 (-$icon-size * 9);
+  }
+
+  &[data-unit="commander"] {
+    background-position: 0 (-$icon-size * 10);
+  }
+}
+
+.backdrop-disabled .mat-sidenav-backdrop.mat-sidenav-shown {
+  visibility: hidden;
+}
+
+game-container .mat-sidenav-content {
+  overflow: inherit;
 }
