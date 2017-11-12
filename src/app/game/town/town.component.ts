@@ -18,8 +18,6 @@ import { getActiveWorld } from '../../store/world';
 })
 
 export class TownComponent implements OnInit, OnDestroy {
-  private townObserver: Subscription;
-  private gameObserver: Subscription;
   private nameChange = '';
   public town$ = this.store.select(getActiveTown);
   public worldData$ = this.store.select(getActiveWorld);

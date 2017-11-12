@@ -18,6 +18,7 @@ export interface Report {
   origin: CombatCasualties;
   destination: CombatCasualties;
   haul: Haul;
+  loyaltyChange: [number, number];
   ReportOriginTownId: number;
   ReportDestinationTownId: number;
   ReportDestinationTown: Town;

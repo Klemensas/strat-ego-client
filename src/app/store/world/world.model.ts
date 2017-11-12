@@ -63,6 +63,9 @@ export interface World {
   size: number;
   speed: number;
   timeQouta: number;
+  initialLoyalty: number;
+  loyaltyRegeneration: number;
+  loyaltyReductionRange: [number, number];
   createdAt: string;
   updatedAt: string;
 }

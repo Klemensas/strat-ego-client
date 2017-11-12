@@ -79,6 +79,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     private commandService: CommandService,
     private sanitizer: DomSanitizer
   ) {
+    setTimeout(() => console.log('fuuuu'), 5000);
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }

@@ -5,7 +5,7 @@
       <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
       <button (click)="changeName(nameChange, town.name)">Save</button>
 
-      <strong *ngIf="town.loyalty !== 100" class="ml-4 text-danger">Loyalty: {{town.loyalty}}</strong>
+      <town-loyalty *ngIf="town.loyalty !== 100" [town]="town" [loyaltyRegeneration]="(worldData$ | async)?.world.loyaltyRegeneration"></town-loyalty>
     </div>
   </div>
   <div class="row">

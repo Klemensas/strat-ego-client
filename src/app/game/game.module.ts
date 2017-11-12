@@ -21,6 +21,7 @@ import { MovementsComponent } from './movements/movements.component';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportComponent } from './reports/report/report.component';
 import { UnitQueueComponent } from './unit-queue/unit-queue.component';
+import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { UnitQueueComponent } from './unit-queue/unit-queue.component';
     ReportsComponent,
     ReportComponent,
     UnitQueueComponent,
+    TownLoyaltyComponent,
   ],
   providers: [
     SocketService,

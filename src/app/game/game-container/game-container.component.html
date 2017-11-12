@@ -47,10 +47,10 @@
           </li>
         </ul>
         <div class="d-flex justify-content-center align-items-center">
-          <div ngbDropdown class="nav-item mr-3">
+          <div ngbDropdown placement="bottom-right" class="nav-item mr-3">
             <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
             <div ngbDropdownMenu aria-labelledby="active-town">
-              <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown._id === town._id }" (click)="activeTown._id !== town._id ? selectTown(town._id) : false" class="dropdown-item">{{town.name}}</button>
+              <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown._id === town._id }" (click)="activeTown._id !== town._id ? selectTown(town._id) : false" class="dropdown-item">{{town.name}} ({{town.location}})</button>
             </div>
           </div>
           <div class="nav-item">

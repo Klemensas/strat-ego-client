@@ -40,7 +40,7 @@ export interface Town {
       queued: number;
     };
   };
-  loaylty: number;
+  loyalty: number;
   location: [number, number];
   production: Resources;
   population: TownPopulation;
