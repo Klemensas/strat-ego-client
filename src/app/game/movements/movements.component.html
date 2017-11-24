@@ -15,7 +15,8 @@
     <div class="row" [hidden]="!queue.isVisible">
       <div class="col d-flex flex-row" *ngFor="let unit of worldData.units">
         <div class="unit-icon" [attr.data-unit]="unit.name"></div>
-        <div>{{ queue.units[unit.name] || 0 }}</div>
+        <div *ngIf="queue.units">{{ queue.units[unit.name] || 0 }}</div>
+        <div *ngIf="!queue.units">?</div>
       </div>
     </div>
   </div>
