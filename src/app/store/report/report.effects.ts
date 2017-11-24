@@ -8,7 +8,6 @@ import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { ReportActions } from './report.actions';
-import { TownActions } from '../town';
 import { StoreState } from '../';
 
 @Injectable()

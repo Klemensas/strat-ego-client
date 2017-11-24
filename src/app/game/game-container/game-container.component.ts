@@ -3,12 +3,18 @@ import { Store } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { MatSidenav, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
-import { getActiveWorld } from '../../store/world';
-import { PlayerActions, getSidenavs, getPlayerReports } from '../../store/player';
-import { getTownState, getActiveTown, TownActions, TownState, Town } from '../../store/town';
-import { AuthActions } from '../../store/auth';
 import { StoreState } from '../../store';
+import { ActionWithPayload } from '../../store/util';
+import { getTownState } from 'app/store/town/town.selectors';
+import { getPlayerReports, getSidenavs } from 'app/store/player/player.selectors';
+import { getActiveWorld } from 'app/store/world/world.selectors';
+import { Town } from 'app/store/town/town.model';
+import { TownState } from 'app/store/town/town.state';
+import { TownActions } from 'app/store/town/town.actions';
+import { PlayerActions } from 'app/store/player/player.actions';
+import { AuthActions } from 'app/store/auth/auth.actions';
 
 @Component({
   selector: 'game-container',

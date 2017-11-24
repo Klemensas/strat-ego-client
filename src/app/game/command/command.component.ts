@@ -5,7 +5,8 @@ import { GameDataService } from '../../services/game-data.service';
 import { TownService, CommandService, MapService } from '../services/';
 import { unitData } from '../staticData';
 import { StoreState } from '../../store';
-import { TownActions, Town } from '../../store/town';
+import { Town } from 'app/store/town/town.model';
+import { TownActions } from 'app/store/town/town.actions';
 
 @Component({
   selector: 'command',

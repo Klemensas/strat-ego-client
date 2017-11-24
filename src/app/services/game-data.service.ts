@@ -15,11 +15,12 @@ export class GameDataService {
   //   activeWorld: new BehaviorSubject(null)
   // };
 
-  constructor(private http:Http, private authHttp:AuthHttp) {}
+  constructor(private http: Http, private authHttp: AuthHttp) {}
 
   getActiveWorlds() {
     return this.http.get(`${environment.server.api}world`)
       .map(t => t.json())
+  }
 // .cache();
       // .map(this.mapBuildings)
       // .flatMap(t => {
@@ -27,7 +28,6 @@ export class GameDataService {
       //   this.token = t;
       //   return this.getUser();
       // });
-  }
 
   // getWorldData(target) {
   //   return this.authHttp.get(`${API}world/${target}`)

@@ -1,4 +1,4 @@
-import { User } from '../user/';
+import { User } from '../user/user.model';
 
 export interface Map {
   _id: string;

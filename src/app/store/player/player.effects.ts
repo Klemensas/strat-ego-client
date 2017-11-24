@@ -8,8 +8,9 @@ import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { PlayerActions } from './player.actions';
-import { TownActions } from '../town';
+import { TownActions } from '../town/town.actions';
 import { StoreState } from '../';
+import { SocketService } from '../../game/services/socket.service';
 
 @Injectable()
 export class PlayerEffects {

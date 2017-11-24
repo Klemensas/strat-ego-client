@@ -7,9 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
 import { SocketService } from './socket.service';
-import { AuthActions, getUserState } from '../../store/auth';
-import { PlayerActions } from '../../store/player';
 import { StoreState } from '../../store';
+import { getUserState } from 'app/store/auth/auth.selectors';
+import { PlayerActions } from 'app/store/player/player.actions';
 
 @Injectable()
 export class SocketGuard implements CanActivate {

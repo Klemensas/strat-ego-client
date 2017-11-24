@@ -5,10 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 
 import { GameDataService } from '../../services/game-data.service';
-import { SocketService, PlayerService, TownService } from '../services';
+import { SocketService, TownService } from '../services';
 import { StoreState } from '../../store';
-import { getActiveTown, TownActions, Town } from '../../store/town';
-import { getActiveWorld } from '../../store/world';
+import { getActiveTown } from 'app/store/town/town.selectors';
+import { getActiveWorld } from 'app/store/world/world.selectors';
+import { TownActions } from 'app/store/town/town.actions';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -24,7 +25,6 @@ export class TownComponent implements OnInit, OnDestroy {
 
   constructor(
     private socket: SocketService,
-    private playerService: PlayerService,
     private townService: TownService,
     private gameDataService: GameDataService,
     private store: Store<StoreState>

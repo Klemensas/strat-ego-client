@@ -5,7 +5,7 @@ import { MatSidenavModule, MatSnackBarModule, MatButtonModule, MatSelectModule, 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
-import { SocketService, PlayerService, TownService, MapService, CommandService, ReportService } from './services/index';
+import { SocketService, TownService, MapService, CommandService, ReportService } from './services/index';
 
 import { gameRouting, gameComponents } from './game.routing';
 import { ResourcesComponent } from './resources';
@@ -52,7 +52,6 @@ import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
   ],
   providers: [
     SocketService,
-    PlayerService,
     TownService,
     MapService,
     CommandService,

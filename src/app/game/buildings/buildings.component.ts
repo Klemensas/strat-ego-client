@@ -6,7 +6,6 @@ import 'rxjs/add/operator/takeLast';
 
 import { resourceTime, availableResources } from '../utils';
 import { buildingData } from '../staticData';
-import { Resources } from '../../store/world';
 
 @Component({
   selector: 'buildings',

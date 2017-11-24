@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { PlayerService } from './player.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import * as seedrandom from 'seedrandom';
@@ -38,7 +37,7 @@ export class MapService {
 
   private mapImgeLoc = './assets/images/tiles_small.png';
 
-  constructor(private socket: SocketService, private playerService: PlayerService) {
+  constructor(private socket: SocketService) {
     this.imgPreload(this.mapImgeLoc);
     // Test version with all available map data
     // this.socket.events.get('map').subscribe(event => {

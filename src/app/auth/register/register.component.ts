@@ -5,7 +5,9 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { StoreState } from '../../store';
-import { AuthActions, AuthState, getUserState } from '../../store/auth';
+import { getUserState } from 'app/store/report/report.selectors';
+import { AuthActions } from 'app/store/auth/auth.actions';
+import { AuthState } from 'app/store/auth/auth.state';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -21,7 +23,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.userSubscription = this.store.select(getUserState).subscribe((auth) => {
+    this.userSubscription = this.store.select(getUserState).subscribe((auth: AuthState) => {
       if (auth.user) {
         this.router.navigate(['/']);
         return;

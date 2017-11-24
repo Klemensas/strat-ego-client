@@ -8,12 +8,15 @@ import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { ActionWithPayload } from '../util';
-import { TownActions, getActiveTown, Town } from './';
-import { PlayerActions } from '../player';
+import { Town } from './town.model';
+import { getActiveTown } from './town.selectors';
+import { TownActions } from './town.actions';
+import { PlayerActions } from '../player/player.actions';
 import { StoreState } from '../';
 import { SocketService } from '../../game/services/socket.service';
-import { getActiveWorld, WorldData } from '../world';
 import { availableResources } from '../../game/utils';
+import { getActiveWorld } from 'app/store/world/world.selectors';
+import { WorldData } from 'app/store/world/world.model';
 
 @Injectable()
 export class TownEffects {

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
+import 'rxjs/add/operator/combineLatest';
 
 import { StoreState } from '../../store';
-import { WorldActions, getWorld } from '../../store/world';
-import { getPlayerState } from '../../store/player';
+import { getWorld } from 'app/store/world/world.selectors';
+import { getPlayerState } from 'app/store/player/player.selectors';
+import { WorldActions } from 'app/store/world/world.actions';
 
 @Injectable()
 export class WorldGuard implements CanActivate {

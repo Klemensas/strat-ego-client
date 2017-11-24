@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-
-import { Town } from '../../store/town';
+import { Town } from 'app/store/town/town.model';
 
 @Component({
   selector: 'resources',

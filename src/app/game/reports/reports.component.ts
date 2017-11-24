@@ -1,8 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-
-import { Town } from '../../store/town';
-import { Report } from '../../store/report';
-import { WorldData } from '../../store/world';
+import { Report } from 'app/store/report/report.model';
+import { WorldData } from 'app/store/world/world.model';
 
 export interface ReportMapped extends Report {
   type: string;

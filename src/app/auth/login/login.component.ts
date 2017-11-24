@@ -5,7 +5,9 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { StoreState } from '../../store';
-import { AuthActions, AuthState, getUserState } from '../../store/auth';
+import { AuthState } from 'app/store/auth/auth.state';
+import { getUserState } from 'app/store/report/report.selectors';
+import { AuthActions } from 'app/store/auth/auth.actions';
 
 @Component({
   // tslint:disable-next-line:component-selector

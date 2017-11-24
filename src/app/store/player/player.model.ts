@@ -1,5 +1,5 @@
-import { User } from '../user/';
-import { Report } from '../report/';
+import { User } from '../user/user.model';
+import { Report } from '../report/report.model';
 
 export interface Player {
   _id: string;

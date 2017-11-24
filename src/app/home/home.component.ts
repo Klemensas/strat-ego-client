@@ -5,8 +5,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 
 import { StoreState } from '../store';
-import { getUser } from '../store/auth';
-import { getWorlds } from '../store/world';
+import { getWorlds } from '../store/world/world.selectors';
+import { getUser } from 'app/store/auth/auth.selectors';
+import { AuthActions } from 'app/store/auth/auth.actions';
 
 @Component({
   selector: 'home',

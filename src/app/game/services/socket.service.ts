@@ -6,11 +6,11 @@ import * as io from 'socket.io-client';
 
 import { environment } from '../../../environments/environment';
 import { StoreState } from '../../store';
-import { AuthActions } from '../../store/auth';
-import { PlayerActions } from '../../store/player';
-import { TownActions } from '../../store/town';
+import { AuthActions } from '../../store/auth/auth.actions';
+import { PlayerActions } from '../../store/player/player.actions';
+import { TownActions } from '../../store/town/town.actions';
 import { MapActions } from '../../store/map/map.actions';
-import { ReportActions } from '../../store/report';
+import { ReportActions } from '../../store/report/report.actions';
 
 @Injectable()
 export class SocketService {
@@ -50,7 +50,7 @@ export class SocketService {
         this.socket.close();
     }
 
-    public sendEvent(event, data) {
+    public sendEvent(event: string, data?: any) {
         // console.log(`[Socket emit: ${event}]`, data);
         this.socket.emit(event, data);
     }

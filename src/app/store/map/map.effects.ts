@@ -7,9 +7,9 @@ import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { MapActions } from './map.actions';
-import { TownActions } from '../town';
 import { StoreState } from '../';
 import { SocketService } from '../../game/services';
+
 @Injectable()
 export class MapEffects {
   @Effect({ dispatch: false })

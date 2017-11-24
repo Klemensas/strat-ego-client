@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { GameDataService } from '../../services/game-data.service';
 import { SocketService } from './socket.service';
-import { PlayerService } from './player.service';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-
-import { Town } from '../models/Town';
+import { Town } from 'app/store/town/town.model';
 
 @Injectable()
 export class TownService {
@@ -26,7 +24,7 @@ export class TownService {
   };
   public worldData;
 
-  constructor(private socket: SocketService, private playerService: PlayerService, private gameData: GameDataService) {
+  constructor(private socket: SocketService, private gameData: GameDataService) {
     // this.playerService.activeTown.subscribe((town: Town) => {
     //   if (town) {
     //     console.log('iniy town', town)

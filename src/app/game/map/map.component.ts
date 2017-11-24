@@ -14,10 +14,13 @@ import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
 
 import { StoreState } from '../../store';
-import { getMapData, Map, MapActions } from '../../store/map';
-import { PlayerActions } from '../../store/player';
-import { getTownState, Town, TownState } from '../../store/town';
 import { MapService, CommandService } from '../services';
+import { TownState } from 'app/store/town/town.state';
+import { getTownState } from 'app/store/town/town.selectors';
+import { getMapData } from 'app/store/map/map.selectors';
+import { Town } from 'app/store/town/town.model';
+import { MapActions } from 'app/store/map/map.actions';
+import { PlayerActions } from 'app/store/player/player.actions';
 
 @Component({
   // tslint:disable-next-line:component-selector

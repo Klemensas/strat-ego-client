@@ -6,8 +6,9 @@ import { Store } from '@ngrx/store';
 import { GameDataService } from '../../services/game-data.service';
 import { unitData } from '../staticData';
 import { StoreState } from '../../store';
-import { TownActions, Town } from '../../store/town';
-import { WorldData, Resources } from '../../store/world';
+import { Town } from 'app/store/town/town.model';
+import { WorldData, Resources } from 'app/store/world/world.model';
+import { TownActions } from 'app/store/town/town.actions';
 
 @Component({
   // tslint:disable-next-line:component-selector

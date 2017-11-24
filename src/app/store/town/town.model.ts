@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs/Observable';
 
-import { User } from '../user/';
-import { Resources } from '../world';
-import { Report } from '../report';
+import { User } from '../user/user.model';
+import { Resources } from '../world/world.model';
+import { Report } from '../report/report.model';
 
 export interface TownActionState {
   name: boolean;

@@ -4,40 +4,60 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { environment } from '../../environments/environment';
-import * as auth from './auth';
-import * as world from './world';
-import * as player from './player';
-import * as town from './town';
-import * as map from './map';
+import { AuthState } from 'app/store/auth/auth.state';
+import { WorldState } from 'app/store/world/world.state';
+import { PlayerState } from 'app/store/player/player.state';
+import { TownState } from 'app/store/town/town.state';
+import { MapState } from 'app/store/map/map.state';
+import { AuthReducer } from 'app/store/auth/auth.reducer';
+import { WorldReducer } from 'app/store/world/world.reducer';
+import { PlayerReducer } from 'app/store/player/player.reducer';
+import { TownReducer } from 'app/store/town/town.reducer';
+import { MapReducer } from 'app/store/map/map.reducer';
+import { AuthActions } from 'app/store/auth/auth.actions';
+import { WorldActions } from 'app/store/world/world.actions';
+import { PlayerActions } from 'app/store/player/player.actions';
+import { TownActions } from 'app/store/town/town.actions';
+import { MapActions } from 'app/store/map/map.actions';
+import { AuthEffects } from 'app/store/auth/auth.effects';
+import { WorldEffects } from 'app/store/world/world.effects';
+import { PlayerEffects } from 'app/store/player/player.effects';
+import { TownEffects } from 'app/store/town/town.effects';
+import { MapEffects } from 'app/store/map/map.effects';
+// import * as auth from './auth';
+// import * as world from './world';
+// import * as player from './player';
+// import * as town from './town';
+// import * as map from './map';
 
 export interface StoreState {
-  auth: auth.AuthState,
-  world: world.WorldState,
-  player: player.PlayerState,
-  town: town.TownState,
-  map: map.MapState,
+  auth: AuthState,
+  world: WorldState,
+  player: PlayerState,
+  town: TownState,
+  map: MapState,
 };
 
 const reducers: ActionReducerMap<StoreState> = {
-  auth: auth.AuthReducer,
-  world: world.WorldReducer,
-  player: player.PlayerReducer,
-  town: town.TownReducer,
-  map: map.MapReducer,
+  auth: AuthReducer,
+  world: WorldReducer,
+  player: PlayerReducer,
+  town: TownReducer,
+  map: MapReducer,
 };
 const actions = [
-  auth.AuthActions,
-  world.WorldActions,
-  player.PlayerActions,
-  town.TownActions,
-  map.MapActions,
+  AuthActions,
+  WorldActions,
+  PlayerActions,
+  TownActions,
+  MapActions,
 ];
 const effects = [
-  auth.AuthEffects,
-  world.WorldEffects,
-  player.PlayerEffects,
-  town.TownEffects,
-  map.MapEffects,
+  AuthEffects,
+  WorldEffects,
+  PlayerEffects,
+  TownEffects,
+  MapEffects,
 ];
 
 // Reset state on logout

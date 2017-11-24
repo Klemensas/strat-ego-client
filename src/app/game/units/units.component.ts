@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
 
-import { TownUnit } from '../../store/town';
+import { TownUnit } from '../../store/town/town.model';
 import { unitData } from '../staticData';
 
 @Component({
