@@ -27,10 +27,10 @@ export class TownEffects {
     .ofType(TownActions.SET_PLAYER_TOWNS)
     .map(toPayload)
     .withLatestFrom(this.store)
-    .filter(([towns, store]: [ActionWithPayload, StoreState]) => !store.town.activeTown)
+    .filter(([{ towns }, store]) => (towns.length && !store.town.activeTown) || !towns.length)
     .map(([{ towns }, store]) => ({
       type: TownActions.SET_ACTIVE_TOWN,
-      payload: towns[0]._id
+      payload: towns.length ? towns[0]._id : null
     }));
 
   @Effect()

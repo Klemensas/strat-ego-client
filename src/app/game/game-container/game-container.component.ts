@@ -27,6 +27,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   public townList: Town[];
   public activeTown: Town;
+  public noTowns$: Observable<boolean>;
   public canRecruit: boolean;
 
   public townState$ = this.store.select(getTownState);
@@ -49,12 +50,16 @@ export class GameContainerComponent implements OnInit, OnDestroy {
       this.canRecruit = this.activeTown && !!this.activeTown.buildings.barracks.level;
     });
     this.sidenavSubscription = this.store.select(getSidenavs)
+      .filter(() => this.sidenavLeft && this.sidenavRight)
       .subscribe(sidenavs => this.updateSidenavs(sidenavs));
 
     this.actions$.ofType(TownActions.UPDATE_EVENT)
       .map(toPayload)
       .map(({ town, event }) => event.type)
       .subscribe((event) => this.handleEvent(event))
+
+    this.noTowns$ = this.actions$.ofType(TownActions.SET_PLAYER_TOWNS)
+      .map((action: ActionWithPayload) => !action.payload.towns.length)
   }
 
   updateSidenavs(sidenavs) {
@@ -89,6 +94,10 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   selectTown(townId: number) {
     this.store.dispatch({ type: TownActions.SET_ACTIVE_TOWN, payload: townId });
+  }
+
+  restart() {
+    this.store.dispatch({ type: PlayerActions.RESTART });
   }
 
   private handleEvent(event) {

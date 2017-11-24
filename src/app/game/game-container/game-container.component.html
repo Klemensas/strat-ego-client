@@ -1,4 +1,4 @@
- <mat-sidenav-container class="backdrop-disabled">
+ <mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
   <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
@@ -47,7 +47,7 @@
           </li>
         </ul>
         <div class="d-flex justify-content-center align-items-center">
-          <div ngbDropdown placement="bottom-right" class="nav-item mr-3">
+          <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
             <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
             <div ngbDropdownMenu aria-labelledby="active-town">
               <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown._id === town._id }" (click)="activeTown._id !== town._id ? selectTown(town._id) : false" class="dropdown-item">{{town.name}} ({{town.location}})</button>
@@ -65,3 +65,11 @@
     <router-outlet></router-outlet>
   </div>
 </mat-sidenav-container>
+<div *ngIf="noTowns$ | async" class="pt-5 d-flex justify-content-center align-items-center">
+  <p>
+    All your towns have been conquered.<br>
+    You are no more.<br>
+    <strong class="d-flex my-2">Care to try again?</strong>
+    <button class="btn btn-primary btn-lg" (click)="restart()">Restart</button>
+  </p>
+</div>
