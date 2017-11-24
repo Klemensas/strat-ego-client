@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.authService.logout();
+    this.store.dispatch({ type: AuthActions.LOGOUT });
   }
 
 }

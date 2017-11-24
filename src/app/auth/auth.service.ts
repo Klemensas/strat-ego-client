@@ -55,14 +55,10 @@ export class AuthService {
       .map(token => this.storeToken(token));
   }
 
-  logout() {
-    this.removeToken();
-    this.store.dispatch({ type: AuthActions.LOGOUT })
-  }
 
   tokenExpiration() {
     console.log('token expired');
-    this.logout();
+    this.store.dispatch({ type: AuthActions.LOGOUT });
   }
 
   getUser(): Observable<any> {

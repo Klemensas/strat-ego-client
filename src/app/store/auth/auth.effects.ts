@@ -60,7 +60,7 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   public logout$: Observable<any> = this.actions$
     .ofType(AuthActions.LOGOUT)
-    .map(() => console.log('go to page'))
+    .map(() => this.authService.removeToken())
     .do(() => this.router.navigate(['/']));
 
   constructor(
