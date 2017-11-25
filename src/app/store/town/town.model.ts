@@ -32,7 +32,7 @@ export interface TownUnit {
 }
 
 export interface Town {
-  _id: number;
+  id: number;
   name: string;
   buildings: {
     [name: string]: {
@@ -55,7 +55,7 @@ export interface Town {
   MovementOriginTown: any[];
   PlayerId: number;
   Player: {
-    _id: string;
+    id: string;
     UserId: string;
     name: string;
     createdAt: string;

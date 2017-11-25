@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   userOnWorld(world) {
-      return this.user.UserWorlds.find(w => w._id === world._id);
+      return this.user.UserWorlds.find(w => w.id === world.id);
   }
 
   logout() {

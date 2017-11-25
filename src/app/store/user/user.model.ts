@@ -1,5 +1,5 @@
 export interface User {
-  _id: number;
+  id: number;
   UserWorlds: any[];
   name: string;
   password: string;

@@ -28,7 +28,7 @@ export class TownService {
     // this.playerService.activeTown.subscribe((town: Town) => {
     //   if (town) {
     //     console.log('iniy town', town)
-    //     this.townData[town._id] = town;
+    //     this.townData[town.id] = town;
     //     this.updateCurrent(town);
     //   }
     // });
@@ -43,10 +43,10 @@ export class TownService {
     this.socket.events.get('town').subscribe(({ event, town }) => {
       console.log('[Socket receive town]', event, Object.assign({}, town))
       // Store town in townData for future use
-      this.townData[event._id] = town;
+      this.townData[event.id] = town;
 
       // Check if this is the currently active town
-      if (this.currentTown.value._id === town._id) {
+      if (this.currentTown.value.id === town.id) {
         this.townEvents[event.type].next(true);
         this.updateCurrent(town);
       }
@@ -88,7 +88,7 @@ export class TownService {
       if (this.hasCompleteQueue && this.shouldCheckQueue) {
         this.shouldCheckQueue = false;
         this.socket.sendEvent('town:update', {
-            town: this.currentTown.value._id
+            town: this.currentTown.value.id
         });
       }
     }
@@ -134,27 +134,27 @@ export class TownService {
   }
 
   changeName(name) {
-    this.socket.sendEvent('town:name', { name, town: this.currentTown.value._id});
+    this.socket.sendEvent('town:name', { name, town: this.currentTown.value.id});
   }
 
   upgradeBuilding(target) {
     this.socket.sendEvent('town:build', {
       building: target.building,
       level: target.level,
-      town: this.currentTown.value._id
+      town: this.currentTown.value.id
     });
   }
 
   recruit(units) {
     this.socket.sendEvent('town:recruit', {
-      town: this.currentTown.value._id,
+      town: this.currentTown.value.id,
       units
     });
   }
 
   sendUnits(target, units, type) {
     this.socket.sendEvent('town:moveTroops', {
-      town: this.currentTown.value._id,
+      town: this.currentTown.value.id,
       units,
       target,
       type

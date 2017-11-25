@@ -10,7 +10,7 @@ export const TownReducer: ActionReducer<TownState> = (state = initialTownState, 
     case TownActions.UPDATE: {
       const playerTowns = [ ...state.playerTowns];
       action.payload.towns.forEach((town) => {
-        const currentTown = playerTowns.findIndex(t => t._id === town._id);
+        const currentTown = playerTowns.findIndex(t => t.id === town.id);
         playerTowns[currentTown] = town;
         playerTowns[currentTown]._actionState = { ...state.playerTowns[currentTown]._actionState, [action.payload.event]: false};
       })
@@ -30,21 +30,21 @@ export const TownReducer: ActionReducer<TownState> = (state = initialTownState, 
 
     case TownActions.RECRUIT: {
       const playerTowns = [...state.playerTowns];
-      const recruitingTown = playerTowns.findIndex(t => t._id === state.activeTown);
+      const recruitingTown = playerTowns.findIndex(t => t.id === state.activeTown);
       playerTowns[recruitingTown]._actionState.recruit = true;
       return { ...state, playerTowns };
     }
 
     case TownActions.RECRUIT: {
       const playerTowns = [...state.playerTowns];
-      const recruitingTown = playerTowns.findIndex(t => t._id === state.activeTown);
+      const recruitingTown = playerTowns.findIndex(t => t.id === state.activeTown);
       playerTowns[recruitingTown]._actionState.recruit = true;
       return { ...state, playerTowns };
     }
 
     case TownActions.SEND_TROOPS: {
       const playerTowns = [...state.playerTowns];
-      const recruitingTown = playerTowns.findIndex(t => t._id === state.activeTown);
+      const recruitingTown = playerTowns.findIndex(t => t.id === state.activeTown);
       playerTowns[recruitingTown]._actionState.movement = true;
       return { ...state, playerTowns };
     }

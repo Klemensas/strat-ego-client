@@ -1,7 +1,6 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { TownService } from '../services/';
 import { GameDataService } from '../../services/game-data.service';
 import { MapService } from '../services';
 
@@ -20,7 +19,7 @@ export class MovementsComponent implements OnInit, OnChanges {
   public incoming = [];
   public returning = [];
   public unitTypes = [];
-  constructor(private townService: TownService, private gameData: GameDataService, private mapService: MapService) {
+  constructor(private gameData: GameDataService, private mapService: MapService) {
     console.log(mapService);
   }
 

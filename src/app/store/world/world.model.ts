@@ -16,7 +16,7 @@ export interface Combat {
   }
 }
 export interface Unit {
-  _id: number;
+  id: number;
   name: string;
   costs: Resources;
   combat: Combat;
@@ -38,7 +38,7 @@ export interface BuildingData {
   recruitment?: number;
 }
 export interface Building {
-  _id: number;
+  id: number;
   name: string;
   data: {
 

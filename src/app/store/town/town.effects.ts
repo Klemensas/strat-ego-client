@@ -30,7 +30,7 @@ export class TownEffects {
     .filter(([{ towns }, store]) => (towns.length && !store.town.activeTown) || !towns.length)
     .map(([{ towns }, store]) => ({
       type: TownActions.SET_ACTIVE_TOWN,
-      payload: towns.length ? towns[0]._id : null
+      payload: towns.length ? towns[0].id : null
     }));
 
   @Effect()
@@ -53,28 +53,28 @@ export class TownEffects {
     .ofType(TownActions.CHANGE_NAME)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town._id }))
+    .map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town.id }))
 
   @Effect({ dispatch: false })
   public upgradeBuilding$: Observable<any> = this.actions$
     .ofType(TownActions.UPGRADE_BUILDING)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town._id }))
+    .map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town.id }))
 
   @Effect({ dispatch: false })
   public recruit$: Observable<any> = this.actions$
     .ofType(TownActions.RECRUIT)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town._id }))
+    .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town.id }))
 
   @Effect({ dispatch: false })
   public sendTroops$: Observable<any> = this.actions$
     .ofType(TownActions.SEND_TROOPS)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town._id }))
+    .map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }))
 
 
   @Effect({ dispatch: false })
@@ -118,7 +118,7 @@ export class TownEffects {
 
   public scheduleUpdate(town: Town) {
     const soonest = this.findSoonestItem(town.BuildingQueues, town.UnitQueues, town.MovementDestinationTown, town.MovementOriginTown);
-    let townTimeout = this.townTimeouts[town._id];
+    let townTimeout = this.townTimeouts[town.id];
     if (!soonest) {
       if (townTimeout) {
         clearTimeout(townTimeout.timeout);
@@ -132,7 +132,7 @@ export class TownEffects {
     const time = soonest - Date.now();
     townTimeout = {
       soonest,
-      timeout: setTimeout((id) => this.callUpdate(id), time, town._id)
+      timeout: setTimeout((id) => this.callUpdate(id), time, town.id)
     };
   }
 

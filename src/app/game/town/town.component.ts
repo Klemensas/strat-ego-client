@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 
 import { GameDataService } from '../../services/game-data.service';
-import { SocketService, TownService } from '../services';
+import { SocketService } from '../services';
 import { StoreState } from '../../store';
 import { getActiveTown } from 'app/store/town/town.selectors';
 import { getActiveWorld } from 'app/store/world/world.selectors';
@@ -25,7 +25,6 @@ export class TownComponent implements OnInit, OnDestroy {
 
   constructor(
     private socket: SocketService,
-    private townService: TownService,
     private gameDataService: GameDataService,
     private store: Store<StoreState>
   ) {}

@@ -104,9 +104,9 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     this.store.dispatch({ type: MapActions.LOAD_MAP })
     this.townSubscription = this.townState.subscribe(townState => {
       if (!townState.activeTown) { return; }
-      this.activeTown = townState.playerTowns.find((town) => town._id === townState.activeTown);
+      this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
       this.playerTowns = townState.playerTowns;
-      this.playerTownIds = townState.playerTowns.map((town) => town._id);
+      this.playerTownIds = townState.playerTowns.map((town) => town.id);
 
       this.setMapSettings({
         x: this.map.nativeElement.offsetWidth,
@@ -354,8 +354,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     );
     this.ctx.restore();
 
-    if (data && this.playerTownIds.includes(data._id)) {
-      const type = this.activeTown._id === data._id ?
+    if (data && this.playerTownIds.includes(data.id)) {
+      const type = this.activeTown.id === data.id ?
         this.mapTiles.objectType.ownedActive : this.mapTiles.objectType.owned;
       this.ctx.drawImage(
         this.mapTiles.image,

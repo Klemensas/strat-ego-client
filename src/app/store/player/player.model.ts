@@ -2,7 +2,7 @@ import { User } from '../user/user.model';
 import { Report } from '../report/report.model';
 
 export interface Player {
-  _id: string;
+  id: string;
   UserId: string;
   name: string;
   Towns: any[];

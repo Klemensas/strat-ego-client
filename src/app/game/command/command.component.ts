@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { GameDataService } from '../../services/game-data.service';
-import { TownService, CommandService, MapService } from '../services/';
+import { CommandService, MapService } from '../services/';
 import { unitData } from '../staticData';
 import { StoreState } from '../../store';
 import { Town } from 'app/store/town/town.model';
@@ -28,7 +28,6 @@ export class CommandComponent implements OnInit {
   // public unitDetails;
 
   constructor(
-    private townService: TownService,
     private commandService: CommandService,
     private gameData: GameDataService,
     private mapService: MapService,
@@ -40,20 +39,7 @@ export class CommandComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    setInterval(() => console.log('wat', this.unitsToSend), 1000)
-    // setInterval(() => console.log('this', this.townUnits), 1000);
-    // this.gameData.data.activeWorld.subscribe(world => {
-    //   this.unitData = world.units;
-    //   this.unitDataMap = world.unitMap;
-    // });
-    // this.townService.currentTown.subscribe(town => {
-    //   if (town) {
-    //     this.townId = town._id;
-    //     this.townUnits = town.units;
-    //   }
-    // });
-  }
+  ngOnInit() {}
 
   sendCommand(isSupport, form) {
     // TODO: fill actual town data
@@ -80,8 +66,6 @@ export class CommandComponent implements OnInit {
     }
 
     this.store.dispatch({ type: TownActions.SEND_TROOPS, payload: { units, type, target: this.target } })
-    // this.sending = true;
-    // this.townService.sendUnits(target._id, this.unitsToSend, type);
   }
 
 }

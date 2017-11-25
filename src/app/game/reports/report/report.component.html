@@ -5,9 +5,9 @@
       <span>{{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}}) attacks {{ report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</span>
       <span class="text-muted">{{report.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
     </div>
-    <i class="fa fa-chevron-down ml-auto" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report._id"></i>
+    <i class="fa fa-chevron-down ml-auto" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report.id"></i>
   </div>
-  <div [id]="'collapse-' + report._id" class="col-12 py-2 px-1" [ngbCollapse]="!isCollapsed">
+  <div [id]="'collapse-' + report.id" class="col-12 py-2 px-1" [ngbCollapse]="!isCollapsed">
     <section>
       <header class="font-weight-bold">Defender - {{report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</header>
       <div class="row">

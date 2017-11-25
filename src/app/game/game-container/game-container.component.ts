@@ -46,7 +46,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.townStateSubscription = this.townState$.subscribe((townState: TownState) => {
       this.townList = townState.playerTowns;
-      this.activeTown = townState.playerTowns.find((town) => town._id === townState.activeTown);
+      this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
       this.canRecruit = this.activeTown && !!this.activeTown.buildings.barracks.level;
     });
     this.sidenavSubscription = this.store.select(getSidenavs)

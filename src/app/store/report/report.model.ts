@@ -13,7 +13,7 @@ export interface CombatCasualties {
 }
 
 export interface Report {
-  _id: string;
+  id: string;
   outcome: string;
   origin: CombatCasualties;
   destination: CombatCasualties;
