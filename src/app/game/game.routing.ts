@@ -13,6 +13,7 @@ import { MovementsComponent } from './movements/movements.component';
 import { WorldGuard } from './services/world.guard';
 import { FullGuard } from '../full.guard';
 import { SocketGuard } from './services/socket.guard';
+import { AllianceComponent } from 'app/game/alliance/alliance.component';
 
 const gameRoutes: Routes = [
   {
@@ -22,6 +23,7 @@ const gameRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'town', pathMatch: 'full' },
       { path: 'town', component: TownComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
+      { path: 'alliance', component: AllianceComponent },
       { path: 'map', component: MapComponent },
       { path: 'recruit', component: RecruitComponent, pathMatch: 'prefix', outlet: 'popupRight'},
       { path: 'command', component: CommandComponent, pathMatch: 'prefix', outlet: 'popupLeft' },

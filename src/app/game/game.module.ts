@@ -22,6 +22,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { ReportComponent } from './reports/report/report.component';
 import { UnitQueueComponent } from './unit-queue/unit-queue.component';
 import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
+import { AllianceComponent } from './alliance/alliance.component';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
     ReportComponent,
     UnitQueueComponent,
     TownLoyaltyComponent,
+    AllianceComponent,
   ],
   providers: [
     SocketService,

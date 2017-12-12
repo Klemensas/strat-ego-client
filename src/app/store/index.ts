@@ -24,6 +24,10 @@ import { WorldEffects } from 'app/store/world/world.effects';
 import { PlayerEffects } from 'app/store/player/player.effects';
 import { TownEffects } from 'app/store/town/town.effects';
 import { MapEffects } from 'app/store/map/map.effects';
+import { AllianceState } from 'app/store/alliance/alliance.state';
+import { AllianceReducer } from 'app/store/alliance/alliance.reducer';
+import { AllianceActions } from 'app/store/alliance/alliance.actions';
+import { Allianceffects } from 'app/store/alliance/alliance.effects';
 // import * as auth from './auth';
 // import * as world from './world';
 // import * as player from './player';
@@ -34,6 +38,7 @@ export interface StoreState {
   auth: AuthState,
   world: WorldState,
   player: PlayerState,
+  alliance: AllianceState,
   town: TownState,
   map: MapState,
 };
@@ -42,6 +47,7 @@ const reducers: ActionReducerMap<StoreState> = {
   auth: AuthReducer,
   world: WorldReducer,
   player: PlayerReducer,
+  alliance: AllianceReducer,
   town: TownReducer,
   map: MapReducer,
 };
@@ -49,6 +55,7 @@ const actions = [
   AuthActions,
   WorldActions,
   PlayerActions,
+  AllianceActions,
   TownActions,
   MapActions,
 ];
@@ -56,6 +63,7 @@ const effects = [
   AuthEffects,
   WorldEffects,
   PlayerEffects,
+  Allianceffects,
   TownEffects,
   MapEffects,
 ];

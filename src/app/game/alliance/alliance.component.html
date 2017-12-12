@@ -1,0 +1,26 @@
+<div class="p-2">
+  <div *ngIf="playerAlliance$ | async as alliance; else noAlliance">
+    Your alliance:
+    {{ alliance | json}}
+  </div>
+  <ng-template #noAlliance>
+    <div *ngIf="invitations$ | async as invitations">
+      <p>You are currently not a part of any alliance.</p>
+      <div *ngIf="invitations.length">
+        <p>Here are your current invitations:</p>
+        <div *ngFor="let invite of invitations">
+          <span>{{ invite.name }}</span>
+          <span>{{ invite.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
+          <button class="btn btn-success" (click)="acceptInvite(invite)">Accept</button>
+          <button class="btn btn-danger" (click)="rejectInvite(invite)">Reject</button>
+        </div>
+        <ng-template #noInvites>You don't hanve any invitations.</ng-template>
+      </div>
+    </div>
+    <div>
+      <p>Create your own alliance:</p>
+      <input placeholder="Alliance name" type="text" [(ngModel)]="allianceName">
+      <button type="submit" class="btn btn-primary" (click)="createAlliance()">Create</button>
+    </div>
+  </ng-template>
+</div>

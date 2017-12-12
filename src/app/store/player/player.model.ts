@@ -1,13 +1,18 @@
 import { User } from '../user/user.model';
 import { Report } from '../report/report.model';
+import { Alliance, AllianceBase } from 'app/store/alliance/alliance.model';
+
 
 export interface Player {
-  id: string;
-  UserId: string;
+  id: number;
+  UserId: number;
   name: string;
   Towns: any[];
   ReportDestinationPlayer: Report[];
   ReportOriginPlayer: Report[];
+  AllianceId: number;
+  Alliance: Alliance;
+  Invitations: AllianceBase[];
   createdAt: string;
   updatedAt: string;
 };
