@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule   } from '@angular/forms';
-import { MatSidenavModule, MatSnackBarModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material';
+import { MatSidenavModule, MatSnackBarModule, MatButtonModule, MatSelectModule, MatIconModule, MatTabsModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
@@ -31,6 +31,7 @@ import { AllianceComponent } from './alliance/alliance.component';
     MatSnackBarModule,
     MatIconModule,
     MatButtonModule,
+    MatTabsModule,
     CommonModule,
     FormsModule,
     gameRouting,

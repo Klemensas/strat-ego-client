@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { StoreState } from 'app/store';
 import { getPlayerAlliance, getPlayerInvitations } from 'app/store/alliance/alliance.selectors';
 import { AllianceActions } from 'app/store/alliance/alliance.actions';
+import { getPlayerAllianceRoleName } from 'app/store/player/player.selectors';
 
 @Component({
   selector: 'alliance',
@@ -10,9 +11,14 @@ import { AllianceActions } from 'app/store/alliance/alliance.actions';
   styleUrls: ['./alliance.component.scss'],
 })
 export class AllianceComponent implements OnInit {
+  public playerAllianceData$ = this.store.select(getPlayerAllianceRoleName);
   public playerAlliance$ = this.store.select(getPlayerAlliance);
   public invitations$ = this.store.select(getPlayerInvitations);
+  public allianceData$ = this.playerAllianceData$
+    .combineLatest(this.playerAlliance$)
+    .map(([{ role, name }, alliance]) => ({ role, name, alliance }));
   public allianceName = '';
+  public inviteTarget = '';
 
   constructor(private store: Store<StoreState>) { }
 
@@ -26,6 +32,10 @@ export class AllianceComponent implements OnInit {
   }
 
   acceptInvite(alliance) {
-    this.store.dispatch({ typeL})
+    this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE, payload: alliance });
+  }
+
+  sendInvite() {
+    this.store.dispatch({ type: AllianceActions.SEND_INVITE, payload: this.inviteTarget });
   }
 }

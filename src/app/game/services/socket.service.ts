@@ -11,6 +11,7 @@ import { PlayerActions } from '../../store/player/player.actions';
 import { TownActions } from '../../store/town/town.actions';
 import { MapActions } from '../../store/map/map.actions';
 import { ReportActions } from '../../store/report/report.actions';
+import { AllianceActions } from '../../store/alliance/alliance.actions';
 
 @Injectable()
 export class SocketService {
@@ -35,6 +36,7 @@ export class SocketService {
         this.socket.on('town', (data) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload: data }))
         this.socket.on('map', (data) => this.store.dispatch({ type: MapActions.UPDATE, payload: data }))
         this.socket.on('report', (data) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload: data }))
+        this.socket.on('alliance:invite', (data) => this.store.dispatch({ type: AllianceActions.UPDATE_INVITES, payload: data }))
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));

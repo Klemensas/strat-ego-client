@@ -1,7 +1,43 @@
-<div class="p-2">
-  <div *ngIf="playerAlliance$ | async as alliance; else noAlliance">
-    Your alliance:
-    {{ alliance | json}}
+<div *ngIf="allianceData$ | async as allianceData" class="p-2">
+  <div *ngIf="allianceData.alliance as alliance; else noAlliance">
+    {{ alliance | json }}
+    <mat-tab-group class="">
+      <mat-tab label="Overview">
+      </mat-tab>
+      <mat-tab label="Profile">
+        <div class="row">
+          <div class="col-6">
+            <h2>{{ alliance.name }}</h2>
+          </div>
+          <div class="col-6">
+            <div>Members</div>
+            <ul>
+              <li *ngFor="let member of alliance.Members">{{ member.name }}</li>
+            </ul>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab *ngIf="allianceData.role === 'Owner'" label="Invitations">
+         <div>
+           <p>Invite players to expand your alliance.</p>
+           <div>
+             <input type="text" placeholder="Player name" [(ngModel)]="inviteTarget">
+             <button class="btn btn-primary" (click)="sendInvite()">Invite</button>
+           </div>
+         </div>
+         <div *ngIf="alliance.Invitations.length; else noInvitations">
+            <span>Invited players:</span>
+            <ul>
+             <li *ngFor="let invitation of alliance.Invitations">{{ invitation | json }}</li>
+           </ul>
+         </div>
+         <ng-template #noInvitations>
+           <p>No pending invitations.</p>
+         </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="allianceData.role === 'Owner'" label="Management"></mat-tab>
+      <mat-tab label="Forum"></mat-tab>
+    </mat-tab-group>
   </div>
   <ng-template #noAlliance>
     <div *ngIf="invitations$ | async as invitations">
@@ -11,7 +47,7 @@
         <div *ngFor="let invite of invitations">
           <span>{{ invite.name }}</span>
           <span>{{ invite.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
-          <button class="btn btn-success" (click)="acceptInvite(invite)">Accept</button>
+          <button class="btn btn-success" (click)="acceptInvite(invite.id)">Accept</button>
           <button class="btn btn-danger" (click)="rejectInvite(invite)">Reject</button>
         </div>
         <ng-template #noInvites>You don't hanve any invitations.</ng-template>

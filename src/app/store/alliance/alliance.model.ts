@@ -1,3 +1,14 @@
+export interface Profile {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
+export interface AllianceMember extends Profile {
+  allianceName: string;
+  allianceRole: string;
+}
+
 export interface AllianceBase {
   id: number;
   name: string;
@@ -9,6 +20,7 @@ export interface AllianceRole {
 }
 
 export interface Alliance extends AllianceBase {
-  memberCount: number;
   roles: AllianceRole[];
+  Members: AllianceMember[];
+  Invitations: Profile[];
 }

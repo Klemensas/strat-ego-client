@@ -12,6 +12,8 @@ export interface Player {
   ReportOriginPlayer: Report[];
   AllianceId: number;
   Alliance: Alliance;
+  allianceName: string;
+  allianceRole: string;
   Invitations: AllianceBase[];
   createdAt: string;
   updatedAt: string;

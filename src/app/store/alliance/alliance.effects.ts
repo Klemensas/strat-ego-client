@@ -20,7 +20,6 @@ export class Allianceffects {
   public setAllianceData$$: Observable<ActionWithPayload> = this.actions$
     .ofType(PlayerActions.UPDATE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((t) => { console.log('www', t); return t })
     .map(({ AllianceId, Alliance, Invitations }) => ({
       type: AllianceActions.SET_DATA,
       payload: {
@@ -34,7 +33,17 @@ export class Allianceffects {
   public create$: Observable<any> = this.actions$
     .ofType(AllianceActions.CREATE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((data) => this.socketService.sendEvent('alliance:create', data));
+    .map((name) => this.socketService.sendEvent('alliance:create', { name }));
+
+  @Effect({ dispatch: false })
+  public invite$: Observable<any> = this.actions$
+    .ofType(AllianceActions.SEND_INVITE)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((name) => this.socketService.sendEvent('alliance:invite', { name }));
+
+  @Effect({ dispatch: false })
+  public acccept$: Observable<any> = this.actions$
+    .ofType(AllianceActions.ACCEPT_INVITE)
 
     // playerAlliance
     // permissions
