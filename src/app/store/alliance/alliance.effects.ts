@@ -42,8 +42,22 @@ export class Allianceffects {
     .map((name) => this.socketService.sendEvent('alliance:invite', { name }));
 
   @Effect({ dispatch: false })
-  public acccept$: Observable<any> = this.actions$
+  public cancelInvite$: Observable<any> = this.actions$
+    .ofType(AllianceActions.CANCEL_INVITE)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((playerId) => this.socketService.sendEvent('alliance:cancelInvite', { playerId }));
+
+  @Effect({ dispatch: false })
+  public accceptInvite$: Observable<any> = this.actions$
     .ofType(AllianceActions.ACCEPT_INVITE)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((allianceId) => this.socketService.sendEvent('alliance:acceptInvite', { allianceId }));
+
+  @Effect({ dispatch: false })
+  public rejectInvite$: Observable<any> = this.actions$
+    .ofType(AllianceActions.REJECT_INVITE)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((allianceId) => this.socketService.sendEvent('alliance:rejectInvite', { allianceId }));
 
     // playerAlliance
     // permissions

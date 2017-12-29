@@ -28,7 +28,10 @@
          <div *ngIf="alliance.Invitations.length; else noInvitations">
             <span>Invited players:</span>
             <ul>
-             <li *ngFor="let invitation of alliance.Invitations">{{ invitation | json }}</li>
+              <li *ngFor="let invitation of alliance.Invitations">
+               <span>{{ invitation | json }}</span>
+               <i class="fa fa-times"(click)="cancelInvite(invitation.id)"></i>
+              </li>
            </ul>
          </div>
          <ng-template #noInvitations>
@@ -48,7 +51,7 @@
           <span>{{ invite.name }}</span>
           <span>{{ invite.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
           <button class="btn btn-success" (click)="acceptInvite(invite.id)">Accept</button>
-          <button class="btn btn-danger" (click)="rejectInvite(invite)">Reject</button>
+          <button class="btn btn-danger" (click)="rejectInvite(invite.id)">Reject</button>
         </div>
         <ng-template #noInvites>You don't hanve any invitations.</ng-template>
       </div>

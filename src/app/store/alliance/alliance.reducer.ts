@@ -18,27 +18,14 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.UPDATE_INVITES: {
-      const { deleted, invitation } = action.payload;
-      const playerAlliance = state.alliances[state.playerAlliance];
-      const Invitations = [...playerAlliance.Invitations];
-
-      // TODO: handle deleted
-      if (!deleted) {
-        Invitations.unshift(invitation);
-      }
-
-
+    case AllianceActions.UPDATE: {
       return {
         ...state,
         alliances: {
           ...state.alliances,
-          [state.playerAlliance]: {
-            ...playerAlliance,
-            Invitations
-          }
+          [state.playerAlliance]: action.payload
         }
-      };
+      }
     }
 
     default: {

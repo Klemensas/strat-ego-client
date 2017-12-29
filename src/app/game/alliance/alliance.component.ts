@@ -35,7 +35,16 @@ export class AllianceComponent implements OnInit {
     this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE, payload: alliance });
   }
 
+  rejectInvite(alliance) {
+    this.store.dispatch({ type: AllianceActions.REJECT_INVITE, payload: alliance });
+  }
+
+
   sendInvite() {
     this.store.dispatch({ type: AllianceActions.SEND_INVITE, payload: this.inviteTarget });
+  }
+
+  cancelInvite(playerId) {
+    this.store.dispatch({ type: AllianceActions.CANCEL_INVITE, payload: playerId });
   }
 }

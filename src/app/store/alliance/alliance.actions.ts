@@ -5,6 +5,9 @@ export class AllianceActions {
   public static SET_DATA = '[Alliance] SET_DATA';
   public static CREATE = '[Alliance] CREATE';
   public static SEND_INVITE = '[Alliance] SEND_INVITE';
-  public static UPDATE_INVITES = '[Alliance] UPDATE_INVITES';
+  public static CANCEL_INVITE = '[Alliance] CANCEL_INVITE';
+  public static ACCEPT_INVITE = '[Alliance] ACCEPT_INVITE';
+  public static REJECT_INVITE = '[Alliance] REJECT_INVITE';
+  public static UPDATE = '[Alliance] UPDATE';
   // public static LOGIN_FAIL: string = '[Player] LOGIN Fail';
 }
