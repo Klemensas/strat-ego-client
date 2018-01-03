@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.form.form.setErrors({ errorMessage: errorMessage });
           return;
         }
-        this.form.form.setErrors({ errorMessage: 'Unforseen server error.'})
+        this.form.form.setErrors({ errorMessage: 'Unforseen server error.'});
       }
     });
   }

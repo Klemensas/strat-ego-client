@@ -35,7 +35,7 @@ export class CommandComponent implements OnInit {
   ) {
     this.commandService.targeting.subscribe(target => {
       this.target = target;
-      this.targetCoords = target
+      this.targetCoords = target;
     });
   }
 
@@ -50,7 +50,7 @@ export class CommandComponent implements OnInit {
       //   return;
       // }
     if (this.target === this.town.location) {
-      form.form.setErrors({ errorMessage: 'A town can\'t attack itself.'})
+      form.form.setErrors({ errorMessage: 'A town can\'t attack itself.'});
       return;
     }
 
@@ -61,11 +61,11 @@ export class CommandComponent implements OnInit {
       false;
 
     if (!validUnits) {
-      form.form.setErrors({ errorMessage: 'Incorrectly entered units.'})
+      form.form.setErrors({ errorMessage: 'Incorrectly entered units.'});
       return;
     }
 
-    this.store.dispatch({ type: TownActions.SEND_TROOPS, payload: { units, type, target: this.target } })
+    this.store.dispatch({ type: TownActions.SEND_TROOPS, payload: { units, type, target: this.target } });
   }
 
 }

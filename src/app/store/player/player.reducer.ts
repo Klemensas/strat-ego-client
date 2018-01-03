@@ -20,7 +20,7 @@ export const PlayerReducer: ActionReducer<PlayerState> = (state = initialPlayerS
 
     case PlayerActions.UPDATE_REPORTS: {
       const { report, side } = action.payload;
-      const playerData = { ...state.playerData, [side]: [report, ...state.playerData[side]] }
+      const playerData = { ...state.playerData, [side]: [report, ...state.playerData[side]] };
       return { ...state, playerData };
     }
 

@@ -5,7 +5,7 @@ import { CountdownPipe } from './countdown.pipe';
 
 describe('CountdownPipe', () => {
   it('create an instance', () => {
-    let pipe = new CountdownPipe();
+    const pipe = new CountdownPipe();
     expect(pipe).toBeTruthy();
   });
 });

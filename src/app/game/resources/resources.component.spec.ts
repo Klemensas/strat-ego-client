@@ -7,7 +7,7 @@ import { ResourcesComponent } from './resources.component';
 
 describe('Component: Resources', () => {
   it('should create an instance', () => {
-    let component = new ResourcesComponent();
+    const component = new ResourcesComponent();
     expect(component).toBeTruthy();
   });
 });

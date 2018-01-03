@@ -25,7 +25,7 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
           ...state.alliances,
           [state.playerAlliance]: action.payload
         }
-      }
+      };
     }
 
     default: {

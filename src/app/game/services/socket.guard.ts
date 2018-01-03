@@ -22,9 +22,9 @@ export class SocketGuard implements CanActivate {
       .switchMap(({ token }) => {
         console.log('ho socket');
         if (!token) { return Observable.of(false); }
-        this.store.dispatch({ type: PlayerActions.SET_PROGRESS })
+        this.store.dispatch({ type: PlayerActions.SET_PROGRESS });
         return this.socket.connect(token).map(() => true);
-      })
+      });
   }
 }
 

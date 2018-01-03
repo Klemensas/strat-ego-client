@@ -50,6 +50,6 @@ export class MovementsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes) {
     this.movements = [...this.town.MovementOriginTown, ...this.town.MovementDestinationTown].sort((a, b) =>
-      new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime() )
+      new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime() );
   }
 }

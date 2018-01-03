@@ -47,7 +47,7 @@ export class RecruitComponent implements OnChanges, OnDestroy {
     gameData: null,
     currentTown: null,
     recruitEvents: null
-  }
+  };
   public queue$: Observable<any>;
   public updateAvailability$: Subscription;
 
@@ -85,7 +85,7 @@ export class RecruitComponent implements OnChanges, OnDestroy {
         this.recruitment.resourcesAvailable.iron += diff.iron;
 
         // this.updateAvailability$ = Observable.timer(soonestAvailable).subscribe(() => this.ngOnChanges);
-      })
+      });
   }
 
   ngOnDestroy() {
@@ -123,10 +123,10 @@ export class RecruitComponent implements OnChanges, OnDestroy {
     if (!unit.requirements || !this.town) {
       return true;
     }
-    return unit.requirements.every(req => req.level <= this.town.buildings[req.item].level)
+    return unit.requirements.every(req => req.level <= this.town.buildings[req.item].level);
   }
 
   recruit(amount, type) {
-    this.store.dispatch({ type: TownActions.RECRUIT, payload: [{ type, amount }] })
+    this.store.dispatch({ type: TownActions.RECRUIT, payload: [{ type, amount }] });
   }
 }

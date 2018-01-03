@@ -95,4 +95,4 @@ export const unitData = {
     name: 'Commander',
     description: 'Bears flags.'
   },
-}
+};

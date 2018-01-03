@@ -25,18 +25,18 @@ export class SocketService {
     }
 
     public connect(token): Observable<any> {
-        const world = 'megapolis' // replace with target world data
+        const world = 'megapolis'; // replace with target world data
         // console.log('connecting to socket', this.auth.tokenData)
         this.socket = io.connect(environment.server.base, {
             path: '/socket.io-client',
             query: `token=${token}&world=${world}`,
         });
 
-        this.socket.on('player', (data) => this.store.dispatch({ type: PlayerActions.UPDATE, payload: data }))
-        this.socket.on('town', (data) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload: data }))
-        this.socket.on('map', (data) => this.store.dispatch({ type: MapActions.UPDATE, payload: data }))
-        this.socket.on('report', (data) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload: data }))
-        this.socket.on('alliance', (data) => this.store.dispatch({ type: AllianceActions.UPDATE, payload: data }))
+        this.socket.on('player', (data) => this.store.dispatch({ type: PlayerActions.UPDATE, payload: data }));
+        this.socket.on('town', (data) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload: data }));
+        this.socket.on('map', (data) => this.store.dispatch({ type: MapActions.UPDATE, payload: data }));
+        this.socket.on('report', (data) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload: data }));
+        this.socket.on('alliance', (data) => this.store.dispatch({ type: AllianceActions.UPDATE, payload: data }));
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));
@@ -61,9 +61,9 @@ export class SocketService {
         return Observable.create((observer: any) => {
             this.socket.on(event, (data: any) => {
               console.log('wup', event, data);
-              observer.next(data)
+              observer.next(data);
             });
-        })
+        });
         // .cache();
     }
 

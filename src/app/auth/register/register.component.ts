@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.form.form.setErrors({ errorMessage });
         return;
       }
-      this.form.form.setErrors({ errorMessage: 'Unforseen server error.'})
+      this.form.form.setErrors({ errorMessage: 'Unforseen server error.'});
 
     });
   }

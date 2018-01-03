@@ -8,4 +8,4 @@ export interface WorldState {
 export const initialWorldState = {
   worlds: [],
   activeWorld: null,
-}
+};

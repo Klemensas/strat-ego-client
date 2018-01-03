@@ -17,4 +17,4 @@ export interface Player {
   Invitations: AllianceBase[];
   createdAt: string;
   updatedAt: string;
-};
+}

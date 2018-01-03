@@ -35,7 +35,7 @@ export class TownLoyaltyComponent implements OnChanges {
 
   queueNextUpdate(loyalty: number) {
     const nextGrowth = (1 - loyalty % 1) * (3600000 / this.loyaltyRegeneration);
-    console.log('next growth at', nextGrowth)
+    console.log('next growth at', nextGrowth);
     setTimeout(() => this.updateLoyalty(), nextGrowth);
   }
 }

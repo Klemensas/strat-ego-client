@@ -13,7 +13,7 @@ export interface Combat {
     general: number;
     cavalry: number;
     archer: number;
-  }
+  };
 }
 export interface Unit {
   id: number;
@@ -42,11 +42,11 @@ export interface Building {
   name: string;
   data: {
 
-  }
+  };
   levels: {
     max: number;
     min: number;
-  }
+  };
   requirements: Requirements[];
   createdAt: string;
   updatedAt: string;

@@ -28,7 +28,7 @@ export class ReportsComponent implements OnChanges, OnDestroy {
       ...this.mapReports(this.reports.ReportOrigin, 'attack'),
       ...this.mapReports(this.reports.ReportDestination, 'defense'),
     ]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   mapReports(reports: Report[], type: string): ReportMapped[] {
@@ -36,7 +36,7 @@ export class ReportsComponent implements OnChanges, OnDestroy {
       ...report,
       type,
       result: report.outcome === type ? 'win' : 'lose',
-    }))
+    }));
   }
 
   ngOnDestroy() {}

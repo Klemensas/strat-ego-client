@@ -7,7 +7,7 @@ export interface PlayerState {
   sidenavs: {
     left: string;
     right: string;
-  }
+  };
 }
 
 export const initialPlayerState: PlayerState = {

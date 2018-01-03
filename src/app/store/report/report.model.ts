@@ -29,4 +29,4 @@ export interface Report {
   ReportOriginPlayer: Player;
   createdAt: string;
   updatedAt: string;
-};
+}

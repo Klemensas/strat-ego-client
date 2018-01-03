@@ -13,7 +13,7 @@ export const TownReducer: ActionReducer<TownState> = (state = initialTownState, 
         const currentTown = playerTowns.findIndex(t => t.id === town.id);
         playerTowns[currentTown] = town;
         playerTowns[currentTown]._actionState = { ...state.playerTowns[currentTown]._actionState, [action.payload.event]: false};
-      })
+      });
       return { ...state, playerTowns };
     }
 

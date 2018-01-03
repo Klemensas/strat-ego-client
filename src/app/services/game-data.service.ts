@@ -19,7 +19,7 @@ export class GameDataService {
 
   getActiveWorlds() {
     return this.http.get(`${environment.server.api}world`)
-      .map(t => t.json())
+      .map(t => t.json());
   }
 // .cache();
       // .map(this.mapBuildings)

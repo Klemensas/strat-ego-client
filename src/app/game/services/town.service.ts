@@ -41,7 +41,7 @@ export class TownService {
 
   observeTown() {
     this.socket.events.get('town').subscribe(({ event, town }) => {
-      console.log('[Socket receive town]', event, Object.assign({}, town))
+      console.log('[Socket receive town]', event, Object.assign({}, town));
       // Store town in townData for future use
       this.townData[event.id] = town;
 
@@ -78,7 +78,7 @@ export class TownService {
     this.lastUpdate = new Date(town.updatedAt).getTime();
     this.updateValues(town);
     this.currentTown.next(town);
-  };
+  }
 
   timeTick() {
     const target = this.currentTown.value;

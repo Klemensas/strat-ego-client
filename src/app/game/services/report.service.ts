@@ -42,7 +42,7 @@ export class ReportService {
       ...report,
       type,
       result,
-    }
+    };
   }
 
 }

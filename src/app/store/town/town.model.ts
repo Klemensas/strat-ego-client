@@ -22,7 +22,7 @@ export const TownDefaultActionState: TownActionState = {
   name: false,
   movement: false,
   recruit: false,
-}
+};
 
 export interface TownUnit {
   inside: number;
@@ -49,7 +49,7 @@ export interface Town {
   resources: Resources;
   units: {
     [name: string]: TownUnit
-  }
+  };
   BuildingQueues: any[];
   MovementDestinationTown: any[];
   MovementOriginTown: any[];
@@ -60,7 +60,7 @@ export interface Town {
     name: string;
     createdAt: string;
     updatedAt: string;
-  }
+  };
   ReportDestinationTown: Report;
   ReportOriginTown: Report;
   UnitQueues: any[];
@@ -68,4 +68,4 @@ export interface Town {
   updatedAt: string;
   availableResources$: Observable<Resources>;
   _actionState: TownActionState;
-};
+}

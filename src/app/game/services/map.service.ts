@@ -119,7 +119,7 @@ export class MapService {
       y: realOffset.y,
       xPx: pos.x,
       yPx: pos.y
-    }
+    };
 
     function odd(coords) { // A
       const offsetGradient = offset.x.times(settings.edgeGradient);
@@ -131,10 +131,10 @@ export class MapService {
         coords.y = coords.y.minus(1);
       }
       return coords;
-    };
+    }
 
     function even(coords) { // B
-      const offsetGradient = offset.x.times(settings.edgeGradient)
+      const offsetGradient = offset.x.times(settings.edgeGradient);
       // console.log('b', +offset.x, +offset.y, +offsetGradient, +settings.side.minus(offsetGradient));
       if (offset.x.gte(settings.radius)) {
         if (offset.y.lt(settings.side.minus(offsetGradient))) {
@@ -160,7 +160,7 @@ export class MapService {
     return {
       x, z,
       y: -x - z
-    }
+    };
   }
 
   public distanceFromCoord(start, end) {

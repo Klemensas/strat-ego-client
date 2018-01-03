@@ -39,7 +39,7 @@ export class TownEffects {
     .map(toPayload)
     .map((player) => player.Towns)
     .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
+    .map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS));
 
   @Effect()
   public townUpdateEvent$: Observable<ActionWithPayload> = this.actions$
@@ -53,28 +53,28 @@ export class TownEffects {
     .ofType(TownActions.CHANGE_NAME)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town.id }))
+    .map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town.id }));
 
   @Effect({ dispatch: false })
   public upgradeBuilding$: Observable<any> = this.actions$
     .ofType(TownActions.UPGRADE_BUILDING)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town.id }))
+    .map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town.id }));
 
   @Effect({ dispatch: false })
   public recruit$: Observable<any> = this.actions$
     .ofType(TownActions.RECRUIT)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town.id }))
+    .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town.id }));
 
   @Effect({ dispatch: false })
   public sendTroops$: Observable<any> = this.actions$
     .ofType(TownActions.SEND_TROOPS)
     .map(toPayload)
     .withLatestFrom(this.store.select(getActiveTown))
-    .map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }))
+    .map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }));
 
 
   @Effect({ dispatch: false })
@@ -144,7 +144,7 @@ export class TownEffects {
   }
 
   public callUpdate(id) {
-    console.info('calling update')
+    console.info('calling update');
     this.store.dispatch({ type: TownActions.SCHEDULE_UPDATE, payload: id });
   }
 

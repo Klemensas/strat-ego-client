@@ -20,7 +20,7 @@ export class WorldGuard implements CanActivate {
       .combineLatest(this.store.select(getPlayerState))
       .filter(([world, player]) => !player.inProgress)
       .map(([world, player]) => {
-        console.log('guard da world', world, player)
+        console.log('guard da world', world, player);
         if (!world) {
           this.router.navigate(['/']);
           return false;

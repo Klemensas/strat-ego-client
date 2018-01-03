@@ -56,10 +56,10 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     this.actions$.ofType(TownActions.UPDATE_EVENT)
       .map(toPayload)
       .map(({ town, event }) => event.type)
-      .subscribe((event) => this.handleEvent(event))
+      .subscribe((event) => this.handleEvent(event));
 
     this.noTowns$ = this.actions$.ofType(TownActions.SET_PLAYER_TOWNS)
-      .map((action: ActionWithPayload) => !action.payload.towns.length)
+      .map((action: ActionWithPayload) => !action.payload.towns.length);
   }
 
   updateSidenavs(sidenavs) {
@@ -79,7 +79,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   sidenavToggle(side, name) {
-    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side, name }]})
+    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side, name }]});
   }
 
   ngOnDestroy() {
@@ -118,6 +118,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
       default:
         return;
     }
-    this.snackBar.open(message, null, { duration: 3000 })
+    this.snackBar.open(message, null, { duration: 3000 });
   }
 }

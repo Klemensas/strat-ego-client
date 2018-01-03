@@ -101,7 +101,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public ngOnInit() {
-    this.store.dispatch({ type: MapActions.LOAD_MAP })
+    this.store.dispatch({ type: MapActions.LOAD_MAP });
     this.townSubscription = this.townState.subscribe(townState => {
       if (!townState.activeTown) { return; }
       this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
@@ -123,7 +123,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
         this.mapData = map;
         this.mapSettings.shouldDraw = true;
       }
-    })
+    });
   }
 
   public ngOnDestroy() {
@@ -148,7 +148,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   toggleSidenav(target, data) {
     this.commandService.targeting.next(data);
     this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side: 'left', name: 'command' }]});
-    console.log('toggle sidenav!')
+    console.log('toggle sidenav!');
   }
 
   public mapClick(event) {
@@ -182,7 +182,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     const initialOffset = _.cloneDeep(this.mapOffset);
     this.dragging = 1;
     this.hoverPauser.next(true);
-    console.log('welp da darag should start')
+    console.log('welp da darag should start');
     // Observable.fromEvent(this.map.nativeElement, 'mousemove')
     Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
@@ -190,7 +190,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     )
       .takeWhile(() => !!this.dragging)
       .throttleTime(10)
-      .subscribe(data => this.mapDrag(origin, data, initialOffset))
+      .subscribe(data => this.mapDrag(origin, data, initialOffset));
   }
 
   public stopDrag() {
@@ -330,7 +330,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       }
     }
     this.mapSettings.shouldDraw = false;
-  };
+  }
 
   private drawHex(x, y, coordString) {
     const data = this.mapData[coordString];

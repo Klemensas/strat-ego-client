@@ -21,7 +21,7 @@ export class UnitsComponent implements OnChanges {
           name,
           ...unit,
           amount: unit.outside + unit.inside,
-        })
+        });
       }
       return result;
     }, []);

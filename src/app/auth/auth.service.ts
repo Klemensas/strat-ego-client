@@ -32,8 +32,8 @@ export class AuthService {
   }
 
   storeToken(token) {
-    const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(token)).getTime()
-    this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now())
+    const tokenExpires = new Date(this.jwtHelper.getTokenExpirationDate(token)).getTime();
+    this.tokenExpirationTimeout = setTimeout(this.tokenExpiration, tokenExpires - Date.now());
     localStorage.setItem('jwt', token);
     return token;
   }
@@ -63,7 +63,7 @@ export class AuthService {
 
   getUser(): Observable<any> {
     return this.authHttp.get(`${environment.server.api}users/me`)
-      .map(data => data.json())
+      .map(data => data.json());
       // .cache();
 
       // user$.subscribe(
