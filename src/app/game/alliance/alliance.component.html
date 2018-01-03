@@ -38,7 +38,22 @@
            <p>No pending invitations.</p>
          </ng-template>
       </mat-tab>
-      <mat-tab *ngIf="allianceData.role === 'Owner'" label="Management"></mat-tab>
+      <mat-tab *ngIf="allianceData.role === 'Owner'" label="Management">
+        <div class="row">
+          <div class="col">Role / Permission</div>
+          <div class="col" *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]"></div>
+        </div>
+        <div *ngFor="let role of alliance.roleArray" class="row">
+          <div class="col">{{ role }}</div>
+          <div class="col" *ngFor="let permission of alliancePermissions">
+            <i *ngIf="alliance.roles[role][permission]; else noPerm" class="fa fa-check-circle-o text-success"></i>
+            <ng-template #noPerm><i class="fa fa-times-circle-o text-danger"></i></ng-template>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col"><i class="fa fa-plus"></i> Add role</div>
+        </div>
+      </mat-tab>
       <mat-tab label="Forum"></mat-tab>
     </mat-tab-group>
   </div>

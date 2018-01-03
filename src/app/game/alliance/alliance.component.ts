@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { StoreState } from 'app/store';
-import { getPlayerAlliance, getPlayerInvitations } from 'app/store/alliance/alliance.selectors';
-import { AllianceActions } from 'app/store/alliance/alliance.actions';
-import { getPlayerAllianceRoleName } from 'app/store/player/player.selectors';
+import { StoreState } from '../../store';
+import { getPlayerAlliance, getPlayerInvitations } from '../../store/alliance/alliance.selectors';
+import { AllianceActions } from '../../store/alliance/alliance.actions';
+import { getPlayerAllianceRoleName } from '../../store/player/player.selectors';
+import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES } from '../../store/alliance/alliance.model';
+
 
 @Component({
   selector: 'alliance',
@@ -16,14 +18,21 @@ export class AllianceComponent implements OnInit {
   public invitations$ = this.store.select(getPlayerInvitations);
   public allianceData$ = this.playerAllianceData$
     .combineLatest(this.playerAlliance$)
-    .map(([{ role, name }, alliance]) => ({ role, name, alliance }));
+    .map(([{ role, name }, alliance]) => {
+      if (alliance) {
+        alliance.roleArray = Object.keys(alliance.roles);
+        console.log('hmm', alliance);
+      }
+      return ({ role, name, alliance });
+    });
   public allianceName = '';
   public inviteTarget = '';
+  public alliancePermissions = ALLIANCE_PERMISSIONS;
+  public permissionNames = PERMISSION_NAMES;
 
   constructor(private store: Store<StoreState>) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   createAlliance() {
     if (this.allianceName.length > 3) {
