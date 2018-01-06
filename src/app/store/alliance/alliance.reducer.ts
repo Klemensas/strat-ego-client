@@ -9,12 +9,13 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
     case AllianceActions.SET_DATA: {
       const alliance = action.payload.AllianceId ? { [action.payload.AllianceId]: action.payload.Alliance } : {};
       const alliances = { ...state.alliances, ...alliance };
-
       return {
         ...state,
         alliances,
+        playerName: action.payload.allianceName,
         playerAlliance: action.payload.AllianceId,
-        invitations: action.payload.Invitations
+        invitations: action.payload.Invitations,
+        role: action.payload.AllianceRole
       };
     }
 

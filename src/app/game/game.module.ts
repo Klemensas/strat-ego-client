@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule   } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule   } from '@angular/forms';
 import {
   MatSidenavModule,
   MatSnackBarModule,
@@ -8,6 +8,9 @@ import {
   MatSelectModule,
   MatIconModule,
   MatTabsModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatCheckboxModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -30,6 +33,8 @@ import { ReportComponent } from './reports/report/report.component';
 import { UnitQueueComponent } from './unit-queue/unit-queue.component';
 import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
 import { AllianceComponent } from './alliance/alliance.component';
+import { EditableRolesComponent } from './alliance/editable-roles/editable-roles.component';
+import { PlayerRolesComponent } from './alliance/player-roles/player-roles.component';
 
 @NgModule({
   imports: [
@@ -39,8 +44,12 @@ import { AllianceComponent } from './alliance/alliance.component';
     MatIconModule,
     MatButtonModule,
     MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     gameRouting,
     NgbModule,
     BrowserAnimationsModule,
@@ -59,6 +68,8 @@ import { AllianceComponent } from './alliance/alliance.component';
     UnitQueueComponent,
     TownLoyaltyComponent,
     AllianceComponent,
+    EditableRolesComponent,
+    PlayerRolesComponent,
   ],
   providers: [
     SocketService,

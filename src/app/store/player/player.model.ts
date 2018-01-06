@@ -1,7 +1,6 @@
 import { User } from '../user/user.model';
 import { Report } from '../report/report.model';
-import { Alliance, AllianceBase } from 'app/store/alliance/alliance.model';
-
+import { Alliance, AllianceBase, AllianceRole } from '../alliance/alliance.model';
 
 export interface Player {
   id: number;
@@ -12,6 +11,8 @@ export interface Player {
   ReportOriginPlayer: Report[];
   AllianceId: number;
   Alliance: Alliance;
+  AllianceRoleId: number;
+  AllianceRole: AllianceRole;
   allianceName: string;
   allianceRole: string;
   Invitations: AllianceBase[];

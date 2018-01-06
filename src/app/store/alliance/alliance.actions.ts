@@ -9,5 +9,6 @@ export class AllianceActions {
   public static ACCEPT_INVITE = '[Alliance] ACCEPT_INVITE';
   public static REJECT_INVITE = '[Alliance] REJECT_INVITE';
   public static UPDATE = '[Alliance] UPDATE';
+  public static UPDATE_ROLE_PERMISSIONS = '[Alliance] UPDATE_ROLE_PERMISSIONS';
   // public static LOGIN_FAIL: string = '[Player] LOGIN Fail';
 }

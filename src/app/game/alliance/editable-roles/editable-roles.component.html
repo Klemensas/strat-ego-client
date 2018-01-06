@@ -1,0 +1,41 @@
+<form [formGroup]="rolePermissionForm" novalidate class="pt-3" style="overflow: hidden;">
+  <div class="row pt-1" style="color: var(--light); background-color: var(--indigo)">
+    <div class="col">
+        <!-- <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polygon points="0,0 100,100 100,0"/>
+        </svg> -->
+        <div class="heading-split px-1"><strong>Role</strong></div>
+      </div>
+      <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center" style="border-bottom: 2px solid var(--indigo)"></div>
+  </div>
+  <div formArrayName="roles" class="roles roles-current">
+    <div *ngFor="let role of alliance.Roles; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+      <div class="col">
+        <mat-form-field floatLabel="never">
+          <input matInput type="text" placeholder="Role name" formControlName="name">
+        </mat-form-field>
+      </div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
+        <mat-checkbox [formControlName]="permission"></mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rolePermissionForm.controls.newRoles.length" formArrayName="newRoles" class="roles roles-new">
+    <div *ngFor="let role of rolePermissionForm.controls.newRoles.controls; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+      <div class="col">
+        <mat-form-field floatLabel="never">
+          <input matInput type="text" placeholder="Role name" formControlName="name">
+        </mat-form-field>
+      </div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
+        <mat-checkbox [formControlName]="permission"></mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col"><i class="fa fa-plus" (click)="insertRole()"></i> Add role</div>
+    <div class="col text-right">
+        <button type="submit" mat-raised-button color="primary" [disabled]="!rolePermissionForm.valid || !rolePermissionForm.touched" (click)="saveChanges()">Save changes</button>
+    </div>
+  </div>
+</form>

@@ -34,7 +34,7 @@ export interface Profile {
 
 export interface AllianceMember extends Profile {
   allianceName: string;
-  allianceRole: string;
+  AllianceRole: AllianceRole;
 }
 
 export interface AllianceBase {
@@ -46,13 +46,16 @@ export type AlliancePermissions = {
   [name in permissionNames]?: boolean;
 };
 
-export interface AllianceRoles {
-  [role: string]: AlliancePermissions;
+export interface AllianceRole {
+  id: number;
+  name: string;
+  permissions: AlliancePermissions;
 }
 
 export interface Alliance extends AllianceBase {
-  roles: AllianceRoles;
-  roleArray?: string[];
+  Roles: AllianceRole[];
+  DefaultRoleId: number;
+  DefaultRole: AllianceRole;
   Members: AllianceMember[];
   Invitations: Profile[];
 }

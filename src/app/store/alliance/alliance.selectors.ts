@@ -5,4 +5,8 @@ import { StoreState } from '../';
 export const getAllianceState = (state: StoreState) => state.alliance;
 export const getPlayerAlliance = (state: StoreState) => state.alliance.alliances[state.alliance.playerAlliance];
 export const getPlayerInvitations = (state: StoreState) => state.alliance.invitations;
-export const getAlliancePermissions = (state: StoreState) => state.alliance.permissions;
+export const getPlayerAllianceData = (state: StoreState) => ({
+  alliance: state.alliance.alliances[state.alliance.playerAlliance],
+  name: state.alliance.playerName,
+  role: state.alliance.role,
+});

@@ -93,3 +93,8 @@ $icon-size: 24px;
 game-container .mat-sidenav-content {
   overflow: inherit;
 }
+
+// TODO: consider default width for mobile,
+.mat-form-field-infix {
+  width: auto !important;
+}

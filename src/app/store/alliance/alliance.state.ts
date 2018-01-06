@@ -1,17 +1,19 @@
-import { Alliance } from './alliance.model';
+import { Alliance, AllianceRole } from './alliance.model';
 
 export interface AllianceState {
   playerAlliance: number;
+  playerName: string;
   alliances: {
     [name: string]: Alliance;
   };
-  permissions: string[];
+  role: AllianceRole;
   invitations: Alliance[];
 }
 
 export const initialAllianceState: AllianceState = {
   playerAlliance: null,
+  playerName: '',
   alliances: {},
-  permissions: [],
+  role: null,
   invitations: [],
 };
