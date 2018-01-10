@@ -1,8 +1,9 @@
 <div *ngIf="allianceData$ | async as allianceData" class="p-2">
   <div *ngIf="allianceData.alliance as alliance; else noAlliance">
     {{ alliance | json }}
-    <mat-tab-group class="">
+    <mat-tab-group>
       <mat-tab label="Overview">
+        <button *ngIf="allianceData.role?.permissions.editProfile" mat-raised-button color="warn" (click)="destroyAlliance()" class="mt-3">Destroy alliance</button>
       </mat-tab>
       <mat-tab label="Profile">
         <div class="row">
@@ -22,7 +23,7 @@
            <p>Invite players to expand your alliance.</p>
            <div>
              <input type="text" placeholder="Player name" [(ngModel)]="inviteTarget">
-             <button class="btn btn-primary" (click)="sendInvite()">Invite</button>
+             <button mat-raised-button color="primary" (click)="sendInvite()">Invite</button>
            </div>
          </div>
          <div *ngIf="alliance.Invitations.length; else noInvitations">
@@ -39,8 +40,8 @@
          </ng-template>
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewManagement" label="Management">
-        <editable-roles [alliance]="alliance" (roleUpdate)="roleUpdate($event)"></editable-roles>
-        <player-roles [alliance]="alliance"></player-roles>
+        <editable-roles [alliance]="alliance" (roleUpdate)="roleUpdate($event)" (roleRemove)="roleRemove($event)"></editable-roles>
+        <player-roles [alliance]="alliance" class="mt-4"></player-roles>
       </mat-tab>
       <mat-tab label="Forum"></mat-tab>
     </mat-tab-group>

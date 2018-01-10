@@ -10,6 +10,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 export class EditableRolesComponent implements OnChanges {
   @Input() alliance: Alliance;
   @Output() roleUpdate = new EventEmitter();
+  @Output() roleRemove = new EventEmitter();
 
   public alliancePermissions = ALLIANCE_PERMISSIONS;
   public permissionNames = PERMISSION_NAMES;
@@ -18,6 +19,17 @@ export class EditableRolesComponent implements OnChanges {
     roles: this.formBuilder.array([]),
     newRoles: this.formBuilder.array([])
   });
+
+  // private hasChanges$ = this.rolePermissionForm.valueChanges.map((values) => {
+  //   const roleArray = this.rolePermissionForm.controls.roles as FormArray;
+
+  //   // Filter to only send actually changed roles
+  //   const roleChanges = !roleArray.touched ? [] : roleArray.value.filter((role, i) => {
+  //     const current = this.alliance.Roles[i];
+  //     return role.name.toLowerCase() !== current.name.toLowerCase() ||
+  //       this.alliancePermissions.some((perm) => role.permissions[perm] !== current.permissions[perm]);
+  //   });
+  // })
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -36,6 +48,15 @@ export class EditableRolesComponent implements OnChanges {
       name: ['', Validators.required],
       permissions: this.formBuilder.group(this.alliancePermissions.reduce((prev, current) => ({ ...prev, [current]: false }), {}))
     }));
+  }
+
+  removeRole(index) {
+    (this.rolePermissionForm.controls.newRoles as FormArray).removeAt(index);
+  }
+
+  deleteRole(role) {
+    // TODO: STUB
+    this.roleRemove.emit(role);
   }
 
   saveChanges() {

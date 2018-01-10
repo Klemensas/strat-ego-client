@@ -6,7 +6,8 @@
         </svg> -->
         <div class="heading-split px-1"><strong>Role</strong></div>
       </div>
-      <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center" style="border-bottom: 2px solid var(--indigo)"></div>
+      <div class="col text-center"><i class="fa fa-trash"></i></div>
+      <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center"></div>
   </div>
   <div formArrayName="roles" class="roles roles-current">
     <div *ngFor="let role of alliance.Roles; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
@@ -15,6 +16,7 @@
           <input matInput type="text" placeholder="Role name" formControlName="name">
         </mat-form-field>
       </div>
+      <div class="col text-center"><button (click)="deleteRole(role)" mat-raised-button color="warn">Delete</button></div>
       <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
         <mat-checkbox [formControlName]="permission"></mat-checkbox>
       </div>
@@ -27,15 +29,18 @@
           <input matInput type="text" placeholder="Role name" formControlName="name">
         </mat-form-field>
       </div>
+      <div class="col text-center"><button (click)="removeRole(i)" mat-raised-button color="warn">Remove</button></div>
       <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
         <mat-checkbox [formControlName]="permission"></mat-checkbox>
       </div>
     </div>
   </div>
   <div class="row pt-3">
-    <div class="col"><i class="fa fa-plus" (click)="insertRole()"></i> Add role</div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="insertRole()"><i class="fa fa-plus"></i> Add Role</button>
+    </div>
     <div class="col text-right">
-        <button type="submit" mat-raised-button color="primary" [disabled]="!rolePermissionForm.valid || !rolePermissionForm.touched" (click)="saveChanges()">Save changes</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="!rolePermissionForm.valid || !rolePermissionForm.touched" (click)="saveChanges()">Update Roles</button>
     </div>
   </div>
 </form>

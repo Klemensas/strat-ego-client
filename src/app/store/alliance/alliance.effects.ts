@@ -61,12 +61,22 @@ export class Allianceffects {
     .map((action: ActionWithPayload) => action.payload)
     .map((allianceId) => this.socketService.sendEvent('alliance:rejectInvite', { allianceId }));
 
-    @Effect({ dispatch: false })
-    public updateRolePermissions$: Observable<any> = this.actions$
-      .ofType(AllianceActions.UPDATE_ROLE_PERMISSIONS)
-      .map((action: ActionWithPayload) => action.payload)
-      .map((payload) => this.socketService.sendEvent('alliance:updateRoles', payload));
+  @Effect({ dispatch: false })
+  public updateRolePermissions$: Observable<any> = this.actions$
+    .ofType(AllianceActions.UPDATE_ROLE_PERMISSIONS)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((payload) => this.socketService.sendEvent('alliance:updateRoles', payload));
 
+  @Effect({ dispatch: false })
+  public removeROle$: Observable<any> = this.actions$
+    .ofType(AllianceActions.REMOVE_ROLE)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((payload) => this.socketService.sendEvent('alliance:removeRole', payload));
+
+  @Effect({ dispatch: false })
+  public destroy$: Observable<any> = this.actions$
+    .ofType(AllianceActions.DESTROY)
+    .map((payload) => this.socketService.sendEvent('alliance:destroy'));
 
     // playerAlliance
     // permissions

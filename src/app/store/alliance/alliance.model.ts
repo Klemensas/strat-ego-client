@@ -43,7 +43,7 @@ export interface AllianceBase {
 }
 
 export type AlliancePermissions = {
-  [name in permissionNames]?: boolean;
+  [name in permissionNames]: boolean;
 };
 
 export interface AllianceRole {
