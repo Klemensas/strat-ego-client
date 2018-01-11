@@ -9,9 +9,10 @@ import { SocketService } from '../../game/services/socket.service';
 @Injectable()
 export class PlayerEffects {
   @Effect({ dispatch: false })
-  public update$: Observable<any> = this.actions$
+  public restart$: Observable<any> = this.actions$
     .ofType(PlayerActions.RESTART)
     .map((data) => this.socketService.sendEvent('player:restart'));
+
 
   constructor(
     private actions$: Actions,

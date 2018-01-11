@@ -13,8 +13,6 @@ export interface Player {
   Alliance: Alliance;
   AllianceRoleId: number;
   AllianceRole: AllianceRole;
-  allianceName: string;
-  allianceRole: string;
   Invitations: AllianceBase[];
   createdAt: string;
   updatedAt: string;

@@ -12,7 +12,6 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       return {
         ...state,
         alliances,
-        playerName: action.payload.allianceName,
         playerAlliance: action.payload.AllianceId,
         invitations: action.payload.Invitations,
         role: action.payload.AllianceRole
@@ -28,6 +27,17 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
         }
       };
     }
+
+    case AllianceActions.DESTROYED: {
+      const alliances = { ...state.alliances, [state.playerAlliance]: null };
+      return {
+        ...state,
+        ...alliances,
+        role: null,
+        playerAlliance: null,
+      };
+    }
+
 
     default: {
       return state;

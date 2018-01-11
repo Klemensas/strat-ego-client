@@ -2,7 +2,6 @@ import { Alliance, AllianceRole } from './alliance.model';
 
 export interface AllianceState {
   playerAlliance: number;
-  playerName: string;
   alliances: {
     [name: string]: Alliance;
   };
@@ -12,7 +11,6 @@ export interface AllianceState {
 
 export const initialAllianceState: AllianceState = {
   playerAlliance: null,
-  playerName: '',
   alliances: {},
   role: null,
   invitations: [],

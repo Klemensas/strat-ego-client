@@ -7,6 +7,5 @@ export const getPlayerAlliance = (state: StoreState) => state.alliance.alliances
 export const getPlayerInvitations = (state: StoreState) => state.alliance.invitations;
 export const getPlayerAllianceData = (state: StoreState) => ({
   alliance: state.alliance.alliances[state.alliance.playerAlliance],
-  name: state.alliance.playerName,
   role: state.alliance.role,
 });

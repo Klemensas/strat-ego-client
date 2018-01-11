@@ -33,7 +33,6 @@ export interface Profile {
 }
 
 export interface AllianceMember extends Profile {
-  allianceName: string;
   AllianceRole: AllianceRole;
 }
 

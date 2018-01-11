@@ -51,6 +51,10 @@ export class AllianceComponent implements OnInit {
     this.store.dispatch({ type: AllianceActions.UPDATE_ROLE_PERMISSIONS, payload });
   }
 
+  updatePlayerRole() {
+    this.store.dispatch({ type: AllianceActions.UPDATE_PLAYER_ROLE })
+  }
+
   roleRemove(payload) {
     this.store.dispatch({ type: AllianceActions.REMOVE_ROLE, payload });
   }

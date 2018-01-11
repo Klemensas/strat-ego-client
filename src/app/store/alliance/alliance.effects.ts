@@ -74,7 +74,7 @@ export class Allianceffects {
     .map((payload) => this.socketService.sendEvent('alliance:removeRole', payload));
 
   @Effect({ dispatch: false })
-  public destroy$: Observable<any> = this.actions$
+  public attemptDestroying$: Observable<any> = this.actions$
     .ofType(AllianceActions.DESTROY)
     .map((payload) => this.socketService.sendEvent('alliance:destroy'));
 
