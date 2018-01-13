@@ -28,6 +28,27 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
+    case AllianceActions.UPDATE_MEMBER: {
+      const alliance = state.alliances[state.playerAlliance];
+      const memberIndex = alliance.Members.findIndex(({ id }) => id === action.payload.id);
+
+      alliance.Members[memberIndex] = action.payload;
+      return {
+        ...state,
+        alliances: {
+          ...state.alliances,
+          alliance
+        }
+      };
+    }
+
+    case AllianceActions.SET_PLAYER_ROLE: {
+      return {
+        ...state,
+        role: action.payload
+      };
+    }
+
     case AllianceActions.DESTROYED: {
       const alliances = { ...state.alliances, [state.playerAlliance]: null };
       return {

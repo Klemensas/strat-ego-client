@@ -41,7 +41,7 @@
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewManagement" label="Management">
         <editable-roles [alliance]="alliance" (roleUpdate)="roleUpdate($event)" (roleRemove)="roleRemove($event)"></editable-roles>
-        <player-roles [alliance]="alliance" class="mt-4"></player-roles>
+        <player-roles [alliance]="alliance" (playerRoleUpdate)="updatePlayerRole($event)" class="mt-4"></player-roles>
       </mat-tab>
       <mat-tab label="Forum"></mat-tab>
     </mat-tab-group>

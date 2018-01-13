@@ -1,4 +1,4 @@
-<form [formGroup]="memberRoleForm" novalidate class="pt-3" style="overflow: hidden;">
+<!-- <form [formGroup]="memberRoleForm" novalidate class="pt-3" style="overflow: hidden;">
   <div class="row pt-1" style="color: var(--light); background-color: var(--indigo)">
     <div class="col">
       <div class="heading-split px-1"><strong>Player</strong></div>
@@ -13,7 +13,7 @@
       <div class="col" (click)="test(memberF)">{{ member.name }}</div>
       <div class="col text-center">
         <mat-form-field floatLabel="never">
-          <mat-select placeholder="Role" formControlName="role" required>
+          <mat-select placeholder="Role" formControlName="role" (ngModelChange)="test($event)" required>
             <mat-option *ngFor="let role of alliance.Roles" [value]="role.name">{{ role.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -23,4 +23,35 @@
       </div>
     </div>
   </div>
-</form>
+</form> -->
+<div class="pt-4" style="overflow: hidden">
+  <div class="row" style="color: var(--light); background-color: var(--indigo)">
+    <div class="col">
+      <div class="heading-split px-1"><strong>Player</strong></div>
+    </div>
+    <div class="col text-center">
+      <strong>Role</strong>
+    </div>
+    <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center"></div>
+  </div>
+  <div class="roles roles-members">
+    <div *ngFor="let member of alliance.Members; let i = index;" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+      <div class="col">
+        <span>{{ member.name }}</span>
+        <button mat-icon-button color="warn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="col text-center">
+        <mat-form-field floatLabel="never">
+          <mat-select placeholder="Role" [(ngModel)]="member.AllianceRole" [compareWith]="compareRoles" (ngModelChange)="updatePlayerRole($event.id, member.id)" required>
+            <mat-option *ngFor="let role of alliance.Roles" [value]="role">{{ role.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions">
+        <mat-checkbox disabled [checked]="member.AllianceRole.permissions[permission]"></mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import { StoreState } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { ActionWithPayload } from '../util';
 import { PlayerActions } from '../player/player.actions';
+import { getPlayerData } from '../player/player.selectors';
 
 @Injectable()
 export class Allianceffects {
@@ -20,10 +21,9 @@ export class Allianceffects {
   public setAllianceData$$: Observable<ActionWithPayload> = this.actions$
     .ofType(PlayerActions.UPDATE)
     .map((action: ActionWithPayload) => action.payload)
-    .map(({ allianceName, AllianceId, Alliance, Invitations, AllianceRole }) => ({
+    .map(({ AllianceId, Alliance, Invitations, AllianceRole }) => ({
       type: AllianceActions.SET_DATA,
       payload: {
-        allianceName,
         AllianceId,
         Alliance,
         AllianceRole,
@@ -60,6 +60,23 @@ export class Allianceffects {
     .ofType(AllianceActions.REJECT_INVITE)
     .map((action: ActionWithPayload) => action.payload)
     .map((allianceId) => this.socketService.sendEvent('alliance:rejectInvite', { allianceId }));
+
+  @Effect({ dispatch: false })
+  public updatePlayerRole$: Observable<any> = this.actions$
+    .ofType(AllianceActions.UPDATE_MEMBER_ROLE)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((payload) => this.socketService.sendEvent('alliance:updatePlayerRole', payload));
+
+  @Effect()
+  public updatePlayer$: Observable<any> = this.actions$
+    .ofType(AllianceActions.UPDATE_MEMBER)
+    .map((action: ActionWithPayload) => action.payload)
+    .withLatestFrom(this.store.select(getPlayerData))
+    .filter(([payload, player]) => {
+      console.log('check', payload, player)
+      return player.id === payload.id
+    })
+    .map(([payload, player]) => ({ type: AllianceActions.SET_PLAYER_ROLE, payload: payload.AllianceRole }));
 
   @Effect({ dispatch: false })
   public updateRolePermissions$: Observable<any> = this.actions$

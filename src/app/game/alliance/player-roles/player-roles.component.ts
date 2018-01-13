@@ -1,5 +1,4 @@
-import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Alliance, AlliancePermissions, ALLIANCE_PERMISSIONS, PERMISSION_NAMES } from '../../../store/alliance/alliance.model';
 
 @Component({
@@ -7,29 +6,22 @@ import { Alliance, AlliancePermissions, ALLIANCE_PERMISSIONS, PERMISSION_NAMES }
   templateUrl: './player-roles.component.html',
   styleUrls: ['./player-roles.component.scss']
 })
-export class PlayerRolesComponent implements OnChanges {
+export class PlayerRolesComponent {
   @Input() alliance: Alliance;
+  @Output() playerRoleUpdate = new EventEmitter<{ playerId: number; roleId: number; }>();
 
   public alliancePermissions = ALLIANCE_PERMISSIONS;
   public permissionNames = PERMISSION_NAMES;
 
   public allianceRolePermissions: { [role: string]: AlliancePermissions } = {};
 
-  private memberRoleForm: FormGroup = this.formBuilder.group({
-    members: this.formBuilder.array([]),
-  });
+  constructor() { }
 
-  constructor(private formBuilder: FormBuilder) { }
-
-  ngOnChanges(changes: SimpleChanges) {
-    const alliance = changes.alliance.currentValue;
-    this.allianceRolePermissions = changes.alliance.currentValue.Roles.reduce((p, c) => ({ ...p, [c.name]: c.permissions }), {});
-    const memberRoles = alliance.Members.map((member) => this.formBuilder.group({
-      id: member.id,
-      role: [member.AllianceRole.name, Validators.required],
-    }));
-    this.memberRoleForm.setControl('members', this.formBuilder.array(memberRoles));
+  compareRoles(r1, r2) {
+    return r1 && r2 && r1.name === r2.name;
   }
 
-  test(d) { console.log('hu', d)}
+  updatePlayerRole(roleId: number, playerId: number) {
+    this.playerRoleUpdate.emit({ roleId, playerId });
+  }
 }
