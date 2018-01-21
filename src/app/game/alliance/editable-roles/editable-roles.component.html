@@ -1,4 +1,4 @@
-<form [formGroup]="rolePermissionForm" novalidate class="pt-3" style="overflow: hidden;">
+<form [formGroup]="rolePermissionForm" novalidate class="pt-4 mb-2" style="overflow: hidden;">
   <div class="row pt-1" style="color: var(--light); background-color: var(--indigo)">
     <div class="col">
         <!-- <svg viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -16,7 +16,7 @@
           <input matInput type="text" placeholder="Role name" formControlName="name">
         </mat-form-field>
       </div>
-      <div class="col text-center"><button (click)="deleteRole(role)" mat-raised-button color="warn">Delete</button></div>
+      <div class="col text-center"><button (click)="deleteRole(role.id)" mat-raised-button color="warn">Delete</button></div>
       <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
         <mat-checkbox [formControlName]="permission"></mat-checkbox>
       </div>

@@ -1,9 +1,9 @@
 <div *ngIf="allianceData$ | async as allianceData" class="p-2">
   <div *ngIf="allianceData.alliance as alliance; else noAlliance">
-    {{ alliance | json }}
     <mat-tab-group>
       <mat-tab label="Overview">
         <button *ngIf="allianceData.role?.permissions.editProfile" mat-raised-button color="warn" (click)="destroyAlliance()" class="mt-3">Destroy alliance</button>
+        <button mat-raised-button color="warn" (click)="leaveAlliance()" class="mt-3">Leave alliance</button>
       </mat-tab>
       <mat-tab label="Profile">
         <div class="row">
@@ -41,7 +41,7 @@
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewManagement" label="Management">
         <editable-roles [alliance]="alliance" (roleUpdate)="roleUpdate($event)" (roleRemove)="roleRemove($event)"></editable-roles>
-        <player-roles [alliance]="alliance" (playerRoleUpdate)="updatePlayerRole($event)" class="mt-4"></player-roles>
+        <player-roles [alliance]="alliance" (playerRoleUpdate)="updatePlayerRole($event)" (playerRemove)="removePlayer($event)" class="mt-4"></player-roles>
       </mat-tab>
       <mat-tab label="Forum"></mat-tab>
     </mat-tab-group>

@@ -59,7 +59,15 @@ export class AllianceComponent implements OnInit {
     this.store.dispatch({ type: AllianceActions.REMOVE_ROLE, payload });
   }
 
+  removePlayer(payload) {
+    this.store.dispatch({ type: AllianceActions.REMOVE_PLAYER, payload });
+  }
+
   destroyAlliance() {
     this.store.dispatch({ type: AllianceActions.DESTROY });
+  }
+
+  leaveAlliance() {
+    this.store.dispatch({ type: AllianceActions.LEAVE_ALLIANCE });
   }
 }

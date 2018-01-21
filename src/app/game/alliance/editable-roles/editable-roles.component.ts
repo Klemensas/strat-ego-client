@@ -54,9 +54,8 @@ export class EditableRolesComponent implements OnChanges {
     (this.rolePermissionForm.controls.newRoles as FormArray).removeAt(index);
   }
 
-  deleteRole(role) {
-    // TODO: STUB
-    this.roleRemove.emit(role);
+  deleteRole(roleId) {
+    this.roleRemove.emit(roleId);
   }
 
   saveChanges() {
@@ -69,5 +68,6 @@ export class EditableRolesComponent implements OnChanges {
         this.alliancePermissions.some((perm) => role.permissions[perm] !== current.permissions[perm]);
     });
     this.roleUpdate.emit({ roles: roleChanges, newRoles: this.rolePermissionForm.controls.newRoles.value });
+    (this.rolePermissionForm as FormGroup).setControl('newRoles', this.formBuilder.array([]));
   }
 }

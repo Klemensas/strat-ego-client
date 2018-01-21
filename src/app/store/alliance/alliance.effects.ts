@@ -35,31 +35,31 @@ export class Allianceffects {
   public create$: Observable<any> = this.actions$
     .ofType(AllianceActions.CREATE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((name) => this.socketService.sendEvent('alliance:create', { name }));
+    .map((name) => this.socketService.sendEvent('alliance:create', name));
 
   @Effect({ dispatch: false })
   public invite$: Observable<any> = this.actions$
     .ofType(AllianceActions.SEND_INVITE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((name) => this.socketService.sendEvent('alliance:invite', { name }));
+    .map((name) => this.socketService.sendEvent('alliance:invite', name));
 
   @Effect({ dispatch: false })
   public cancelInvite$: Observable<any> = this.actions$
     .ofType(AllianceActions.CANCEL_INVITE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((playerId) => this.socketService.sendEvent('alliance:cancelInvite', { playerId }));
+    .map((playerId) => this.socketService.sendEvent('alliance:cancelInvite', playerId));
 
   @Effect({ dispatch: false })
   public accceptInvite$: Observable<any> = this.actions$
     .ofType(AllianceActions.ACCEPT_INVITE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((allianceId) => this.socketService.sendEvent('alliance:acceptInvite', { allianceId }));
+    .map((allianceId) => this.socketService.sendEvent('alliance:acceptInvite', allianceId));
 
   @Effect({ dispatch: false })
   public rejectInvite$: Observable<any> = this.actions$
     .ofType(AllianceActions.REJECT_INVITE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((allianceId) => this.socketService.sendEvent('alliance:rejectInvite', { allianceId }));
+    .map((allianceId) => this.socketService.sendEvent('alliance:rejectInvite', allianceId));
 
   @Effect({ dispatch: false })
   public updatePlayerRole$: Observable<any> = this.actions$
@@ -72,11 +72,14 @@ export class Allianceffects {
     .ofType(AllianceActions.UPDATE_MEMBER)
     .map((action: ActionWithPayload) => action.payload)
     .withLatestFrom(this.store.select(getPlayerData))
-    .filter(([payload, player]) => {
-      console.log('check', payload, player)
-      return player.id === payload.id
-    })
-    .map(([payload, player]) => ({ type: AllianceActions.SET_PLAYER_ROLE, payload: payload.AllianceRole }));
+    .filter(([payload, player]) => player.id === payload.id)
+    .map(([payload, player]) => ({
+      type: PlayerActions.UPDATE,
+      payload: {
+        ...player,
+        AllianceRoleId: payload.AllianceRole.id,
+        AllianceRole: payload.AllianceRole
+      } }));
 
   @Effect({ dispatch: false })
   public updateRolePermissions$: Observable<any> = this.actions$
@@ -85,23 +88,41 @@ export class Allianceffects {
     .map((payload) => this.socketService.sendEvent('alliance:updateRoles', payload));
 
   @Effect({ dispatch: false })
-  public removeROle$: Observable<any> = this.actions$
+  public removeRole$: Observable<any> = this.actions$
     .ofType(AllianceActions.REMOVE_ROLE)
     .map((action: ActionWithPayload) => action.payload)
     .map((payload) => this.socketService.sendEvent('alliance:removeRole', payload));
 
   @Effect({ dispatch: false })
+  public removePlayer$: Observable<any> = this.actions$
+    .ofType(AllianceActions.REMOVE_PLAYER)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((payload) => this.socketService.sendEvent('alliance:removePlayer', payload));
+
+  @Effect({ dispatch: false })
+  public leaveAlliance$: Observable<any> = this.actions$
+    .ofType(AllianceActions.LEAVE_ALLIANCE)
+    .map((payload) => this.socketService.sendEvent('alliance:leave'));
+
+  @Effect()
+  public removedMember$: Observable<any> = this.actions$
+    .ofType(AllianceActions.REMOVED_MEMBER)
+    .map((action: ActionWithPayload) => action.payload)
+    .withLatestFrom(this.store.select(getPlayerData))
+    .filter(([payload, player]) => player.id === payload.memberId)
+    .map(([payload, player]) => ({
+      type: PlayerActions.UPDATE,
+      payload: {
+        ...player,
+        AllianceId: payload.alliance.id,
+        Alliance: null,
+      }
+    }));
+
+  @Effect({ dispatch: false })
   public attemptDestroying$: Observable<any> = this.actions$
     .ofType(AllianceActions.DESTROY)
     .map((payload) => this.socketService.sendEvent('alliance:destroy'));
-
-    // playerAlliance
-    // permissions
-    // invitations
-    // .withL
-    // .withLatestFrom(this.store.select(getActiveWorld))
-    // .map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS))
-
 
   constructor(
     private actions$: Actions,

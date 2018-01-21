@@ -12,9 +12,12 @@ export class AllianceActions {
   public static UPDATE_ROLE_PERMISSIONS = '[Alliance] UPDATE_ROLE_PERMISSIONS';
   public static UPDATE_MEMBER_ROLE = '[Alliance] UPDATE_MEMBER_ROLE';
   public static UPDATE_MEMBER = '[Alliance] UPDATE_MEMBER';
-  public static SET_PLAYER_ROLE = '[Alliance] SET_PLAYER_ROLE';
+  public static REMOVED_MEMBER = '[Alliance] REMOVED_MEMBER';
   public static REMOVE_ROLE = '[Alliance] REMOVE_ROLE';
+  public static REMOVE_PLAYER = '[Alliance] REMOVE_PLAYER';
   public static DESTROY = '[Alliance] DESTROY';
-  public static DESTROYED = '[Alliance] DESTROYED';
+  public static DESTROY_SUCCESS = '[Alliance] DESTROY_SUCCESS';
+  public static LEAVE_ALLIANCE = '[Alliance] LEAVE_ALLIANCE';
+  public static LEAVE_ALLIANCE_SUCCESS = '[Alliance] LEAVE_ALLIANCE_SUCCESS';
   // public static LOGIN_FAIL: string = '[Player] LOGIN Fail';
 }

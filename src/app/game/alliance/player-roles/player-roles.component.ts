@@ -9,6 +9,7 @@ import { Alliance, AlliancePermissions, ALLIANCE_PERMISSIONS, PERMISSION_NAMES }
 export class PlayerRolesComponent {
   @Input() alliance: Alliance;
   @Output() playerRoleUpdate = new EventEmitter<{ playerId: number; roleId: number; }>();
+  @Output() playerRemove = new EventEmitter<number>();
 
   public alliancePermissions = ALLIANCE_PERMISSIONS;
   public permissionNames = PERMISSION_NAMES;
@@ -17,8 +18,12 @@ export class PlayerRolesComponent {
 
   constructor() { }
 
-  compareRoles(r1, r2) {
+  private compareRoles(r1, r2) {
     return r1 && r2 && r1.name === r2.name;
+  }
+
+  removePlayer(playerId: number) {
+    this.playerRemove.emit(playerId);
   }
 
   updatePlayerRole(roleId: number, playerId: number) {

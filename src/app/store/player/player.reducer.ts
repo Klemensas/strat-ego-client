@@ -25,17 +25,6 @@ export const PlayerReducer: ActionReducer<PlayerState> = (state = initialPlayerS
       return { ...state, playerData };
     }
 
-    case AllianceActions.DESTROYED: {
-      const playerData = {
-        ...state.playerData,
-        AllianceId: null,
-        Alliance: null,
-        AllianceRoleId: null,
-        AllianceRole: null
-      };
-      return { ...state, playerData };
-    }
-
     default: {
       return state;
     }

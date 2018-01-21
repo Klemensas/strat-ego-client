@@ -42,14 +42,26 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.SET_PLAYER_ROLE: {
+    case AllianceActions.REMOVED_MEMBER: {
+      const alliance = action.payload.alliance;
       return {
         ...state,
-        role: action.payload
+        alliances: {
+          ...state.alliances,
+          [state.playerAlliance]: alliance
+        }
       };
     }
 
-    case AllianceActions.DESTROYED: {
+    case AllianceActions.LEAVE_ALLIANCE_SUCCESS: {
+      return {
+        ...state,
+        playerAlliance: null,
+        role: null,
+      };
+    }
+
+    case AllianceActions.DESTROY_SUCCESS: {
       const alliances = { ...state.alliances, [state.playerAlliance]: null };
       return {
         ...state,

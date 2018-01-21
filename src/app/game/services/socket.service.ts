@@ -38,7 +38,10 @@ export class SocketService {
         this.socket.on('report', (data) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload: data }));
         this.socket.on('alliance', (data) => this.store.dispatch({ type: AllianceActions.UPDATE, payload: data }));
         this.socket.on('alliance:memberUpdate', (data) => this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER, payload: data }));
-        this.socket.on('alliance:destroyed', (data) => this.store.dispatch({ type: AllianceActions.DESTROYED, payload: data }));
+        this.socket.on('alliance:memberRemove', (data) => this.store.dispatch({ type: AllianceActions.REMOVED_MEMBER, payload: data }));
+        this.socket.on('alliance:memberLeave', (data) => this.store.dispatch({ type: AllianceActions.REMOVED_MEMBER, payload: data }));
+        this.socket.on('alliance:left', (data) => this.store.dispatch({ type: AllianceActions.LEAVE_ALLIANCE_SUCCESS }));
+        this.socket.on('alliance:destroyed', (data) => this.store.dispatch({ type: AllianceActions.DESTROY_SUCCESS, payload: data }));
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));
