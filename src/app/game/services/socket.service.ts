@@ -12,6 +12,7 @@ import { TownActions } from '../../store/town/town.actions';
 import { MapActions } from '../../store/map/map.actions';
 import { ReportActions } from '../../store/report/report.actions';
 import { AllianceActions } from '../../store/alliance/alliance.actions';
+import { ChatActions } from '../../store/chat/chat.actions';
 
 @Injectable()
 export class SocketService {
@@ -32,16 +33,26 @@ export class SocketService {
             query: `token=${token}&world=${world}`,
         });
 
-        this.socket.on('player', (data) => this.store.dispatch({ type: PlayerActions.UPDATE, payload: data }));
-        this.socket.on('town', (data) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload: data }));
-        this.socket.on('map', (data) => this.store.dispatch({ type: MapActions.UPDATE, payload: data }));
-        this.socket.on('report', (data) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload: data }));
-        this.socket.on('alliance', (data) => this.store.dispatch({ type: AllianceActions.UPDATE, payload: data }));
-        this.socket.on('alliance:memberUpdate', (data) => this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER, payload: data }));
-        this.socket.on('alliance:memberRemove', (data) => this.store.dispatch({ type: AllianceActions.REMOVED_MEMBER, payload: data }));
-        this.socket.on('alliance:memberLeave', (data) => this.store.dispatch({ type: AllianceActions.REMOVED_MEMBER, payload: data }));
-        this.socket.on('alliance:left', (data) => this.store.dispatch({ type: AllianceActions.LEAVE_ALLIANCE_SUCCESS }));
-        this.socket.on('alliance:destroyed', (data) => this.store.dispatch({ type: AllianceActions.DESTROY_SUCCESS, payload: data }));
+        // TODO: consider moving hookup to the appropriate component
+        // TODO: many listeners vs less with metadata
+        this.socket.on('player', (payload) => this.store.dispatch({ type: PlayerActions.UPDATE, payload }));
+        this.socket.on('town', (payload) => this.store.dispatch({ type: TownActions.UPDATE_EVENT, payload }));
+        this.socket.on('map', (payload) => this.store.dispatch({ type: MapActions.UPDATE, payload }));
+        this.socket.on('report', (payload) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload }));
+        this.socket.on('alliance:createSuccess', (payload) => this.store.dispatch({ type: AllianceActions.CREATE_SUCCESS, payload }));
+        this.socket.on('alliance', (payload) => this.store.dispatch({ type: AllianceActions.UPDATE, payload }));
+        this.socket.on('alliance:memberUpdate', (payload) => this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER, payload }));
+        this.socket.on('alliance:memberRemove', (payload) => this.store.dispatch({ type: AllianceActions.REMOVED_MEMBER, payload }));
+        this.socket.on('alliance:invited', (payload) => this.store.dispatch({ type: AllianceActions.INVITED, payload }));
+        this.socket.on('alliance:inviteCanceled', (payload) => this.store.dispatch({ type: AllianceActions.INVITE_CANCELED, payload }));
+        this.socket.on('alliance:inviteRejected', (payload) => this.store.dispatch({ type: AllianceActions.INVITE_REJECTED, payload }));
+        this.socket.on('alliance:rejectInviteSuccess', (payload) => this.store.dispatch({ type: AllianceActions.REJECT_INVITE_SUCCESS, payload }));
+        this.socket.on('alliance:left', () => this.store.dispatch({ type: AllianceActions.LEAVE_ALLIANCE_SUCCESS }));
+        this.socket.on('alliance:destroyed', () => this.store.dispatch({ type: AllianceActions.DESTROY_SUCCESS }));
+        this.socket.on('alliance:createForumCategory', (payload) => this.store.dispatch({ type: AllianceActions.CREATE_FORUM_CATEGORY_SUCCESS, payload }));
+        this.socket.on('alliance:acceptInviteSuccess', (payload) => this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE_SUCCESS, payload }));
+        this.socket.on('chat:messageCreated', (payload) => this.store.dispatch({ type: ChatActions.POST_MESSAGE_SUCCESS, payload }));
+        this.socket.on('chat:newMessage', (payload) => this.store.dispatch({ type: ChatActions.ADD_MESSAGE, payload }));
         this.events.set('player', this.socketObservable('player'));
         this.events.set('town', this.socketObservable('town'));
         this.events.set('map', this.socketObservable('map'));

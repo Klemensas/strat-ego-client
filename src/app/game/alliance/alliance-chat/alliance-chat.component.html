@@ -1,0 +1,23 @@
+<div class="chat" [ngClass]="{ 'chat-active': visible }">
+  <div class="header" (click)="visible = !visible">
+    <span>Alliance chat</span>
+    <span></span>
+  </div>
+  <div class="content-container">
+    <div class="content" #messageContainer>
+      <div *ngFor="let entry of entries" class="entry" [ngClass]="{ 'entry-owner': entry.PlayerId === player.id }" [style.border-color]="entry.color">
+        <div class="entry-author">{{ entry.Player.name }} {{ entry.PlayerId }}</div>
+        <div *ngFor="let message of entry.messages" [matTooltip]="message.createdAt | date:'short'" matTooltipPosition="left" class="entry-message">
+          <mat-spinner *ngIf="entry.PlayerId === player.id && message.saving" diameter="16" class="message-saving"></mat-spinner>
+          {{ message.text }}
+        </div>
+      </div>
+    </div>
+    <div class="message-compose">
+        <mat-form-field floatLabel="never" [(ngModel)]="message" name="message" ngDefaultControl (keydown.enter)="sendMessage($event, message)" style="width: 100%">
+          <textarea [ngModel]="message" matInput matAutosizeMinRows="2" matAutosizeMaxRows="5" matTextareaAutosize [placeholder]="inProgress ? 'Saving message' : 'Enter message'" [disabled]="inProgress"></textarea>
+        </mat-form-field>
+
+    </div>
+  </div>
+</div>

@@ -11,6 +11,8 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatCheckboxModule,
+  MatTooltipModule,
+  MatProgressSpinnerModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -35,6 +37,9 @@ import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
 import { AllianceComponent } from './alliance/alliance.component';
 import { EditableRolesComponent } from './alliance/editable-roles/editable-roles.component';
 import { PlayerRolesComponent } from './alliance/player-roles/player-roles.component';
+import { ForumComponent } from './alliance/forum/forum.component';
+import { AllianceChatComponent } from './alliance/alliance-chat/alliance-chat.component';
+import { AllianceDiplomacyComponent } from './alliance/alliance-diplomacy/alliance-diplomacy.component';
 
 @NgModule({
   imports: [
@@ -47,6 +52,8 @@ import { PlayerRolesComponent } from './alliance/player-roles/player-roles.compo
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -70,6 +77,9 @@ import { PlayerRolesComponent } from './alliance/player-roles/player-roles.compo
     AllianceComponent,
     EditableRolesComponent,
     PlayerRolesComponent,
+    ForumComponent,
+    AllianceChatComponent,
+    AllianceDiplomacyComponent,
   ],
   providers: [
     SocketService,

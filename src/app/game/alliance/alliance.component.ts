@@ -31,12 +31,12 @@ export class AllianceComponent implements OnInit {
     }
   }
 
-  acceptInvite(alliance) {
-    this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE, payload: alliance });
+  acceptInvite(payload: number) {
+    this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE, payload });
   }
 
-  rejectInvite(alliance) {
-    this.store.dispatch({ type: AllianceActions.REJECT_INVITE, payload: alliance });
+  rejectInvite(payload: number) {
+    this.store.dispatch({ type: AllianceActions.REJECT_INVITE, payload });
   }
 
   sendInvite() {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { of } from 'rxjs/observable/of';
@@ -20,6 +21,7 @@ export class Allianceffects {
   @Effect()
   public setAllianceData$$: Observable<ActionWithPayload> = this.actions$
     .ofType(PlayerActions.UPDATE)
+    .first()
     .map((action: ActionWithPayload) => action.payload)
     .map(({ AllianceId, Alliance, Invitations, AllianceRole }) => ({
       type: AllianceActions.SET_DATA,
@@ -50,7 +52,7 @@ export class Allianceffects {
     .map((playerId) => this.socketService.sendEvent('alliance:cancelInvite', playerId));
 
   @Effect({ dispatch: false })
-  public accceptInvite$: Observable<any> = this.actions$
+  public acceptInvite$: Observable<any> = this.actions$
     .ofType(AllianceActions.ACCEPT_INVITE)
     .map((action: ActionWithPayload) => action.payload)
     .map((allianceId) => this.socketService.sendEvent('alliance:acceptInvite', allianceId));
@@ -123,6 +125,12 @@ export class Allianceffects {
   public attemptDestroying$: Observable<any> = this.actions$
     .ofType(AllianceActions.DESTROY)
     .map((payload) => this.socketService.sendEvent('alliance:destroy'));
+
+  @Effect({ dispatch: false })
+  public createForumCategory$: Observable<any> = this.actions$
+    .ofType(AllianceActions.CREATE_FORUM_CATEGORY)
+    .map((action: ActionWithPayload) => action.payload)
+    .map((payload) => this.socketService.sendEvent('alliance:createForumCategory', payload));
 
   constructor(
     private actions$: Actions,

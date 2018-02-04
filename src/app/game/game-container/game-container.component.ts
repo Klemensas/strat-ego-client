@@ -7,14 +7,16 @@ import { Observable } from 'rxjs/Observable';
 
 import { StoreState } from '../../store';
 import { ActionWithPayload } from '../../store/util';
-import { getTownState } from 'app/store/town/town.selectors';
-import { getPlayerReports, getSidenavs } from 'app/store/player/player.selectors';
-import { getActiveWorld } from 'app/store/world/world.selectors';
-import { Town } from 'app/store/town/town.model';
-import { TownState } from 'app/store/town/town.state';
-import { TownActions } from 'app/store/town/town.actions';
-import { PlayerActions } from 'app/store/player/player.actions';
-import { AuthActions } from 'app/store/auth/auth.actions';
+import { getTownState } from '../../store/town/town.selectors';
+import { getPlayerReports, getSidenavs, getPlayerData } from '../../store/player/player.selectors';
+import { getActiveWorld } from '../../store/world/world.selectors';
+import { Town } from '../../store/town/town.model';
+import { TownState } from '../../store/town/town.state';
+import { TownActions } from '../../store/town/town.actions';
+import { PlayerActions } from '../../store/player/player.actions';
+import { AuthActions } from '../../store/auth/auth.actions';
+import { getChatMessages } from '../../store/chat/chat.selectors';
+import { getPlayerAlliance } from '../../store/alliance/alliance.selectors';
 
 @Component({
   selector: 'game-container',
@@ -30,6 +32,8 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public noTowns$: Observable<boolean>;
   public canRecruit: boolean;
 
+  public player$ = this.store.select(getPlayerData);
+  public alliance$ = this.store.select(getPlayerAlliance);
   public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);

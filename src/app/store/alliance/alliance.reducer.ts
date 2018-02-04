@@ -17,6 +17,15 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
         role: action.payload.AllianceRole
       };
     }
+    case AllianceActions.CREATE_SUCCESS: {
+      const alliances = { ...state.alliances, [action.payload.alliance.id]: action.payload.alliance };
+      return {
+        ...state,
+        alliances,
+        playerAlliance: action.payload.alliance.id,
+        role: action.payload.role,
+      };
+    }
 
     case AllianceActions.UPDATE: {
       return {
@@ -71,6 +80,68 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
+    case AllianceActions.DESTROY_SUCCESS: {
+      const alliances = { ...state.alliances, [state.playerAlliance]: null };
+      return {
+        ...state,
+        ...alliances,
+        role: null,
+        playerAlliance: null,
+      };
+    }
+
+    case AllianceActions.INVITED: {
+      return {
+        ...state,
+        invitations: [...state.invitations, action.payload]
+      };
+    }
+
+    case AllianceActions.REJECT_INVITE_SUCCESS:
+    case AllianceActions.INVITE_CANCELED: {
+      return {
+        ...state,
+        invitations: state.invitations.filter(({ id }) => id !== action.payload)
+      };
+    }
+
+    case AllianceActions.ACCEPT_INVITE_SUCCESS: {
+      const alliances = { ...state.alliances, [action.payload.id]: action.payload };
+      const role = action.payload.DefaultRole;
+      return {
+        ...state,
+        alliances,
+        role,
+        playerAlliance: action.payload.id,
+      };
+    }
+
+    case AllianceActions.INVITE_REJECTED: {
+      const alliance = state.alliances[state.playerAlliance];
+      const alliances = {
+        ...state.alliances,
+        [state.playerAlliance]: {
+          ...alliance,
+          Invitations: alliance.Invitations.filter(({ id }) => id !== action.payload)
+        }
+      };
+      return {
+        ...state,
+        alliances,
+      };
+    }
+
+    case AllianceActions.CREATE_FORUM_CATEGORY_SUCCESS: {
+      const Forum = [ ...state.alliances[state.playerAlliance].Forum, action.payload];
+      const alliance = { ...state.alliances[state.playerAlliance], Forum };
+      return {
+        ...state,
+        alliances: {
+          ...state.alliances,
+          [state.playerAlliance]: alliance
+        },
+      };
+    }
 
     default: {
       return state;

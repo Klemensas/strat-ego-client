@@ -13,62 +13,64 @@
     <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
   </mat-sidenav>
-  <header>
-    <nav class="navbar navbar-expand-md navbar-light bg-faded">
-      <button class="navbar-toggler" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" [ngbCollapse]="!isVisible">
-        <ul class="nav navbar-nav align-items-center mr-auto">
-          <li class="nav-item">
-            <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
-              <i class="fa fa-home" aria-hidden="true"></i> Town
-            </a>
-          </li>
-          <li class="nav-item">
-            <a [routerLink]="['./alliance']" routerLinkActive="active" class="nav-link">
-              <i class="fa fa-group" aria-hidden="true"></i> Alliance
-            </a>
-          </li>
-          <li class="nav-item">
-            <a [routerLink]="['./map']" routerLinkActive="active" class="nav-link">
-              <i class="fa fa-globe" aria-hidden="true"></i> Map
-            </a>
-          </li>
-          <li class="nav-item">
-            <a *ngIf="canRecruit" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
-              <i class="fa fa-users" aria-hidden="true"></i> Recruit
-            </a>
-          </li>
-          <li class="nav-item">
-            <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movements')">
-              <i class="fa fa-arrows" aria-hidden="true"></i> Movements
-            </a>
-          </li>
-          <li class="nav-item">
-            <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'reports')">
-              <i class="fa fa-flag" aria-hidden="true"></i> Reports
-            </a>
-          </li>
-        </ul>
-        <div class="d-flex justify-content-center align-items-center">
-          <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
-            <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
-            <div ngbDropdownMenu aria-labelledby="active-town">
-              <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown.id === town.id }" (click)="activeTown.id !== town.id ? selectTown(town.id) : false" class="dropdown-item">{{town.name}} ({{town.location}})</button>
+
+  <mat-sidenav-content>
+    <header>
+      <nav class="navbar navbar-expand-md navbar-light bg-faded">
+        <button class="navbar-toggler" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" [ngbCollapse]="!isVisible">
+          <ul class="nav navbar-nav align-items-center mr-auto">
+            <li class="nav-item">
+              <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
+                <i class="fa fa-home" aria-hidden="true"></i> Town
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['./alliance']" routerLinkActive="active" class="nav-link">
+                <i class="fa fa-group" aria-hidden="true"></i> Alliance
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['./map']" routerLinkActive="active" class="nav-link">
+                <i class="fa fa-globe" aria-hidden="true"></i> Map
+              </a>
+            </li>
+            <li class="nav-item">
+              <a *ngIf="canRecruit" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
+                <i class="fa fa-users" aria-hidden="true"></i> Recruit
+              </a>
+            </li>
+            <li class="nav-item">
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movements')">
+                <i class="fa fa-arrows" aria-hidden="true"></i> Movements
+              </a>
+            </li>
+            <li class="nav-item">
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'reports')">
+                <i class="fa fa-flag" aria-hidden="true"></i> Reports
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex justify-content-center align-items-center">
+            <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
+              <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
+              <div ngbDropdownMenu aria-labelledby="active-town">
+                <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown.id === town.id }" (click)="activeTown.id !== town.id ? selectTown(town.id) : false" class="dropdown-item">{{town.name}} ({{town.location}})</button>
+              </div>
+            </div>
+            <div class="nav-item">
+              <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
             </div>
           </div>
-          <div class="nav-item">
-            <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
-          </div>
         </div>
-      </div>
-    </nav>
-  </header>
-
-  <div class="container-fluid">
-    <router-outlet></router-outlet>
-  </div>
+      </nav>
+    </header>
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>
 <div *ngIf="noTowns$ | async" class="pt-5 d-flex justify-content-center align-items-center">
   <p>
@@ -77,4 +79,8 @@
     <strong class="d-flex my-2">Care to try again?</strong>
     <button class="btn btn-primary btn-lg" (click)="restart()">Restart</button>
   </p>
+</div>
+
+<div class="game-chat" *ngIf="alliance$ | async">
+  <alliance-chat [player]="player$ | async"></alliance-chat>
 </div>

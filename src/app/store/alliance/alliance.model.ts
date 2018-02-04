@@ -30,9 +30,9 @@ export type permissionNames =
 
 
 export interface Profile {
-  id: number;
+  id?: number;
   name: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface AllianceMember extends Profile {
@@ -54,10 +54,47 @@ export interface AllianceRole {
   permissions: AlliancePermissions;
 }
 
+export interface AllianceForumCategory {
+  id: number;
+  name: string;
+  description: string;
+  Topics: AllianceForumTopic[];
+}
+
+export interface AllianceForumTopic {
+  id: number;
+  name: string;
+  CreatorId: number;
+  Creator: Profile;
+  CategoryId: number;
+  Category: AllianceForumCategory;
+  Posts: AllianceForumPost[];
+  createdAt: number;
+}
+
+export interface AllianceForumPost {
+  id: number;
+  body: string;
+  TopicId: number;
+  Topic: AllianceForumTopic;
+  PosterId: number;
+  Poster: Profile;
+}
+
+export interface AllianceMessage {
+  id: number;
+  text: string;
+  PlayerId: number;
+  Player: Profile;
+  createdAt: number;
+}
+
 export interface Alliance extends AllianceBase {
   Roles: AllianceRole[];
   DefaultRoleId: number;
   DefaultRole: AllianceRole;
   Members: AllianceMember[];
   Invitations: Profile[];
+  Forum: AllianceForumCategory[];
+  Messages: AllianceMessage[];
 }

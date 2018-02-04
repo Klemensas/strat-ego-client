@@ -18,32 +18,37 @@
           </div>
         </div>
       </mat-tab>
+      <mat-tab label="Diplomacy">
+        <alliance-diplomacy></alliance-diplomacy>
+`      </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewInvites" label="Invitations">
-         <div>
-           <p>Invite players to expand your alliance.</p>
-           <div>
-             <input type="text" placeholder="Player name" [(ngModel)]="inviteTarget">
-             <button mat-raised-button color="primary" (click)="sendInvite()">Invite</button>
-           </div>
-         </div>
-         <div *ngIf="alliance.Invitations.length; else noInvitations">
-            <span>Invited players:</span>
-            <ul>
-              <li *ngFor="let invitation of alliance.Invitations">
-               <span>{{ invitation | json }}</span>
-               <i class="fa fa-times"(click)="cancelInvite(invitation.id)"></i>
-              </li>
-           </ul>
-         </div>
-         <ng-template #noInvitations>
-           <p>No pending invitations.</p>
-         </ng-template>
+        <div>
+          <p>Invite players to expand your alliance.</p>
+          <div>
+            <input type="text" placeholder="Player name" [(ngModel)]="inviteTarget">
+            <button mat-raised-button color="primary" (click)="sendInvite()">Invite</button>
+          </div>
+        </div>
+        <div *ngIf="alliance.Invitations.length; else noInvitations">
+          <span>Invited players:</span>
+          <ul>
+            <li *ngFor="let invitation of alliance.Invitations">
+              <span>{{ invitation | json }}</span>
+              <i class="fa fa-times"(click)="cancelInvite(invitation.id)"></i>
+            </li>
+          </ul>
+        </div>
+        <ng-template #noInvitations>
+          <p>No pending invitations.</p>
+        </ng-template>
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewManagement" label="Management">
         <editable-roles [alliance]="alliance" (roleUpdate)="roleUpdate($event)" (roleRemove)="roleRemove($event)"></editable-roles>
         <player-roles [alliance]="alliance" (playerRoleUpdate)="updatePlayerRole($event)" (playerRemove)="removePlayer($event)" class="mt-4"></player-roles>
       </mat-tab>
-      <mat-tab label="Forum"></mat-tab>
+      <!-- <mat-tab label="Forum">
+        <forum [alliance]="alliance" [permissions]="allianceData.role.permissions"></forum>
+      </mat-tab> -->
     </mat-tab-group>
   </div>
   <ng-template #noAlliance>

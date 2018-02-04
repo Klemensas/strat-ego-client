@@ -28,6 +28,10 @@ import { AllianceState } from './alliance/alliance.state';
 import { AllianceReducer } from './alliance/alliance.reducer';
 import { AllianceActions } from './alliance/alliance.actions';
 import { Allianceffects } from './alliance/alliance.effects';
+import { ChatState } from './chat/chat.state';
+import { ChatReducer } from './chat/chat.reducer';
+import { ChatActions } from './chat/chat.actions';
+import { ChatEffects } from './chat/chat.effects';
 // import * as auth from './auth';
 // import * as world from './world';
 // import * as player from './player';
@@ -39,6 +43,7 @@ export interface StoreState {
   world: WorldState;
   player: PlayerState;
   alliance: AllianceState;
+  chat: ChatState;
   town: TownState;
   map: MapState;
 }
@@ -48,6 +53,7 @@ const reducers: ActionReducerMap<StoreState> = {
   world: WorldReducer,
   player: PlayerReducer,
   alliance: AllianceReducer,
+  chat: ChatReducer,
   town: TownReducer,
   map: MapReducer,
 };
@@ -56,6 +62,7 @@ const actions = [
   WorldActions,
   PlayerActions,
   AllianceActions,
+  ChatActions,
   TownActions,
   MapActions,
 ];
@@ -64,6 +71,7 @@ const effects = [
   WorldEffects,
   PlayerEffects,
   Allianceffects,
+  ChatEffects,
   TownEffects,
   MapEffects,
 ];
