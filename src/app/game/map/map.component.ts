@@ -15,12 +15,15 @@ import { Store } from '@ngrx/store';
 
 import { StoreState } from '../../store';
 import { MapService, CommandService } from '../services';
-import { TownState } from 'app/store/town/town.state';
-import { getTownState } from 'app/store/town/town.selectors';
-import { getMapData } from 'app/store/map/map.selectors';
-import { Town } from 'app/store/town/town.model';
-import { MapActions } from 'app/store/map/map.actions';
-import { PlayerActions } from 'app/store/player/player.actions';
+import { TownState } from '../../store/town/town.state';
+import { getTownState } from '../../store/town/town.selectors';
+import { getMapData } from '../../store/map/map.selectors';
+import { Town } from '../../store/town/town.model';
+import { MapActions } from '../../store/map/map.actions';
+import { PlayerActions } from '../../store/player/player.actions';
+import { getPlayerAlliance } from '../../store/alliance/alliance.selectors';
+import { Alliance } from '../../store/alliance/alliance.model';
+import { Map } from '../../store/map/map.model';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -30,12 +33,14 @@ import { PlayerActions } from 'app/store/player/player.actions';
 })
 export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit, OnDestroy  {
   @ViewChild('map') map;
-  public townState: Observable<TownState> = this.store.select(getTownState);
-  public mapUpdate = Observable.combineLatest(
+  public townState$ = this.store.select(getTownState);
+  public alliance$ = this.store.select(getPlayerAlliance);
+  public mapUpdate$ = Observable.combineLatest(
     this.store.select(getMapData),
     this.mapService.imagesLoaded
   );
   public dragging = 0;
+  public alliance: Alliance;
   public activeTown: Town;
   public playerTowns: Town[];
   public playerTownIds: number[];
@@ -49,10 +54,10 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   public selected;
   public zoom = 1;
-  public mapData;
+  public mapData: Map;
   public mapOffset;
   public mapSettings = {
-    size: { x: 0, y: 0 },
+    size: { x: 100, y: 100 },
     width: <any>0,
     height: <any>0,
     side: <any>0,
@@ -75,6 +80,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   public townSubscription: Subscription;
   public mapSubscription: Subscription;
+  public allianceSubscription: Subscription;
 
   constructor(
     private mapService: MapService,
@@ -102,10 +108,19 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   public ngOnInit() {
     this.store.dispatch({ type: MapActions.LOAD_MAP });
-    this.townSubscription = this.townState.subscribe(townState => {
+    this.mapSubscription = this.mapUpdate$.subscribe(([map, imagesLoaded]) => {
+      if (map && imagesLoaded) {
+        if (!this.mapData) {
+          this.hoverPauser.next(false);
+        }
+        this.mapData = map;
+        this.mapSettings.shouldDraw = true;
+      }
+    });
+    this.townSubscription = this.townState$.subscribe(townState => {
       if (!townState.activeTown) { return; }
       this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
-      this.playerTowns = townState.playerTowns;
+    this.playerTowns = townState.playerTowns;
       this.playerTownIds = townState.playerTowns.map((town) => town.id);
 
       this.setMapSettings({
@@ -115,14 +130,9 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       this.mapOffset = this.centerOffset({ x: this.activeTown.location[0], y: this.activeTown.location[1] });
       this.mapSettings.shouldDraw = !!this.mapData;
     });
-    this.mapSubscription = this.mapUpdate.subscribe(([map, imagesLoaded]) => {
-      if (map && imagesLoaded) {
-        if (!this.mapData) {
-          this.hoverPauser.next(false);
-        }
-        this.mapData = map;
-        this.mapSettings.shouldDraw = true;
-      }
+    this.allianceSubscription = this.alliance$.subscribe((alliance) => {
+      this.alliance = alliance;
+      this.mapSettings.shouldDraw = true;
     });
   }
 
@@ -158,7 +168,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     }
     this.toggleSidenav('command', this.hoverData.location);
     this.selected = this.hoverData;
-    // this.position.click = this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
+    // this.position.click =
+    // this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
   }
 
   public onZoom(event) {
@@ -243,7 +254,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       y: yPos.minus(this.boxSize.y).lte(0) ? yPos.plus(this.mapSettings.height) : yPos.minus(this.mapSettings.aHeight)
     };
     this.position.hover = `translate3d(${+this.hoverData.pos.x}px,${+this.hoverData.pos.y}px,0)`;
-    // this.position.hover = `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,${+mouse.y.plus(coord.y).minus(this.mapSettings.aHeight  )}px,0)`;
+    // this.position.hover =
+    // `translate3d(${+mouse.x.plus(coord.x).plus(this.mapSettings.radius)}px,${+mouse.y.plus(coord.y).minus(this.mapSettings.aHeight  )}px,0)`;
     this.hoverData.distance = this.mapService.distanceFromCoord(
       { x: this.activeTown.location[0], y: this.activeTown.location[1] },
       { x: +coord.xCoord, y: +coord.yCoord }
@@ -354,21 +366,30 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     );
     this.ctx.restore();
 
-    if (data && this.playerTownIds.includes(data.id)) {
-      const type = this.activeTown.id === data.id ?
-        this.mapTiles.objectType.ownedActive : this.mapTiles.objectType.owned;
-      this.ctx.drawImage(
-        this.mapTiles.image,
-        // this.mapTiles.object[0], this.mapTiles.object[1],
-        type[0], type[1],
-        this.mapTiles.size[0], this.mapTiles.size[1],
-        +x, +y,
-        +this.mapSettings.width, +this.mapSettings.height
-      );
-      // this.ctx.globalCompositeOperation = 'multiply';
-      // this.ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
-      // this.ctx.fill();
-      // this.ctx.globalCompositeOperation = 'source-over';
+    if (data) {
+      if (this.playerTownIds.includes(data.id)) {
+        const type = this.activeTown.id === data.id ?
+          this.mapTiles.objectType.ownedActive : this.mapTiles.objectType.owned;
+        this.ctx.drawImage(
+          this.mapTiles.image,
+          type[0], type[1],
+          this.mapTiles.size[0], this.mapTiles.size[1],
+          +x, +y,
+          +this.mapSettings.width, +this.mapSettings.height
+        );
+        // this.ctx.globalCompositeOperation = 'multiply';
+        // this.ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
+        // this.ctx.fill();
+        // this.ctx.globalCompositeOperation = 'source-over';
+      } else if (this.alliance && data.alliance && this.alliance.id === data.alliance.id) {
+        this.ctx.drawImage(
+          this.mapTiles.image,
+          this.mapTiles.objectType.ally[0], this.mapTiles.objectType.ally[1],
+          this.mapTiles.size[0], this.mapTiles.size[1],
+          +x, +y,
+          +this.mapSettings.width, +this.mapSettings.height
+        );
+      }
     }
 
     // this.ctx.strokeStyle= 'rgba(0,0,0,0.2)';
