@@ -40,6 +40,7 @@ import { PlayerRolesComponent } from './alliance/player-roles/player-roles.compo
 import { ForumComponent } from './alliance/forum/forum.component';
 import { AllianceChatComponent } from './alliance/alliance-chat/alliance-chat.component';
 import { AllianceDiplomacyComponent } from './alliance/alliance-diplomacy/alliance-diplomacy.component';
+import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance-overview.component';
 
 @NgModule({
   imports: [
@@ -80,6 +81,7 @@ import { AllianceDiplomacyComponent } from './alliance/alliance-diplomacy/allian
     ForumComponent,
     AllianceChatComponent,
     AllianceDiplomacyComponent,
+    AllianceOverviewComponent,
   ],
   providers: [
     SocketService,

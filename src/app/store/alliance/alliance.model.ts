@@ -89,6 +89,30 @@ export interface AllianceMessage {
   createdAt: number;
 }
 
+export type eventType = 'diplomacy' | 'membership' | 'forum' | 'roles' | 'permissions' | 'invitation';
+export type eventStatus =
+  'pending' | 'started' | 'ended' |
+  'join' | 'leave' | 'remove' |
+  'update' |
+  'update' |
+  'update' |
+  'create' | 'reject' | 'cancel';
+
+export interface AllianceEvent {
+  id: number;
+  type: eventType;
+  status: eventStatus;
+  createdAt: Date;
+  InitiatingPlayerId?: number;
+  TargetPlayerId?: number;
+  InitiatingPlayer?: Profile;
+  TargetPlayer?: Profile;
+  InitiatingAllianceId?: number;
+  TargetAllianceId?: number;
+  InitiatingAlliance?: AllianceBase;
+  TargetAlliance?: AllianceBase;
+}
+
 export interface Alliance extends AllianceBase {
   Roles: AllianceRole[];
   DefaultRoleId: number;
@@ -97,4 +121,5 @@ export interface Alliance extends AllianceBase {
   Invitations: Profile[];
   Forum: AllianceForumCategory[];
   Messages: AllianceMessage[];
+  Events: AllianceEvent[];
 }

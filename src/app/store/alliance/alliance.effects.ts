@@ -6,7 +6,7 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { of } from 'rxjs/observable/of';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 
 import { AllianceActions } from './alliance.actions';
 import { TownActions } from '../town/town.actions';
@@ -15,6 +15,7 @@ import { SocketService } from '../../game/services/socket.service';
 import { ActionWithPayload } from '../util';
 import { PlayerActions } from '../player/player.actions';
 import { getPlayerData } from '../player/player.selectors';
+import { AllianceEvent } from './alliance.model';
 
 @Injectable()
 export class Allianceffects {
@@ -39,11 +40,22 @@ export class Allianceffects {
     .map((action: ActionWithPayload) => action.payload)
     .map((name) => this.socketService.sendEvent('alliance:create', name));
 
+  // @Effect()
+  // public event$: Observable<Action> = this.actions$
+  //   .ofType(AllianceActions.EVENT)
+  //   .map((action: ActionWithPayload) => action.payload)
+  //   .map((event) => {
+  //     switch(event.type) {
+
+  //     }
+  //   })
+  //   .map((name) => this.socketService.sendEvent('alliance:create', name));
+
   @Effect({ dispatch: false })
-  public invite$: Observable<any> = this.actions$
-    .ofType(AllianceActions.SEND_INVITE)
+  public createInvite$: Observable<any> = this.actions$
+    .ofType(AllianceActions.CREATE_INVITE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((name) => this.socketService.sendEvent('alliance:invite', name));
+    .map((name) => this.socketService.sendEvent('alliance:createInvite', name));
 
   @Effect({ dispatch: false })
   public cancelInvite$: Observable<any> = this.actions$
@@ -96,30 +108,15 @@ export class Allianceffects {
     .map((payload) => this.socketService.sendEvent('alliance:removeRole', payload));
 
   @Effect({ dispatch: false })
-  public removePlayer$: Observable<any> = this.actions$
-    .ofType(AllianceActions.REMOVE_PLAYER)
+  public removeMember$: Observable<any> = this.actions$
+    .ofType(AllianceActions.REMOVE_MEMBER)
     .map((action: ActionWithPayload) => action.payload)
-    .map((payload) => this.socketService.sendEvent('alliance:removePlayer', payload));
+    .map((payload) => this.socketService.sendEvent('alliance:removeMember', payload));
 
   @Effect({ dispatch: false })
   public leaveAlliance$: Observable<any> = this.actions$
     .ofType(AllianceActions.LEAVE_ALLIANCE)
     .map((payload) => this.socketService.sendEvent('alliance:leave'));
-
-  @Effect()
-  public removedMember$: Observable<any> = this.actions$
-    .ofType(AllianceActions.REMOVED_MEMBER)
-    .map((action: ActionWithPayload) => action.payload)
-    .withLatestFrom(this.store.select(getPlayerData))
-    .filter(([payload, player]) => player.id === payload.memberId)
-    .map(([payload, player]) => ({
-      type: PlayerActions.UPDATE,
-      payload: {
-        ...player,
-        AllianceId: payload.alliance.id,
-        Alliance: null,
-      }
-    }));
 
   @Effect({ dispatch: false })
   public attemptDestroying$: Observable<any> = this.actions$
@@ -137,5 +134,73 @@ export class Allianceffects {
     private router: Router,
     private store: Store<StoreState>,
     private socketService: SocketService,
-  ) {}
+  ) {
+    this.socketService.registerEvents([
+      [
+        'alliance:event',
+        (payload: { event: AllianceEvent, data: any }) => this.store.dispatch({ type: `[Alliance] EVENT_${payload.event.type.toUpperCase()}`, payload })
+      ],
+      [
+        'alliance',
+        (payload) => this.store.dispatch({ type: AllianceActions.UPDATE, payload })
+      ],
+      [
+        'alliance:createSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.CREATE_SUCCESS, payload })
+      ],
+      [
+        'alliance:createInviteSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.CREATE_INVITE_SUCCESS, payload })
+      ],
+      [
+        'alliance:cancelInviteSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.CANCEL_INVITE_SUCCESS, payload })
+      ],
+      [
+        'alliance:removeMemberSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.REMOVE_MEMBER_SUCCESS, payload })
+      ],
+      [
+        'alliance:memberUpdate',
+        (payload) => this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER, payload })
+      ],
+      [
+        'alliance:removed',
+        () => this.store.dispatch({ type: AllianceActions.REMOVED })
+      ],
+      [
+        'alliance:invited',
+        (payload) => this.store.dispatch({ type: AllianceActions.INVITED, payload })
+      ],
+      [
+        'alliance:inviteCanceled',
+        (payload) => this.store.dispatch({ type: AllianceActions.INVITE_CANCELED, payload })
+      ],
+      [
+        'alliance:inviteRejected',
+        (payload) => this.store.dispatch({ type: AllianceActions.INVITE_REJECTED, payload })
+      ],
+      [
+        'alliance:rejectInviteSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.REJECT_INVITE_SUCCESS, payload })
+      ],
+      [
+        'alliance:leaveAllianceSuccess',
+       () => this.store.dispatch({ type: AllianceActions.LEAVE_ALLIANCE_SUCCESS })
+      ],
+      [
+        'alliance:destroyed',
+       () => this.store.dispatch({ type: AllianceActions.DESTROY_SUCCESS })
+      ],
+      [
+        'alliance:createForumCategory',
+        (payload) => this.store.dispatch({ type: AllianceActions.CREATE_FORUM_CATEGORY_SUCCESS, payload })
+      ],
+      [
+        'alliance:acceptInviteSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE_SUCCESS, payload })
+      ],
+
+    ]);
+  }
 }

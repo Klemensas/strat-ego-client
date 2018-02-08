@@ -51,17 +51,7 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.REMOVED_MEMBER: {
-      const alliance = action.payload.alliance;
-      return {
-        ...state,
-        alliances: {
-          ...state.alliances,
-          [state.playerAlliance]: alliance
-        }
-      };
-    }
-
+    case AllianceActions.REMOVED:
     case AllianceActions.LEAVE_ALLIANCE_SUCCESS: {
       return {
         ...state,
@@ -108,10 +98,12 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
     case AllianceActions.ACCEPT_INVITE_SUCCESS: {
       const alliances = { ...state.alliances, [action.payload.id]: action.payload };
       const role = action.payload.DefaultRole;
+      const invitations = state.invitations.filter(({ id }) => id !== action.payload.id);
       return {
         ...state,
         alliances,
         role,
+        invitations,
         playerAlliance: action.payload.id,
       };
     }
@@ -143,8 +135,70 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
+    case AllianceActions.CREATE_INVITE_SUCCESS:
+    case AllianceActions.CANCEL_INVITE_SUCCESS: {
+      return eventInvitation(action, state, { inProgress: false });
+    }
+
+    case AllianceActions.EVENT_INVITATION: {
+      return eventInvitation(action, state);
+    }
+
+    case AllianceActions.REMOVE_MEMBER_SUCCESS: {
+      return eventMembership(action, state, { inProgress: false });
+    }
+
+    case AllianceActions.EVENT_MEMBERSHIP: {
+      return eventMembership(action, state);
+    }
+
+    case AllianceActions.CANCEL_INVITE:
+    case AllianceActions.CREATE_INVITE: {
+      return { ...state, error: null, inProgress: true };
+    }
+
     default: {
       return state;
     }
   }
+};
+
+const eventMembership = (action, state: AllianceState, stateParams = {}): AllianceState => {
+  const isJoin = action.payload.event.status === 'join';
+  const alliance = state.alliances[state.playerAlliance];
+  return {
+    ...state,
+    alliances: {
+      ...state.alliances,
+      [state.playerAlliance]: {
+        ...alliance,
+        Events: [action.payload.event, ...alliance.Events],
+        Invitations: isJoin ?
+          alliance.Invitations.filter(({ id }) => id !== action.payload.data.id) :
+          alliance.Invitations,
+        Members: isJoin ?
+          [action.payload.data, ...alliance.Members] :
+          alliance.Members.filter(({ id }) => id !== action.payload.data)
+      }
+    }
+  };
+};
+
+const eventInvitation = (action, state: AllianceState, stateParams = {}): AllianceState => {
+  const isCreated = action.payload.event.status === 'create';
+  const alliance = state.alliances[state.playerAlliance];
+  return {
+    ...state,
+    alliances: {
+      ...state.alliances,
+      [state.playerAlliance]: {
+        ...alliance,
+        Events: [action.payload.event, ...alliance.Events],
+        Invitations: isCreated ?
+          [action.payload.data, ...alliance.Invitations] :
+          alliance.Invitations.filter(({ id }) => id !== action.payload.data)
+      }
+    },
+    ...stateParams
+  };
 };

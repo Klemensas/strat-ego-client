@@ -39,8 +39,8 @@ export class AllianceComponent implements OnInit {
     this.store.dispatch({ type: AllianceActions.REJECT_INVITE, payload });
   }
 
-  sendInvite() {
-    this.store.dispatch({ type: AllianceActions.SEND_INVITE, payload: this.inviteTarget });
+  createInvite() {
+    this.store.dispatch({ type: AllianceActions.CREATE_INVITE, payload: this.inviteTarget });
   }
 
   cancelInvite(playerId) {
@@ -59,8 +59,8 @@ export class AllianceComponent implements OnInit {
     this.store.dispatch({ type: AllianceActions.REMOVE_ROLE, payload });
   }
 
-  removePlayer(payload) {
-    this.store.dispatch({ type: AllianceActions.REMOVE_PLAYER, payload });
+  removeMember(payload) {
+    this.store.dispatch({ type: AllianceActions.REMOVE_MEMBER, payload });
   }
 
   destroyAlliance() {

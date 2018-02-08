@@ -7,6 +7,8 @@ export interface AllianceState {
   };
   role: AllianceRole;
   invitations: Alliance[];
+  inProgress: boolean;
+  error: any;
 }
 
 export const initialAllianceState: AllianceState = {
@@ -14,4 +16,6 @@ export const initialAllianceState: AllianceState = {
   alliances: {},
   role: null,
   invitations: [],
+  inProgress: false,
+  error: null,
 };

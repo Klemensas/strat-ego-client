@@ -60,7 +60,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(/* private authService: AuthService */) {
+  constructor() {
     (window.screen as any).orientation.lock('landscape')
       .then(() => {})
       .catch(() => {});
