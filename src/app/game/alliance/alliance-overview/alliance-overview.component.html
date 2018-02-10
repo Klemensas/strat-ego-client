@@ -18,6 +18,19 @@
             <a href="#">{{ event.TargetPlayer.name }}</a> {{ membershipStatus[event.status] }} <a href="#">{{ event.InitiatingPlayer.name }}</a>
           </ng-template>
         </ng-container>
+        <ng-container *ngSwitchCase="'management'">
+          <ng-template [ngIf]="event.status === 'create'">
+            <a href="#">{{ event.InitiatingPlayer.name }}</a> created the alliance
+          </ng-template>
+        </ng-container>
+        <ng-container *ngSwitchCase="'roles'">
+          <ng-template [ngIf]="event.status === 'update'">
+            <a href="#">{{ event.InitiatingPlayer.name }}</a> updated alliance roles
+          </ng-template>
+          <ng-template [ngIf]="event.status === 'updateMember'">
+            <a href="#">{{ event.TargetPlayer.name }}</a> role was updated by <a href="#">{{ event.InitiatingPlayer.name }}</a>
+          </ng-template>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AllianceActions {
+  // TODO: differentiate between action initiator and affected players
   public static SET_DATA = '[Alliance] SET_DATA';
   public static CREATE = '[Alliance] CREATE';
   public static CREATE_SUCCESS = '[Alliance] CREATE_SUCCESS';
   public static EVENT_INVITATION = '[Alliance] EVENT_INVITATION';
   public static EVENT_MEMBERSHIP = '[Alliance] EVENT_MEMBERSHIP';
+  public static EVENT_MANAGEMENT = '[Alliance] EVENT_MANAGEMENT';
+  public static EVENT_ROLES = '[Alliance] EVENT_ROLES';
   public static CREATE_INVITE = '[Alliance] CREATE_INVITE';
   public static CREATE_INVITE_SUCCESS = '[Alliance] CREATE_INVITE_SUCCESS';
   public static INVITED = '[Alliance] INVITED';
@@ -20,9 +23,12 @@ export class AllianceActions {
   public static REJECT_INVITE_SUCCESS = '[Alliance] REJECT_INVITE_SUCCESS';
   public static UPDATE = '[Alliance] UPDATE';
   public static UPDATE_ROLE_PERMISSIONS = '[Alliance] UPDATE_ROLE_PERMISSIONS';
+  public static UPDATE_ROLE_PERMISSIONS_SUCCESS = '[Alliance] UPDATE_ROLE_PERMISSIONS_SUCCESS';
   public static UPDATE_MEMBER_ROLE = '[Alliance] UPDATE_MEMBER_ROLE';
-  public static UPDATE_MEMBER = '[Alliance] UPDATE_MEMBER';
+  public static UPDATE_MEMBER_ROLE_SUCCESS = '[Alliance] UPDATE_MEMBER_ROLE_SUCCESS';
+  public static UPDATE_SELF_ROLE = '[Alliance] UPDATE_SELF_ROLE';
   public static REMOVE_ROLE = '[Alliance] REMOVE_ROLE';
+  public static REMOVE_ROLE_SUCCESS = '[Alliance] REMOVE_ROLE_SUCCESS';
   public static REMOVED = '[Alliance] REMOVED';
   public static REMOVE_MEMBER = '[Alliance] REMOVE_MEMBER';
   public static REMOVE_MEMBER_SUCCESS = '[Alliance] REMOVE_MEMBER_SUCCESS';

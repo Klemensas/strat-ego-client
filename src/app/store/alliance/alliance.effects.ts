@@ -79,21 +79,20 @@ export class Allianceffects {
   public updatePlayerRole$: Observable<any> = this.actions$
     .ofType(AllianceActions.UPDATE_MEMBER_ROLE)
     .map((action: ActionWithPayload) => action.payload)
-    .map((payload) => this.socketService.sendEvent('alliance:updatePlayerRole', payload));
+    .map((payload) => this.socketService.sendEvent('alliance:updateMemberRole', payload));
 
+  // TODO: consider changing this as it's an outlier in role event.
+  // The event updates all roles/members accordinly but it can't update self role as it can't identify player
   @Effect()
-  public updatePlayer$: Observable<any> = this.actions$
-    .ofType(AllianceActions.UPDATE_MEMBER)
+  public updateSelfRole$: Observable<any> = this.actions$
+    .ofType(AllianceActions.EVENT_ROLES)
     .map((action: ActionWithPayload) => action.payload)
     .withLatestFrom(this.store.select(getPlayerData))
-    .filter(([payload, player]) => player.id === payload.id)
+    .filter(([payload, player]) => payload.data.updatedMember && payload.data.updatedMember.some(({ id }) => id === player.id))
     .map(([payload, player]) => ({
-      type: PlayerActions.UPDATE,
-      payload: {
-        ...player,
-        AllianceRoleId: payload.AllianceRole.id,
-        AllianceRole: payload.AllianceRole
-      } }));
+      type: AllianceActions.UPDATE_SELF_ROLE,
+      payload: payload.data.updatedMember.find(({ id }) => id === player.id).role
+    }));
 
   @Effect({ dispatch: false })
   public updateRolePermissions$: Observable<any> = this.actions$
@@ -161,8 +160,16 @@ export class Allianceffects {
         (payload) => this.store.dispatch({ type: AllianceActions.REMOVE_MEMBER_SUCCESS, payload })
       ],
       [
-        'alliance:memberUpdate',
-        (payload) => this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER, payload })
+        'alliance:updateRolePermissionsSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.UPDATE_ROLE_PERMISSIONS_SUCCESS, payload })
+      ],
+      [
+        'alliance:removeRoleSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.REMOVE_ROLE_SUCCESS, payload })
+      ],
+      [
+        'alliance:updateMemberRoleSuccess',
+        (payload) => this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER_ROLE_SUCCESS, payload })
       ],
       [
         'alliance:removed',

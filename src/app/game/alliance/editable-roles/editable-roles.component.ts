@@ -20,17 +20,6 @@ export class EditableRolesComponent implements OnChanges {
     newRoles: this.formBuilder.array([])
   });
 
-  // private hasChanges$ = this.rolePermissionForm.valueChanges.map((values) => {
-  //   const roleArray = this.rolePermissionForm.controls.roles as FormArray;
-
-  //   // Filter to only send actually changed roles
-  //   const roleChanges = !roleArray.touched ? [] : roleArray.value.filter((role, i) => {
-  //     const current = this.alliance.Roles[i];
-  //     return role.name.toLowerCase() !== current.name.toLowerCase() ||
-  //       this.alliancePermissions.some((perm) => role.permissions[perm] !== current.permissions[perm]);
-  //   });
-  // })
-
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -38,7 +27,10 @@ export class EditableRolesComponent implements OnChanges {
     const roleGroups = alliance.Roles.map((role) => this.formBuilder.group({
       id: role.id,
       name: [role.name, Validators.required],
-      permissions: this.formBuilder.group(role.permissions)
+      permissions: role.id === alliance.MasterRoleId ?
+        this.formBuilder.group(Object.entries(role.permissions).reduce((result, [name, value]) =>
+          ({ ...result, [name]: this.formBuilder.control({ value, disabled: true }) }), {})) :
+        this.formBuilder.group(role.permissions),
     }));
     this.rolePermissionForm.setControl('roles', this.formBuilder.array(roleGroups));
   }
@@ -64,8 +56,9 @@ export class EditableRolesComponent implements OnChanges {
     // Filter to only send actually changed roles
     const roleChanges = !roleArray.touched ? [] : roleArray.value.filter((role, i) => {
       const current = this.alliance.Roles[i];
+      console.log('wut', role, current)
       return role.name.toLowerCase() !== current.name.toLowerCase() ||
-        this.alliancePermissions.some((perm) => role.permissions[perm] !== current.permissions[perm]);
+        (role.id !== this.alliance.MasterRoleId && this.alliancePermissions.some((perm) => role.permissions[perm] !== current.permissions[perm]));
     });
     this.roleUpdate.emit({ roles: roleChanges, newRoles: this.rolePermissionForm.controls.newRoles.value });
     (this.rolePermissionForm as FormGroup).setControl('newRoles', this.formBuilder.array([]));

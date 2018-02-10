@@ -14,10 +14,12 @@
       <div class="col">
         <mat-form-field floatLabel="never">
           <input matInput type="text" placeholder="Role name" formControlName="name">
+          <mat-hint *ngIf="role.id === alliance.DefaultRoleId" align="start"><strong>Default role</strong> </mat-hint>
+          <mat-hint *ngIf="role.id === alliance.MasterRoleId" align="start"><strong>Master role</strong> </mat-hint>
         </mat-form-field>
       </div>
-      <div class="col text-center"><button (click)="deleteRole(role.id)" mat-raised-button color="warn">Delete</button></div>
-      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
+      <div class="col text-center" matTooltip="Master and default roles can't be deleted" [matTooltipDisabled]="role.id !== alliance.DefaultRoleId && role.id !== alliance.MasterRoleId"><button (click)="deleteRole(role.id)" mat-raised-button color="warn" [disabled]="role.id === alliance.DefaultRoleId || role.id === alliance.MasterRoleId">Delete</button></div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions" matTooltip="Can't change master role permissions" [matTooltipDisabled]="role.id !== alliance.MasterRoleId">
         <mat-checkbox [formControlName]="permission"></mat-checkbox>
       </div>
     </div>

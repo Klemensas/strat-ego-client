@@ -88,7 +88,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     private commandService: CommandService,
     private sanitizer: DomSanitizer
   ) {
-    setTimeout(() => console.log('fuuuu'), 5000);
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
@@ -142,7 +141,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public ngAfterViewChecked() {
-    if (this.ctx && this.mapSettings.shouldDraw && this.activeTown) {
+    if (this.ctx && this.mapSettings.shouldDraw && this.activeTown && this.mapData) {
       this.drawMap(this.mapOffset);
     }
   }
@@ -158,7 +157,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   toggleSidenav(target, data) {
     this.commandService.targeting.next(data);
     this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side: 'left', name: 'command' }]});
-    console.log('toggle sidenav!');
   }
 
   public mapClick(event) {
@@ -210,7 +208,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public mapDrag(origin, event, offset) {
-    console.log('sup drag', origin, event.offsetX, event.offsetY, offset);
     const difference = {
       x: origin.x - (event.offsetX || event.touches[0].pageX - event.touches[0].target.offsetLeft),
       y: origin.y - (event.offsetY || event.touches[0].pageY - event.touches[0].target.offsetTop)
