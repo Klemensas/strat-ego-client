@@ -1,93 +1,109 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/filter';
+import { Store, Action } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
-import { Store } from '@ngrx/store';
+import { map, withLatestFrom, filter } from 'rxjs/operators';
 
-import { ActionWithPayload } from '../util';
 import { Town } from './town.model';
-import { getActiveTown } from './town.selectors';
-import { TownActions } from './town.actions';
-import { PlayerActions } from '../player/player.actions';
-import { StoreState } from '../';
+import {
+  TownActions,
+  TownActionTypes,
+  SetActiveTown,
+  SetPlayerTowns,
+  UpdateEvent,
+  Update,
+  ChangeName,
+  Recruit,
+  SendTroops,
+  ScheduleUpdate,
+  UpgradeBuilding
+} from './town.actions';
+import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
+import { GameModuleState, getActiveTown } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { availableResources } from '../../game/utils';
-import { getActiveWorld } from 'app/store/world/world.selectors';
-import { WorldData } from 'app/store/world/world.model';
+import { getActiveWorld, State } from '../../reducers';
+import { WorldData } from '../../world/world.model';
 
 @Injectable()
 export class TownEffects {
   public townTimeouts = {};
 
   @Effect()
-  public setActiveTown$: Observable<ActionWithPayload> = this.actions$
-    .ofType(TownActions.SET_PLAYER_TOWNS)
-    .map(toPayload)
-    .withLatestFrom(this.store)
-    .filter(([{ towns }, store]) => (towns.length && !store.town.activeTown) || !towns.length)
-    .map(([{ towns }, store]) => ({
-      type: TownActions.SET_ACTIVE_TOWN,
-      payload: towns.length ? towns[0].id : null
-    }));
+  public setActiveTown$: Observable<Action> = this.actions$.pipe(
+    ofType<SetPlayerTowns>(TownActionTypes.SetPlayerTowns),
+    map((action) => action.payload),
+    withLatestFrom(this.store),
+    filter(([{ towns }, store]) => (towns.length && !store.game.town.activeTown) || !towns.length),
+    map(([{ towns }, store]) => new SetActiveTown(towns.length ? towns[0].id : null))
+  );
 
   @Effect()
-  public setPlayerTowns$: Observable<ActionWithPayload> = this.actions$
-    .ofType(PlayerActions.UPDATE)
-    .map(toPayload)
-    .map((player) => player.Towns)
-    .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, TownActions.SET_PLAYER_TOWNS));
+  public setPlayerTowns$: Observable<Action> = this.actions$.pipe(
+    ofType<PlayerUpdate>(PlayerActionTypes.Update),
+    map((action) => action.payload),
+    map((player) => player.Towns),
+    withLatestFrom(this.store.select(getActiveWorld)),
+    map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, SetPlayerTowns))
+  );
 
   @Effect()
-  public townUpdateEvent$: Observable<ActionWithPayload> = this.actions$
-    .ofType(TownActions.UPDATE_EVENT)
-    .map(toPayload)
-    .withLatestFrom(this.store.select(getActiveWorld))
-    .map(([{ town, event }, world]) => this.updateAction(world, [town], TownActions.UPDATE, event.type));
-
-  @Effect({ dispatch: false })
-  public changeTownName$: Observable<any> = this.actions$
-    .ofType(TownActions.CHANGE_NAME)
-    .map(toPayload)
-    .withLatestFrom(this.store.select(getActiveTown))
-    .map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town.id }));
-
-  @Effect({ dispatch: false })
-  public upgradeBuilding$: Observable<any> = this.actions$
-    .ofType(TownActions.UPGRADE_BUILDING)
-    .map(toPayload)
-    .withLatestFrom(this.store.select(getActiveTown))
-    .map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town.id }));
-
-  @Effect({ dispatch: false })
-  public recruit$: Observable<any> = this.actions$
-    .ofType(TownActions.RECRUIT)
-    .map(toPayload)
-    .withLatestFrom(this.store.select(getActiveTown))
-    .map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town.id }));
-
-  @Effect({ dispatch: false })
-  public sendTroops$: Observable<any> = this.actions$
-    .ofType(TownActions.SEND_TROOPS)
-    .map(toPayload)
-    .withLatestFrom(this.store.select(getActiveTown))
-    .map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }));
+  public townUpdateEvent$: Observable<Action> = this.actions$.pipe(
+    ofType<UpdateEvent>(TownActionTypes.UpdateEvent),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getActiveWorld)),
+    map(([{ town, event }, world]) => this.updateAction(world, [town], Update, event.type))
+  );
 
 
   @Effect({ dispatch: false })
-  public scheduleUpdate$: Observable<any> = this.actions$
-    .ofType(TownActions.SCHEDULE_UPDATE)
-    .map(toPayload)
-    .map((id) => this.socketService.sendEvent('town:update', { town: id }));
+  public changeTownName$: Observable<any> = this.actions$.pipe(
+    ofType<ChangeName>(TownActionTypes.ChangeName),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getActiveTown)),
+    map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town.id }))
+  );
 
-  public updateAction(world, towns: Town[], type, event?): ActionWithPayload {
+  @Effect({ dispatch: false })
+  public upgradeBuilding$: Observable<any> = this.actions$.pipe(
+    ofType<UpgradeBuilding>(TownActionTypes.UpgradeBuilding),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getActiveTown)),
+    map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town.id }))
+  );
+
+  @Effect({ dispatch: false })
+  public recruit$: Observable<any> = this.actions$.pipe(
+    ofType<Recruit>(TownActionTypes.Recruit),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getActiveTown)),
+    map(([units, town]) => this.socketService.sendEvent('town:recruit', { units, town: town.id }))
+  );
+
+  @Effect({ dispatch: false })
+  public sendTroops$: Observable<any> = this.actions$.pipe(
+    ofType<SendTroops>(TownActionTypes.SendTroops),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getActiveTown)),
+    map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }))
+  );
+
+
+  @Effect({ dispatch: false })
+  public scheduleUpdate$: Observable<any> = this.actions$.pipe(
+    ofType<ScheduleUpdate>(TownActionTypes.ScheduleUpdate),
+    map((action) => action.payload),
+    map((id) => this.socketService.sendEvent('town:update', { town: id }))
+  );
+
+
+  public updateAction(world, towns: Town[], action, event?): TownActions {
     towns.forEach((town) => this.scheduleUpdate(town));
     const townPayload = towns.map((town) => {
       const fullTown = {
-        ...town,
+      ...town,
         population: this.calculatePopulation(town, world.buildingMap.farm.data),
         storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
         recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
@@ -95,13 +111,10 @@ export class TownEffects {
       fullTown.availableResources$ = availableResources(fullTown);
       return fullTown;
     });
-    return {
-      type,
-      payload: {
-        event,
-        towns: townPayload
-      }
-    };
+    return new action({
+      event,
+      towns: townPayload
+    });
   }
 
   public calculatePopulation(town: Town, farmData) {
@@ -144,14 +157,13 @@ export class TownEffects {
   }
 
   public callUpdate(id) {
-    console.info('calling update');
-    this.store.dispatch({ type: TownActions.SCHEDULE_UPDATE, payload: id });
+    this.store.dispatch(new ScheduleUpdate(id));
   }
 
   constructor(
     private actions$: Actions,
     private router: Router,
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
     private socketService: SocketService,
   ) {}
 }

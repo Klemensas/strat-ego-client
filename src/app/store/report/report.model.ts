@@ -1,6 +1,6 @@
 import { Player } from '../player/player.model';
 import { Town } from '../town/town.model';
-import { Resources } from '../world/world.model';
+import { Resources } from '../../world/world.model';
 
 export interface Haul {
   maxHaul: number;

@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import * as seedrandom from 'seedrandom';
 
 import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES, Alliance, AllianceMessage, Profile, AllianceMember } from '../../../store/alliance/alliance.model';
-import { StoreState } from '../../../store/index';
 import { AllianceActions } from '../../../store/alliance/alliance.actions';
 import { ChatActions } from '../../../store/chat/chat.actions';
 import { getChatState } from '../../../store/chat/chat.selectors';
@@ -12,6 +11,7 @@ import { OnInit } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ActionWithPayload } from '../../../store/util';
 import { Player } from '../../../store/player/player.model';
+import { GameModuleState } from '../../../store';
 
 export interface ChatMessage {
   id: number;
@@ -49,7 +49,7 @@ export class AllianceChatComponent implements OnInit {
   private progressingMessage: ChatMessage;
   private chatScrollPosition: number = null;
 
-  constructor(private store: Store<StoreState>, private actions$: Actions) {}
+  constructor(private store: Store<GameModuleState>, private actions$: Actions) {}
 
   ngOnInit() {
     this.store.select(getChatState)
@@ -63,7 +63,7 @@ export class AllianceChatComponent implements OnInit {
         if (chatState.inProgress !== this.inProgress && this.progressingMessage) {
           this.progressingMessage.saving = false;
           this.progressingMessage = null;
-          console.log('this', this.entries)
+          console.log('this', this.entries);
         }
         this.inProgress = chatState.inProgress;
       });

@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
+import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { StoreState } from '../store';
-import { AuthActions } from '../store/auth/auth.actions';
+import { AuthActions, LoginSuccess, Logout } from './auth.actions';
 import { environment } from '../../environments/environment';
+import { User } from './user/user.model';
+import { AuthModuleState } from './reducers';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,7 @@ export class AuthService {
   tokenExpirationTimeout;
   user = new BehaviorSubject(null);
 
-  constructor(private http: Http, private authHttp: AuthHttp, private router: Router, private store: Store<StoreState>) {
+  constructor(private http: Http, private authHttp: AuthHttp, private router: Router, private store: Store<AuthModuleState>) {
     this.jwtHelper = new JwtHelper();
   }
 
@@ -28,7 +30,7 @@ export class AuthService {
       return false;
     }
     // this.tokenData = this.jwtHelper.decodeToken(token);
-    this.store.dispatch({ type: AuthActions.LOGIN_SUCCESS, payload: token });
+    this.store.dispatch(new LoginSuccess(token));
   }
 
   storeToken(token) {
@@ -43,27 +45,30 @@ export class AuthService {
     localStorage.removeItem('jwt');
   }
 
-  login(data) {
-    return this.http.post(`${environment.server.auth}local`, data)
-      .map(token => token.json().token)
-      .map(token => this.storeToken(token));
+  login(data): Observable<string> {
+    return this.http.post(`${environment.server.auth}local`, data).pipe(
+      map(token => token.json().token),
+      tap(token => this.storeToken(token))
+    );
   }
 
-  register(data) {
-    return this.http.post(`${environment.server.api}users`, data)
-      .map(token => token.json().token)
-      .map(token => this.storeToken(token));
+  register(data): Observable<string> {
+    return this.http.post(`${environment.server.api}users`, data).pipe(
+      map(token => token.json().token),
+      tap(token => this.storeToken(token))
+    );
   }
 
 
   tokenExpiration() {
     console.log('token expired');
-    this.store.dispatch({ type: AuthActions.LOGOUT });
+    this.store.dispatch(new Logout());
   }
 
-  getUser(): Observable<any> {
-    return this.authHttp.get(`${environment.server.api}users/me`)
-      .map(data => data.json());
+  getUser(): Observable<User> {
+    return this.authHttp.get(`${environment.server.api}users/me`).pipe(
+      map(data => data.json())
+    );
       // .cache();
 
       // user$.subscribe(

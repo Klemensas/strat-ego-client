@@ -1,30 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
 import { of } from 'rxjs/observable/of';
+import { map, withLatestFrom, filter, first } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
 
 import { AllianceActions } from './alliance.actions';
 import { TownActions } from '../town/town.actions';
-import { StoreState } from '../';
+import { GameModuleState, getPlayerData } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { ActionWithPayload } from '../util';
-import { PlayerActions } from '../player/player.actions';
-import { getPlayerData } from '../player/player.selectors';
+import { PlayerActionTypes } from '../player/player.actions';
 import { AllianceEvent } from './alliance.model';
 
 @Injectable()
 export class Allianceffects {
   @Effect()
-  public setAllianceData$$: Observable<ActionWithPayload> = this.actions$
-    .ofType(PlayerActions.UPDATE)
-    .first()
-    .map((action: ActionWithPayload) => action.payload)
-    .map(({ AllianceId, Alliance, Invitations, AllianceRole }) => ({
+  public setAllianceData$$: Observable<ActionWithPayload> = this.actions$.pipe(
+    ofType(PlayerActionTypes.Update),
+    first(),
+    map((action: ActionWithPayload) => action.payload),
+    map(({ AllianceId, Alliance, Invitations, AllianceRole }) => ({
       type: AllianceActions.SET_DATA,
       payload: {
         AllianceId,
@@ -32,7 +29,8 @@ export class Allianceffects {
         AllianceRole,
         Invitations,
       }
-    }));
+    }))
+  );
 
   @Effect({ dispatch: false })
   public create$: Observable<any> = this.actions$
@@ -84,15 +82,16 @@ export class Allianceffects {
   // TODO: consider changing this as it's an outlier in role event.
   // The event updates all roles/members accordinly but it can't update self role as it can't identify player
   @Effect()
-  public updateSelfRole$: Observable<any> = this.actions$
-    .ofType(AllianceActions.EVENT_ROLES)
-    .map((action: ActionWithPayload) => action.payload)
-    .withLatestFrom(this.store.select(getPlayerData))
-    .filter(([payload, player]) => payload.data.updatedMember && payload.data.updatedMember.some(({ id }) => id === player.id))
-    .map(([payload, player]) => ({
+  public updateSelfRole$: Observable<any> = this.actions$.pipe(
+    ofType(AllianceActions.EVENT_ROLES),
+    map((action: ActionWithPayload) => action.payload),
+    withLatestFrom(this.store.select(getPlayerData)),
+    filter(([payload, player]) => payload.data.updatedMember && payload.data.updatedMember.some(({ id }) => id === player.id)),
+    map(([payload, player]) => ({
       type: AllianceActions.UPDATE_SELF_ROLE,
       payload: payload.data.updatedMember.find(({ id }) => id === player.id).role
-    }));
+    }))
+  );
 
   @Effect({ dispatch: false })
   public updateRolePermissions$: Observable<any> = this.actions$
@@ -131,7 +130,7 @@ export class Allianceffects {
   constructor(
     private actions$: Actions,
     private router: Router,
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([

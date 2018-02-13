@@ -1,6 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '@ngrx/store';
 
-import { StoreState } from '../';
-
-export const getChatState = (state: StoreState) => state.chat;
-export const getChatMessages = (state: StoreState) => state.chat.messages;
+export const getChatState = (state: any) => state.game.chat;
+export const getChatMessages = (state: any) => state.game.chat.messages;

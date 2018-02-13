@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { timestamp, map } from 'rxjs/operators';
 
 import { GameDataService } from '../../services/game-data.service';
 import { MapService } from '../services';
@@ -24,12 +25,13 @@ export class MovementsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.queue$ = Observable.timer(0, 1000)
-      .timestamp()
-      .map(({ timestamp }) => this.movements.map(queue => {
-        queue.timeLeft = new Date(queue.endsAt).getTime() - timestamp;
+    this.queue$ = Observable.timer(0, 1000).pipe(
+      timestamp(),
+      map((time) => this.movements.map(queue => {
+        queue.timeLeft = new Date(queue.endsAt).getTime() - time.timestamp;
         return queue;
-      }));
+      }))
+    );
     // this.gameData.data.activeWorld.subscribe(world => {
     //   // this.worldData = world;
     //   this.unitTypes  = world.units;

@@ -1,14 +1,15 @@
 import { Component, OnChanges, OnDestroy, Input  } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 
 import { GameDataService } from '../../services/game-data.service';
 import { unitData } from '../staticData';
-import { StoreState } from '../../store';
-import { Town } from 'app/store/town/town.model';
-import { WorldData, Resources } from 'app/store/world/world.model';
-import { TownActions } from 'app/store/town/town.actions';
+import { GameModuleState } from '../../store';
+import { Town } from '../../store/town/town.model';
+import { TownActions, Recruit } from '../../store/town/town.actions';
+import { WorldData, Resources } from '../../world/world.model';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -53,7 +54,7 @@ export class RecruitComponent implements OnChanges, OnDestroy {
 
   constructor(
     private gameData: GameDataService,
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
   ) {}
 
   // TODO: update resources, either listen to resource events in an interval or
@@ -61,10 +62,9 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   ngOnChanges() {
     this.unitData = this.worldData.units;
     this.hasRecruitmentQueue = !!this.town.UnitQueues.length;
-    this.town.availableResources$
-      .timestamp()
-      .take(1)
-      .subscribe(({ value, timestamp}) => {
+    this.town.availableResources$.pipe(
+      take(1)
+    ).subscribe((value) => {
         if (
           this.recruitment.resources.wood === this.recruitment.resourcesAvailable.wood &&
           this.recruitment.resources.clay === this.recruitment.resourcesAvailable.clay &&
@@ -127,6 +127,6 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   }
 
   recruit(amount, type) {
-    this.store.dispatch({ type: TownActions.RECRUIT, payload: [{ type, amount }] });
+    this.store.dispatch(new Recruit([{ type, amount }]));
   }
 }

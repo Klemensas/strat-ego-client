@@ -1,22 +1,21 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 import { MatSidenav, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { filter, map } from 'rxjs/operators';
+import { ofType } from '@ngrx/effects';
 
-import { StoreState } from '../../store';
+import { GameModuleState, getTownState, getPlayerData, getPlayerReports, getSidenavs } from '../../store';
 import { ActionWithPayload } from '../../store/util';
-import { getTownState } from '../../store/town/town.selectors';
-import { getPlayerReports, getSidenavs, getPlayerData } from '../../store/player/player.selectors';
-import { getActiveWorld } from '../../store/world/world.selectors';
 import { Town } from '../../store/town/town.model';
-import { TownState } from '../../store/town/town.state';
-import { TownActions } from '../../store/town/town.actions';
-import { PlayerActions } from '../../store/player/player.actions';
-import { AuthActions } from '../../store/auth/auth.actions';
+import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/town.actions';
+import { PlayerActions, SetSidenav, Restart } from '../../store/player/player.actions';
 import { getChatMessages } from '../../store/chat/chat.selectors';
 import { getPlayerAlliance } from '../../store/alliance/alliance.selectors';
+import { Logout } from '../../auth/auth.actions';
+import { getActiveWorld } from '../../reducers';
 
 @Component({
   selector: 'game-container',
@@ -29,7 +28,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   public townList: Town[];
   public activeTown: Town;
-  public noTowns$: Observable<boolean>;
   public canRecruit: boolean;
 
   public player$ = this.store.select(getPlayerData);
@@ -37,33 +35,35 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
+  public noTowns$ = this.townState$.pipe(
+    map((state) => !state.inProgress && !state.playerTowns.length)
+  );
   public isVisible;
   public sidenavSubscription: Subscription;
   public townStateSubscription: Subscription;
 
   constructor(
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
     private snackBar: MatSnackBar,
     private actions$: Actions,
   ) {}
 
   ngOnInit() {
-    this.townStateSubscription = this.townState$.subscribe((townState: TownState) => {
+    this.townStateSubscription = this.townState$.subscribe((townState) => {
       this.townList = townState.playerTowns;
       this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
       this.canRecruit = this.activeTown && !!this.activeTown.buildings.barracks.level;
     });
-    this.sidenavSubscription = this.store.select(getSidenavs)
-      .filter(() => this.sidenavLeft && this.sidenavRight)
+    this.sidenavSubscription = this.store.select(getSidenavs).pipe(
+      filter(() => this.sidenavLeft && this.sidenavRight)
+    )
       .subscribe(sidenavs => this.updateSidenavs(sidenavs));
 
-    this.actions$.ofType(TownActions.UPDATE_EVENT)
-      .map(toPayload)
-      .map(({ town, event }) => event.type)
-      .subscribe((event) => this.handleEvent(event));
-
-    this.noTowns$ = this.actions$.ofType(TownActions.SET_PLAYER_TOWNS)
-      .map((action: ActionWithPayload) => !action.payload.towns.length);
+    this.actions$.pipe(
+      ofType(TownActionTypes.UpdateEvent),
+      map((action: ActionWithPayload) => action.payload),
+      map(({ town, event }) => event.type)
+    ).subscribe((event) => this.handleEvent(event));
   }
 
   updateSidenavs(sidenavs) {
@@ -83,7 +83,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   sidenavToggle(side, name) {
-    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side, name }]});
+    this.store.dispatch(new SetSidenav([{ side, name }]));
   }
 
   ngOnDestroy() {
@@ -93,15 +93,15 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.store.dispatch({ type: AuthActions.LOGOUT });
+    this.store.dispatch(new Logout());
   }
 
   selectTown(townId: number) {
-    this.store.dispatch({ type: TownActions.SET_ACTIVE_TOWN, payload: townId });
+    this.store.dispatch(new SetActiveTown(townId));
   }
 
   restart() {
-    this.store.dispatch({ type: PlayerActions.RESTART });
+    this.store.dispatch(new Restart());
   }
 
   private handleEvent(event) {

@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/operator/cache';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { WorldData } from '../world/world.model';
+import { map } from 'rxjs/operators';
 
 // TODO: split this service into world and player services
 
@@ -17,9 +19,8 @@ export class GameDataService {
 
   constructor(private http: Http, private authHttp: AuthHttp) {}
 
-  getActiveWorlds() {
-    return this.http.get(`${environment.server.api}world`)
-      .map(t => t.json());
+  getActiveWorlds(): Observable<WorldData[]> {
+    return this.http.get(`${environment.server.api}world`).pipe(map(t => t.json()));
   }
 // .cache();
       // .map(this.mapBuildings)

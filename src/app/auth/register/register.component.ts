@@ -4,10 +4,9 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
-import { StoreState } from '../../store';
-import { getUserState } from 'app/store/report/report.selectors';
-import { AuthActions } from 'app/store/auth/auth.actions';
-import { AuthState } from 'app/store/auth/auth.state';
+import { AuthModuleState, getAuthState } from '../reducers';
+import { AuthState } from '../auth.reducer';
+import { Register } from '../auth.actions';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -19,11 +18,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
   @ViewChild('loginForm') public form: NgForm;
   public userSubscription: Subscription;
 
-  constructor(private store: Store<StoreState>, private router: Router) {
+  constructor(private store: Store<AuthModuleState>, private router: Router) {
   }
 
   public ngOnInit() {
-    this.userSubscription = this.store.select(getUserState).subscribe((auth: AuthState) => {
+    this.userSubscription = this.store.select(getAuthState).subscribe((auth: AuthState) => {
       if (auth.user) {
         this.router.navigate(['/']);
         return;
@@ -44,6 +43,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(form) {
-    this.store.dispatch({ type: AuthActions.REGISTER, payload: form.value });
+    this.store.dispatch(new Register(form.value));
   }
 }

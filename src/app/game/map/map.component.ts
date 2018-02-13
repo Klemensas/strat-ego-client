@@ -13,14 +13,12 @@ import * as _ from 'lodash';
 import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
 
-import { StoreState } from '../../store';
+import { GameModuleState, getTownState } from '../../store';
 import { MapService, CommandService } from '../services';
-import { TownState } from '../../store/town/town.state';
-import { getTownState } from '../../store/town/town.selectors';
 import { getMapData } from '../../store/map/map.selectors';
 import { Town } from '../../store/town/town.model';
 import { MapActions } from '../../store/map/map.actions';
-import { PlayerActions } from '../../store/player/player.actions';
+import { PlayerActions, SetSidenav } from '../../store/player/player.actions';
 import { getPlayerAlliance } from '../../store/alliance/alliance.selectors';
 import { Alliance } from '../../store/alliance/alliance.model';
 import { Map } from '../../store/map/map.model';
@@ -84,7 +82,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   constructor(
     private mapService: MapService,
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
     private commandService: CommandService,
     private sanitizer: DomSanitizer
   ) {
@@ -156,7 +154,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   toggleSidenav(target, data) {
     this.commandService.targeting.next(data);
-    this.store.dispatch({ type: PlayerActions.SET_SIDENAV, payload: [{ side: 'left', name: 'command' }]});
+    this.store.dispatch(new SetSidenav([{ side: 'left', name: 'command' }]));
   }
 
   public mapClick(event) {

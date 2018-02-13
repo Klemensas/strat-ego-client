@@ -4,7 +4,6 @@
       <strong>{{ town.name }}</strong>
       <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
       <button (click)="changeName(nameChange, town.name)">Save</button>
-
       <town-loyalty *ngIf="town.loyalty !== 100" [town]="town" [loyaltyRegeneration]="(worldData$ | async)?.world.loyaltyRegeneration"></town-loyalty>
     </div>
   </div>

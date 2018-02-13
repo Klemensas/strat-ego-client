@@ -1,13 +1,32 @@
-import { ActionReducer } from '@ngrx/store';
+import { Town, TownActionState } from './town.model';
+import { TownActions, TownActionTypes } from './town.actions';
 
-import { ActionWithPayload } from '../util';
-import { TownDefaultActionState } from './town.model';
-import { TownState, initialTownState } from './town.state';
-import { TownActions } from './town.actions';
+export interface TownState {
+  inProgress: boolean;
+  activeTown: number;
+  playerTowns: Town[];
+}
 
-export const TownReducer: ActionReducer<TownState> = (state = initialTownState, action: ActionWithPayload) => {
+export const initialState: TownState = {
+  inProgress: true,
+  activeTown: null,
+  playerTowns: [],
+};
+
+export const TownDefaultActionState: TownActionState = {
+  build: false,
+  name: false,
+  movement: false,
+  recruit: false,
+};
+
+
+export function reducer(
+  state = initialState,
+  action: TownActions
+): TownState {
   switch (action.type) {
-    case TownActions.UPDATE: {
+    case TownActionTypes.Update: {
       const playerTowns = [ ...state.playerTowns];
       action.payload.towns.forEach((town) => {
         const currentTown = playerTowns.findIndex(t => t.id === town.id);
@@ -17,45 +36,47 @@ export const TownReducer: ActionReducer<TownState> = (state = initialTownState, 
       return { ...state, playerTowns };
     }
 
-    case TownActions.SET_PLAYER_TOWNS: {
+    case TownActionTypes.SetPlayerTowns: {
       const playerTowns = action.payload.towns.map((town) => ({
         ...town,
         _actionState: TownDefaultActionState,
       }));
-      return { ...state, playerTowns };
+      return { ...state, playerTowns, inProgress: false };
     }
 
-    case TownActions.SET_ACTIVE_TOWN:
+    case TownActionTypes.SetActiveTown:
       return { ...state, activeTown: action.payload };
 
-    case TownActions.RECRUIT: {
+    case TownActionTypes.Recruit: {
       const playerTowns = [...state.playerTowns];
       const recruitingTown = playerTowns.findIndex(t => t.id === state.activeTown);
       playerTowns[recruitingTown]._actionState.recruit = true;
       return { ...state, playerTowns };
     }
 
-    case TownActions.RECRUIT: {
+    case TownActionTypes.Recruit: {
       const playerTowns = [...state.playerTowns];
       const recruitingTown = playerTowns.findIndex(t => t.id === state.activeTown);
       playerTowns[recruitingTown]._actionState.recruit = true;
       return { ...state, playerTowns };
     }
 
-    case TownActions.SEND_TROOPS: {
+    case TownActionTypes.SendTroops: {
       const playerTowns = [...state.playerTowns];
       const recruitingTown = playerTowns.findIndex(t => t.id === state.activeTown);
       playerTowns[recruitingTown]._actionState.movement = true;
       return { ...state, playerTowns };
     }
 
-    case TownActions.SET_PLAYER_TOWNS:
-    case TownActions.UPDATE_EVENT:
-    case TownActions.RECRUIT:
-    case TownActions.UPGRADE_BUILDING:
-    case TownActions.CHANGE_NAME:
+    case TownActionTypes.UpdateEvent:
+    case TownActionTypes.Recruit:
+    case TownActionTypes.UpgradeBuilding:
+    case TownActionTypes.ChangeName:
     default: {
       return state;
     }
   }
-};
+}
+
+export const getPlayerTowns = (state: TownState) => state.playerTowns;
+export const getActiveTown = (state: TownState) => state.playerTowns.find((town) => town.id === state.activeTown);

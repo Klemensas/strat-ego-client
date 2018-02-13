@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
-import { User } from '../user/user.model';
-import { Resources } from '../world/world.model';
 import { Report } from '../report/report.model';
+import { Resources } from '../../world/world.model';
 
 export interface TownActionState {
   name: boolean;
@@ -17,18 +16,24 @@ export interface TownPopulation {
   available: number;
 }
 
-export const TownDefaultActionState: TownActionState = {
-  build: false,
-  name: false,
-  movement: false,
-  recruit: false,
-};
-
 export interface TownUnit {
   inside: number;
   outside: number;
   queued: number;
   amount?: number;
+}
+
+
+// From server
+export interface TownUpdatePayload {
+  event: { type: string };
+  town: Town;
+}
+
+// Formatted
+export interface TownUpdateFormatted {
+  event?: string;
+  towns: Town[];
 }
 
 export interface Town {
@@ -66,6 +71,6 @@ export interface Town {
   UnitQueues: any[];
   createdAt: string;
   updatedAt: string;
-  availableResources$: Observable<Resources>;
+  availableResources$?: Observable<Resources>;
   _actionState: TownActionState;
 }

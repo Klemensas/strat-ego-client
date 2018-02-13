@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
-import { StoreState } from '../store';
-import { getWorlds } from '../store/world/world.selectors';
-import { getUser } from 'app/store/auth/auth.selectors';
-import { AuthActions } from 'app/store/auth/auth.actions';
+import { Logout } from '../auth/auth.actions';
+import { getUser, AuthModuleState } from '../auth/reducers';
+import { getWorlds } from '../reducers';
 
 @Component({
   selector: 'home',
@@ -22,7 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public userSubScription: Subscription;
   public isCollapsed = true;
 
-  constructor(private authService: AuthService, private store: Store<StoreState>) {}
+  constructor(private authService: AuthService, private store: Store<AuthModuleState>) {}
 
   ngOnInit() {
     this.userSubscription$ = this.store.select(getUser).subscribe((user) => {
@@ -39,7 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.store.dispatch({ type: AuthActions.LOGOUT });
+    this.store.dispatch(new Logout());
   }
 
 }

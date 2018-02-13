@@ -3,13 +3,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/observable/of';
+// import 'rxjs/add/observable/timer';
 
 import { GameDataService } from '../../services/game-data.service';
 import { SocketService } from '../services';
-import { StoreState } from '../../store';
-import { getActiveTown } from 'app/store/town/town.selectors';
-import { getActiveWorld } from 'app/store/world/world.selectors';
-import { TownActions } from 'app/store/town/town.actions';
+import { GameModuleState, getActiveTown } from '../../store';
+import { TownActions, ChangeName, UpgradeBuilding } from '../../store/town/town.actions';
+import { getActiveWorld } from '../../reducers';
+import { Town } from '../../store/town/town.model';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -26,7 +29,7 @@ export class TownComponent implements OnInit, OnDestroy {
   constructor(
     private socket: SocketService,
     private gameDataService: GameDataService,
-    private store: Store<StoreState>
+    private store: Store<GameModuleState>
   ) {}
 
   public ngOnInit() {
@@ -42,12 +45,12 @@ export class TownComponent implements OnInit, OnDestroy {
 
   public changeName(targetName, oldName) {
     if (targetName.length > 3 && targetName !== oldName) {
-      this.store.dispatch({ type: TownActions.CHANGE_NAME, payload: targetName });
+      this.store.dispatch(new ChangeName(targetName));
     }
   }
 
   public upgradeBuilding(building) {
-    this.store.dispatch({ type: TownActions.UPGRADE_BUILDING, payload: building });
+    this.store.dispatch(new UpgradeBuilding(building));
   }
 
 

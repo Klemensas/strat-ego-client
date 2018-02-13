@@ -14,16 +14,16 @@ import {
   MatTooltipModule,
   MatProgressSpinnerModule,
 } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterModule } from '@angular/router/';
 
-import { SocketService, TownService, MapService, CommandService, ReportService } from './services/index';
-
+import { TownService, MapService, CommandService, ReportService } from './services/index';
+import { reducers, effects, actions } from '../store/index';
 import { gameRouting, gameComponents } from './game.routing';
-import { ResourcesComponent } from './resources';
 
-import { WorldGuard } from './services/world.guard';
-import { FullGuard } from '../full.guard';
+import { ResourcesComponent } from './resources';
 import { BuildingsComponent } from './buildings/buildings.component';
 import { BuildingQueueComponent } from './building-queue/building-queue.component';
 import { UnitsComponent } from './units/units.component';
@@ -60,7 +60,8 @@ import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance
     ReactiveFormsModule,
     gameRouting,
     NgbModule,
-    BrowserAnimationsModule,
+    StoreModule.forFeature('game', reducers),
+    EffectsModule.forFeature(effects)
   ],
   declarations: [
     gameComponents,
@@ -84,15 +85,14 @@ import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance
     AllianceOverviewComponent,
   ],
   providers: [
-    SocketService,
     TownService,
     MapService,
     CommandService,
     ReportService,
-    WorldGuard,
-    FullGuard,
     NgbTooltipConfig,
-  ]
+    ...actions
+  ],
+  exports: [RouterModule]
 })
 
 export class GameModule {

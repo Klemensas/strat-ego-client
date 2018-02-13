@@ -1,11 +1,9 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '@ngrx/store';
 
-import { StoreState } from '../';
-
-export const getAllianceState = (state: StoreState) => state.alliance;
-export const getPlayerAlliance = (state: StoreState) => state.alliance.alliances[state.alliance.playerAlliance];
-export const getPlayerInvitations = (state: StoreState) => state.alliance.invitations;
-export const getPlayerAllianceData = (state: StoreState) => ({
-  alliance: state.alliance.alliances[state.alliance.playerAlliance],
-  role: state.alliance.role,
+export const getAllianceState = (state: any) => state.game.alliance;
+export const getPlayerAlliance = (state: any) => state.game.alliance.alliances[state.game.alliance.playerAlliance];
+export const getPlayerInvitations = (state: any) => state.game.alliance.invitations;
+export const getPlayerAllianceData = (state: any) => ({
+  alliance: state.game.alliance.alliances[state.game.alliance.playerAlliance],
+  role: state.game.alliance.role,
 });

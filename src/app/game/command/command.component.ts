@@ -4,9 +4,9 @@ import { Store } from '@ngrx/store';
 import { GameDataService } from '../../services/game-data.service';
 import { CommandService, MapService } from '../services/';
 import { unitData } from '../staticData';
-import { StoreState } from '../../store';
-import { Town } from 'app/store/town/town.model';
-import { TownActions } from 'app/store/town/town.actions';
+import { GameModuleState } from '../../store';
+import { Town } from '../../store/town/town.model';
+import { SendTroops } from '../../store/town/town.actions';
 
 @Component({
   selector: 'command',
@@ -19,7 +19,7 @@ export class CommandComponent implements OnInit {
   // TODO: convert this to a real form with validation
   // public townUnits;
   public unitDetails = unitData;
-  public target = [];
+  public target: [number, number] = [null, null];
   public targetCoords;
   public unitsToSend = {};
   public sending = false;
@@ -31,7 +31,7 @@ export class CommandComponent implements OnInit {
     private commandService: CommandService,
     private gameData: GameDataService,
     private mapService: MapService,
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
   ) {
     this.commandService.targeting.subscribe(target => {
       this.target = target;
@@ -55,7 +55,7 @@ export class CommandComponent implements OnInit {
     }
 
     const type = isSupport ? 'support' : 'attack';
-    const units = Object.entries(form.value).filter(([unit, amount]) => !!+amount);
+    const units = (Object.entries(form.value) as [string, number][]).filter(([unit, amount]) => !!+amount);
     const validUnits = units.length ?
       units.every(([unit, amount]) => this.town.units[unit].inside >= amount) :
       false;
@@ -65,7 +65,7 @@ export class CommandComponent implements OnInit {
       return;
     }
 
-    this.store.dispatch({ type: TownActions.SEND_TROOPS, payload: { units, type, target: this.target } });
+    this.store.dispatch(new SendTroops({ units, type, target: this.target }));
   }
 
 }

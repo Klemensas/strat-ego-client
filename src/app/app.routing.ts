@@ -2,22 +2,24 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/';
-import { LoginComponent } from './auth/login/';
-import { RegisterComponent } from './auth/register/';
 import { AuthGuard } from './auth.guard';
+import { FullGuard } from './full.guard';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
   {
     path: 'manage',
     canActivate: [AuthGuard],
     data: { role: 'admin' },
     component: HomeComponent
   },
+  {
+    path: 'world/:name',
+    canActivate: [/* AuthGuard, SocketGuard, WorldGuard */ FullGuard],
+    loadChildren: 'app/game/game.module#GameModule'
+  }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);
 
-export const routedComponents = [HomeComponent, LoginComponent, RegisterComponent];
+export const routedComponents = [HomeComponent];

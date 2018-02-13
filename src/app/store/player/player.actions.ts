@@ -1,12 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
 
-@Injectable()
-export class PlayerActions {
-  public static UPDATE = '[Player] UPDATE';
-  public static SET_PROGRESS = '[Player] SET_PROGRESS';
-  public static SET_SIDENAV = '[Player] SET_SIDENAV';
-  public static UPDATE_REPORTS = '[Player] UPDATE_REPORTS';
-  public static RESTART = '[Player] RESTART';
-  // public static LOGIN_SUCCESS: string = '[Player] LOGIN Success';
-  // public static LOGIN_FAIL: string = '[Player] LOGIN Fail';
+import { Player } from './player.model';
+
+export enum PlayerActionTypes {
+  Update = '[Player] Update',
+  SetSidenav = '[Player] Set Sidenav',
+  // UpdateReports = '[Player] Update Reports',
+  Restart = '[Player] Restart',
 }
+
+export class Update implements Action {
+  readonly type = PlayerActionTypes.Update;
+
+  constructor(public payload: Player) {}
+}
+export class SetSidenav implements Action {
+  readonly type = PlayerActionTypes.SetSidenav;
+
+  constructor(public payload: { side: string, name: string }[]) {}
+}
+// export class UpdateReports implements Action {
+//   readonly type = PlayerActionTypes.UpdateReports;
+
+//   constructor(public payload:) {}
+// }
+export class Restart implements Action {
+  readonly type = PlayerActionTypes.Restart;
+}
+
+export type PlayerActions = Update |
+  SetSidenav |
+  Restart;
+

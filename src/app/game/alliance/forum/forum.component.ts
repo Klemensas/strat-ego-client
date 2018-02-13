@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Alliance, AlliancePermissions } from '../../../store/alliance/alliance.model';
 import { Store } from '@ngrx/store';
-import { StoreState } from '../../../store/index';
+import { GameModuleState } from '../../../store/index';
 import { AllianceActions } from '../../../store/alliance/alliance.actions';
 
 @Component({
@@ -16,7 +16,7 @@ export class ForumComponent implements OnInit {
   private categoryName = '';
   private categoryDesc = '';
 
-  constructor(private store: Store<StoreState>) { }
+  constructor(private store: Store<GameModuleState>) { }
 
   ngOnInit() {
   }

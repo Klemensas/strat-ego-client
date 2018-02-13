@@ -1,8 +1,6 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AuthGuard } from '../auth.guard';
-
 import { GameContainerComponent } from './game-container';
 import { TownComponent } from './town';
 import { MapComponent } from './map';
@@ -10,15 +8,12 @@ import { RecruitComponent } from './recruit/recruit.component';
 import { CommandComponent } from './command/command.component';
 import { MovementsComponent } from './movements/movements.component';
 
-import { WorldGuard } from './services/world.guard';
 import { FullGuard } from '../full.guard';
-import { SocketGuard } from './services/socket.guard';
-import { AllianceComponent } from 'app/game/alliance/alliance.component';
+import { AllianceComponent } from '../game/alliance/alliance.component';
 
 const gameRoutes: Routes = [
   {
-    path: 'world/:name',
-    canActivate: [/* AuthGuard, SocketGuard, WorldGuard */ FullGuard],
+    path: '',
     component: GameContainerComponent,
     children: [
       { path: '', redirectTo: 'town', pathMatch: 'full' },

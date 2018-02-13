@@ -1,32 +1,55 @@
-import { ActionReducer } from '@ngrx/store';
+import { PlayerActions, PlayerActionTypes } from './player.actions';
+import { Player } from './player.model';
 
-import { ActionWithPayload } from '../util';
-import { PlayerState, initialPlayerState } from './player.state';
-import { PlayerActions } from './player.actions';
-import { AllianceActions } from '../alliance/alliance.actions';
+export interface PlayerState {
+  inProgress: boolean;
+  activeTown: number;
+  playerData: Player;
+  sidenavs: {
+    left: string;
+    right: string;
+  };
+}
 
-export const PlayerReducer: ActionReducer<PlayerState> = (state = initialPlayerState, action: ActionWithPayload) => {
+export const initialState: PlayerState = {
+  inProgress: false,
+  activeTown: null,
+  playerData: null,
+  sidenavs: {
+    left: null,
+    right: null,
+  }
+};
+
+export function reducer(
+  state = initialState,
+  action: PlayerActions
+) {
   switch (action.type) {
-    case PlayerActions.SET_PROGRESS:
-      return { ...state, inProgress: true };
-
-    case PlayerActions.UPDATE:
+    case PlayerActionTypes.Update:
       return { ...state, inProgress: false, playerData: action.payload };
 
-    case PlayerActions.SET_SIDENAV: {
+    case PlayerActionTypes.SetSidenav: {
       const sidenavs = { ...state.sidenavs };
       action.payload.forEach(({ side, name }) => sidenavs[side] = name);
       return { ...state, sidenavs };
     }
 
-    case PlayerActions.UPDATE_REPORTS: {
-      const { report, side } = action.payload;
-      const playerData = { ...state.playerData, [side]: [report, ...state.playerData[side]] };
-      return { ...state, playerData };
-    }
+    // case PlayerActionTypes.Report: {
+    //   const { report, side } = action.payload;
+    //   const playerData = { ...state.playerData, [side]: [report, ...state.playerData[side]] };
+    //   return { ...state, playerData };
+    // }
 
     default: {
       return state;
     }
   }
-};
+}
+
+export const getPlayerData = (state: any) => state.playerData;
+export const getPlayerReports = (state: any) => ({
+  ReportOrigin: state.playerData.ReportOriginPlayer,
+  ReportDestination: state.playerData.ReportDestinationPlayer,
+});
+export const getSidenavs = (state: any) => state.sidenavs;

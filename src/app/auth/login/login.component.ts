@@ -4,10 +4,9 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
-import { StoreState } from '../../store';
-import { AuthState } from 'app/store/auth/auth.state';
-import { getUserState } from 'app/store/report/report.selectors';
-import { AuthActions } from 'app/store/auth/auth.actions';
+import { Login } from '../auth.actions';
+import { AuthModuleState, getAuthState } from '../reducers';
+import { AuthState } from '../auth.reducer';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -19,11 +18,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   @ViewChild('loginForm') public form: NgForm;
   public userSubscription: Subscription;
 
-  constructor(private router: Router, private store: Store<StoreState>) {
+  constructor(private router: Router, private store: Store<AuthModuleState>) {
   }
 
   public ngOnInit() {
-    this.userSubscription = this.store.select(getUserState).subscribe((auth: AuthState) => {
+    this.userSubscription = this.store.select(getAuthState).subscribe((auth: AuthState) => {
       if (auth.user) {
          this.router.navigate(['/']);
          return;
@@ -44,7 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(form) {
-    this.store.dispatch({ type: AuthActions.LOGIN, payload: form.value });
+    this.store.dispatch(new Login(form.value));
   }
 
 }

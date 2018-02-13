@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { StoreState } from '../../store';
+
 import { getPlayerInvitations, getPlayerAllianceData } from '../../store/alliance/alliance.selectors';
 import { AllianceActions } from '../../store/alliance/alliance.actions';
 import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES } from '../../store/alliance/alliance.model';
+import { GameModuleState } from '../../store';
 
 @Component({
   selector: 'alliance',
@@ -21,7 +22,7 @@ export class AllianceComponent implements OnInit {
   public invitations$ = this.store.select(getPlayerInvitations);
   public allianceData$ = this.store.select(getPlayerAllianceData);
 
-  constructor(private store: Store<StoreState>, private formBuilder: FormBuilder) { }
+  constructor(private store: Store<GameModuleState>, private formBuilder: FormBuilder) { }
 
   ngOnInit() {}
 

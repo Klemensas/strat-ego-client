@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/timestamp';
+import { timestamp, map } from 'rxjs/operators';
 
 import { buildingData } from '../staticData';
 
@@ -17,12 +16,13 @@ export class BuildingQueueComponent implements OnInit, OnChanges {
   public buildingDetails = buildingData;
 
   public ngOnInit() {
-    this.queue$ = Observable.timer(0, 1000)
-      .timestamp()
-      .map(({ timestamp }) => this.buildingQueue.map((queue) => ({
+    this.queue$ = Observable.timer(0, 1000).pipe(
+      timestamp(),
+      map((time) => this.buildingQueue.map((queue) => ({
         ...queue,
-        timeLeft: new Date(queue.endsAt).getTime() - timestamp,
-      })));
+        timeLeft: new Date(queue.endsAt).getTime() - time.timestamp,
+      })))
+    );
   }
 
   public ngOnChanges(changes) {

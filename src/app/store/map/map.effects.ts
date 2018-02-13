@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
@@ -7,7 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { MapActions } from './map.actions';
-import { StoreState } from '../';
+import { GameModuleState } from '../';
 import { SocketService } from '../../game/services';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class MapEffects {
 
   constructor(
     private actions$: Actions,
-    private store: Store<StoreState>,
+    private store: Store<GameModuleState>,
     private socketService: SocketService,
   ) {}
 }

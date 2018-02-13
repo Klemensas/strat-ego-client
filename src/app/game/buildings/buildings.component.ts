@@ -1,11 +1,11 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/takeLast';
+import { timestamp, take } from 'rxjs/operators';
 
 import { resourceTime, availableResources } from '../utils';
 import { buildingData } from '../staticData';
+import { Town } from '../../store/town/town.model';
 
 @Component({
   selector: 'buildings',
@@ -13,7 +13,7 @@ import { buildingData } from '../staticData';
   styleUrls: ['./buildings.component.scss'],
 })
 export class BuildingsComponent implements OnChanges {
-  @Input() public town;
+  @Input() public town: Town;
   @Input() public worldData;
   @Output() public upgradeBuilding: EventEmitter<any> = new EventEmitter();
 
@@ -22,11 +22,10 @@ export class BuildingsComponent implements OnChanges {
   public updateAvailability$: Subscription;
 
   public ngOnChanges(changes?) {
-    this.town.availableResources$
-      .timestamp()
-      .take(1)
-      .subscribe(({ value, timestamp }) => {
-        this.buildings = Object.entries(this.town.buildings).map(([name, building]) => {
+    this.town.availableResources$.pipe(
+      take(1)
+    ).subscribe((value) => {
+      this.buildings = Object.entries(this.town.buildings).map(([name, building]) => {
           const next = building.queued || building.level;
           const targetBuilding = this.worldData.buildingMap[name];
           const requirements = targetBuilding.requirements;
