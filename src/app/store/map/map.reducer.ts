@@ -1,12 +1,24 @@
-import { ActionReducer } from '@ngrx/store';
+import { Map } from './map.model';
+import { MapActions, MapActionTypes } from './map.actions';
 
-import { ActionWithPayload } from '../util';
-import { MapState, initialMapState } from './map.state';
-import { MapActions } from './map.actions';
+export interface MapState {
+  inProgress: boolean;
+  activeTown: number;
+  mapData: Map;
+}
 
-export const MapReducer: ActionReducer<MapState> = (state = initialMapState, action: ActionWithPayload) => {
+export const initialState: MapState = {
+  inProgress: false,
+  activeTown: null,
+  mapData: null
+};
+
+export function reducer(
+  state = initialState,
+  action: MapActions
+): MapState {
   switch (action.type) {
-    case MapActions.UPDATE:
+    case MapActionTypes.Update:
       return { ...state, mapData: action.payload };
 
     default: {
@@ -14,3 +26,5 @@ export const MapReducer: ActionReducer<MapState> = (state = initialMapState, act
     }
   }
 };
+
+export const getMapData = (state: MapState) => state.mapData;

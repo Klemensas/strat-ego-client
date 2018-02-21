@@ -22,9 +22,9 @@ export class ForumComponent implements OnInit {
   }
 
   createCategory() {
-    this.store.dispatch({ type: AllianceActions.CREATE_FORUM_CATEGORY, payload: {
-      name: this.categoryName,
-      description: this.categoryDesc
-    } })
+    // this.store.dispatch({ type: AllianceActions.CREATE_FORUM_CATEGORY, payload: {
+    //   name: this.categoryName,
+    //   description: this.categoryDesc
+    // } })
   }
 }

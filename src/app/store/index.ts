@@ -1,22 +1,9 @@
 import { environment } from '../../environments/environment';
-import { MapState } from './map/map.state';
 import * as player from './player/player.reducer';
 import * as town from './town/town.reducer';
-import { MapReducer } from './map/map.reducer';
-import { PlayerActions } from './player/player.actions';
-import { TownActions } from './town/town.actions';
-import { MapActions } from './map/map.actions';
-import { PlayerEffects } from './player/player.effects';
-import { TownEffects } from './town/town.effects';
-import { MapEffects } from './map/map.effects';
-import { AllianceState } from './alliance/alliance.state';
-import { AllianceReducer } from './alliance/alliance.reducer';
-import { AllianceActions } from './alliance/alliance.actions';
-import { Allianceffects } from './alliance/alliance.effects';
-import { ChatState } from './chat/chat.state';
-import { ChatReducer } from './chat/chat.reducer';
-import { ChatActions } from './chat/chat.actions';
-import { ChatEffects } from './chat/chat.effects';
+import * as alliance from './alliance/alliance.reducer';
+import * as chat from './chat/chat.reducer';
+import * as map from './map/map.reducer';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 // import * as auth from './auth';
 // import * as world from './world';
@@ -26,10 +13,10 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface State {
   player: player.PlayerState;
-  alliance: AllianceState;
-  chat: ChatState;
+  alliance: alliance.AllianceState;
   town: town.TownState;
-  map: MapState;
+  chat: chat.ChatState;
+  map: map.MapState;
 }
 
 export interface GameModuleState {
@@ -38,23 +25,11 @@ export interface GameModuleState {
 
 export const reducers = {
   player: player.reducer,
-  alliance: AllianceReducer,
-  chat: ChatReducer,
+  alliance: alliance.reducer,
+  chat: chat.reducer,
   town: town.reducer,
-  map: MapReducer,
+  map: map.reducer,
 };
-export const actions = [
-  AllianceActions,
-  ChatActions,
-  MapActions,
-];
-export const effects = [
-  PlayerEffects,
-  Allianceffects,
-  ChatEffects,
-  TownEffects,
-  MapEffects,
-];
 
 export const getState = createFeatureSelector<State>('game');
 
@@ -85,3 +60,42 @@ export const getSidenavs = createSelector(
   getPlayerState,
   player.getSidenavs
 );
+
+// Alliance selectors
+export const getAllianceState = createSelector(
+  getState,
+  (state: State) => state.alliance
+);
+export const getPlayerAlliance = createSelector(
+  getAllianceState,
+  alliance.getPlayerAlliance
+);
+export const getPlayerInvitations = createSelector(
+  getAllianceState,
+  alliance.getPlayerInvitations
+);
+export const getPlayerAllianceData = createSelector(
+  getAllianceState,
+  alliance.getPlayerAllianceData
+);
+
+// Chat selectors
+export const getChatState = createSelector(
+  getState,
+  (state: State) => state.chat
+);
+export const getChatMessages = createSelector(
+  getChatState,
+  chat.getChatMessages
+);
+
+// Map selectors
+export const getMapState = createSelector(
+  getState,
+  (state: State) => state.map
+);
+export const getMapData = createSelector(
+  getMapState,
+  map.getMapData
+);
+

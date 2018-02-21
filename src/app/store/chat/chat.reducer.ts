@@ -1,90 +1,48 @@
-import { ActionReducer } from '@ngrx/store';
+import { ChatActions, ChatActionTypes } from './chat.actions';
+import { AllianceActions, AllianceActionTypes } from '../alliance/alliance.actions';
 
-import { ActionWithPayload } from '../util';
-import { ChatState, initialChatState } from './chat.state';
-import { ChatActions } from './chat.actions';
-import { AllianceActions } from '../alliance/alliance.actions';
+import { AllianceMessage } from '../alliance/alliance.model';
 
-export const ChatReducer: ActionReducer<ChatState> = (state = initialChatState, action: ActionWithPayload) => {
+export interface ChatState {
+  messages: AllianceMessage[];
+  inProgress: boolean;
+}
+
+export const initialState: ChatState = {
+  messages: [],
+  inProgress: false,
+};
+
+
+export function reducer(
+  state = initialState,
+  action: ChatActions | AllianceActions
+) {
   switch (action.type) {
-    case AllianceActions.LEAVE_ALLIANCE_SUCCESS:
-    case AllianceActions.DESTROY_SUCCESS: {
-      return initialChatState;
+    case AllianceActionTypes.LeaveAllianceSuccess:
+    case AllianceActionTypes.DestroySuccess: {
+      return initialState;
     }
 
-    case ChatActions.UPDATE: {
+    case ChatActionTypes.Update: {
       return { ...state, messages: action.payload };
     }
 
-    case ChatActions.ADD_MESSAGE: {
+    case ChatActionTypes.AddMessage: {
       return { ...state, messages: [...state.messages, action.payload] };
     }
 
-    case ChatActions.POST_MESSAGE: {
+    case ChatActionTypes.PostMessage: {
       return { ...state, inProgress: true };
     }
 
-    case ChatActions.POST_MESSAGE_SUCCESS: {
+    case ChatActionTypes.PostMessageSuccess: {
       return { ...state, inProgress: false, messages: [...state.messages, action.payload] };
     }
-
-    // case ChatActions.UPDATE_MEMBER: {
-    //   const Chat = state.Chats[state.playerChat];
-    //   const memberIndex = Chat.Members.findIndex(({ id }) => id === action.payload.id);
-
-    //   Chat.Members[memberIndex] = action.payload;
-    //   return {
-    //     ...state,
-    //     Chats: {
-    //       ...state.Chats,
-    //       Chat
-    //     }
-    //   };
-    // }
-
-    // case ChatActions.REMOVED_MEMBER: {
-    //   const Chat = action.payload.Chat;
-    //   return {
-    //     ...state,
-    //     Chats: {
-    //       ...state.Chats,
-    //       [state.playerChat]: Chat
-    //     }
-    //   };
-    // }
-
-    // case ChatActions.LEAVE_Chat_SUCCESS: {
-    //   return {
-    //     ...state,
-    //     playerChat: null,
-    //     role: null,
-    //   };
-    // }
-
-    // case ChatActions.DESTROY_SUCCESS: {
-    //   const Chats = { ...state.Chats, [state.playerChat]: null };
-    //   return {
-    //     ...state,
-    //     ...Chats,
-    //     role: null,
-    //     playerChat: null,
-    //   };
-    // }
-
-    // case ChatActions.CREATE_FORUM_CATEGORY_SUCCESS: {
-    //   const Forum = [ ...state.Chats[state.playerChat].Forum, action.payload];
-    //   const Chat = { ...state.Chats[state.playerChat], Forum };
-    //   return {
-    //     ...state,
-    //     Chats: {
-    //       ...state.Chats,
-    //       [state.playerChat]: Chat
-    //     },
-    //   };
-    // }
-
     default: {
       return state;
     }
   }
 };
+
+export const getChatMessages = (state: ChatState) => state.messages;

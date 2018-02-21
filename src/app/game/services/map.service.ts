@@ -8,7 +8,7 @@ import { Big } from 'big.js';
 @Injectable()
 export class MapService {
   public imagesLoaded = new BehaviorSubject(false);
-  // TODO: use dynamic marker coloring
+  // TODO: use dynamic marker coloring, add markers for allies and naps
   public mapTiles = {
     image: null,
     tiles: [
@@ -28,8 +28,8 @@ export class MapService {
       abandoned: [480, 140],
       ownedActive: [600, 140],
       owned: [0, 280],
-      ally: [120, 280],
-      enemy: [240, 280],
+      member: [120, 280],
+      war: [240, 280],
     },
     size: [120, 140]
   };

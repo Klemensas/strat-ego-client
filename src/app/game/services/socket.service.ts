@@ -38,9 +38,7 @@ export class SocketService {
 
   public events = new Map();
 
-  constructor(private store: Store<GameModuleState>) {
-    console.log('i provide substinance!');
-  }
+  constructor(private store: Store<GameModuleState>) {}
 
   public registerEvents(events: SocketEvent[]) {
     // Add to already existing events
@@ -55,14 +53,9 @@ export class SocketService {
         query: `token=${token}&world=${world}`,
     });
 
-    // TODO: consider moving hookup to the appropriate component
     // TODO: many listeners vs less with metadata
-    this.socket.on('player', (payload) => this.store.dispatch(new Update(payload)));
-    this.socket.on('town', (payload) => this.store.dispatch(new UpdateEvent(payload)));
-    this.socket.on('map', (payload) => this.store.dispatch({ type: MapActions.UPDATE, payload }));
     // this.socket.on('report', (payload) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload }));
-    this.socket.on('chat:messageCreated', (payload) => this.store.dispatch({ type: ChatActions.POST_MESSAGE_SUCCESS, payload }));
-    this.socket.on('chat:newMessage', (payload) => this.store.dispatch({ type: ChatActions.ADD_MESSAGE, payload }));
+    // TODO: cleanup refactoring, remove old events code
     this.events.set('player', this.socketObservable('player'));
     this.events.set('town', this.socketObservable('town'));
     this.events.set('map', this.socketObservable('map'));

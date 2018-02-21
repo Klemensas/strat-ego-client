@@ -165,5 +165,9 @@ export class TownEffects {
     private router: Router,
     private store: Store<GameModuleState>,
     private socketService: SocketService,
-  ) {}
+  ) {
+    this.socketService.registerEvents([
+      ['town', (payload) => this.store.dispatch(new UpdateEvent(payload))]
+    ]);
+  }
 }

@@ -1,9 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Action } from "@ngrx/store";
 
-@Injectable()
-export class MapActions {
-  public static UPDATE = '[Map] UPDATE';
-  public static LOAD_MAP = '[Map] LOAD_MAP';
-  // public static LOGIN_SUCCESS: string = '[Map] LOGIN Success';
-  // public static LOGIN_FAIL: string = '[Map] LOGIN Fail';
+import { Map } from "./map.model";
+
+export enum MapActionTypes {
+  LoadMap = '[Map] LoadMap',
+  Update = '[Map] Update',
 }
+
+export class LoadMap implements Action {
+  readonly type = MapActionTypes.LoadMap;
+}
+export class Update implements Action {
+  readonly type = MapActionTypes.Update;
+
+  constructor(public payload: Map) {}
+}
+
+export type MapActions = LoadMap |
+  Update;

@@ -1,25 +1,21 @@
 import { Component, AfterContentInit, OnInit, OnDestroy, AfterViewChecked , ElementRef, Renderer, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest, throttleTime, takeWhile, filter, switchMap } from 'rxjs/operators';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/never';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/throttleTime';
+import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
 import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
 
-import { GameModuleState, getTownState } from '../../store';
+import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../../store';
 import { MapService, CommandService } from '../services';
-import { getMapData } from '../../store/map/map.selectors';
 import { Town } from '../../store/town/town.model';
-import { MapActions } from '../../store/map/map.actions';
+import { MapActions, LoadMap } from '../../store/map/map.actions';
 import { PlayerActions, SetSidenav } from '../../store/player/player.actions';
-import { getPlayerAlliance } from '../../store/alliance/alliance.selectors';
 import { Alliance } from '../../store/alliance/alliance.model';
 import { Map } from '../../store/map/map.model';
 
@@ -32,13 +28,14 @@ import { Map } from '../../store/map/map.model';
 export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit, OnDestroy  {
   @ViewChild('map') map;
   public townState$ = this.store.select(getTownState);
-  public alliance$ = this.store.select(getPlayerAlliance);
-  public mapUpdate$ = Observable.combineLatest(
-    this.store.select(getMapData),
-    this.mapService.imagesLoaded
+  public alliance$ = this.store.select(getPlayerAlliance).pipe(
+    filter((alliance) => !!alliance)
+  );
+  public mapUpdate$ = this.store.select(getMapData).pipe(
+    combineLatest(this.mapService.imagesLoaded)
   );
   public dragging = 0;
-  public alliance: Alliance;
+  public allianceDiplomacy: { [id: number]: string } = {};
   public activeTown: Town;
   public playerTowns: Town[];
   public playerTownIds: number[];
@@ -97,14 +94,16 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     const moveEvent = Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
       Observable.fromEvent(this.map.nativeElement, 'touchmove')
-    ).throttleTime(50);
-    const pausableMove = this.hoverPauser.switchMap(paused => paused ? Observable.never() : moveEvent);
+    ).pipe(throttleTime(50));
+    const pausableMove = this.hoverPauser.pipe(
+      switchMap(paused => paused ? Observable.never() : moveEvent)
+    );
     pausableMove.subscribe(data => this.onHover(data));
     this.hoverPauser.next(!this.mapData);
   }
 
   public ngOnInit() {
-    this.store.dispatch({ type: MapActions.LOAD_MAP });
+    this.store.dispatch(new LoadMap());
     this.mapSubscription = this.mapUpdate$.subscribe(([map, imagesLoaded]) => {
       if (map && imagesLoaded) {
         if (!this.mapData) {
@@ -128,7 +127,19 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       this.mapSettings.shouldDraw = !!this.mapData;
     });
     this.allianceSubscription = this.alliance$.subscribe((alliance) => {
-      this.alliance = alliance;
+      let diplomacy = alliance.DiplomacyTarget.reduce((result, { status, OriginAllianceId, type}) => {
+        if (status === 'ongoing') { result[OriginAllianceId] = type; }
+        return result;
+      }, {});
+      diplomacy = alliance.DiplomacyOrigin.reduce((result, { status, TargetAllianceId, type }) => {
+        if (status === 'ongoing') { result[TargetAllianceId] = type; }
+        return result;
+      }, diplomacy);
+
+      this.allianceDiplomacy = {
+        ...diplomacy,
+        [alliance.id]: 'member',
+      }
       this.mapSettings.shouldDraw = true;
     });
   }
@@ -194,9 +205,10 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
       Observable.fromEvent(this.map.nativeElement, 'touchmove')
+    ).pipe(
+      takeWhile(() => !!this.dragging),
+      throttleTime(10),
     )
-      .takeWhile(() => !!this.dragging)
-      .throttleTime(10)
       .subscribe(data => this.mapDrag(origin, data, initialOffset));
   }
 
@@ -376,10 +388,11 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
         // this.ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
         // this.ctx.fill();
         // this.ctx.globalCompositeOperation = 'source-over';
-      } else if (this.alliance && data.alliance && this.alliance.id === data.alliance.id) {
+      } else if (data.alliance && this.allianceDiplomacy[data.alliance.id]) {
+        const target = this.allianceDiplomacy[data.alliance.id];
         this.ctx.drawImage(
           this.mapTiles.image,
-          this.mapTiles.objectType.ally[0], this.mapTiles.objectType.ally[1],
+          this.mapTiles.objectType[target][0], this.mapTiles.objectType[target][1],
           this.mapTiles.size[0], this.mapTiles.size[1],
           +x, +y,
           +this.mapSettings.width, +this.mapSettings.height

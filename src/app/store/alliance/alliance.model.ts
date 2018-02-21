@@ -91,7 +91,7 @@ export interface AllianceMessage {
 
 export type eventType = 'diplomacy' | 'membership' | 'forum' | 'roles' | 'invitation' | 'management';
 export type eventStatus =
-  'pending' | 'started' | 'ended' |
+  'proposeAlliance' | 'cancelAlliance' | 'rejectAlliance' | 'startAlliance' | 'endAlliance' | 'proposeNap' | 'cancelNap' | 'rejectNap' | 'startNap' | 'endNap' | 'startWar' | 'endWar' |
   'join' | 'leave' | 'remove' |
   'update' |
   'update' | 'updateMember' |
@@ -103,14 +103,36 @@ export interface AllianceEvent {
   type: eventType;
   status: eventStatus;
   createdAt: Date;
-  InitiatingPlayerId?: number;
+  OriginPlayerId?: number;
   TargetPlayerId?: number;
-  InitiatingPlayer?: Profile;
+  OriginPlayer?: Profile;
   TargetPlayer?: Profile;
-  InitiatingAllianceId?: number;
+  OriginAllianceId?: number;
   TargetAllianceId?: number;
-  InitiatingAlliance?: AllianceBase;
+  OriginAlliance?: AllianceBase;
   TargetAlliance?: AllianceBase;
+}
+
+export type diplomacyType = 'alliance' | 'war' | 'nap';
+export type diplomacyStatus = 'pending' | 'ongoing';
+
+export interface AllianceDiplomacy {
+  id: number;
+  status: diplomacyStatus;
+  type: diplomacyType;
+  data?: {
+    reason: string;
+  };
+  OriginAllianceId: number;
+  OriginAlliance: AllianceBase;
+  OriginPlayerId: number;
+  OriginPlayer: Profile;
+  TargetAllianceId: number;
+  TargetAlliance: AllianceBase;
+  TargetPlayerId: number;
+  TargetPlayer: Profile;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface Alliance extends AllianceBase {
@@ -124,4 +146,18 @@ export interface Alliance extends AllianceBase {
   Forum: AllianceForumCategory[];
   Messages: AllianceMessage[];
   Events: AllianceEvent[];
+  DiplomacyOrigin: AllianceDiplomacy[];
+  DiplomacyTarget: AllianceDiplomacy[];
+}
+
+export interface AllianceRoleSocketPayload {
+  created?: AllianceRole[];
+  updated?: AllianceRole[];
+  removed?: number[];
+  updatedMember?: { id: number; role: AllianceRole }[];
+}
+
+export interface AllianceEventSocketMessage<T> {
+  event: AllianceEvent;
+  data: T;
 }

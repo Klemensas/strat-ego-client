@@ -20,7 +20,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { RouterModule } from '@angular/router/';
 
 import { TownService, MapService, CommandService, ReportService } from './services/index';
-import { reducers, effects, actions } from '../store/index';
+import { reducers } from '../store/index';
 import { gameRouting, gameComponents } from './game.routing';
 
 import { ResourcesComponent } from './resources';
@@ -41,6 +41,20 @@ import { ForumComponent } from './alliance/forum/forum.component';
 import { AllianceChatComponent } from './alliance/alliance-chat/alliance-chat.component';
 import { AllianceDiplomacyComponent } from './alliance/alliance-diplomacy/alliance-diplomacy.component';
 import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance-overview.component';
+
+import { PlayerEffects } from '../store/player/player.effects';
+import { Allianceffects } from '../store/alliance/alliance.effects';
+import { ChatEffects } from '../store/chat/chat.effects';
+import { TownEffects } from '../store/town/town.effects';
+import { MapEffects } from '../store/map/map.effects';
+
+export const effects = [
+  PlayerEffects,
+  Allianceffects,
+  ChatEffects,
+  TownEffects,
+  MapEffects,
+];
 
 @NgModule({
   imports: [
@@ -90,7 +104,6 @@ import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance
     CommandService,
     ReportService,
     NgbTooltipConfig,
-    ...actions
   ],
   exports: [RouterModule]
 })

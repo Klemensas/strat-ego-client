@@ -1,13 +1,33 @@
-import { ActionReducer } from '@ngrx/store';
+import { AllianceRole, Alliance, AllianceBase, AllianceMember, AllianceEvent, AllianceEventSocketMessage, AllianceRoleSocketPayload, Profile, AllianceDiplomacy } from './alliance.model';
+import { AllianceActionTypes, AllianceActions, EventMembership, EventInvitation, EventRoles } from './alliance.actions';
+import { Action } from '@ngrx/store';
 
-import { ActionWithPayload } from '../util';
-import { AllianceState, initialAllianceState } from './alliance.state';
-import { AllianceActions } from './alliance.actions';
-import { AllianceRole } from './alliance.model';
+export interface AllianceState {
+  playerAlliance: number;
+  alliances: {
+    [name: string]: Alliance;
+  };
+  role: AllianceRole;
+  invitations: AllianceBase[];
+  inProgress: boolean;
+  error: any;
+}
 
-export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAllianceState, action: ActionWithPayload) => {
+export const initialState: AllianceState = {
+  playerAlliance: null,
+  alliances: {},
+  role: null,
+  invitations: [],
+  inProgress: false,
+  error: null,
+};
+
+export function reducer(
+  state = initialState,
+  action: AllianceActions
+): AllianceState {
   switch (action.type) {
-    case AllianceActions.SET_DATA: {
+    case AllianceActionTypes.SetData: {
       const alliance = action.payload.AllianceId ? { [action.payload.AllianceId]: action.payload.Alliance } : {};
       const alliances = { ...state.alliances, ...alliance };
       return {
@@ -18,7 +38,7 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
         role: action.payload.AllianceRole
       };
     }
-    case AllianceActions.CREATE_SUCCESS: {
+    case AllianceActionTypes.CreateSuccess: {
       const alliances = { ...state.alliances, [action.payload.alliance.id]: action.payload.alliance };
       return {
         ...state,
@@ -28,18 +48,8 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.UPDATE: {
-      return {
-        ...state,
-        alliances: {
-          ...state.alliances,
-          [state.playerAlliance]: action.payload
-        }
-      };
-    }
-
-    case AllianceActions.REMOVED:
-    case AllianceActions.LEAVE_ALLIANCE_SUCCESS: {
+    case AllianceActionTypes.Removed:
+    case AllianceActionTypes.LeaveAllianceSuccess: {
       return {
         ...state,
         playerAlliance: null,
@@ -47,7 +57,7 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.DESTROY_SUCCESS: {
+    case AllianceActionTypes.DestroySuccess: {
       const alliances = { ...state.alliances, [state.playerAlliance]: null };
       return {
         ...state,
@@ -57,32 +67,22 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.DESTROY_SUCCESS: {
-      const alliances = { ...state.alliances, [state.playerAlliance]: null };
-      return {
-        ...state,
-        ...alliances,
-        role: null,
-        playerAlliance: null,
-      };
-    }
-
-    case AllianceActions.INVITED: {
+    case AllianceActionTypes.Invited: {
       return {
         ...state,
         invitations: [...state.invitations, action.payload]
       };
     }
 
-    case AllianceActions.REJECT_INVITE_SUCCESS:
-    case AllianceActions.INVITE_CANCELED: {
+    case AllianceActionTypes.RejectInviteSuccess:
+    case AllianceActionTypes.InviteCanceled: {
       return {
         ...state,
         invitations: state.invitations.filter(({ id }) => id !== action.payload)
       };
     }
 
-    case AllianceActions.ACCEPT_INVITE_SUCCESS: {
+    case AllianceActionTypes.AcceptInviteSuccess: {
       const alliances = { ...state.alliances, [action.payload.id]: action.payload };
       const role = action.payload.DefaultRole;
       const invitations = state.invitations.filter(({ id }) => id !== action.payload.id);
@@ -95,84 +95,159 @@ export const AllianceReducer: ActionReducer<AllianceState> = (state = initialAll
       };
     }
 
-    case AllianceActions.INVITE_REJECTED: {
-      const alliance = state.alliances[state.playerAlliance];
-      const alliances = {
-        ...state.alliances,
-        [state.playerAlliance]: {
-          ...alliance,
-          Invitations: alliance.Invitations.filter(({ id }) => id !== action.payload)
-        }
-      };
-      return {
-        ...state,
-        alliances,
-      };
+    case AllianceActionTypes.CreateInviteSuccess:
+    case AllianceActionTypes.CancelInviteSuccess: {
+      return eventInvitation(action.payload, state, { inProgress: false });
     }
 
-    case AllianceActions.CREATE_FORUM_CATEGORY_SUCCESS: {
-      const Forum = [ ...state.alliances[state.playerAlliance].Forum, action.payload];
-      const alliance = { ...state.alliances[state.playerAlliance], Forum };
-      return {
-        ...state,
-        alliances: {
-          ...state.alliances,
-          [state.playerAlliance]: alliance
-        },
-      };
+    case AllianceActionTypes.EventInvitation: {
+      return eventInvitation(action.payload, state);
     }
 
-    case AllianceActions.CREATE_INVITE_SUCCESS:
-    case AllianceActions.CANCEL_INVITE_SUCCESS: {
-      return eventInvitation(action, state, { inProgress: false });
+    case AllianceActionTypes.RemoveMemberSuccess: {
+      return eventMembership(action.payload, state, { inProgress: false });
     }
 
-    case AllianceActions.EVENT_INVITATION: {
-      return eventInvitation(action, state);
+    case AllianceActionTypes.EventMembership: {
+      return eventMembership(action.payload, state);
     }
 
-    case AllianceActions.REMOVE_MEMBER_SUCCESS: {
-      return eventMembership(action, state, { inProgress: false });
+    case AllianceActionTypes.EventRoles: {
+      return eventRoles(action.payload, state);
     }
 
-    case AllianceActions.EVENT_MEMBERSHIP: {
-      return eventMembership(action, state);
-    }
-
-    case AllianceActions.EVENT_ROLES: {
-      return eventRoles(action, state);
-    }
-
-    case AllianceActions.UPDATE_SELF_ROLE: {
+    case AllianceActionTypes.UpdateSelfRole: {
       return {
         ...state,
         role: action.payload,
       };
     }
 
-    case AllianceActions.UPDATE_ROLE_PERMISSIONS_SUCCESS:
-    case AllianceActions.REMOVE_ROLE_SUCCESS:
-    case AllianceActions.UPDATE_MEMBER_ROLE_SUCCESS: {
-      console.log('really?')
-      return eventRoles(action, state, { inProgress: false });
+    case AllianceActionTypes.UpdateRolePermissionsSuccess:
+    case AllianceActionTypes.RemoveRoleSuccess:
+    case AllianceActionTypes.UpdateMemberRoleSuccess: {
+      return eventRoles(action.payload, state, { inProgress: false });
     }
 
-    case AllianceActions.UPDATE_ROLE_PERMISSIONS:
-    case AllianceActions.REMOVE_ROLE:
-    case AllianceActions.UPDATE_MEMBER_ROLE:
-    case AllianceActions.CANCEL_INVITE:
-    case AllianceActions.CREATE_INVITE: {
+    case AllianceActionTypes.EventDiplomacy: {
+      return eventDiplomacy(action.payload, state);
+    }
+
+    case AllianceActionTypes.ProposeAllianceSuccess:
+    case AllianceActionTypes.ProposeNapSuccess:
+    case AllianceActionTypes.CancelAllianceSuccess:
+    case AllianceActionTypes.CancelNapSuccess:
+    case AllianceActionTypes.RejectAllianceSuccess:
+    case AllianceActionTypes.RejectNapSuccess:
+    case AllianceActionTypes.AcceptAllianceSuccess:
+    case AllianceActionTypes.AcceptNapSuccess:
+    case AllianceActionTypes.EndAllianceSuccess:
+    case AllianceActionTypes.EndNapSuccess:
+    case AllianceActionTypes.DeclareWarSuccess: {
+      return eventDiplomacy(action.payload, state, { inProgress: false });
+    }
+
+    case AllianceActionTypes.UpdateRolePermissions:
+    case AllianceActionTypes.RemoveRole:
+    case AllianceActionTypes.UpdateMemberRole:
+    case AllianceActionTypes.CancelInvite:
+    case AllianceActionTypes.CreateInvite:
+    case AllianceActionTypes.ProposeAlliance:
+    case AllianceActionTypes.ProposeNap:
+    case AllianceActionTypes.CancelAlliance:
+    case AllianceActionTypes.CancelNap:
+    case AllianceActionTypes.RejectAlliance:
+    case AllianceActionTypes.RejectNap:
+    case AllianceActionTypes.AcceptAlliance:
+    case AllianceActionTypes.AcceptNap:
+    case AllianceActionTypes.EndAlliance:
+    case AllianceActionTypes.EndNap:
+    case AllianceActionTypes.DeclareWar: {
       return { ...state, error: null, inProgress: true };
     }
 
     default: {
       return state;
     }
+
+    // case AllianceActionTypes.Update: {
+    //   return {
+    //     ...state,
+    //     alliances: {
+    //       ...state.alliances,
+    //       [state.playerAlliance]: action.payload
+    //     }
+    //   };
+    // }
+
+    // case AllianceActionTypes.CreateForumCategorySuccess: {
+    //   const Forum = [ ...state.alliances[state.playerAlliance].Forum, action.payload];
+    //   const alliance = { ...state.alliances[state.playerAlliance], Forum };
+    //   return {
+    //     ...state,
+    //     alliances: {
+    //       ...state.alliances,
+    //       [state.playerAlliance]: alliance
+    //     },
+    //   };
+    // }
   }
 };
 
-const eventRoles = (action, state: AllianceState, stateParams = {}): AllianceState => {
-  const { created, updated, removed, updatedMember } = action.payload.data;
+export const getPlayerAlliance = (state: AllianceState) => state.alliances[state.playerAlliance];
+export const getPlayerInvitations = (state: AllianceState) => state.invitations;
+export const getPlayerAllianceData = (state: AllianceState) => ({
+  alliance: state.alliances[state.playerAlliance],
+  role: state.role,
+});
+export const getPlayerAllianceActiveDiplomacy = (state: AllianceState) => {
+  const alliance = state.alliances[state.playerAlliance];
+  return !alliance ? [] : [...alliance.DiplomacyOrigin, ...alliance.DiplomacyTarget].filter(({ status }) => status === 'ongoing');
+};
+
+
+const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | number>, state: AllianceState, stateParams = {}): AllianceState => {
+  const isJoin = payload.event.status === 'join';
+  const alliance = state.alliances[state.playerAlliance];
+  return {
+    ...state,
+    alliances: {
+      ...state.alliances,
+      [state.playerAlliance]: {
+        ...alliance,
+        Events: [payload.event, ...alliance.Events],
+        Invitations: isJoin ?
+          alliance.Invitations.filter(({ id }) => id !== (payload.data as AllianceMember).id) :
+          alliance.Invitations,
+        Members: isJoin ?
+          [payload.data, ...alliance.Members] :
+          alliance.Members.filter(({ id }) => id !== payload.data)
+      }
+    }
+  };
+};
+
+const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, state: AllianceState, stateParams = {}): AllianceState => {
+  const isCreated = payload.event.status === 'create';
+  const alliance = state.alliances[state.playerAlliance];
+  return {
+    ...state,
+    alliances: {
+      ...state.alliances,
+      [state.playerAlliance]: {
+        ...alliance,
+        Events: [payload.event, ...alliance.Events],
+        Invitations: isCreated ?
+          [payload.data, ...alliance.Invitations] :
+          alliance.Invitations.filter(({ id }) => id !== payload.data)
+      }
+    },
+    ...stateParams
+  };
+};
+
+const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayload>, state: AllianceState, stateParams = {}): AllianceState => {
+  const { created, updated, removed, updatedMember } = payload.data;
   const alliance = state.alliances[state.playerAlliance];
   let Members = [...alliance.Members];
   let Roles = [...alliance.Roles];
@@ -204,16 +279,7 @@ const eventRoles = (action, state: AllianceState, stateParams = {}): AllianceSta
       Members[memberIndex].AllianceRole = role;
     });
   }
-  console.log('wtf', state.alliances, state.playerAlliance, {
-    ...state.alliances,
-    [state.playerAlliance]: {
-      ...alliance,
-      Members,
-      Roles,
-      DefaultRole,
-      Events: [action.payload.event, ...alliance.Events],
-    }
-  });
+
   return {
     ...state,
     role: playerRole,
@@ -224,49 +290,45 @@ const eventRoles = (action, state: AllianceState, stateParams = {}): AllianceSta
         Members,
         Roles,
         DefaultRole,
-        Events: [action.payload.event, ...alliance.Events],
+        Events: [payload.event, ...alliance.Events],
       }
     }
   };
 };
 
-
-const eventMembership = (action, state: AllianceState, stateParams = {}): AllianceState => {
-  const isJoin = action.payload.event.status === 'join';
+const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | number>, state: AllianceState, stateParams = {}): AllianceState => {
+  let diplomacy: { DiplomacyTarget?: AllianceDiplomacy[]; DiplomacyOrigin?: AllianceDiplomacy[] } = {};
   const alliance = state.alliances[state.playerAlliance];
+  const hasDiplo = typeof payload.data !== 'number';
+  const isDiploStart = !hasDiplo && payload.event.status.includes('start') && !payload.event.status.includes('War');
+  if (isDiploStart) {
+    diplomacy = {
+      DiplomacyTarget: [...alliance.DiplomacyTarget],
+      DiplomacyOrigin: [...alliance.DiplomacyOrigin]
+    };
+    const target = diplomacy.DiplomacyTarget.find(({ id }) => id === payload.data) || diplomacy.DiplomacyOrigin.find(({ id }) => id === payload.data);
+    target.status = 'ongoing';
+  } else if (!hasDiplo) {
+    diplomacy = {
+      DiplomacyTarget: alliance.DiplomacyTarget.filter(({id }) => id !== payload.data),
+      DiplomacyOrigin: alliance.DiplomacyOrigin.filter(({id }) => id !== payload.data)
+    };
+  } else {
+    // TODO: shouldn't have to use as here, look into TS
+    const type = (payload.data as AllianceDiplomacy).TargetAllianceId === state.playerAlliance ? 'DiplomacyTarget' : 'DiplomacyOrigin';
+    diplomacy[type] = [payload.data as AllianceDiplomacy, ...alliance[type]];
+  }
+
+  console.log('oho', diplomacy);
   return {
     ...state,
     alliances: {
       ...state.alliances,
       [state.playerAlliance]: {
         ...alliance,
-        Events: [action.payload.event, ...alliance.Events],
-        Invitations: isJoin ?
-          alliance.Invitations.filter(({ id }) => id !== action.payload.data.id) :
-          alliance.Invitations,
-        Members: isJoin ?
-          [action.payload.data, ...alliance.Members] :
-          alliance.Members.filter(({ id }) => id !== action.payload.data)
+        ...diplomacy,
+        Events: [payload.event, ...alliance.Events],
       }
     }
   };
-};
-
-const eventInvitation = (action, state: AllianceState, stateParams = {}): AllianceState => {
-  const isCreated = action.payload.event.status === 'create';
-  const alliance = state.alliances[state.playerAlliance];
-  return {
-    ...state,
-    alliances: {
-      ...state.alliances,
-      [state.playerAlliance]: {
-        ...alliance,
-        Events: [action.payload.event, ...alliance.Events],
-        Invitations: isCreated ?
-          [action.payload.data, ...alliance.Invitations] :
-          alliance.Invitations.filter(({ id }) => id !== action.payload.data)
-      }
-    },
-    ...stateParams
-  };
-};
+}

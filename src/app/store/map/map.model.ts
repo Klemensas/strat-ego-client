@@ -9,7 +9,7 @@ export interface Map {
     };
     alliance?: {
       id: number;
-      name: string;cmd
+      name: string;
     };
   };
 }

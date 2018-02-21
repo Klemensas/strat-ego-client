@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
-import { getPlayerInvitations, getPlayerAllianceData } from '../../store/alliance/alliance.selectors';
-import { AllianceActions } from '../../store/alliance/alliance.actions';
 import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES } from '../../store/alliance/alliance.model';
-import { GameModuleState } from '../../store';
+import { GameModuleState, getPlayerInvitations, getPlayerAllianceData } from '../../store';
+import { Create, AcceptInvite, Destroy, LeaveAlliance, RejectInvite, CreateInvite, CancelInvite, UpdateMemberRole, UpdateRolePermissions, RemoveRole, RemoveMember } from '../../store/alliance/alliance.actions';
 
 @Component({
   selector: 'alliance',
@@ -28,47 +27,47 @@ export class AllianceComponent implements OnInit {
 
   createAlliance() {
     if (this.allianceName.length > 3) {
-      this.store.dispatch({ type: AllianceActions.CREATE, payload: this.allianceName });
+      this.store.dispatch(new Create(this.allianceName));
     }
   }
 
   acceptInvite(payload: number) {
-    this.store.dispatch({ type: AllianceActions.ACCEPT_INVITE, payload });
+    this.store.dispatch(new AcceptInvite(payload));
   }
 
   rejectInvite(payload: number) {
-    this.store.dispatch({ type: AllianceActions.REJECT_INVITE, payload });
+    this.store.dispatch(new RejectInvite(payload));
   }
 
   createInvite() {
-    this.store.dispatch({ type: AllianceActions.CREATE_INVITE, payload: this.inviteTarget });
+    this.store.dispatch(new CreateInvite(this.inviteTarget));
   }
 
   cancelInvite(playerId) {
-    this.store.dispatch({ type: AllianceActions.CANCEL_INVITE, payload: playerId });
+    this.store.dispatch(new CancelInvite(playerId));
   }
 
   updatePlayerRole(payload) {
-    this.store.dispatch({ type: AllianceActions.UPDATE_MEMBER_ROLE, payload });
+    this.store.dispatch(new UpdateMemberRole(payload));
   }
 
   roleUpdate(payload) {
-    this.store.dispatch({ type: AllianceActions.UPDATE_ROLE_PERMISSIONS, payload });
+    this.store.dispatch(new UpdateRolePermissions(payload));
   }
 
   roleRemove(payload) {
-    this.store.dispatch({ type: AllianceActions.REMOVE_ROLE, payload });
+    this.store.dispatch(new RemoveRole(payload));
   }
 
   removeMember(payload) {
-    this.store.dispatch({ type: AllianceActions.REMOVE_MEMBER, payload });
+    this.store.dispatch(new RemoveMember(payload));
   }
 
   destroyAlliance() {
-    this.store.dispatch({ type: AllianceActions.DESTROY });
+    this.store.dispatch(new Destroy());
   }
 
   leaveAlliance() {
-    this.store.dispatch({ type: AllianceActions.LEAVE_ALLIANCE });
+    this.store.dispatch(new LeaveAlliance());
   }
 }

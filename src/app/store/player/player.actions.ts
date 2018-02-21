@@ -2,11 +2,12 @@ import { Action } from '@ngrx/store';
 
 import { Player } from './player.model';
 
+// TODO: move sidenav to a dedicated game state
 export enum PlayerActionTypes {
   Update = '[Player] Update',
   SetSidenav = '[Player] Set Sidenav',
-  // UpdateReports = '[Player] Update Reports',
   Restart = '[Player] Restart',
+  // UpdateReports = '[Player] Update Reports',
 }
 
 export class Update implements Action {
@@ -19,14 +20,14 @@ export class SetSidenav implements Action {
 
   constructor(public payload: { side: string, name: string }[]) {}
 }
+export class Restart implements Action {
+  readonly type = PlayerActionTypes.Restart;
+}
 // export class UpdateReports implements Action {
 //   readonly type = PlayerActionTypes.UpdateReports;
 
 //   constructor(public payload:) {}
 // }
-export class Restart implements Action {
-  readonly type = PlayerActionTypes.Restart;
-}
 
 export type PlayerActions = Update |
   SetSidenav |

@@ -62,11 +62,11 @@ export class SendTroops implements Action {
 }
 
 export type TownActions = Update |
-UpdateEvent |
-ScheduleUpdate |
-SetPlayerTowns |
-SetActiveTown |
-ChangeName |
-UpgradeBuilding |
-Recruit |
-SendTroops;
+  UpdateEvent |
+  ScheduleUpdate |
+  SetPlayerTowns |
+  SetActiveTown |
+  ChangeName |
+  UpgradeBuilding |
+  Recruit |
+  SendTroops;

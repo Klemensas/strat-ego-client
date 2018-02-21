@@ -7,13 +7,11 @@ import { Observable } from 'rxjs/Observable';
 import { filter, map } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
 
-import { GameModuleState, getTownState, getPlayerData, getPlayerReports, getSidenavs } from '../../store';
+import { GameModuleState, getTownState, getPlayerData, getPlayerReports, getSidenavs, getPlayerAlliance } from '../../store';
 import { ActionWithPayload } from '../../store/util';
 import { Town } from '../../store/town/town.model';
 import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/town.actions';
 import { PlayerActions, SetSidenav, Restart } from '../../store/player/player.actions';
-import { getChatMessages } from '../../store/chat/chat.selectors';
-import { getPlayerAlliance } from '../../store/alliance/alliance.selectors';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
 

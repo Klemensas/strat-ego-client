@@ -56,7 +56,6 @@ export class EditableRolesComponent implements OnChanges {
     // Filter to only send actually changed roles
     const roleChanges = !roleArray.touched ? [] : roleArray.value.filter((role, i) => {
       const current = this.alliance.Roles[i];
-      console.log('wut', role, current)
       return role.name.toLowerCase() !== current.name.toLowerCase() ||
         (role.id !== this.alliance.MasterRoleId && this.alliancePermissions.some((perm) => role.permissions[perm] !== current.permissions[perm]));
     });

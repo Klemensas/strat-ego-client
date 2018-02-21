@@ -1,17 +1,16 @@
 import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
+import { map } from 'rxjs/operators';
 import * as seedrandom from 'seedrandom';
 
 import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES, Alliance, AllianceMessage, Profile, AllianceMember } from '../../../store/alliance/alliance.model';
-import { AllianceActions } from '../../../store/alliance/alliance.actions';
-import { ChatActions } from '../../../store/chat/chat.actions';
-import { getChatState } from '../../../store/chat/chat.selectors';
+import { ChatActions, ChatActionTypes, PostMessage, AddMessage } from '../../../store/chat/chat.actions';
 import { OnInit } from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { ActionWithPayload } from '../../../store/util';
 import { Player } from '../../../store/player/player.model';
-import { GameModuleState } from '../../../store';
+import { GameModuleState, getChatState } from '../../../store';
 
 export interface ChatMessage {
   id: number;
@@ -63,14 +62,14 @@ export class AllianceChatComponent implements OnInit {
         if (chatState.inProgress !== this.inProgress && this.progressingMessage) {
           this.progressingMessage.saving = false;
           this.progressingMessage = null;
-          console.log('this', this.entries);
         }
         this.inProgress = chatState.inProgress;
       });
 
-    this.actions$
-      .ofType(ChatActions.ADD_MESSAGE)
-      .map((action: ActionWithPayload) => action.payload)
+    this.actions$.pipe(
+      ofType<AddMessage>(ChatActionTypes.AddMessage),
+      map((action) => action.payload)
+    )
       .subscribe((message: AllianceMessage) => {
         this.chatScrollPosition = this.getScrollPosition();
         const lastEntry = this.entries[this.entries.length - 1];
@@ -87,7 +86,7 @@ export class AllianceChatComponent implements OnInit {
             createdAt: message.createdAt
           }));
         }
-        setTimeout(() => this.scrollChat(this.chatScrollPosition));
+        this.scrollChat(this.chatScrollPosition);
       });
   }
 
@@ -97,7 +96,7 @@ export class AllianceChatComponent implements OnInit {
 
     this.chatScrollPosition = this.getScrollPosition();
     this.message = '';
-    this.store.dispatch({ type: ChatActions.POST_MESSAGE, payload });
+    this.store.dispatch(new PostMessage(payload));
 
     const lastEntry = this.entries[this.entries.length - 1];
     const message = {
@@ -113,7 +112,7 @@ export class AllianceChatComponent implements OnInit {
       this.entries.push(this.formatEntry(this.player.id, { name: this.player.name }, message));
     }
     this.progressingMessage = message;
-    setTimeout(() => this.scrollChat(this.chatScrollPosition));
+    this.scrollChat(this.chatScrollPosition);
   }
 
   private formatEntries(messages: AllianceMessage[]): ChatEntry[] {
@@ -158,10 +157,12 @@ export class AllianceChatComponent implements OnInit {
   }
 
   private scrollChat(prevPosition: number, force = false) {
-    const element = this.messageContainer.nativeElement;
+    setTimeout(() => {
+      const element = this.messageContainer.nativeElement;
 
-    if (!force && prevPosition > 60) { return; }
-    element.scrollTop = element.scrollHeight;
+      if (!force && prevPosition > 60) { return; }
+      element.scrollTop = element.scrollHeight;
+    })
   }
 
   private getPlayerColor(name: string, id: number) {

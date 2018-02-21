@@ -4,31 +4,39 @@
       <div *ngFor="let event of alliance.Events" [ngSwitch]="event.type" class="col-12 my-1 py-1 px-4" style="background-color: beige;">
         <ng-container *ngSwitchCase="'invitation'">
           <ng-template [ngIf]="event.status !== 'reject'">
-              <a href="#">{{ event.TargetPlayer.name }}</a> {{ invitationStatus[event.status] }} <a href="#">{{ event.InitiatingPlayer.name }}</a>
+              <a href="#">{{ event.TargetPlayer.name }}</a> {{ invitationStatus[event.status] }} <a href="#">{{ event.OriginPlayer.name }}</a>
           </ng-template>
           <ng-template [ngIf]="event.status === 'reject'">
-            <a href="#">{{ event.InitiatingPlayer.name }}</a> {{ invitationStatus[event.status] }}
+            <a href="#">{{ event.OriginPlayer.name }}</a> {{ invitationStatus[event.status] }}
           </ng-template>
         </ng-container>
         <ng-container *ngSwitchCase="'membership'">
           <ng-template [ngIf]="event.status !== 'remove'">
-            <a href="#">{{ event.InitiatingPlayer.name }}</a> {{ membershipStatus[event.status] }}
+            <a href="#">{{ event.OriginPlayer.name }}</a> {{ membershipStatus[event.status] }}
           </ng-template>
           <ng-template [ngIf]="event.status === 'remove'">
-            <a href="#">{{ event.TargetPlayer.name }}</a> {{ membershipStatus[event.status] }} <a href="#">{{ event.InitiatingPlayer.name }}</a>
+            <a href="#">{{ event.TargetPlayer.name }}</a> {{ membershipStatus[event.status] }} <a href="#">{{ event.OriginPlayer.name }}</a>
           </ng-template>
         </ng-container>
         <ng-container *ngSwitchCase="'management'">
           <ng-template [ngIf]="event.status === 'create'">
-            <a href="#">{{ event.InitiatingPlayer.name }}</a> created the alliance
+            <a href="#">{{ event.OriginPlayer.name }}</a> created the alliance
           </ng-template>
         </ng-container>
         <ng-container *ngSwitchCase="'roles'">
           <ng-template [ngIf]="event.status === 'update'">
-            <a href="#">{{ event.InitiatingPlayer.name }}</a> updated alliance roles
+            <a href="#">{{ event.OriginPlayer.name }}</a> updated alliance roles
           </ng-template>
           <ng-template [ngIf]="event.status === 'updateMember'">
-            <a href="#">{{ event.TargetPlayer.name }}</a> role was updated by <a href="#">{{ event.InitiatingPlayer.name }}</a>
+            <a href="#">{{ event.TargetPlayer.name }}</a> role was updated by <a href="#">{{ event.OriginPlayer.name }}</a>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngSwitchCase="'diplomacy'">
+          <ng-template [ngIf]="!!event.OriginAlliance">
+            <a href="#">{{ event.OriginAlliance.name }}</a> {{ diplomacySubjectStatus[event.status] }}
+          </ng-template>
+          <ng-template [ngIf]="!event.OriginAlliance">
+            <a href="#">{{ event.OriginPlayer.name }}</a> {{ diplomacyOriginStatus[event.status] }} <a href="#">{{ event.TargetAlliance.name }}</a>
           </ng-template>
         </ng-container>
       </div>

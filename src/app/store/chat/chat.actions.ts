@@ -1,9 +1,35 @@
-import { Injectable } from '@angular/core';
+import { Action } from "@ngrx/store";
+import { AllianceMessage } from "../alliance/alliance.model";
 
-@Injectable()
-export class ChatActions {
-  public static UPDATE = '[Chat] UPDATE';
-  public static POST_MESSAGE = '[Chat] POST_MESSAGE';
-  public static POST_MESSAGE_SUCCESS = '[Chat] POST_MESSAGE_SUCCESS';
-  public static ADD_MESSAGE = '[Chat] ADD_MESSAGE';
+export enum ChatActionTypes {
+  Update = '[Chat] UPDATE',
+  PostMessage = '[Chat] Post Message',
+  PostMessageSuccess = '[Chat] Post Message Success',
+  AddMessage = '[Chat] Add Message'
 }
+
+export class Update implements Action {
+  readonly type = ChatActionTypes.Update;
+
+  constructor(public payload: AllianceMessage[]) {}
+}
+export class PostMessage implements Action {
+  readonly type = ChatActionTypes.PostMessage;
+
+  constructor(public payload: string) {}
+}
+export class PostMessageSuccess implements Action {
+  readonly type = ChatActionTypes.PostMessageSuccess;
+
+  constructor(public payload: AllianceMessage) {}
+}
+export class AddMessage implements Action {
+  readonly type = ChatActionTypes.AddMessage;
+
+  constructor(public payload: AllianceMessage) {}
+}
+
+export type ChatActions = Update |
+  PostMessage |
+  PostMessageSuccess |
+  AddMessage;

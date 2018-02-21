@@ -18,7 +18,7 @@
         </div>
       </mat-tab>
       <mat-tab label="Diplomacy">
-        <alliance-diplomacy></alliance-diplomacy>
+        <alliance-diplomacy [alliance]="alliance"></alliance-diplomacy>
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewInvites" label="Invitations">
         <div>
