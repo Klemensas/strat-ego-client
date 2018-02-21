@@ -1,0 +1,48 @@
+<form [formGroup]="rolePermissionForm" novalidate class="pt-4 mb-2" style="overflow: hidden;">
+  <div class="row pt-1" style="color: var(--light); background-color: var(--indigo)">
+    <div class="col">
+        <!-- <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polygon points="0,0 100,100 100,0"/>
+        </svg> -->
+        <div class="heading-split px-1"><strong>Role</strong></div>
+      </div>
+      <div class="col text-center"><i class="fa fa-trash"></i></div>
+      <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center"></div>
+  </div>
+  <div formArrayName="roles" class="roles roles-current">
+    <div *ngFor="let role of alliance.Roles; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+      <div class="col">
+        <mat-form-field floatLabel="never">
+          <input matInput type="text" placeholder="Role name" formControlName="name">
+          <mat-hint *ngIf="role.id === alliance.DefaultRoleId" align="start"><strong>Default role</strong> </mat-hint>
+          <mat-hint *ngIf="role.id === alliance.MasterRoleId" align="start"><strong>Master role</strong> </mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col text-center" matTooltip="Master and default roles can't be deleted" [matTooltipDisabled]="role.id !== alliance.DefaultRoleId && role.id !== alliance.MasterRoleId"><button (click)="deleteRole(role.id)" mat-raised-button color="warn" [disabled]="role.id === alliance.DefaultRoleId || role.id === alliance.MasterRoleId">Delete</button></div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions" matTooltip="Can't change master role permissions" [matTooltipDisabled]="role.id !== alliance.MasterRoleId">
+        <mat-checkbox [formControlName]="permission"></mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rolePermissionForm.controls.newRoles.length" formArrayName="newRoles" class="roles roles-new">
+    <div *ngFor="let role of rolePermissionForm.controls.newRoles.controls; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+      <div class="col">
+        <mat-form-field floatLabel="never">
+          <input matInput type="text" placeholder="Role name" formControlName="name">
+        </mat-form-field>
+      </div>
+      <div class="col text-center"><button (click)="removeRole(i)" mat-raised-button color="warn">Remove</button></div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions">
+        <mat-checkbox [formControlName]="permission"></mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="insertRole()"><i class="fa fa-plus"></i> Add Role</button>
+    </div>
+    <div class="col text-right">
+        <button type="submit" mat-raised-button color="primary" [disabled]="!rolePermissionForm.valid || !rolePermissionForm.touched" (click)="saveChanges()">Update Roles</button>
+    </div>
+  </div>
+</form>

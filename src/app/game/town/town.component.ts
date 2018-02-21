@@ -1,40 +1,60 @@
-import { Component, OnInit } from '@angular/core';
+// TODO: refactor some town elements in to simple presentation components
 
-import { SocketService, PlayerService, TownService } from '../services';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/observable/of';
+// import 'rxjs/add/observable/timer';
 
-import { Town } from '../models/Town';
+import { GameDataService } from '../../services/game-data.service';
+import { SocketService } from '../services';
+import { GameModuleState, getActiveTown } from '../../store';
+import { TownActions, ChangeName, UpgradeBuilding } from '../../store/town/town.actions';
+import { getActiveWorld } from '../../reducers';
+import { Town } from '../../store/town/town.model';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'town',
   templateUrl: './town.component.html',
   styleUrls: ['./town.component.scss'],
 })
 
-export class TownComponent implements OnInit {
-  private townObserver: Subscription;
+export class TownComponent implements OnInit, OnDestroy {
   private nameChange = '';
-  public town: Town;
+  public town$ = this.store.select(getActiveTown);
+  public worldData$ = this.store.select(getActiveWorld);
 
-  constructor(private socket: SocketService, private playerService: PlayerService, private townService: TownService) {
-  }
+  constructor(
+    private socket: SocketService,
+    private gameDataService: GameDataService,
+    private store: Store<GameModuleState>
+  ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     // Subscribe to town data updates
-    this.townObserver = this.townService.currentTown.subscribe(update => {
-      this.town = update;
-      // console.log('Town component: town updated', this.townService)
-    });
+    // this.store.select(getActiveTown).subscribe((town) => {
+    //   this.town = town as any;
+    // })
+    // this.townObserver = this.townService.currentTown.subscribe(update => {
+    //   console.log('hmm', update)
+    //   this.town = update;
+    // });
   }
 
-  changeName() {
-    if (this.nameChange.length > 3 && this.nameChange !== this.town.name) {
-      this.townService.changeName(this.nameChange);
+  public changeName(targetName, oldName) {
+    if (targetName.length > 3 && targetName !== oldName) {
+      this.store.dispatch(new ChangeName(targetName));
     }
   }
 
+  public upgradeBuilding(building) {
+    this.store.dispatch(new UpgradeBuilding(building));
+  }
+
+
   ngOnDestroy() {
-    this.townObserver.unsubscribe();
+    // this.townObserver.unsubscribe();
   }
 }

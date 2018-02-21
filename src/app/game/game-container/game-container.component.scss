@@ -1,32 +1,57 @@
-nav {
+header {
+  padding-bottom: 43px;
+}
+
+nav.navbar {
   padding: 0;
-  height: 7vh;
+  // min-height: 7vh;
+  min-height: 43px;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
   .nav-item {
     padding: 0;
     margin: 0;
+
     .nav-link {
       padding: .5rem;
       background-color: rgba(255,255,255,0);
       border-top: 3px solid transparent;
       transition: 0.25s;
+
       &:hover {
         background-color: rgba(255,255,255,0.5);
       }
+
       &.active {
         background-color: rgba(255,255,255,1);
         border-top: 3px solid #22ff00;
       }
     }
   }
+
+  .collapse.show .nav-item {
+    min-width: 40%;
+    text-align: center;
+  }
 }
 
-.overlay {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 40%;
-  background-color: white;
-  box-shadow: 0 0 1px 1px black;
-  // transform: translateX(-100%);
+.mat-sidenav-container {
+  min-height: 100vh;
+
+  .mat-sidenav {
+    background-color: white;
+    // width: 50%;
+  }
+}
+
+.game-chat {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  position: fixed;
+  bottom: 0;
+  right: 10%;
+  z-index: 1;
 }

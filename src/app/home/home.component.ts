@@ -1,43 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { GameDataService } from '../services/game-data.service';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+
+import { Logout } from '../auth/auth.actions';
+import { getUser, AuthModuleState } from '../auth/reducers';
+import { getWorlds } from '../reducers';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  private worlds;
-  private user;
-  private userSubScription: Subscription;
+export class HomeComponent implements OnInit, OnDestroy {
+  public worlds;
+  public user;
+  public userSubscription$: Subscription;
+  public worlds$ = this.store.select(getWorlds);
+  public userSubScription: Subscription;
+  public isCollapsed = true;
 
-  constructor(private authService:AuthService, private gdService:GameDataService) {
-    this.userSubScription = this.authService.user.subscribe(
-      user => {
-        this.user = user;
-      }
-    );
-    this.gdService.data.world
-      .subscribe(worlds => {
-        this.worlds = worlds;
-      });
-  }
+  constructor(private authService: AuthService, private store: Store<AuthModuleState>) {}
 
   ngOnInit() {
+    this.userSubscription$ = this.store.select(getUser).subscribe((user) => {
+      this.user = user;
+    });
   }
 
   ngOnDestroy() {
+    this.userSubscription$.unsubscribe();
   }
 
   userOnWorld(world) {
-      return this.user.UserWorlds.find(w => w._id === world._id);
+      return this.user.UserWorlds.find(w => w.id === world.id);
   }
 
   logout() {
-    this.authService.logout();
+    this.store.dispatch(new Logout());
   }
 
 }

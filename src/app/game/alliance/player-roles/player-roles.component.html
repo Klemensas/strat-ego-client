@@ -1,0 +1,32 @@
+
+<div class="pt-4 mb-2" style="overflow: hidden">
+  <div class="row" style="color: var(--light); background-color: var(--indigo)">
+    <div class="col">
+      <div class="heading-split px-1"><strong>Player</strong></div>
+    </div>
+    <div class="col text-center">
+      <strong>Role</strong>
+    </div>
+    <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center"></div>
+  </div>
+  <div class="roles roles-members">
+    <div *ngFor="let member of alliance.Members; let i = index;" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+    <div class="col d-flex align-items-center justify-content-between">
+        <span>{{ member.name }}</span>
+        <button mat-icon-button color="warn" (click)="removePlayer(member.id)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="col text-center">
+        <mat-form-field floatLabel="never">
+          <mat-select placeholder="Role" [(ngModel)]="member.AllianceRole" [compareWith]="compareRoles" (ngModelChange)="updatePlayerRole($event.id, member.id)" required>
+            <mat-option *ngFor="let role of alliance.Roles" [value]="role">{{ role.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions">
+        <mat-checkbox disabled [checked]="member.AllianceRole.permissions[permission]"></mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>

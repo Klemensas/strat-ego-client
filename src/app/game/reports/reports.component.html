@@ -1,0 +1,5 @@
+<div class="container-fluid pb-5">
+  <h2>Reports</h2>
+  <report [report]="report" [unitList]="worldData.units" *ngFor="let report of reportsMapped"></report>
+  <div *ngIf="!reportsMapped.length">There are no reports.</div>
+</div>

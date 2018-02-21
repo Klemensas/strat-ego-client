@@ -1,19 +1,33 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router} from '@angular/router';
-import { AuthService } from './auth/auth.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { AuthModuleState } from './auth/reducers';
+
+// import { AuthActions, AuthState, getUserState } from './store/auth';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private store: Store<AuthModuleState>, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot) {
-    if (this.authService.isLoggedIn()) {
-      if (!route.data['role']) {
-        return true;
-      }
-      return this.authService.hasRole(route.data['role']);
-    }
-    this.router.navigate(['login']);
-    return false;
+    const b: Promise<boolean> = new Promise((resolve) => setTimeout(() => resolve(true), 5000));
+    // return this.store.select(getUserState)
+    //   .filter(({ inProgress }) => !inProgress)
+    //   .map((d) => ({ lol: 'wut' }))
+    //   .subscribe(d => console.log('hmm', d));
+    return b;
+
+  //   return this.store.select(getUserState)
+  //     .filter(({ inProgress }) => !inProgress)
+  //     .map(({ user, token }) => {
+  //       console.log('hrllo', user, token)
+  //       const canAccess = !!user && !!token;
+  //       if (canAccess && (!route.data.role || route.data.role === user.role)) {
+  //         return true;
+  //       }
+  //       this.router.navigate(['login']);
+  //       return false;
+  //     });
   }
 }

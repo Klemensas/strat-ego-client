@@ -1,0 +1,73 @@
+<div *ngIf="allianceData$ | async as allianceData" class="p-2">
+  <div *ngIf="allianceData.alliance as alliance; else noAlliance">
+    <mat-tab-group>
+      <mat-tab label="Overview">
+        <alliance-overview [alliance]="alliance" [role]="allianceData.role" (leaveAlliance)="leaveAlliance()" (destroyAlliance)="destroyAlliance()"></alliance-overview>
+      </mat-tab>
+      <mat-tab label="Profile">
+        <div class="row">
+          <div class="col-6">
+            <h2>{{ alliance.name }}</h2>
+          </div>
+          <div class="col-6">
+            <div>Members</div>
+            <ul>
+              <li *ngFor="let member of alliance.Members">{{ member.name }}</li>
+            </ul>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Diplomacy">
+        <alliance-diplomacy [alliance]="alliance"></alliance-diplomacy>
+      </mat-tab>
+      <mat-tab *ngIf="allianceData.role?.permissions.viewInvites" label="Invitations">
+        <div>
+          <p>Invite players to expand your alliance.</p>
+          <div>
+            <input type="text" placeholder="Player name" [(ngModel)]="inviteTarget">
+            <button mat-raised-button color="primary" (click)="createInvite()">Invite</button>
+          </div>
+        </div>
+        <div *ngIf="alliance.Invitations.length; else noInvitations">
+          <span>Invited players:</span>
+          <ul>
+            <li *ngFor="let invitation of alliance.Invitations">
+              <span>{{ invitation | json }}</span>
+              <i class="fa fa-times"(click)="cancelInvite(invitation.id)"></i>
+            </li>
+          </ul>
+        </div>
+        <ng-template #noInvitations>
+          <p>No pending invitations.</p>
+        </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="allianceData.role?.permissions.viewManagement" label="Management">
+        <editable-roles [alliance]="alliance" (roleUpdate)="roleUpdate($event)" (roleRemove)="roleRemove($event)"></editable-roles>
+        <player-roles [alliance]="alliance" (playerRoleUpdate)="updatePlayerRole($event)" (playerRemove)="removeMember($event)" class="mt-4"></player-roles>
+      </mat-tab>
+      <!-- <mat-tab label="Forum">
+        <forum [alliance]="alliance" [permissions]="allianceData.role.permissions"></forum>
+      </mat-tab> -->
+    </mat-tab-group>
+  </div>
+  <ng-template #noAlliance>
+    <div *ngIf="invitations$ | async as invitations">
+      <p>You are currently not a part of any alliance.</p>
+      <div *ngIf="invitations.length">
+        <p>Here are your current invitations:</p>
+        <div *ngFor="let invite of invitations">
+          <span>{{ invite.name }}</span>
+          <span>{{ invite.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
+          <button class="btn btn-success" (click)="acceptInvite(invite.id)">Accept</button>
+          <button class="btn btn-danger" (click)="rejectInvite(invite.id)">Reject</button>
+        </div>
+        <ng-template #noInvites>You don't hanve any invitations.</ng-template>
+      </div>
+    </div>
+    <div>
+      <p>Create your own alliance:</p>
+      <input placeholder="Alliance name" type="text" [(ngModel)]="allianceName">
+      <button type="submit" class="btn btn-primary" (click)="createAlliance()">Create</button>
+    </div>
+  </ng-template>
+</div>

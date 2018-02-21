@@ -2,7 +2,8 @@
   position: relative;
   margin-left: -15px;
   width: 100vw;
-  height: 93vh;
+  height: calc(100vh - 43px);
+  overflow: hidden;
   canvas {
     width: 100%;
     height: 100%;
@@ -12,12 +13,12 @@
     user-select: none;
   }
   .town-hover {
-    height: 14vh;
+    // height: 14vh;
     padding: 8px;
     position: absolute;
     top: 0;
     left: 0;
-    width: 20vw;
+    // width: 20vw;
     background-color: pink;
     i {
       margin-right: 6px;
@@ -28,51 +29,68 @@
     top: 0;
     left: 0;
     div {
-      position: absolute;
-      border-style: solid;
-      left: 0;
-      bottom: -60px;
-      transform-origin: bottom left;
-      border-color: transparent transparent transparent rgba(0,0,255,0.75);
-      animation-fill-mode: forwards !important;
-      transform: scale(0);
     }
-    div:nth-child(1) { animation: .25s scale ease; }
-    div:nth-child(2) { animation: .25s .05s rotate60 ease; }
-    div:nth-child(3) { animation: .25s .1s rotate120 ease; }
-    div:nth-child(4) { animation: .25s .15s rotate180 ease; }
-    div:nth-child(5) { animation: .25s .2s rotate240 ease; }
-    div:nth-child(6) { animation: .25s .25s rotate300 ease; }
+    .map-icon {
+      border-radius: 50%;
+      width: 5vh;
+      height: 5vh;
+      position: absolute;
+      &.attack {
+        left: 50%;
+        top: 15%;
+        margin-left: -2.5vh;
+        background-color: red;
+      }
+      &.village {
+        left: 10%;
+        top: 45%;
+        background-color: green;
+      }
+      &.message {
+        right: 10%;
+        top: 45%;
+        background-color: yellow;
+      }
+    }
   }
 }
 
-@-webkit-keyframes scale {
-  0% { transform: scale(0); }
-  // 20% { transform: scale(0.4); }
-  100% { transform: scale(1); }
-}
-@-webkit-keyframes rotate60 {
-  0% { transform: scale(0) rotate(0); }
-  // 20% { transform: scale(0.4) rotate(0); }
-  100% { transform: scale(1) rotate(60deg); }
-}
-@-webkit-keyframes rotate120 {
-  0% { transform: scale(0) rotate(0); }
-  // 20% { transform: scale(0.4) rotate(0); }
-  100% { transform: scale(1) rotate(120deg); }
-}
-@-webkit-keyframes rotate180 {
-  0% { transform: scale(0) rotate(0); }
-  // 20% { transform: scale(0.4) rotate(0); }
-  100% { transform: scale(1) rotate(180deg); }
-}
-@-webkit-keyframes rotate240 {
-  0% { transform: scale(0) rotate(0); }
-  // 20% { transform: scale(0.4) rotate(0); }
-  100% { transform: scale(1) rotate(240deg); }
-}
-@-webkit-keyframes rotate300 {
-  0% { transform: scale(0) rotate(0); }
-  // 20% { transform: scale(0.4) rotate(0); }
-  100% { transform: scale(1) rotate(300deg); }
+.svg-hex {
+  .svg-icon {
+    font-family: FontAwesome;
+    text-anchor: middle;
+  }
+  polygon {
+    // stroke: rgb(255,255,255);
+    // opacity: 0.9;
+    stroke-width: 0;
+    // stroke-opacity: 0.9;
+  }
+  g:nth-child(1) polygon {
+    fill: rgb(255,255,255);
+  }
+  g:nth-child(2) polygon {
+    fill: rgb(235,235,235);
+    // stroke: rgb(245,245,245);
+  }
+  g:nth-child(3) polygon {
+    fill: rgb(215,215,215);
+    // stroke: rgb(235,235,235);
+  }
+  g:nth-child(4) polygon {
+    fill: rgb(195,195,195);
+    // stroke: rgb(225,225,225);
+  }
+  g:nth-child(5) polygon {
+    fill: rgb(175,175,175);
+    // stroke: rgb(215,215,215);
+  }
+  g:nth-child(6) polygon {
+    fill: rgb(155,155,155);
+    // stroke: rgb(205,205,205);
+  }
+  g:hover polygon {
+      stroke-opacity: 1;
+      opacity: 1;
+  }
 }

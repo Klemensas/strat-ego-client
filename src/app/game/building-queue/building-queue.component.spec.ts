@@ -5,7 +5,7 @@ import { BuildingQueueComponent } from './building-queue.component';
 
 describe('Component: BuildingQueue', () => {
   it('should create an instance', () => {
-    let component = new BuildingQueueComponent();
+    const component = new BuildingQueueComponent();
     expect(component).toBeTruthy();
   });
 });

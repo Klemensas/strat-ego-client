@@ -5,21 +5,23 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/operator/cache';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { WorldData } from '../world/world.model';
+import { map } from 'rxjs/operators';
 
 // TODO: split this service into world and player services
 
 @Injectable()
 export class GameDataService {
-  public data = {
-    world: this.getActiveWorlds(),
-    activeWorld: new BehaviorSubject(null)
-  };
+  // public data = {
+  //   world: this.getActiveWorlds(),
+  //   activeWorld: new BehaviorSubject(null)
+  // };
 
-  constructor(private http:Http, private authHttp:AuthHttp) {}
+  constructor(private http: Http, private authHttp: AuthHttp) {}
 
-  getActiveWorlds() {
-    return this.http.get(`${environment.server.api}world`)
-      .map(t => t.json())
+  getActiveWorlds(): Observable<WorldData[]> {
+    return this.http.get(`${environment.server.api}world`).pipe(map(t => t.json()));
+  }
 // .cache();
       // .map(this.mapBuildings)
       // .flatMap(t => {
@@ -27,19 +29,6 @@ export class GameDataService {
       //   this.token = t;
       //   return this.getUser();
       // });
-  }
-
-  mapBuildings(worlds) {
-    const data = worlds.map(world => {
-      const buildings = {};
-      world.buildingData.forEach(build => {
-        buildings[build.name] = build;
-      })
-      world.buildingData = buildings;
-      return world;
-    });
-    return data;
-  }
 
   // getWorldData(target) {
   //   return this.authHttp.get(`${API}world/${target}`)

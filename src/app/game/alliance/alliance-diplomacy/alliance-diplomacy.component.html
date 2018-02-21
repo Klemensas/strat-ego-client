@@ -1,0 +1,74 @@
+<div class="pb-3">
+  <div>Alliances:</div>
+  <div *ngFor="let ally of alliances">
+    <ng-container *ngIf="ally.OriginAllianceId === alliance.id">
+      <span>{{ ally.TargetAlliance.name }}</span>
+      <span *ngIf="ally.status === 'pending'"> pending request <mat-icon >warning</mat-icon></span>
+      <button *ngIf="ally.status === 'pending'" mat-raised-button color="warn" (click)="cancelAlliance(ally.id)">Cancel</button>
+      <button *ngIf="ally.status === 'ongoing'" mat-raised-button color="warn" (click)="endAlliance(ally.id)">End</button>
+    </ng-container>
+    <ng-container *ngIf="ally.TargetAllianceId === alliance.id">
+      <span>{{ ally.OriginAlliance.name }}</span>
+      <span *ngIf="ally.status === 'pending'"> pending request <mat-icon >warning</mat-icon></span>
+      <button *ngIf="ally.status === 'pending'" mat-raised-button color="primary" (click)="acceptAlliance(ally.id)">Accept</button>
+      <button *ngIf="ally.status === 'pending'" mat-raised-button color="warn" (click)="rejectAlliance(ally.id)">Reject</button>
+      <button *ngIf="ally.status === 'ongoing'" mat-raised-button color="warn" (click)="endAlliance(ally.id)">End</button>
+    </ng-container>
+  </div>
+  <div *ngIf="!alliances.length">None</div>
+
+  <div class="pt-3">
+    <div>Propose Alliance</div>
+    <mat-form-field floatLabel="never">
+      <input matInput type="text" placeholder="Alliance name" [(ngModel)]="allianceTargetName">
+    </mat-form-field>
+    <button mat-raised-button color="warn" (click)="proposeAlliance()" [disabled]="!allianceTargetName.length">Propose</button>
+  </div>
+</div>
+<div class="pb-3">
+  <div>Non Aggression Pacts:</div>
+  <div *ngFor="let nap of naps">
+    <ng-container *ngIf="nap.OriginAllianceId === alliance.id">
+      <span>{{ nap.TargetAlliance.name }}</span>
+      <span *ngIf="nap.status === 'pending'"> pending request <mat-icon >warning</mat-icon></span>
+      <button *ngIf="nap.status === 'pending'" mat-raised-button color="warn" (click)="cancelNap(nap.id)">Cancel</button>
+      <button *ngIf="nap.status === 'ongoing'" mat-raised-button color="warn" (click)="endNap(nap.id)">Cancel</button>
+    </ng-container>
+    <ng-container *ngIf="nap.TargetAllianceId === alliance.id">
+      <span>{{ nap.OriginAlliance.name }}</span>
+      <span *ngIf="nap.status === 'pending'"> pending request <mat-icon >warning</mat-icon></span>
+      <button *ngIf="nap.status === 'pending'" mat-raised-button color="primary" (click)="acceptNap(nap.id)">Accept</button>
+      <button *ngIf="nap.status === 'pending'" mat-raised-button color="warn" (click)="rejectNap(nap.id)">Reject</button>
+      <button *ngIf="nap.status === 'ongoing'" mat-raised-button color="warn" (click)="endNap(nap.id)">Cancel</button>
+    </ng-container>
+  </div>
+  <div *ngIf="!naps.length">None</div>
+
+  <div class="pt-3">
+    <div>Propose Non Aggression Pact</div>
+    <mat-form-field floatLabel="never">
+      <input matInput type="text" placeholder="Alliance name" [(ngModel)]="napTargetName">
+    </mat-form-field>
+    <button mat-raised-button color="warn" (click)="proposeNap()" [disabled]="!napTargetName.length">Propose</button>
+  </div>
+</div>
+<div class="pb-3">
+  <div>Wars:<div>
+  <div *ngFor="let war of wars">
+    <span>{{ war.OriginAlliance ? war.OriginAlliance.name : war.TargetAlliance.name }}</span>
+    <span>{{ war.data.reason }}</span>
+    <button mat-raised-button color="primary" (click)="negotiatePeace(war)">Negotiate peace</button>
+  </div>
+  <div *ngIf="!wars.length">None</div>
+
+  <div class="pt-3">
+    <div>Declare war</div>
+    <mat-form-field floatLabel="never">
+      <input matInput type="text" placeholder="Alliance name" [(ngModel)]="warTargetName">
+    </mat-form-field>
+    <mat-form-field floatLabel="never">
+      <input matInput type="text" placeholder="War reason" [(ngModel)]="reason">
+    </mat-form-field>
+    <button mat-raised-button color="warn" (click)="declareWar()" [disabled]="!warTargetName.length || !reason.length">Declare</button>
+  </div>
+</div>

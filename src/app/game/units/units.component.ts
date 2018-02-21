@@ -1,39 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { GameDataService } from '../../services/game-data.service'
-import { TownService } from '../services/town.service'
+import { Component, OnChanges, Input } from '@angular/core';
+
+import { TownUnit } from '../../store/town/town.model';
+import { unitData } from '../staticData';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'units',
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.scss']
 })
-export class UnitsComponent implements OnInit {
-  units;
-  constructor(private townService: TownService, private gameData: GameDataService) { }
+export class UnitsComponent implements OnChanges {
+  @Input() public units: { [name: string]: TownUnit };
+  public unitDetails = unitData;
+  public townUnits: TownUnit[] = [];
 
-  ngOnInit() {
-    // this.gameData.data.activeWorld.subscribe(world => {
-    //   this.buildingData = world.buildingData;
-    //   this.buildingDataMap = world.buildingDataMap;
-    // });
-    this.townService.currentTown.subscribe(town => {
-      this.units = this.unitArray(town.units);
-    });
-  }
-
-  unitArray(units) {
-    const list = Object.keys(units);
-    return list.reduce((array, item) => {
-      const unit = units[item];
-      if (unit.amount || unit.queued) {
-        array.push({
-          name: item,
-          amount: unit.amount,
-          queued: unit.queued
+  public ngOnChanges(changes) {
+    this.townUnits = Object.entries(this.units).reduce((result, [name, unit]) => {
+      if (unit.inside || unit.outside || unit.queued) {
+        result.push({
+          name,
+          ...unit,
+          amount: unit.outside + unit.inside,
         });
       }
-      return array;
-    }, [])
+      return result;
+    }, []);
   }
-
 }

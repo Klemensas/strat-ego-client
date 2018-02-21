@@ -1,44 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, Validators, FormControl, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs/Subscription';
+
+import { Login } from '../auth.actions';
+import { AuthModuleState, getAuthState } from '../reducers';
+import { AuthState } from '../auth.reducer';
 
 @Component({
-  selector: 'app-login',
+  // tslint:disable-next-line:component-selector
+  selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  @ViewChild('loginForm') public form: NgForm;
+  public userSubscription: Subscription;
 
-  form;
-  userModel;
-
-    // Reset the form with a new hero AND restore 'pristine' class state
-  // by toggling 'active' flag which causes the form
-  // to be removed/re-added in a tick via NgIf
-  // TODO: Workaround until NgForm has a reset method (#6822)
-  active = true;
-
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private router: Router, private store: Store<AuthModuleState>) {
   }
 
+  public ngOnInit() {
+    this.userSubscription = this.store.select(getAuthState).subscribe((auth: AuthState) => {
+      if (auth.user) {
+         this.router.navigate(['/']);
+         return;
+      }
+      if (auth.error) {
+        if (auth.error.status === 401) {
+          const errorMessage = auth.error.message || 'Unauthorized';
+          this.form.form.setErrors({ errorMessage: errorMessage });
+          return;
+        }
+        this.form.form.setErrors({ errorMessage: 'Unforseen server error.'});
+      }
+    });
+  }
 
-  ngOnInit() {
-    this.userModel = {
-      email: new FormControl('test@test.com', Validators.required),
-      password: new FormControl('default', Validators.required)
-    };
-
-    this.form = new FormGroup(this.userModel);
+  public ngOnDestroy() {
+    this.userSubscription.unsubscribe();
   }
 
   onSubmit(form) {
-     if (form.valid) {
-       this.authService.login(form.value).subscribe(
-         u => this.router.navigate(['/']),
-         err => console.error('login error', err)
-       );
-    }
+    this.store.dispatch(new Login(form.value));
   }
 
 }

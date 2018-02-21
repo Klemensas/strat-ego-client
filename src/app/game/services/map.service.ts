@@ -1,27 +1,19 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { PlayerService } from './player.service';
-
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 import * as seedrandom from 'seedrandom';
-import * as Big from 'big.js';
+import { Big } from 'big.js';
 
 @Injectable()
 export class MapService {
-  private currentMapData = {};
-  private lastUpdate = null;
-
-  private mapOffset = { x: 0, y: 0 };
-  private mapCoords = { x: 0, y: 0 };
-
-  private imageLoaded = false;
-  private mapImgeLoc = './assets/images/tiles_small.png';
-
+  public imagesLoaded = new BehaviorSubject(false);
+  // TODO: use dynamic marker coloring, add markers for allies and naps
   public mapTiles = {
     image: null,
     tiles: [
       [0, 0], [120, 0], [240, 0], [360, 0], [480, 0], [600, 0],
-      [0, 140], [120, 140], [240, 140], /*[360, 140], [480, 140], [600, 140],*/
+        [0, 140], [120, 140], [240, 140], /*[360, 140], [480, 140], [600, 140],*/
       // [0, 280], [120, 280], [240, 280], [360, 280], [480, 280], [600, 280],
       // [0, 420], [120, 420], [240, 420], [360, 420], [480, 420], [600, 420],
       // [0, 560], [120, 560], [240, 560], [360, 560], [480, 560], [600, 560],
@@ -34,23 +26,30 @@ export class MapService {
     object: [360, 140],
     objectType: {
       abandoned: [480, 140],
-      owned: [600, 140],
+      ownedActive: [600, 140],
+      owned: [0, 280],
+      member: [120, 280],
+      war: [240, 280],
     },
     size: [120, 140]
   };
-  public mapData = {};
-  public queuedPromise = [];
+  // public mapData = {};
 
-  constructor(private socket: SocketService, private playerService: PlayerService) {
+  // public queuedPromise = [];
+  // private lastUpdate = null;
+
+  private mapImgeLoc = './assets/images/tiles_small.png';
+
+  constructor(private socket: SocketService) {
     this.imgPreload(this.mapImgeLoc);
     // Test version with all available map data
-    this.socket.events.get('map').subscribe(event => {
-      this.lastUpdate = Date.now();
-      Object.assign(this.mapData, event);
-      if (this.queuedPromise.length && this.imageLoaded) {
-        this.formatMapData(this.queuedPromise.shift());
-      }
-    });
+    // this.socket.events.get('map').subscribe(event => {
+    //   this.lastUpdate = Date.now();
+    //   Object.assign(this.mapData, event);
+    //   if (this.queuedPromise.length && this.imagesLoaded) {
+    //     this.formatMapData(this.queuedPromise.shift());
+    //   }
+    // });
   }
 
   public rng(seed) {
@@ -61,47 +60,18 @@ export class MapService {
   private imgPreload(imageURL) {
     this.mapTiles.image = new Image();
     this.mapTiles.image.src = imageURL;
-    this.mapTiles.image.onload = () => {
-      this.imageLoaded = true;
-      if (this.lastUpdate && this.queuedPromise.length) {
-        this.formatMapData(this.queuedPromise.shift());
-      }
-    }
+    this.mapTiles.image.onload = () => this.imagesLoaded.next(true);
   }
 
-/*  private imgPreload(images) {
-    let loaded = 0;
-    images = Object.prototype.toString.apply(images) === '[object Array]' ? images : [images];
-    const inc = (img) => {
-      loaded += 1;
-      if (loaded === images.length) {
-        this.imagesLoaded = true;
-        if (this.lastUpdate && this.queuedPromise.length) {
-          const resolve = this.queuedPromise.shift();
-          this.formatMapData(resolve);
-        }
-      }
-    };
-    for (let i = 0; i < images.length; i++) {
-      this.images[i] = new Image();
-      this.images[i].onabort = inc;
-      this.images[i].onerror = inc;
-      this.images[i].onload = inc;
-      this.images[i].src = images[i];
-    }
-  }*/
-
-  private formatMapData(callback) {
-    callback(this.mapData);
-  }
-
-  public getMapData(coords) {
-    return new Promise((resolve, reject) => {
-      this.mapCoords = coords;
-      this.queuedPromise.push(resolve);
-      this.socket.sendEvent('map', {});
-    });
-  }
+  // public getMapData(coords) {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.lastUpdate) {
+  //       return this.formatMapData(resolve);
+  //     }
+  //     this.queuedPromise.push(resolve);
+  //     this.socket.sendEvent('map', {});
+  //   });
+  // }
 
   // Returns { x, y } pixels on the center of the coordinate
   public coordToPixel(location, settings) {
@@ -133,7 +103,6 @@ export class MapService {
     };
     // Adjust coord if near edge
     if (adjust && realOffset.y.gt(-settings.hexHeight)) {
-      console.log('adjusting coord for edge')
       coords.y = coords.y.minus(1);
       const parity = +coords.y % 2;
       realOffset.y = realOffset.y.minus(settings.aHeight);
@@ -153,11 +122,10 @@ export class MapService {
       y: realOffset.y,
       xPx: pos.x,
       yPx: pos.y
-    }
+    };
 
     function odd(coords) { // A
       const offsetGradient = offset.x.times(settings.edgeGradient);
-      // console.log('a', +offset.x, +offset.y, +settings.hexHeight, +offsetGradient, offset.y.lt(-settings.hexHeight.plus(offsetGradient)), offset.y.lt(settings.hexHeight.times(-1).plus(offsetGradient)), -settings.hexHeight.plus(offsetGradient));
       if (offset.y.lt(settings.hexHeight.minus(offsetGradient))) {
         coords.x = coords.x.minus(1);
         coords.y = coords.y.minus(1);
@@ -166,10 +134,10 @@ export class MapService {
         coords.y = coords.y.minus(1);
       }
       return coords;
-    };
+    }
 
     function even(coords) { // B
-      const offsetGradient = offset.x.times(settings.edgeGradient)
+      const offsetGradient = offset.x.times(settings.edgeGradient);
       // console.log('b', +offset.x, +offset.y, +offsetGradient, +settings.side.minus(offsetGradient));
       if (offset.x.gte(settings.radius)) {
         if (offset.y.lt(settings.side.minus(offsetGradient))) {
@@ -195,7 +163,7 @@ export class MapService {
     return {
       x, z,
       y: -x - z
-    }
+    };
   }
 
   public distanceFromCoord(start, end) {

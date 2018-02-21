@@ -1,0 +1,16 @@
+.development {
+  .done {
+    text-decoration: line-through;
+    color: green;
+  }
+  .active {
+    font-weight: 800;
+  }
+  .inactive {
+    color: rgba(100, 100, 100, 0.5);
+
+    &.progressed {
+      color: rgba(255, 0, 0, 0.5);
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { UnitsComponent } from './units.component';
 
 describe('Component: Units', () => {
   it('should create an instance', () => {
-    let component = new UnitsComponent();
+    const component = new UnitsComponent();
     expect(component).toBeTruthy();
   });
 });

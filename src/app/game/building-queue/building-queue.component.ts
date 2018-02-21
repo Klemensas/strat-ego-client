@@ -1,30 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { timestamp, map } from 'rxjs/operators';
 
-import { GameDataService } from '../../services/game-data.service';
-import { TownService } from '../services/town.service';
-
-import { Town } from '../models/Town';
+import { buildingData } from '../staticData';
 
 @Component({
   selector: 'building-queue',
   templateUrl: './building-queue.component.html',
   styleUrls: ['./building-queue.component.scss']
 })
-export class BuildingQueueComponent implements OnInit {
-  private worldData;
-  private queue;
+export class BuildingQueueComponent implements OnInit, OnChanges {
+  @Input() public buildingQueue = [];
 
-  constructor(private townService: TownService, private gameData: GameDataService) {
-    this.gameData.data.activeWorld.subscribe(world => {
-      this.worldData = world;
-      // this.buildingData = world.buildingData;
-      // this.buildingList = Object.keys(world.buildingData);
-    });
+  public queue$: Observable<any>;
+  public buildingDetails = buildingData;
+
+  public ngOnInit() {
+    this.queue$ = Observable.timer(0, 1000).pipe(
+      timestamp(),
+      map((time) => this.buildingQueue.map((queue) => ({
+        ...queue,
+        timeLeft: new Date(queue.endsAt).getTime() - time.timestamp,
+      })))
+    );
   }
 
-  ngOnInit() {
-    this.townService.currentTown.subscribe((town: Town) => {
-      this.queue = town.BuildingQueues;
-    })
+  public ngOnChanges(changes) {
+    // const time = Date.now();
+    // this.buildingQueue.map((queue) => ({
+    //   ...queue,
+    //   timeLeft:
+    // }))
   }
 }
