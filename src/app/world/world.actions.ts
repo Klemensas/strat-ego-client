@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
-
-import { WorldData } from './world.model';
+import { WorldData } from 'strat-ego-common';
 
 export enum WorldActionTypes {
   Load = '[World] Load',

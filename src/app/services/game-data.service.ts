@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { AuthHttp, JwtHelper } from 'angular2-jwt';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
+import { WorldData } from 'strat-ego-common';
 // import 'rxjs/add/operator/cache';
+
+import { environment } from '../../environments/environment';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { WorldData } from '../world/world.model';
 import { map } from 'rxjs/operators';
 
 // TODO: split this service into world and player services
