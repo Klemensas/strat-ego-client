@@ -1,10 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { ALLIANCE_PERMISSIONS, PermissionNames } from 'strat-ego-common';
 
-import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES } from '../../store/alliance/alliance.model';
 import { GameModuleState, getPlayerInvitations, getPlayerAllianceData } from '../../store';
-import { Create, AcceptInvite, Destroy, LeaveAlliance, RejectInvite, CreateInvite, CancelInvite, UpdateMemberRole, UpdateRolePermissions, RemoveRole, RemoveMember } from '../../store/alliance/alliance.actions';
+import {
+  Create,
+  AcceptInvite,
+  Destroy,
+  LeaveAlliance,
+  RejectInvite,
+  CreateInvite,
+  CancelInvite,
+  UpdateMemberRole,
+  UpdateRolePermissions,
+  RemoveRole,
+  RemoveMember
+} from '../../store/alliance/alliance.actions';
+
+export const PERMISSION_NAMES: { [name in PermissionNames]: string } = {
+  viewInvites: '<i class="fa fa-eye"></i><i class="fa fa-envelope-open-o"></i>',
+  editInvites: '<i class="fa fa-edit"></i><i class="fa fa-envelope-open-o"></i>',
+  manageForum: '<i class="fa fa-edit"></i><i class="fa fa-comments"></i>',
+  viewManagement: '<i class="fa fa-eye"></i><i class="fa fa-id-card-o"></i>',
+  manageRoles: '<i class="fa fa-edit"></i><i class="fa fa-id-badge"></i>',
+  editProfile: '<i class="fa fa-edit"></i><i class="fa fa-id-card-o"></i>',
+  manageAlliance: '<i class="fa fa-edit"></i><i class="fa fa-tasks"></i>',
+};
+
+// TODO: add in progress display for wherever needed (especially role updates)
 
 @Component({
   selector: 'alliance',

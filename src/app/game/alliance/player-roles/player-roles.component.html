@@ -10,7 +10,7 @@
     <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center"></div>
   </div>
   <div class="roles roles-members">
-    <div *ngFor="let member of alliance.Members; let i = index;" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+    <div *ngFor="let member of alliance.members; let i = index;" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
     <div class="col d-flex align-items-center justify-content-between">
         <span>{{ member.name }}</span>
         <button mat-icon-button color="warn" (click)="removePlayer(member.id)">
@@ -19,13 +19,13 @@
       </div>
       <div class="col text-center">
         <mat-form-field floatLabel="never">
-          <mat-select placeholder="Role" [(ngModel)]="member.AllianceRole" [compareWith]="compareRoles" (ngModelChange)="updatePlayerRole($event.id, member.id)" required>
-            <mat-option *ngFor="let role of alliance.Roles" [value]="role">{{ role.name }}</mat-option>
+          <mat-select placeholder="Role" [(ngModel)]="member.allianceRole" [compareWith]="compareRoles" (ngModelChange)="updatePlayerRole($event.id, member.id)" required>
+            <mat-option *ngFor="let role of alliance.roles" [value]="role">{{ role.name }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="col text-center" *ngFor="let permission of alliancePermissions">
-        <mat-checkbox disabled [checked]="member.AllianceRole.permissions[permission]"></mat-checkbox>
+        <mat-checkbox disabled [checked]="member.allianceRole.permissions[permission]"></mat-checkbox>
       </div>
     </div>
   </div>

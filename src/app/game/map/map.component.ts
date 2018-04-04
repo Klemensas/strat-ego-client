@@ -10,14 +10,17 @@ import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
 import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
+import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName } from 'strat-ego-common';
 
 import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../../store';
 import { MapService, CommandService } from '../services';
 import { Town } from '../../store/town/town.model';
 import { MapActions, LoadMap } from '../../store/map/map.actions';
 import { PlayerActions, SetSidenav } from '../../store/player/player.actions';
-import { Alliance } from '../../store/alliance/alliance.model';
 import { Map } from '../../store/map/map.model';
+
+// TODO: important https://www.chromestatus.com/feature/5424182347169792
+// will massively improve performance
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -35,9 +38,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     combineLatest(this.mapService.imagesLoaded)
   );
   public dragging = 0;
-  public allianceDiplomacy: { [id: number]: string } = {};
+  public allianceDiplomacy: MapAllianceMark = {};
   public activeTown: Town;
-  public playerTowns: Town[];
   public playerTownIds: number[];
   public boxSize = {
     x: 260,
@@ -115,9 +117,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     });
     this.townSubscription = this.townState$.subscribe(townState => {
       if (!townState.activeTown) { return; }
-      this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
-    this.playerTowns = townState.playerTowns;
-      this.playerTownIds = townState.playerTowns.map((town) => town.id);
+      this.activeTown = townState.playerTowns[townState.activeTown];
+      this.playerTownIds = townState.ids;
 
       this.setMapSettings({
         x: this.map.nativeElement.offsetWidth,
@@ -127,19 +128,20 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       this.mapSettings.shouldDraw = !!this.mapData;
     });
     this.allianceSubscription = this.alliance$.subscribe((alliance) => {
-      let diplomacy = alliance.DiplomacyTarget.reduce((result, { status, OriginAllianceId, type}) => {
-        if (status === 'ongoing') { result[OriginAllianceId] = type; }
+      let diplomacy: MapAllianceMark = {};
+      diplomacy = alliance.diplomacyTarget.reduce((result, { status, originAllianceId, type}) => {
+        if (status === DiplomacyStatus.ongoing) { result[originAllianceId] = diplomacyTypeName[type]; }
         return result;
-      }, {});
-      diplomacy = alliance.DiplomacyOrigin.reduce((result, { status, TargetAllianceId, type }) => {
-        if (status === 'ongoing') { result[TargetAllianceId] = type; }
+      }, diplomacy);
+      diplomacy = alliance.diplomacyOrigin.reduce((result, { status, targetAllianceId, type }) => {
+        if (status === DiplomacyStatus.ongoing) { result[targetAllianceId] = diplomacyTypeName[type]; }
         return result;
       }, diplomacy);
 
       this.allianceDiplomacy = {
         ...diplomacy,
         [alliance.id]: 'member',
-      }
+      };
       this.mapSettings.shouldDraw = true;
     });
   }

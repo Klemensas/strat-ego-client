@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Alliance, AlliancePermissions, ALLIANCE_PERMISSIONS, PERMISSION_NAMES } from '../../../store/alliance/alliance.model';
+import { Alliance, ALLIANCE_PERMISSIONS, AlliancePermissions } from 'strat-ego-common';
+
+import { PERMISSION_NAMES } from '../alliance.component';
 
 @Component({
   selector: 'player-roles',

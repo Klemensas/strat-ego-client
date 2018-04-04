@@ -5,13 +5,13 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map, withLatestFrom, filter, first } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
+import { AllianceEventSocketMessage } from 'strat-ego-common';
 
 import * as allianceActions from './alliance.actions';
 import { TownActions } from '../town/town.actions';
 import { GameModuleState, getPlayerData } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as UpdatePlayer } from '../player/player.actions';
-import { AllianceEvent, AllianceEventSocketMessage } from './alliance.model';
 
 @Injectable()
 export class Allianceffects {
@@ -20,11 +20,11 @@ export class Allianceffects {
     ofType<UpdatePlayer>(PlayerActionTypes.Update),
     first(),
     map((action) => action.payload),
-    map(({ AllianceId, Alliance, Invitations, AllianceRole }) => new allianceActions.SetData({
-        AllianceId,
-        Alliance,
-        AllianceRole,
-        Invitations,
+    map(({ allianceId, alliance, invitations, allianceRole }) => new allianceActions.SetData({
+        allianceId,
+        alliance,
+        allianceRole,
+        invitations,
       })
     )
   );
@@ -208,7 +208,7 @@ export class Allianceffects {
       [
         'alliance:event',
         (payload: AllianceEventSocketMessage<any>) => {
-          const eventAction: allianceActions.AllianceEventActions = new allianceActions[`Event${payload.event.type.slice(0, 1).toUpperCase()}${payload.event.type.slice(1)}`](payload);
+          const eventAction = new allianceActions[allianceActions.AllianceEventActions[payload.event.type]](payload);
           this.store.dispatch(eventAction);
         }
       ],
@@ -236,9 +236,9 @@ export class Allianceffects {
       ['alliance:endAllianceSuccess', (payload) => this.store.dispatch(new allianceActions.EndAllianceSuccess(payload))],
       ['alliance:endNapSuccess', (payload) => this.store.dispatch(new allianceActions.EndNapSuccess(payload))],
       ['alliance:declareWarSuccess', (payload) => this.store.dispatch(new allianceActions.DeclareWarSuccess(payload))],
+      ['alliance:acceptInviteSuccess', (payload) => this.store.dispatch(new allianceActions.AcceptInviteSuccess(payload))],
       // ['alliance', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.UPDATE, payload))],
       // ['alliance:createForumCategory', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.CREATE_FORUM_CATEGORY_SUCCESS, payload))],
-      // ['alliance:acceptInviteSuccess', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.ACCEPT_INVITE_SUCCESS, payload))],
     ]);
   }
 }
