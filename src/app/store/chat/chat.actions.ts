@@ -1,5 +1,5 @@
-import { Action } from "@ngrx/store";
-import { AllianceMessage } from "../alliance/alliance.model";
+import { Action } from '@ngrx/store';
+import { AllianceMessage, MessagePayload } from 'strat-ego-common';
 
 export enum ChatActionTypes {
   Update = '[Chat] UPDATE',
@@ -16,12 +16,12 @@ export class Update implements Action {
 export class PostMessage implements Action {
   readonly type = ChatActionTypes.PostMessage;
 
-  constructor(public payload: string) {}
+  constructor(public payload: MessagePayload) {}
 }
 export class PostMessageSuccess implements Action {
   readonly type = ChatActionTypes.PostMessageSuccess;
 
-  constructor(public payload: AllianceMessage) {}
+  constructor(public payload: { message: AllianceMessage, messageStamp: number }) {}
 }
 export class AddMessage implements Action {
   readonly type = ChatActionTypes.AddMessage;

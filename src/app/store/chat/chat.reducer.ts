@@ -1,16 +1,14 @@
+import { AllianceMessage } from 'strat-ego-common';
+
 import { ChatActions, ChatActionTypes } from './chat.actions';
 import { AllianceActions, AllianceActionTypes } from '../alliance/alliance.actions';
 
-import { AllianceMessage } from '../alliance/alliance.model';
-
 export interface ChatState {
   messages: AllianceMessage[];
-  inProgress: boolean;
 }
 
 export const initialState: ChatState = {
   messages: [],
-  inProgress: false,
 };
 
 
@@ -33,16 +31,16 @@ export function reducer(
     }
 
     case ChatActionTypes.PostMessage: {
-      return { ...state, inProgress: true };
+      return { ...state };
     }
 
     case ChatActionTypes.PostMessageSuccess: {
-      return { ...state, inProgress: false, messages: [...state.messages, action.payload] };
+      return { ...state, messages: [...state.messages, action.payload] };
     }
     default: {
       return state;
     }
   }
-};
+}
 
 export const getChatMessages = (state: ChatState) => state.messages;

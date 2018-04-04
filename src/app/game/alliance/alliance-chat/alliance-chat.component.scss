@@ -30,6 +30,7 @@
     height: calc(100% - #{$chat-header-height});
     display: flex;
     flex-direction: column;
+    background-color: $chat-background;
   }
   .content {
     height: 80%;
@@ -42,7 +43,7 @@
       min-width: 20%;
       max-width: 90%;
       position: relative;
-      margin-bottom: 0.6em;
+      margin: 0.6em 0;
       padding: 0.3em 0.3em 0;
       border: 2px solid;
 

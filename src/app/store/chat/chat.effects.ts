@@ -27,8 +27,8 @@ export class ChatEffects {
     ofType<PlayerUpdate>(PlayerActionTypes.Update),
     map((action) => action.payload),
     withLatestFrom(this.store.select(getChatMessages)),
-    filter(([player, messages]: [Player, AllianceMessage[]]) => !messages.length && player.Alliance && !!player.Alliance.Messages.length),
-    map(([player]) => new Update(player.Alliance.Messages))
+    filter(([player, messages]: [Player, AllianceMessage[]]) => !messages.length && player.alliance && !!player.alliance.messages.length),
+    map(([player]) => new Update(player.alliance.messages))
   );
 
   constructor(
@@ -38,7 +38,7 @@ export class ChatEffects {
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([
-      ['chat:messageCreated', (payload) => this.store.dispatch(new PostMessageSuccess(payload))],
+      ['chat:postMessageSuccess', (payload) => this.store.dispatch(new PostMessageSuccess(payload))],
       ['chat:newMessage', (payload) => this.store.dispatch(new AddMessage(payload))]
     ]);
   }
