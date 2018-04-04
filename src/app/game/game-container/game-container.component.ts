@@ -34,7 +34,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
   public noTowns$ = this.townState$.pipe(
-    map((state) => !state.inProgress && !state.playerTowns.length)
+    map((state) => !state.inProgress && !state.ids.length)
   );
   public isVisible;
   public sidenavSubscription: Subscription;
@@ -48,8 +48,8 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.townStateSubscription = this.townState$.subscribe((townState) => {
-      this.townList = townState.playerTowns;
-      this.activeTown = townState.playerTowns.find((town) => town.id === townState.activeTown);
+      this.townList = townState.ids.map((id) => townState.playerTowns[id]);
+      this.activeTown = townState.playerTowns[townState.activeTown];
       this.canRecruit = this.activeTown && !!this.activeTown.buildings.barracks.level;
     });
     this.sidenavSubscription = this.store.select(getSidenavs).pipe(

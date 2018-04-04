@@ -4,11 +4,11 @@
     <div class="row">
       <div class="col">
         <i class="fa" *ngIf="queue.units" [ngClass]="{ 'fa-caret-right': !queue.isVisible, 'fa-caret-down': queue.isVisible }" (click)="queue.isVisible = !queue.isVisible"></i>
-        {{ queue.MovementOriginId }}
+        {{ queue.originTownId }}
       </div>
       <div class="col">{{ queue.timeLeft | countdown:'HH:mm:ss' }}</div>
       <div class="col">
-        {{ queue.type }}
+        {{ typeNames[queue.type] }}
         <i class="fa fa-angle-double-left"></i>
       </div>
     </div>

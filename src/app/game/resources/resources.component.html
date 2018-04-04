@@ -1,4 +1,4 @@
-<div *ngIf="town.availableResources$ | async; let res">
+<div *ngIf="availableResources$ | async; let res">
   <div class="resource"><div class="resource-icon wood"></div>{{res.wood | number:'1.0-0'}}/{{town.storage}} (+{{town.production.wood | number:'1.0-0'}})</div>
   <div class="resource"><div class="resource-icon clay"></div>{{res.clay | number:'1.0-0'}}/{{town.storage}} (+{{town.production.clay | number:'1.0-0'}})</div>
   <div class="resource"><div class="resource-icon iron"></div>{{res.iron | number:'1.0-0'}}/{{town.storage}} (+{{town.production.iron | number:'1.0-0'}})</div>

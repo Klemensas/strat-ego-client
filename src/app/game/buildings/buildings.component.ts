@@ -15,14 +15,14 @@ import { Town } from '../../store/town/town.model';
 export class BuildingsComponent implements OnChanges {
   @Input() public town: Town;
   @Input() public worldData;
-  @Output() public upgradeBuilding: EventEmitter<any> = new EventEmitter();
+  @Output() public build: EventEmitter<any> = new EventEmitter();
 
   public buildings = [];
   public buildingDetails = buildingData;
   public updateAvailability$: Subscription;
 
   public ngOnChanges(changes?) {
-    this.town.availableResources$.pipe(
+    availableResources(this.town).pipe(
       take(1)
     ).subscribe((value) => {
       this.buildings = Object.entries(this.town.buildings).map(([name, building]) => {
@@ -57,6 +57,6 @@ export class BuildingsComponent implements OnChanges {
   }
 
   public upgrade(building) {
-    this.upgradeBuilding.emit({ building: building.name, level: building.level });
+    this.build.emit({ building: building.name, level: building.level });
   }
 }

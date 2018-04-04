@@ -1,12 +1,20 @@
-import { Component, Input } from '@angular/core';
-import { Town } from 'app/store/town/town.model';
+import { Component, Input, OnChanges } from '@angular/core';
+import { Resources } from 'strat-ego-common';
+import { Observable } from 'rxjs/observable';
+
+import { availableResources } from '../utils';
+import { Town } from '../../store/town/town.model';
 
 @Component({
   selector: 'resources',
   templateUrl: './resources.component.html',
   styleUrls: ['./resources.component.scss'],
 })
-export class ResourcesComponent {
+export class ResourcesComponent implements OnChanges {
   @Input() public town: Town;
-  constructor() { }
+  availableResources$: Observable<Resources>;
+
+  ngOnChanges() {
+    this.availableResources$ = availableResources(this.town);
+  }
 }

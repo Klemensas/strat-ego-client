@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { timestamp, map } from 'rxjs/operators';
+import { BuildingQueue } from 'strat-ego-common';
 
 import { buildingData } from '../staticData';
 
@@ -10,7 +11,7 @@ import { buildingData } from '../staticData';
   styleUrls: ['./building-queue.component.scss']
 })
 export class BuildingQueueComponent implements OnInit, OnChanges {
-  @Input() public buildingQueue = [];
+  @Input() public buildingQueue: BuildingQueue[] = [];
 
   public queue$: Observable<any>;
   public buildingDetails = buildingData;
@@ -20,7 +21,7 @@ export class BuildingQueueComponent implements OnInit, OnChanges {
       timestamp(),
       map((time) => this.buildingQueue.map((queue) => ({
         ...queue,
-        timeLeft: new Date(queue.endsAt).getTime() - time.timestamp,
+        timeLeft: +queue.endsAt - time.timestamp,
       })))
     );
   }
