@@ -4,12 +4,12 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
 import * as seedrandom from 'seedrandom';
+import { Player, Profile, AllianceMessage } from 'strat-ego-common';
 
 import { ALLIANCE_PERMISSIONS, PERMISSION_NAMES, Alliance, AllianceMessage, Profile, AllianceMember } from '../../../store/alliance/alliance.model';
 import { ChatActions, ChatActionTypes, PostMessage, AddMessage } from '../../../store/chat/chat.actions';
 import { OnInit } from '@angular/core';
 import { ActionWithPayload } from '../../../store/util';
-import { Player } from '../../../store/player/player.model';
 import { GameModuleState, getChatState } from '../../../store';
 
 export interface ChatMessage {

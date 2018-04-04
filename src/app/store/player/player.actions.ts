@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
-
-import { Player } from './player.model';
+import { Player } from 'strat-ego-common';
 
 // TODO: move sidenav to a dedicated game state
 export enum PlayerActionTypes {

@@ -5,14 +5,13 @@ import { Observable } from 'rxjs/Observable';
 import { map, withLatestFrom, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
+import { Player, AllianceMessage } from 'strat-ego-common';
 
 import { ChatActions, ChatActionTypes, PostMessage, Update, PostMessageSuccess, AddMessage } from './chat.actions';
 import { GameModuleState, getChatMessages } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { Action } from '@ngrx/store/src/models';
-import { Player } from '../player/player.model';
-import { AllianceMessage } from '../alliance/alliance.model';
 
 @Injectable()
 export class ChatEffects {
