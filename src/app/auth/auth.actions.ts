@@ -1,6 +1,6 @@
+import { User, Credentials } from 'strat-ego-common';
 import { Action } from '@ngrx/store';
 
-import { User, Credentials } from './user/user.model';
 
 export enum AuthActionTypes {
   Login = '[Auth] Login',

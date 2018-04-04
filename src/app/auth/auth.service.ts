@@ -6,10 +6,10 @@ import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { User } from 'strat-ego-common';
 
 import { AuthActions, LoginSuccess, Logout } from './auth.actions';
 import { environment } from '../../environments/environment';
-import { User } from './user/user.model';
 import { AuthModuleState } from './reducers';
 
 @Injectable()
@@ -61,7 +61,6 @@ export class AuthService {
 
 
   tokenExpiration() {
-    console.log('token expired');
     this.store.dispatch(new Logout());
   }
 
