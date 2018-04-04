@@ -1,13 +1,16 @@
 import { Observable } from 'rxjs/Observable';
+import { Town as BaseTown, TownError, Report } from 'strat-ego-common';
 
-import { Report } from '../report/report.model';
-import { Resources } from '../../world/world.model';
+export interface TownAction {
+  inProgress: boolean;
+  error: TownError;
+}
 
 export interface TownActionState {
-  name: boolean;
-  build: boolean;
-  movement: boolean;
-  recruit: boolean;
+  name: TownAction;
+  build: TownAction;
+  movement: TownAction;
+  recruit: TownAction;
 }
 
 export interface TownPopulation {
@@ -36,41 +39,9 @@ export interface TownUpdateFormatted {
   towns: Town[];
 }
 
-export interface Town {
-  id: number;
-  name: string;
-  buildings: {
-    [name: string]: {
-      level: number;
-      queued: number;
-    };
-  };
-  loyalty: number;
-  location: [number, number];
-  production: Resources;
+export interface Town extends BaseTown {
   population: TownPopulation;
   storage: number;
   recruitmentModifier: number;
-  resources: Resources;
-  units: {
-    [name: string]: TownUnit
-  };
-  BuildingQueues: any[];
-  MovementDestinationTown: any[];
-  MovementOriginTown: any[];
-  PlayerId: number;
-  Player: {
-    id: string;
-    UserId: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  ReportDestinationTown: Report;
-  ReportOriginTown: Report;
-  UnitQueues: any[];
-  createdAt: string;
-  updatedAt: string;
-  availableResources$?: Observable<Resources>;
   _actionState: TownActionState;
 }
