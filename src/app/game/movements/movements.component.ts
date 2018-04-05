@@ -2,8 +2,8 @@ import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { timestamp, map } from 'rxjs/operators';
 
-import { GameDataService } from '../../services/game-data.service';
-import { MapService } from '../services';
+import { Town } from '../../store/town/town.model';
+import { MovementTypeName } from 'strat-ego-common';
 
 @Component({
   selector: 'movements',
@@ -11,24 +11,23 @@ import { MapService } from '../services';
   styleUrls: ['./movements.component.scss']
 })
 export class MovementsComponent implements OnInit, OnChanges {
-  @Input() public town;
+  @Input() public town: Town;
   @Input() public worldData;
 
+  public typeNames = MovementTypeName;
   public movements = [];
   public queue$: Observable<any>;
   public outgoing = [];
   public incoming = [];
   public returning = [];
   public unitTypes = [];
-  constructor(private gameData: GameDataService, private mapService: MapService) {
-    console.log(mapService);
-  }
 
   ngOnInit() {
+    const b = this.typeNames[0];
     this.queue$ = Observable.timer(0, 1000).pipe(
       timestamp(),
       map((time) => this.movements.map(queue => {
-        queue.timeLeft = new Date(queue.endsAt).getTime() - time.timestamp;
+        queue.timeLeft = +queue.endsAt - time.timestamp;
         return queue;
       }))
     );
@@ -51,7 +50,6 @@ export class MovementsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes) {
-    this.movements = [...this.town.MovementOriginTown, ...this.town.MovementDestinationTown].sort((a, b) =>
-      new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime() );
+    this.movements = [...this.town.originMovements, ...this.town.targetMovements].sort((a, b) => +a.endsAt - +b.endsAt );
   }
 }

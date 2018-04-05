@@ -1,6 +1,17 @@
-import { AllianceRole, Alliance, AllianceBase, AllianceMember, AllianceEvent, AllianceEventSocketMessage, AllianceRoleSocketPayload, Profile, AllianceDiplomacy } from './alliance.model';
-import { AllianceActionTypes, AllianceActions, EventMembership, EventInvitation, EventRoles } from './alliance.actions';
 import { Action } from '@ngrx/store';
+import {
+  AllianceRole,
+  Profile,
+  AllianceEventSocketMessage,
+  AllianceRoleSocketPayload,
+  AllianceDiplomacy,
+  AllianceMember,
+  EventStatus,
+  Alliance,
+  DiplomacyStatus
+} from 'strat-ego-common';
+
+import { AllianceActionTypes, AllianceActions, EventMembership, EventInvitation, EventRoles } from './alliance.actions';
 
 export interface AllianceState {
   playerAlliance: number;
@@ -8,7 +19,7 @@ export interface AllianceState {
     [name: string]: Alliance;
   };
   role: AllianceRole;
-  invitations: AllianceBase[];
+  invitations: Profile[];
   inProgress: boolean;
   error: any;
 }
@@ -28,23 +39,23 @@ export function reducer(
 ): AllianceState {
   switch (action.type) {
     case AllianceActionTypes.SetData: {
-      const alliance = action.payload.AllianceId ? { [action.payload.AllianceId]: action.payload.Alliance } : {};
+      const alliance = action.payload.allianceId ? { [action.payload.allianceId]: action.payload.alliance } : {};
       const alliances = { ...state.alliances, ...alliance };
       return {
         ...state,
         alliances,
-        playerAlliance: action.payload.AllianceId,
-        invitations: action.payload.Invitations,
-        role: action.payload.AllianceRole
+        playerAlliance: action.payload.allianceId,
+        invitations: action.payload.invitations,
+        role: action.payload.allianceRole
       };
     }
     case AllianceActionTypes.CreateSuccess: {
-      const alliances = { ...state.alliances, [action.payload.alliance.id]: action.payload.alliance };
+      const alliances = { ...state.alliances, [action.payload.id]: action.payload };
       return {
         ...state,
         alliances,
-        playerAlliance: action.payload.alliance.id,
-        role: action.payload.role,
+        playerAlliance: action.payload.id,
+        role: action.payload.masterRole,
       };
     }
 
@@ -84,7 +95,7 @@ export function reducer(
 
     case AllianceActionTypes.AcceptInviteSuccess: {
       const alliances = { ...state.alliances, [action.payload.id]: action.payload };
-      const role = action.payload.DefaultRole;
+      const role = action.payload.defaultRole;
       const invitations = state.invitations.filter(({ id }) => id !== action.payload.id);
       return {
         ...state,
@@ -192,7 +203,7 @@ export function reducer(
     //   };
     // }
   }
-};
+}
 
 export const getPlayerAlliance = (state: AllianceState) => state.alliances[state.playerAlliance];
 export const getPlayerInvitations = (state: AllianceState) => state.invitations;
@@ -202,12 +213,12 @@ export const getPlayerAllianceData = (state: AllianceState) => ({
 });
 export const getPlayerAllianceActiveDiplomacy = (state: AllianceState) => {
   const alliance = state.alliances[state.playerAlliance];
-  return !alliance ? [] : [...alliance.DiplomacyOrigin, ...alliance.DiplomacyTarget].filter(({ status }) => status === 'ongoing');
+  return !alliance ? [] : [...alliance.diplomacyOrigin, ...alliance.diplomacyTarget].filter(({ status }) => status === DiplomacyStatus.ongoing);
 };
 
 
 const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | number>, state: AllianceState, stateParams = {}): AllianceState => {
-  const isJoin = payload.event.status === 'join';
+  const isJoin = payload.event.status === EventStatus.join;
   const alliance = state.alliances[state.playerAlliance];
   return {
     ...state,
@@ -215,20 +226,20 @@ const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | nu
       ...state.alliances,
       [state.playerAlliance]: {
         ...alliance,
-        Events: [payload.event, ...alliance.Events],
-        Invitations: isJoin ?
-          alliance.Invitations.filter(({ id }) => id !== (payload.data as AllianceMember).id) :
-          alliance.Invitations,
-        Members: isJoin ?
-          [payload.data, ...alliance.Members] :
-          alliance.Members.filter(({ id }) => id !== payload.data)
+        eventOrigin: [payload.event, ...alliance.eventOrigin],
+        invitations: isJoin ?
+          alliance.invitations.filter(({ id }) => id !== (payload.data as AllianceMember).id) :
+          alliance.invitations,
+        members: isJoin ?
+          [payload.data, ...alliance.members] :
+          alliance.members.filter(({ id }) => id !== payload.data)
       }
     }
   };
 };
 
 const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, state: AllianceState, stateParams = {}): AllianceState => {
-  const isCreated = payload.event.status === 'create';
+  const isCreated = payload.event.status === EventStatus.create;
   const alliance = state.alliances[state.playerAlliance];
   return {
     ...state,
@@ -236,10 +247,10 @@ const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, 
       ...state.alliances,
       [state.playerAlliance]: {
         ...alliance,
-        Events: [payload.event, ...alliance.Events],
-        Invitations: isCreated ?
-          [payload.data, ...alliance.Invitations] :
-          alliance.Invitations.filter(({ id }) => id !== payload.data)
+        eventOrigin: [payload.event, ...alliance.eventOrigin],
+        invitations: isCreated ?
+          [payload.data, ...alliance.invitations] :
+          alliance.invitations.filter(({ id }) => id !== payload.data)
       }
     },
     ...stateParams
@@ -249,34 +260,34 @@ const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, 
 const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayload>, state: AllianceState, stateParams = {}): AllianceState => {
   const { created, updated, removed, updatedMember } = payload.data;
   const alliance = state.alliances[state.playerAlliance];
-  let Members = [...alliance.Members];
-  let Roles = [...alliance.Roles];
-  let DefaultRole = alliance.DefaultRole;
+  let members = [...alliance.members];
+  let roles = [...alliance.roles];
+  let defaultRole = alliance.defaultRole;
   let playerRole = state.role;
 
   if (updated) {
     updated.forEach((role) => {
-      const roleIndex = Roles.findIndex(({ id }) => id === role.id);
-      Roles[roleIndex] = role;
-      if (role.id === alliance.DefaultRoleId) { DefaultRole = role; }
+      const roleIndex = roles.findIndex(({ id }) => id === role.id);
+      roles[roleIndex] = role;
+      if (role.id === alliance.defaultRoleId) { defaultRole = role; }
       if (playerRole.id === role.id) { playerRole = role; }
 
-      Members = Members.map((member) =>  member.AllianceRole.id === role.id ? { ...member, AllianceRole: role } : member);
+      members = members.map((member) =>  member.allianceRole.id === role.id ? { ...member, allianceRole: role } : member);
     });
   }
   if (removed) {
-    Roles = Roles.filter(({ id }) => !removed.includes(id));
-    if (removed.includes(playerRole.id)) { playerRole = DefaultRole; }
+    roles = roles.filter(({ id }) => !removed.includes(id));
+    if (removed.includes(playerRole.id)) { playerRole = defaultRole; }
 
-    Members = Members.map((member) => removed.includes(member.AllianceRole.id) ? { ...member, AllianceRole: DefaultRole } : member);
+    members = members.map((member) => removed.includes(member.allianceRole.id) ? { ...member, allianceRole: defaultRole } : member);
   }
   if (created) {
-    Roles.push(...created);
+    roles.push(...created);
   }
   if (updatedMember) {
     updatedMember.forEach(({ id, role }) => {
-      const memberIndex = Members.findIndex((member) => member.id === id);
-      Members[memberIndex].AllianceRole = role;
+      const memberIndex = members.findIndex((member) => member.id === id);
+      members[memberIndex].allianceRole = role;
     });
   }
 
@@ -287,39 +298,38 @@ const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayloa
       ...state.alliances,
       [state.playerAlliance]: {
         ...alliance,
-        Members,
-        Roles,
-        DefaultRole,
-        Events: [payload.event, ...alliance.Events],
+        members,
+        roles,
+        defaultRole,
+        eventOrigin: [payload.event, ...alliance.eventOrigin],
       }
     }
   };
 };
 
 const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | number>, state: AllianceState, stateParams = {}): AllianceState => {
-  let diplomacy: { DiplomacyTarget?: AllianceDiplomacy[]; DiplomacyOrigin?: AllianceDiplomacy[] } = {};
+  let diplomacy: { diplomacyTarget?: Partial<AllianceDiplomacy>[]; diplomacyOrigin?: Partial<AllianceDiplomacy>[] } = {};
   const alliance = state.alliances[state.playerAlliance];
   const hasDiplo = typeof payload.data !== 'number';
-  const isDiploStart = !hasDiplo && payload.event.status.includes('start') && !payload.event.status.includes('War');
+  const isDiploStart = !hasDiplo && (payload.event.status === EventStatus.startAlliance || payload.event.status === EventStatus.startNap);
   if (isDiploStart) {
     diplomacy = {
-      DiplomacyTarget: [...alliance.DiplomacyTarget],
-      DiplomacyOrigin: [...alliance.DiplomacyOrigin]
+      diplomacyTarget: [...alliance.diplomacyTarget],
+      diplomacyOrigin: [...alliance.diplomacyOrigin]
     };
-    const target = diplomacy.DiplomacyTarget.find(({ id }) => id === payload.data) || diplomacy.DiplomacyOrigin.find(({ id }) => id === payload.data);
-    target.status = 'ongoing';
+    const target = diplomacy.diplomacyTarget.find(({ id }) => id === payload.data) || diplomacy.diplomacyOrigin.find(({ id }) => id === payload.data);
+    target.status = DiplomacyStatus.ongoing;
   } else if (!hasDiplo) {
     diplomacy = {
-      DiplomacyTarget: alliance.DiplomacyTarget.filter(({id }) => id !== payload.data),
-      DiplomacyOrigin: alliance.DiplomacyOrigin.filter(({id }) => id !== payload.data)
+      diplomacyTarget: alliance.diplomacyTarget.filter(({id }) => id !== payload.data),
+      diplomacyOrigin: alliance.diplomacyOrigin.filter(({id }) => id !== payload.data)
     };
   } else {
     // TODO: shouldn't have to use as here, look into TS
-    const type = (payload.data as AllianceDiplomacy).TargetAllianceId === state.playerAlliance ? 'DiplomacyTarget' : 'DiplomacyOrigin';
+    const type = (payload.data as AllianceDiplomacy).targetAllianceId === state.playerAlliance ? 'diplomacyTarget' : 'diplomacyOrigin';
     diplomacy[type] = [payload.data as AllianceDiplomacy, ...alliance[type]];
   }
 
-  console.log('oho', diplomacy);
   return {
     ...state,
     alliances: {
@@ -327,8 +337,8 @@ const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | 
       [state.playerAlliance]: {
         ...alliance,
         ...diplomacy,
-        Events: [payload.event, ...alliance.Events],
+        eventOrigin: [payload.event, ...alliance.eventOrigin],
       }
     }
   };
-}
+};

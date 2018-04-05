@@ -20,7 +20,7 @@ export class UnitQueueComponent implements OnInit, OnChanges {
       timestamp(),
       map(({ timestamp }) => this.unitQueue.map((queue) => ({
         ...queue,
-        timeLeft: new Date(queue.endsAt).getTime() - timestamp,
+        timeLeft: +queue.endsAt - timestamp,
       })))
     );
   }

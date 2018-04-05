@@ -5,14 +5,13 @@ import { Observable } from 'rxjs/Observable';
 import { map, withLatestFrom, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
+import { Player, AllianceMessage } from 'strat-ego-common';
 
 import { ChatActions, ChatActionTypes, PostMessage, Update, PostMessageSuccess, AddMessage } from './chat.actions';
 import { GameModuleState, getChatMessages } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { Action } from '@ngrx/store/src/models';
-import { Player } from '../player/player.model';
-import { AllianceMessage } from '../alliance/alliance.model';
 
 @Injectable()
 export class ChatEffects {
@@ -28,8 +27,8 @@ export class ChatEffects {
     ofType<PlayerUpdate>(PlayerActionTypes.Update),
     map((action) => action.payload),
     withLatestFrom(this.store.select(getChatMessages)),
-    filter(([player, messages]: [Player, AllianceMessage[]]) => !messages.length && player.Alliance && !!player.Alliance.Messages.length),
-    map(([player]) => new Update(player.Alliance.Messages))
+    filter(([player, messages]: [Player, AllianceMessage[]]) => !messages.length && player.alliance && !!player.alliance.messages.length),
+    map(([player]) => new Update(player.alliance.messages))
   );
 
   constructor(
@@ -39,7 +38,7 @@ export class ChatEffects {
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([
-      ['chat:messageCreated', (payload) => this.store.dispatch(new PostMessageSuccess(payload))],
+      ['chat:postMessageSuccess', (payload) => this.store.dispatch(new PostMessageSuccess(payload))],
       ['chat:newMessage', (payload) => this.store.dispatch(new AddMessage(payload))]
     ]);
   }

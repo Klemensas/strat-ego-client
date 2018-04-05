@@ -3,17 +3,17 @@
     <div class="col">
       <strong>{{ town.name }}</strong>
       <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
-      <button (click)="changeName(nameChange, town.name)">Save</button>
+      <button (click)="rename(nameChange, town.name)">Save</button>
       <town-loyalty *ngIf="town.loyalty !== 100" [town]="town" [loyaltyRegeneration]="(worldData$ | async)?.world.loyaltyRegeneration"></town-loyalty>
     </div>
   </div>
   <div class="row">
-    <buildings class="col-md-9" [town]="town" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></buildings>
+    <buildings class="col-md-9" [town]="town" [worldData]="worldData$ | async" (build)="build($event)"></buildings>
     <div class="col-md-3">
        <div class="py-1">Population: <b>{{town.population.used}}/{{town.population.total}}</b></div>
        <resources [town]="town"></resources>
        <units [units]="town.units"></units>
-       <building-queue [buildingQueue]="town.BuildingQueues"></building-queue>
+       <building-queue [buildingQueue]="town.buildingQueues"></building-queue>
     </div>
   </div>
 </div>

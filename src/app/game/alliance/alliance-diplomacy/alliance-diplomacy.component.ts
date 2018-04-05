@@ -1,14 +1,21 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { GameModuleState } from '../../../store';
-import { Alliance, AllianceDiplomacy } from '../../../store/alliance/alliance.model';
-import { AcceptNap, DeclareWar, ProposeNap, ProposeAlliance, CancelAlliance, CancelNap, RejectAlliance, AcceptAlliance, EndAlliance, RejectNap, EndNap } from '../../../store/alliance/alliance.actions';
+import { Alliance, AllianceDiplomacy, DiplomacyStatus, DiplomacyType } from 'strat-ego-common';
 
-export interface dip {
-  id: number;
-  type: string;
-  status: string;
-}
+import { GameModuleState } from '../../../store';
+import {
+  AcceptNap,
+  DeclareWar,
+  ProposeNap,
+  ProposeAlliance,
+  CancelAlliance,
+  CancelNap,
+  RejectAlliance,
+  AcceptAlliance,
+  EndAlliance,
+  RejectNap,
+  EndNap
+} from '../../../store/alliance/alliance.actions';
 
 @Component({
   selector: 'alliance-diplomacy',
@@ -21,26 +28,27 @@ export class AllianceDiplomacyComponent implements OnChanges {
   allianceTargetName = '';
   napTargetName = '';
   warTargetName = '';
-  alliances: AllianceDiplomacy[];
-  wars: AllianceDiplomacy[];
-  naps: AllianceDiplomacy[];
+  alliances: AllianceDiplomacy[] = [];
+  wars: AllianceDiplomacy[] = [];
+  naps: AllianceDiplomacy[] = [];
+  diplomacyStatus = DiplomacyStatus;
 
   constructor(private store: Store<GameModuleState>) { }
 
   ngOnChanges() {
-    const diplomacy = [...this.alliance.DiplomacyOrigin, ...this.alliance.DiplomacyTarget]
-      .sort((a, b) => a.updatedAt - b.updatedAt)
+    const diplomacy = [...this.alliance.diplomacyOrigin, ...this.alliance.diplomacyTarget]
+      .sort((a, b) => +a.updatedAt - +b.updatedAt)
       .reduce((result, item) => {
-        result[item.type].push(item);
+        result[DiplomacyType[item.type]].push(item);
         return result;
       }, {
         war: [],
         alliance: [],
         nap: [],
       });
-      this.alliances = diplomacy.alliance;
-      this.wars = diplomacy.war;
-      this.naps = diplomacy.nap;
+    this.alliances = diplomacy.alliance;
+    this.wars = diplomacy.war;
+    this.naps = diplomacy.nap;
   }
 
   declareWar() {

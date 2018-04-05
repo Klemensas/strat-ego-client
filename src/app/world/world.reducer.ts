@@ -1,6 +1,6 @@
-import { WorldActions, WorldActionTypes } from './world.actions';
-import { WorldData } from './world.model';
+import { WorldData } from 'strat-ego-common';
 
+import { WorldActions, WorldActionTypes } from './world.actions';
 
 export interface WorldState {
   worlds: WorldData[];

@@ -1,16 +1,13 @@
 <form [formGroup]="rolePermissionForm" novalidate class="pt-4 mb-2" style="overflow: hidden;">
   <div class="row pt-1" style="color: var(--light); background-color: var(--indigo)">
     <div class="col">
-        <!-- <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polygon points="0,0 100,100 100,0"/>
-        </svg> -->
         <div class="heading-split px-1"><strong>Role</strong></div>
       </div>
       <div class="col text-center"><i class="fa fa-trash"></i></div>
       <div *ngFor="let permission of alliancePermissions" [innerHTML]="permissionNames[permission]" class="col text-center"></div>
   </div>
   <div formArrayName="roles" class="roles roles-current">
-    <div *ngFor="let role of alliance.Roles; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+    <div *ngFor="let role of alliance.roles; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
       <div class="col">
         <mat-form-field floatLabel="never">
           <input matInput type="text" placeholder="Role name" formControlName="name">

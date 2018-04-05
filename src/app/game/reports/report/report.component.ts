@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Report } from 'app/store/report/report.model';
+import { Report, CombatOutcome } from 'strat-ego-common';
 
 @Component({
   selector: 'report',
@@ -10,6 +10,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   @Input() public report: Report;
   @Input() public unitList = [];
   public isCollapsed;
+  public attackType = CombatOutcome.attack;
+
 
   ngOnInit() {
   }

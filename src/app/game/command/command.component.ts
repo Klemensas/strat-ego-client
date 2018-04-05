@@ -6,7 +6,8 @@ import { CommandService, MapService } from '../services/';
 import { unitData } from '../staticData';
 import { GameModuleState } from '../../store';
 import { Town } from '../../store/town/town.model';
-import { SendTroops } from '../../store/town/town.actions';
+import { MoveTroops } from '../../store/town/town.actions';
+import { MovementType } from 'strat-ego-common';
 
 @Component({
   selector: 'command',
@@ -54,7 +55,7 @@ export class CommandComponent implements OnInit {
       return;
     }
 
-    const type = isSupport ? 'support' : 'attack';
+    const type = isSupport ? MovementType.support : MovementType.attack;
     const units = (Object.entries(form.value) as [string, number][]).filter(([unit, amount]) => !!+amount);
     const validUnits = units.length ?
       units.every(([unit, amount]) => this.town.units[unit].inside >= amount) :
@@ -65,7 +66,7 @@ export class CommandComponent implements OnInit {
       return;
     }
 
-    this.store.dispatch(new SendTroops({ units, type, target: this.target }));
+    this.store.dispatch(new MoveTroops({ units, type, target: this.target }));
   }
 
 }

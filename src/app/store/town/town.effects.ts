@@ -4,7 +4,8 @@ import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Store, Action } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
-import { map, withLatestFrom, filter } from 'rxjs/operators';
+import { map, withLatestFrom, filter, take } from 'rxjs/operators';
+import { WorldData } from 'strat-ego-common';
 
 import { Town } from './town.model';
 import {
@@ -14,18 +15,25 @@ import {
   SetPlayerTowns,
   UpdateEvent,
   Update,
-  ChangeName,
+  Rename,
   Recruit,
-  SendTroops,
   ScheduleUpdate,
-  UpgradeBuilding
+  RenameSuccess,
+  RenameFail,
+  Build,
+  BuildSuccess,
+  BuildFail,
+  RecruitSuccess,
+  RecruitFail,
+  MoveTroopsSuccess,
+  MoveTroopsFail,
+  MoveTroops
 } from './town.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { GameModuleState, getActiveTown } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { availableResources } from '../../game/utils';
 import { getActiveWorld, State } from '../../reducers';
-import { WorldData } from '../../world/world.model';
 
 @Injectable()
 export class TownEffects {
@@ -44,7 +52,7 @@ export class TownEffects {
   public setPlayerTowns$: Observable<Action> = this.actions$.pipe(
     ofType<PlayerUpdate>(PlayerActionTypes.Update),
     map((action) => action.payload),
-    map((player) => player.Towns),
+    map((player) => player.towns),
     withLatestFrom(this.store.select(getActiveWorld)),
     map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, SetPlayerTowns))
   );
@@ -60,15 +68,15 @@ export class TownEffects {
 
   @Effect({ dispatch: false })
   public changeTownName$: Observable<any> = this.actions$.pipe(
-    ofType<ChangeName>(TownActionTypes.ChangeName),
+    ofType<Rename>(TownActionTypes.Rename),
     map((action) => action.payload),
     withLatestFrom(this.store.select(getActiveTown)),
-    map(([name, town]) => this.socketService.sendEvent('town:name', { name, town: town.id }))
+    map(([name, town]) => this.socketService.sendEvent('town:rename', { name, town: town.id }))
   );
 
   @Effect({ dispatch: false })
-  public upgradeBuilding$: Observable<any> = this.actions$.pipe(
-    ofType<UpgradeBuilding>(TownActionTypes.UpgradeBuilding),
+  public build$: Observable<any> = this.actions$.pipe(
+    ofType<Build>(TownActionTypes.Build),
     map((action) => action.payload),
     withLatestFrom(this.store.select(getActiveTown)),
     map(([{ building, level }, town]) => this.socketService.sendEvent('town:build', { building, level, town: town.id }))
@@ -83,8 +91,8 @@ export class TownEffects {
   );
 
   @Effect({ dispatch: false })
-  public sendTroops$: Observable<any> = this.actions$.pipe(
-    ofType<SendTroops>(TownActionTypes.SendTroops),
+  public moveTroops$: Observable<any> = this.actions$.pipe(
+    ofType<MoveTroops>(TownActionTypes.MoveTroops),
     map((action) => action.payload),
     withLatestFrom(this.store.select(getActiveTown)),
     map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }))
@@ -100,21 +108,26 @@ export class TownEffects {
 
 
   public updateAction(world, towns: Town[], action, event?): TownActions {
-    towns.forEach((town) => this.scheduleUpdate(town));
-    const townPayload = towns.map((town) => {
-      const fullTown = {
+    // towns.forEach((town) => this.scheduleUpdate(town));
+    const townPayload = towns.map((town) => ({
       ...town,
-        population: this.calculatePopulation(town, world.buildingMap.farm.data),
-        storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
-        recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
-      };
-      fullTown.availableResources$ = availableResources(fullTown);
-      return fullTown;
-    });
+      population: this.calculatePopulation(town, world.buildingMap.farm.data),
+      storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
+      recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
+    }));
     return new action({
       event,
       towns: townPayload
     });
+  }
+
+  public updateTown(world: WorldData, town: Town): Town {
+    return {
+      ...town,
+      population: this.calculatePopulation(town, world.buildingMap.farm.data),
+      storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
+      recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
+    };
   }
 
   public calculatePopulation(town: Town, farmData) {
@@ -130,7 +143,7 @@ export class TownEffects {
   }
 
   public scheduleUpdate(town: Town) {
-    const soonest = this.findSoonestItem(town.BuildingQueues, town.UnitQueues, town.MovementDestinationTown, town.MovementOriginTown);
+    const soonest = this.findSoonestItem(town.buildingQueues, town.unitQueues/* , town.MovementDestinationTown, town.MovementOriginTown */);
     let townTimeout = this.townTimeouts[town.id];
     if (!soonest) {
       if (townTimeout) {
@@ -167,7 +180,33 @@ export class TownEffects {
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([
-      ['town', (payload) => this.store.dispatch(new UpdateEvent(payload))]
+      ['town', (payload) => this.store.dispatch(new UpdateEvent(payload))],
+      ['town:renameSuccess', (payload) => this.store.dispatch(new RenameSuccess(payload))],
+      ['town:renameFail', (payload) => this.store.dispatch(new RenameFail(payload))],
+      [
+        'town:buildSuccess',
+        (payload) =>
+          this.store.select(getActiveWorld)
+            .pipe(take(1))
+            .subscribe((world) => this.store.dispatch(new BuildSuccess(this.updateTown(world, payload))))
+      ],
+      ['town:buildFail', (payload) => this.store.dispatch(new BuildFail(payload))],
+      [
+        'town:recruitSuccess',
+        (payload) =>
+          this.store.select(getActiveWorld)
+            .pipe(take(1))
+            .subscribe((world) => this.store.dispatch(new RecruitSuccess(this.updateTown(world, payload))))
+      ],
+      ['town:recruitFail', (payload) => this.store.dispatch(new RecruitFail(payload))],
+      [
+        'town:moveTroopsSuccess',
+        (payload) =>
+          this.store.select(getActiveWorld)
+            .pipe(take(1))
+            .subscribe((world) => this.store.dispatch(new MoveTroopsSuccess(this.updateTown(world, payload))))
+      ],
+      ['town:moveTroopsFail', (payload) => this.store.dispatch(new MoveTroopsFail(payload))],
     ]);
   }
 }

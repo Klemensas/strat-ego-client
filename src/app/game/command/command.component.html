@@ -14,7 +14,7 @@
       <label>Y</label>
       <input type="number" [(ngModel)]="target[1]" min="1" max="999" [ngModelOptions]="{standalone: true}" />
     </div>
-    <div *ngIf="!town._actionState.movement">
+    <div *ngIf="!town._actionState.movement.inProgress">
       <button type="button" class="btn btn-danger" (click)="sendCommand(false, commandForm)" [disabled]="commandForm.pristine || commandForm.errors">Attack</button>
       <!--<button type="button" class="btn btn-success" (click)="sendCommand(true)">Support</button>-->
       <span *ngIf="commandForm.errors" class="text-danger">{{commandForm.errors.errorMessage}}</span>

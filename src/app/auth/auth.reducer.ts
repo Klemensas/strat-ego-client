@@ -1,4 +1,4 @@
-import { User } from './user/user.model';
+import { User } from 'strat-ego-common';
 import { AuthActions, AuthActionTypes } from './auth.actions';
 
 export interface AuthState {

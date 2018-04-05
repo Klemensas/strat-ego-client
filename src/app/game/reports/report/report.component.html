@@ -1,15 +1,15 @@
 <div class="row">
   <div class="col-12 d-flex">
     <div>
-      <span class="badge" [ngClass]="{'badge-danger': report.result === 'lose', 'badge-success': report.result === 'win'}">{{report.type}}</span>
-      <span>{{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}}) attacks {{ report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</span>
+      <span class="badge" [ngClass]="{'badge-danger': report.result === 'lose', 'badge-success': report.result === 'win'}">{{report.result}}</span>
+      <span>{{report.originTown.name}} ({{report.originTown.location}}) attacks {{ report.targetTown.name}} ({{report.targetTown.location}})</span>
       <span class="text-muted">{{report.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
     </div>
     <i class="fa fa-chevron-down ml-auto" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report.id"></i>
   </div>
   <div [id]="'collapse-' + report.id" class="col-12 py-2 px-1" [ngbCollapse]="!isCollapsed">
     <section>
-      <header class="font-weight-bold">Defender - {{report.ReportDestinationTown.name}} ({{report.ReportDestinationTown.location}})</header>
+      <header class="font-weight-bold">Defender - {{report.targetTown.name}} ({{report.targetTown.location}})</header>
       <div class="row">
         <div class="col">
           <div>Units</div>
@@ -18,13 +18,13 @@
         </div>
         <div class="col d-flex flex-column align-items-center" *ngFor="let unit of unitList">
           <div class="unit-icon" [attr.data-unit]="unit.name"></div>
-          <div>{{ report.destination.units[unit.name] || 0 }}</div>
-          <div class="text-danger">{{ report.destination.losses[unit.name] || 0 }}</div>
+          <div>{{ report.target.units[unit.name] || 0 }}</div>
+          <div class="text-danger">{{ report.target.losses[unit.name] || 0 }}</div>
         </div>
       </div>
     </section>
     <section>
-      <header class="font-weight-bold">Attacker - {{report.ReportOriginTown.name}} ({{report.ReportOriginTown.location}})</header>
+      <header class="font-weight-bold">Attacker - {{report.originTown.name}} ({{report.originTown.location}})</header>
       <div class="row">
         <div class="col">
           <div>Units</div>
@@ -38,7 +38,7 @@
         </div>
       </div>
     </section>
-    <section class="d-flex justify-content-end" *ngIf="report.outcome === 'attack'">
+    <section class="d-flex justify-content-end" *ngIf="report.outcome === attackType">
       <div *ngIf="report.loyaltyChange[0] !== report.loyaltyChange[1]" class="mr-3">
         Loyalty decreased by <strong>{{ (report.loyaltyChange[1] - report.loyaltyChange[0]) * -1 }}</strong> from <strong>{{ report.loyaltyChange[0] }}</strong> to <strong>{{ report.loyaltyChange[1] }}</strong>
       </div>

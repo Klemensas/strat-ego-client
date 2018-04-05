@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { GameDataService } from '../../services/game-data.service';
 import { SocketService } from '../services';
 import { GameModuleState, getActiveTown } from '../../store';
-import { TownActions, ChangeName, UpgradeBuilding } from '../../store/town/town.actions';
+import { TownActions, Rename, Build } from '../../store/town/town.actions';
 import { getActiveWorld } from '../../reducers';
 import { Town } from '../../store/town/town.model';
 
@@ -23,7 +23,7 @@ import { Town } from '../../store/town/town.model';
 
 export class TownComponent implements OnInit, OnDestroy {
   private nameChange = '';
-  public town$ = this.store.select(getActiveTown);
+  public town$ = this.store.select(getActiveTown)
   public worldData$ = this.store.select(getActiveWorld);
 
   constructor(
@@ -43,14 +43,14 @@ export class TownComponent implements OnInit, OnDestroy {
     // });
   }
 
-  public changeName(targetName, oldName) {
+  public rename(targetName, oldName) {
     if (targetName.length > 3 && targetName !== oldName) {
-      this.store.dispatch(new ChangeName(targetName));
+      this.store.dispatch(new Rename(targetName));
     }
   }
 
-  public upgradeBuilding(building) {
-    this.store.dispatch(new UpgradeBuilding(building));
+  public build(building) {
+    this.store.dispatch(new Build(building));
   }
 
 

@@ -1,5 +1,5 @@
-import { Action } from "@ngrx/store";
-import { Alliance, AllianceRole, AllianceBase, Profile, AllianceEventSocketMessage, AllianceMember, AllianceRoleSocketPayload, AllianceDiplomacy } from "./alliance.model";
+import { Action } from '@ngrx/store';
+import { Alliance, AllianceRole, Profile, AllianceDiplomacy, AllianceEventSocketMessage, AllianceMember, AllianceRoleSocketPayload } from 'strat-ego-common';
 
 // TODO: consider separatig alliance from player and require a separate query to fetch player alliance
 // TODO: fail actions, handling failure, success, progress
@@ -74,7 +74,7 @@ export enum AllianceActionTypes {
 export class SetData implements Action {
   readonly type = AllianceActionTypes.SetData;
 
-  constructor(public payload: { AllianceId: number; Alliance: Alliance; AllianceRole: AllianceRole; Invitations: AllianceBase[] }) {}
+  constructor(public payload: { allianceId: number; alliance: Partial<Alliance>; allianceRole: AllianceRole; invitations: Profile[] }) {}
 }
 export class Create implements Action {
   readonly type = AllianceActionTypes.Create;
@@ -84,7 +84,7 @@ export class Create implements Action {
 export class CreateSuccess implements Action {
   readonly type = AllianceActionTypes.CreateSuccess;
 
-  constructor(public payload: { alliance: Alliance; role: AllianceRole; }) {}
+  constructor(public payload: Alliance) {}
 }
 export class Destroy implements Action {
   readonly type = AllianceActionTypes.Destroy;
@@ -201,7 +201,7 @@ export class RemoveMemberSuccess implements Action {
 export class Invited implements Action {
   readonly type = AllianceActionTypes.Invited;
 
-  constructor(public payload: AllianceBase) {}
+  constructor(public payload: Profile) {}
 }
 export class InviteCanceled implements Action {
   readonly type = AllianceActionTypes.InviteCanceled;
@@ -381,7 +381,16 @@ export type AllianceActions = SetData |
   DeclareWar |
   DeclareWarSuccess;
 
-export type AllianceEventActions =   EventInvitation |
+export type AllianceEventActionTypes = EventInvitation |
   EventMembership |
   EventRoles |
   EventDiplomacy;
+
+// TODO: use actual constructors here
+export const AllianceEventActions = [
+  'EventDiplomacy',
+  'EventInvitation',
+  'EventMembership',
+  'EventRoles',
+  // EventManagement,
+];

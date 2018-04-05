@@ -1,7 +1,7 @@
 <div *ngFor="let item of queue$ | async" class="row">
   <div class="col d-flex">
     <i class="unit-icon mr-1" [attr.data-unit]="item.unit"></i>
-    <span>{{unitDetails[item.unit].name}}</span>
+    <span>{{unitDetails[item.name].name}}</span>
   </div>
   <div class="col">
     {{item.amount}}

@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Report } from '../../store/report/report.model';
-import { WorldData } from '../../world/world.model';
+import { Report, CombatOutcome } from 'strat-ego-common';
+// import { WorldData } from 'strat-ego-common';
 
 export interface ReportMapped extends Report {
-  type: string;
+  type: CombatOutcome;
   result: string;
 }
 
@@ -15,23 +15,22 @@ export interface ReportMapped extends Report {
 
 export class ReportsComponent implements OnChanges, OnDestroy {
   @Input() public reports: {
-    ReportOrigin: Report[],
-    ReportDestination: Report[],
+    originReports: Report[],
+    targetReports: Report[],
   };
-  @Input() public worldData: WorldData;
+  @Input() public worldData: any;
   public reportsMapped: ReportMapped[] = [];
-
   constructor() {}
 
   ngOnChanges() {
     this.reportsMapped = [
-      ...this.mapReports(this.reports.ReportOrigin, 'attack'),
-      ...this.mapReports(this.reports.ReportDestination, 'defense'),
+      ...this.mapReports(this.reports.originReports, CombatOutcome.attack),
+      ...this.mapReports(this.reports.targetReports, CombatOutcome.defense),
     ]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort((a, b) => +b.createdAt - +a.createdAt);
   }
 
-  mapReports(reports: Report[], type: string): ReportMapped[] {
+  mapReports(reports: Report[], type: number): ReportMapped[] {
     return reports.map((report) => ({
       ...report,
       type,

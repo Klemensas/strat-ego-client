@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
 
-@Injectable()
-export class ReportActions {
-  public static UPDATE = '[Report] UPDATE';
-  // public static LOGIN_SUCCESS: string = '[Report] LOGIN Success';
-  // public static LOGIN_FAIL: string = '[Report] LOGIN Fail';
+export enum ReportActionTypes {
+  Update = '[Report] Update',
 }
+
+export class Update implements Action {
+  readonly type = ReportActionTypes.Update;
+
+  constructor(public payload: any) {}
+}
+
+export type ReportActions = Update;

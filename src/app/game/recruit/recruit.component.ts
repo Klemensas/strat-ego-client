@@ -3,13 +3,14 @@ import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
+import { WorldData, Resources } from 'strat-ego-common';
 
 import { GameDataService } from '../../services/game-data.service';
 import { unitData } from '../staticData';
 import { GameModuleState } from '../../store';
 import { Town } from '../../store/town/town.model';
 import { TownActions, Recruit } from '../../store/town/town.actions';
-import { WorldData, Resources } from '../../world/world.model';
+import { availableResources } from '../utils';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -61,8 +62,8 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   // find the time when the next unit is available and update then
   ngOnChanges() {
     this.unitData = this.worldData.units;
-    this.hasRecruitmentQueue = !!this.town.UnitQueues.length;
-    this.town.availableResources$.pipe(
+    this.hasRecruitmentQueue = !!this.town.unitQueues.length;
+    availableResources(this.town).pipe(
       take(1)
     ).subscribe((value) => {
         if (
@@ -117,10 +118,10 @@ export class RecruitComponent implements OnChanges, OnDestroy {
   }
 
   canRecruit(unit) {
-    if (this.town._actionState.recruit || !this.town.population.available) {
+    if (this.town._actionState.recruit.inProgress || !this.town.population.available) {
       return false;
     }
-    if (!unit.requirements || !this.town) {
+    if (!unit.requirements) {
       return true;
     }
     return unit.requirements.every(req => req.level <= this.town.buildings[req.item].level);

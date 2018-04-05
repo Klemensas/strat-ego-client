@@ -1,6 +1,5 @@
-import { Action } from "@ngrx/store";
-
-import { Map } from "./map.model";
+import { Action } from '@ngrx/store';
+import { Map } from 'strat-ego-common';
 
 export enum MapActionTypes {
   LoadMap = '[Map] LoadMap',

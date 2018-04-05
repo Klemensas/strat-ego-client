@@ -12,12 +12,12 @@
           <div class="col-6">
             <div>Members</div>
             <ul>
-              <li *ngFor="let member of alliance.Members">{{ member.name }}</li>
+              <li *ngFor="let member of alliance.members">{{ member.name }}</li>
             </ul>
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Diplomacy">
+      <mat-tab *ngIf="allianceData.role?.permissions.manageAlliance" label="Diplomacy">
         <alliance-diplomacy [alliance]="alliance"></alliance-diplomacy>
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewInvites" label="Invitations">
@@ -28,11 +28,11 @@
             <button mat-raised-button color="primary" (click)="createInvite()">Invite</button>
           </div>
         </div>
-        <div *ngIf="alliance.Invitations.length; else noInvitations">
+        <div *ngIf="alliance.invitations.length; else noInvitations">
           <span>Invited players:</span>
           <ul>
-            <li *ngFor="let invitation of alliance.Invitations">
-              <span>{{ invitation | json }}</span>
+            <li *ngFor="let invitation of alliance.invitations">
+              <span>{{ invitation.name }}</span>
               <i class="fa fa-times"(click)="cancelInvite(invitation.id)"></i>
             </li>
           </ul>

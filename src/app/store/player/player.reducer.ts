@@ -1,5 +1,6 @@
+import { Player } from 'strat-ego-common';
+
 import { PlayerActions, PlayerActionTypes } from './player.actions';
-import { Player } from './player.model';
 
 export interface PlayerState {
   inProgress: boolean;
@@ -49,7 +50,7 @@ export function reducer(
 
 export const getPlayerData = (state: any) => state.playerData;
 export const getPlayerReports = (state: any) => ({
-  ReportOrigin: state.playerData.ReportOriginPlayer,
-  ReportDestination: state.playerData.ReportDestinationPlayer,
+  originReports: state.playerData.originReports,
+  targetReports: state.playerData.targetReports,
 });
 export const getSidenavs = (state: any) => state.sidenavs;
