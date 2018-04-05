@@ -10,14 +10,13 @@ import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
 import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
-import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName } from 'strat-ego-common';
+import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName, Map } from 'strat-ego-common';
 
 import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../../store';
 import { MapService, CommandService } from '../services';
 import { Town } from '../../store/town/town.model';
 import { MapActions, LoadMap } from '../../store/map/map.actions';
 import { PlayerActions, SetSidenav } from '../../store/player/player.actions';
-import { Map } from '../../store/map/map.model';
 
 // TODO: important https://www.chromestatus.com/feature/5424182347169792
 // will massively improve performance

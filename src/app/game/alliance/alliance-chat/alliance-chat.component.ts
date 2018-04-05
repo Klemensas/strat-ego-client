@@ -35,7 +35,7 @@ export class AllianceChatComponent implements OnInit {
   @ViewChild('messageContainer') messageContainer: ElementRef;
   @Input() player: Player;
 
-  visible = true;
+  visible = false;
   entries: ChatEntry[] = [];
   message = '';
   playerColors = {};

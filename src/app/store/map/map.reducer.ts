@@ -1,4 +1,5 @@
-import { Map } from './map.model';
+import { Map } from 'strat-ego-common';
+
 import { MapActions, MapActionTypes } from './map.actions';
 
 export interface MapState {
