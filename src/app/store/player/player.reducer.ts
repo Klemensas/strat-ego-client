@@ -48,9 +48,9 @@ export function reducer(
   }
 }
 
-export const getPlayerData = (state: any) => state.playerData;
-export const getPlayerReports = (state: any) => ({
+export const getPlayerData = (state: PlayerState) => state.playerData;
+export const getPlayerReports = (state: PlayerState) => ({
   originReports: state.playerData.originReports,
   targetReports: state.playerData.targetReports,
 });
-export const getSidenavs = (state: any) => state.sidenavs;
+export const getSidenavs = (state: PlayerState) => state.sidenavs;

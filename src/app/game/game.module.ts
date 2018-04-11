@@ -47,6 +47,7 @@ import { Allianceffects } from '../store/alliance/alliance.effects';
 import { ChatEffects } from '../store/chat/chat.effects';
 import { TownEffects } from '../store/town/town.effects';
 import { MapEffects } from '../store/map/map.effects';
+import { RankingsEffects } from './rankings/rankings.effects';
 
 export const effects = [
   PlayerEffects,
@@ -54,6 +55,7 @@ export const effects = [
   ChatEffects,
   TownEffects,
   MapEffects,
+  RankingsEffects,
 ];
 
 @NgModule({
