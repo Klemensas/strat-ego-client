@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
+  rankingUpdateFrequency: 600000,
   server: {
     base: 'http://localhost:9000',
     api: 'http://localhost:9000/api/',
