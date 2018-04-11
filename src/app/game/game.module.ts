@@ -13,6 +13,8 @@ import {
   MatCheckboxModule,
   MatTooltipModule,
   MatProgressSpinnerModule,
+  MatTableModule,
+  MatPaginatorModule,
 } from '@angular/material';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { StoreModule } from '@ngrx/store';
@@ -41,6 +43,7 @@ import { ForumComponent } from './alliance/forum/forum.component';
 import { AllianceChatComponent } from './alliance/alliance-chat/alliance-chat.component';
 import { AllianceDiplomacyComponent } from './alliance/alliance-diplomacy/alliance-diplomacy.component';
 import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance-overview.component';
+import { RankingsComponent } from './rankings/rankings.component';
 
 import { PlayerEffects } from '../store/player/player.effects';
 import { Allianceffects } from '../store/alliance/alliance.effects';
@@ -71,6 +74,8 @@ export const effects = [
     MatCheckboxModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -99,6 +104,7 @@ export const effects = [
     AllianceChatComponent,
     AllianceDiplomacyComponent,
     AllianceOverviewComponent,
+    RankingsComponent,
   ],
   providers: [
     TownService,
