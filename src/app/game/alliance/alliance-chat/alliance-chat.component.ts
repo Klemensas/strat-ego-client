@@ -50,7 +50,6 @@ export class AllianceChatComponent implements OnInit {
     this.store.select(getChatState)
       .pipe(first())
       .subscribe((chatState) => {
-        console.log('i happen?');
         this.entries = this.formatEntries(chatState.messages);
         this.scrollChat(this.chatScrollPosition);
       });

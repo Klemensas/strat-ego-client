@@ -1,0 +1,28 @@
+<div class="container-fluid pb-4">
+  <h2>Player ranking</h2>
+  <mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="rank">
+      <mat-header-cell *matHeaderCellDef>Rank</mat-header-cell>
+      <mat-cell *matCellDef="let row; let i = index">#{{i + 1 + paginator.pageSize * paginator.pageIndex}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+      <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.score}}</mat-cell>
+    </ng-container>
+
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"  [ngClass]="{'personal-score': i + paginator.pageSize * paginator.pageIndex === positionRankings.playerPosition }"></mat-row>
+  </mat-table>
+  <mat-paginator #paginator
+    [pageSize]="20"
+    [pageSizeOptions]="[5, 10, 20, 50, 100]"
+    [showFirstLastButtons]="true">
+  </mat-paginator>
+</div>

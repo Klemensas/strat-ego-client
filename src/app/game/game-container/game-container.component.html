@@ -12,6 +12,7 @@
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
+    <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -20,8 +21,8 @@
         <button class="navbar-toggler" type="button" (click)="isVisible = !isVisible" [attr.aria-expanded]="isVisible">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" [ngbCollapse]="!isVisible">
-          <ul class="nav navbar-nav align-items-center mr-auto">
+        <div class="collapse navbar-collapse justify-content-between" [ngbCollapse]="!isVisible">
+          <ul class="nav navbar-nav align-items-center">
             <li class="nav-item">
               <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
                 <i class="fa fa-home" aria-hidden="true"></i> Town
@@ -52,7 +53,12 @@
                 <i class="fa fa-flag" aria-hidden="true"></i> Reports
               </a>
             </li>
-          </ul>
+            <li class="nav-item">
+                <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'rankings')">
+                  <i class="fa fa-flag" aria-hidden="true"></i> Rankings
+                </a>
+              </li>
+            </ul>
           <div class="d-flex justify-content-center align-items-center">
             <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
               <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>

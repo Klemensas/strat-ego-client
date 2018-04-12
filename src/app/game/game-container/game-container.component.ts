@@ -4,10 +4,19 @@ import { Effect, Actions } from '@ngrx/effects';
 import { MatSidenav, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
 
-import { GameModuleState, getTownState, getPlayerData, getPlayerReports, getSidenavs, getPlayerAlliance } from '../../store';
+import {
+  GameModuleState,
+  getTownState,
+  getPlayerData,
+  getPlayerReports,
+  getSidenavs,
+  getPlayerAlliance,
+  getPositionRankings,
+  getRankingsProgress
+} from '../../store';
 import { ActionWithPayload } from '../../store/util';
 import { Town } from '../../store/town/town.model';
 import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/town.actions';
@@ -33,6 +42,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
+  public positionRankings$ = this.store.select(getPositionRankings);
   public noTowns$ = this.townState$.pipe(
     map((state) => !state.inProgress && !state.ids.length)
   );

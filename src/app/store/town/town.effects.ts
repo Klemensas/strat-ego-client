@@ -65,7 +65,6 @@ export class TownEffects {
     map(([{ town, event }, world]) => this.updateAction(world, [town], Update, event.type))
   );
 
-
   @Effect({ dispatch: false })
   public changeTownName$: Observable<any> = this.actions$.pipe(
     ofType<Rename>(TownActionTypes.Rename),
