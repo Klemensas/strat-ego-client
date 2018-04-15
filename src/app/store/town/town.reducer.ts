@@ -151,7 +151,7 @@ export function reducer(
       };
     }
 
-    case TownActionTypes.UpdateEvent:
+    // case TownActionTypes.UpdateEvent:
     default: {
       return state;
     }

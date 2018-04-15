@@ -10,12 +10,6 @@ import * as io from 'socket.io-client';
 
 import { environment } from '../../../environments/environment';
 import { GameModuleState } from '../../store';
-import { PlayerActions, Update } from '../../store/player/player.actions';
-import { TownActions, UpdateEvent } from '../../store/town/town.actions';
-import { MapActions } from '../../store/map/map.actions';
-import { ReportActions } from '../../store/report/report.actions';
-import { AllianceActions } from '../../store/alliance/alliance.actions';
-import { ChatActions } from '../../store/chat/chat.actions';
 
 export type SocketEvent<T = any> = [string, (payload: T) => void];
 

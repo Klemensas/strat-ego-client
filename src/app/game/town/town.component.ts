@@ -23,7 +23,7 @@ import { Town } from '../../store/town/town.model';
 
 export class TownComponent implements OnInit, OnDestroy {
   private nameChange = '';
-  public town$ = this.store.select(getActiveTown)
+  public town$ = this.store.select(getActiveTown);
   public worldData$ = this.store.select(getActiveWorld);
 
   constructor(

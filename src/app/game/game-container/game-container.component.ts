@@ -67,11 +67,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     )
       .subscribe(sidenavs => this.updateSidenavs(sidenavs));
 
-    this.actions$.pipe(
-      ofType(TownActionTypes.UpdateEvent),
-      map((action: ActionWithPayload) => action.payload),
-      map(({ town, event }) => event.type)
-    ).subscribe((event) => this.handleEvent(event));
+    // this.actions$.pipe(
+    //   ofType(TownActionTypes.UpdateEvent),
+    //   map((action: ActionWithPayload) => action.payload),
+    //   map(({ town, event }) => event.type)
+    // ).subscribe((event) => this.handleEvent(event));
   }
 
   updateSidenavs(sidenavs) {
@@ -112,24 +112,24 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     this.store.dispatch(new Restart());
   }
 
-  private handleEvent(event) {
-    let message;
-    switch (event) {
-      case 'name':
-        message = 'Town name changed';
-        break;
-      case 'movement':
-        message = 'Movement started';
-        break;
-      case 'recruit':
-        message = 'Recruitment queued';
-        break;
-      case 'build':
-        message = 'Building queued';
-        break;
-      default:
-        return;
-    }
-    this.snackBar.open(message, null, { duration: 3000 });
-  }
+  // private handleEvent(event) {
+  //   let message;
+  //   switch (event) {
+  //     case 'name':
+  //       message = 'Town name changed';
+  //       break;
+  //     case 'movement':
+  //       message = 'Movement started';
+  //       break;
+  //     case 'recruit':
+  //       message = 'Recruitment queued';
+  //       break;
+  //     case 'build':
+  //       message = 'Building queued';
+  //       break;
+  //     default:
+  //       return;
+  //   }
+  //   this.snackBar.open(message, null, { duration: 3000 });
+  // }
 }

@@ -13,11 +13,11 @@ import {
   TownActionTypes,
   SetActiveTown,
   SetPlayerTowns,
-  UpdateEvent,
+  // UpdateEvent,
   Update,
   Rename,
   Recruit,
-  ScheduleUpdate,
+  // ScheduleUpdate,
   RenameSuccess,
   RenameFail,
   Build,
@@ -57,13 +57,13 @@ export class TownEffects {
     map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, SetPlayerTowns))
   );
 
-  @Effect()
-  public townUpdateEvent$: Observable<Action> = this.actions$.pipe(
-    ofType<UpdateEvent>(TownActionTypes.UpdateEvent),
-    map((action) => action.payload),
-    withLatestFrom(this.store.select(getActiveWorld)),
-    map(([{ town, event }, world]) => this.updateAction(world, [town], Update, event.type))
-  );
+  // @Effect()
+  // public townUpdateEvent$: Observable<Action> = this.actions$.pipe(
+  //   ofType<UpdateEvent>(TownActionTypes.UpdateEvent),
+  //   map((action) => action.payload),
+  //   withLatestFrom(this.store.select(getActiveWorld)),
+  //   map(([{ town, event }, world]) => this.updateAction(world, [town], Update, event.type))
+  // );
 
   @Effect({ dispatch: false })
   public changeTownName$: Observable<any> = this.actions$.pipe(
@@ -98,27 +98,27 @@ export class TownEffects {
   );
 
 
-  @Effect({ dispatch: false })
-  public scheduleUpdate$: Observable<any> = this.actions$.pipe(
-    ofType<ScheduleUpdate>(TownActionTypes.ScheduleUpdate),
-    map((action) => action.payload),
-    map((id) => this.socketService.sendEvent('town:update', { town: id }))
-  );
+  // @Effect({ dispatch: false })
+  // public scheduleUpdate$: Observable<any> = this.actions$.pipe(
+  //   ofType<ScheduleUpdate>(TownActionTypes.ScheduleUpdate),
+  //   map((action) => action.payload),
+  //   map((id) => this.socketService.sendEvent('town:update', { town: id }))
+  // );
 
 
-  public updateAction(world, towns: Town[], action, event?): TownActions {
-    // towns.forEach((town) => this.scheduleUpdate(town));
-    const townPayload = towns.map((town) => ({
-      ...town,
-      population: this.calculatePopulation(town, world.buildingMap.farm.data),
-      storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
-      recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
-    }));
-    return new action({
-      event,
-      towns: townPayload
-    });
-  }
+  // public updateAction(world, towns: Town[], action, event?): TownActions {
+  //   // towns.forEach((town) => this.scheduleUpdate(town));
+  //   const townPayload = towns.map((town) => ({
+  //     ...town,
+  //     population: this.calculatePopulation(town, world.buildingMap.farm.data),
+  //     storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
+  //     recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
+  //   }));
+  //   return new action({
+  //     event,
+  //     towns: townPayload
+  //   });
+  // }
 
   public updateTown(world: WorldData, town: Town): Town {
     return {
@@ -141,36 +141,36 @@ export class TownEffects {
     };
   }
 
-  public scheduleUpdate(town: Town) {
-    const soonest = this.findSoonestItem(town.buildingQueues, town.unitQueues/* , town.MovementDestinationTown, town.MovementOriginTown */);
-    let townTimeout = this.townTimeouts[town.id];
-    if (!soonest) {
-      if (townTimeout) {
-        clearTimeout(townTimeout.timeout);
-      }
-      return;
-    }
+  // public scheduleUpdate(town: Town) {
+  //   const soonest = this.findSoonestItem(town.buildingQueues, town.unitQueues/* , town.MovementDestinationTown, town.MovementOriginTown */);
+  //   let townTimeout = this.townTimeouts[town.id];
+  //   if (!soonest) {
+  //     if (townTimeout) {
+  //       clearTimeout(townTimeout.timeout);
+  //     }
+  //     return;
+  //   }
 
-    if (townTimeout) {
-      clearTimeout(townTimeout.timeout);
-    }
-    const time = soonest - Date.now();
-    townTimeout = {
-      soonest,
-      timeout: setTimeout((id) => this.callUpdate(id), time, town.id)
-    };
-  }
+  //   if (townTimeout) {
+  //     clearTimeout(townTimeout.timeout);
+  //   }
+  //   const time = soonest - Date.now();
+  //   townTimeout = {
+  //     soonest,
+  //     timeout: setTimeout((id) => this.callUpdate(id), time, town.id)
+  //   };
+  // }
 
-  public findSoonestItem(...queues) {
-    return queues.reduce((soonest, queue) => {
-      const queueSoonest = queue.reduce((qSoonest, item) => Math.min(qSoonest, new Date(item.endsAt).getTime()), Infinity);
-      return Math.min(soonest, queueSoonest);
-    }, Infinity) % Infinity;
-  }
+  // public findSoonestItem(...queues) {
+  //   return queues.reduce((soonest, queue) => {
+  //     const queueSoonest = queue.reduce((qSoonest, item) => Math.min(qSoonest, new Date(item.endsAt).getTime()), Infinity);
+  //     return Math.min(soonest, queueSoonest);
+  //   }, Infinity) % Infinity;
+  // }
 
-  public callUpdate(id) {
-    this.store.dispatch(new ScheduleUpdate(id));
-  }
+  // public callUpdate(id) {
+  //   this.store.dispatch(new ScheduleUpdate(id));
+  // }
 
   constructor(
     private actions$: Actions,
