@@ -1,7 +1,8 @@
-import { Town, TownActionState } from './town.model';
-import { TownActions, TownActionTypes } from './town.actions';
 import { createSelector } from '@ngrx/store';
 import { TownError } from 'strat-ego-common';
+
+import { Town, TownActionState } from './town.model';
+import { TownActions, TownActionTypes } from './town.actions';
 
 interface TownDict {
   [id: number]: Town;
@@ -48,7 +49,7 @@ export function reducer(
 ): TownState {
   switch (action.type) {
     case TownActionTypes.SetPlayerTowns: {
-      const { playerTowns, ids } = action.payload.towns.reduce((result, town) => {
+      const { playerTowns, ids } = action.payload.reduce((result, town) => {
         result.ids.push(town.id);
         result.playerTowns[town.id] = {
           ...town,
@@ -60,12 +61,17 @@ export function reducer(
     }
 
     case TownActionTypes.Update: {
-      const playerTowns = action.payload.towns.reduce((result, town) => {
-        result[town.id] = town;
-        result[town.id]._actionState = { ...state.playerTowns[town.id]._actionState, [action.payload.event]: { inProgress: false, error: null } };
-        return result;
-      }, {});
-      return { ...state, playerTowns };
+      const targetTown = state.playerTowns[action.payload.id];
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [action.payload.id]: {
+            ...targetTown,
+            ...action.payload,
+          }
+        }
+      };
     }
 
     case TownActionTypes.SetActiveTown: {

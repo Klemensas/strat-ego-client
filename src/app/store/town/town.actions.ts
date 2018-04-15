@@ -27,7 +27,7 @@ export enum TownActionTypes {
 export class Update implements Action {
   readonly type = TownActionTypes.Update;
 
-  constructor(public payload: TownUpdateFormatted) {}
+  constructor(public payload: Town) {}
 }
 export class Rename implements Action {
   readonly type = TownActionTypes.Rename;
@@ -87,7 +87,7 @@ export class RecruitFail implements Action {
 export class SetPlayerTowns implements Action {
   readonly type = TownActionTypes.SetPlayerTowns;
 
-  constructor(public payload: TownUpdateFormatted) {}
+  constructor(public payload: Town[]) {}
 }
 export class SetActiveTown implements Action {
   readonly type = TownActionTypes.SetActiveTown;

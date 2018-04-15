@@ -26,18 +26,17 @@ export interface TownUnit {
   amount?: number;
 }
 
+// // From server
+// export interface TownUpdatePayload {
+//   event: { type: string };
+//   town: Town;
+// }
 
-// From server
-export interface TownUpdatePayload {
-  event: { type: string };
-  town: Town;
-}
-
-// Formatted
-export interface TownUpdateFormatted {
-  event?: string;
-  towns: Town[];
-}
+// // Formatted
+// export interface TownUpdateFormatted {
+//   event?: string;
+//   towns: Town[];
+// }
 
 export interface Town extends BaseTown {
   population: TownPopulation;

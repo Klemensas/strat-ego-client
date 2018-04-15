@@ -44,8 +44,8 @@ export class TownEffects {
     ofType<SetPlayerTowns>(TownActionTypes.SetPlayerTowns),
     map((action) => action.payload),
     withLatestFrom(this.store),
-    filter(([{ towns }, store]) => (towns.length && !store.game.town.activeTown) || !towns.length),
-    map(([{ towns }, store]) => new SetActiveTown(towns.length ? towns[0].id : null))
+    filter(([towns, store]) => (towns.length && !store.game.town.activeTown) || !towns.length),
+    map(([towns, store]) => new SetActiveTown(towns.length ? towns[0].id : null))
   );
 
   @Effect()
@@ -54,7 +54,7 @@ export class TownEffects {
     map((action) => action.payload),
     map((player) => player.towns),
     withLatestFrom(this.store.select(getActiveWorld)),
-    map(([towns, world]: [Town[], WorldData]) => this.updateAction(world, towns, SetPlayerTowns))
+    map(([towns, world]: [Town[], WorldData]) => new SetPlayerTowns(towns.map((town) => this.updateTown(world, town)))),
   );
 
   // @Effect()
@@ -179,7 +179,11 @@ export class TownEffects {
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([
-      ['town', (payload) => this.store.dispatch(new UpdateEvent(payload))],
+      ['town:update', (payload) =>
+      this.store.select(getActiveWorld)
+        .pipe(take(1))
+        .subscribe((world) => this.store.dispatch(new Update(this.updateTown(world, payload))))
+      ],
       ['town:renameSuccess', (payload) => this.store.dispatch(new RenameSuccess(payload))],
       ['town:renameFail', (payload) => this.store.dispatch(new RenameFail(payload))],
       [
