@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Town, TownUpdatePayload, TownUpdateFormatted } from './town.model';
+import { Town } from './town.model';
 import { TownError, MovementType } from 'strat-ego-common';
 
 export enum TownActionTypes {
@@ -16,8 +16,8 @@ export enum TownActionTypes {
   MoveTroops = '[Town] Move Troops',
   MoveTroopsSuccess = '[Town] Move Troops Success',
   MoveTroopsFail = '[Town] Move Troops Fail',
-  UpdateEvent = '[Town] Update Event',
-  ScheduleUpdate = '[Town] Schedule Update',
+  // UpdateEvent = '[Town] Update Event',
+  // ScheduleUpdate = '[Town] Schedule Update',
   SetPlayerTowns = '[Town] Set Player Towns',
   SetActiveTown = '[Town] Set Active Town',
 }
@@ -27,7 +27,7 @@ export enum TownActionTypes {
 export class Update implements Action {
   readonly type = TownActionTypes.Update;
 
-  constructor(public payload: TownUpdateFormatted) {}
+  constructor(public payload: Town) {}
 }
 export class Rename implements Action {
   readonly type = TownActionTypes.Rename;
@@ -74,20 +74,20 @@ export class RecruitFail implements Action {
 
   constructor(public payload: TownError) {}
 }
-export class UpdateEvent implements Action {
-  readonly type = TownActionTypes.UpdateEvent;
+// export class UpdateEvent implements Action {
+//   readonly type = TownActionTypes.UpdateEvent;
 
-  constructor(public payload: TownUpdatePayload) {}
-}
-export class ScheduleUpdate implements Action {
-  readonly type = TownActionTypes.ScheduleUpdate;
+//   constructor(public payload: TownUpdatePayload) {}
+// }
+// export class ScheduleUpdate implements Action {
+//   readonly type = TownActionTypes.ScheduleUpdate;
 
-  constructor(public payload: number) {}
-}
+//   constructor(public payload: number) {}
+// }
 export class SetPlayerTowns implements Action {
   readonly type = TownActionTypes.SetPlayerTowns;
 
-  constructor(public payload: TownUpdateFormatted) {}
+  constructor(public payload: Town[]) {}
 }
 export class SetActiveTown implements Action {
   readonly type = TownActionTypes.SetActiveTown;
@@ -111,7 +111,7 @@ export class MoveTroopsFail implements Action {
 }
 
 export type TownActions = Update |
-  UpdateEvent |
+  // UpdateEvent |
   Rename |
   RenameSuccess |
   RenameFail |
@@ -124,6 +124,6 @@ export type TownActions = Update |
   MoveTroops |
   MoveTroopsSuccess |
   MoveTroopsFail |
-  ScheduleUpdate |
+  // ScheduleUpdate |
   SetPlayerTowns |
   SetActiveTown;
