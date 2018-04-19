@@ -10,7 +10,7 @@ import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
 import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
-import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName, Map } from 'strat-ego-common';
+import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName, Dict, MapTown } from 'strat-ego-common';
 
 import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../../store';
 import { MapService, CommandService } from '../services';
@@ -50,7 +50,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   public selected;
   public zoom = 1;
-  public mapData: Map;
+  public mapData: Dict<MapTown>;
   public mapOffset;
   public mapSettings = {
     size: { x: 100, y: 100 },
