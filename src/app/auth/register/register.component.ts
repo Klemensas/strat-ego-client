@@ -27,13 +27,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
         return;
       }
-      if (auth.error === 422) {
-        const errBody = auth.error.json();
-        const errorMessage = errBody.message;
-        this.form.form.setErrors({ errorMessage });
-        return;
+      if (auth.error) {
+        if (auth.error === 422) {
+          const errBody = auth.error.json();
+          const errorMessage = errBody.message;
+          this.form.form.setErrors({ errorMessage });
+          return;
+        }
+        this.form.form.setErrors({ errorMessage: 'Unforseen server error.'});
       }
-      this.form.form.setErrors({ errorMessage: 'Unforseen server error.'});
 
     });
   }
