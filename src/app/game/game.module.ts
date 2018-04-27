@@ -21,6 +21,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterModule } from '@angular/router/';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import { TownService, MapService, CommandService, ReportService } from './services/index';
 import { reducers } from '../store/index';
 import { gameRouting, gameComponents } from './game.routing';
@@ -51,6 +53,8 @@ import { ChatEffects } from '../store/chat/chat.effects';
 import { TownEffects } from '../store/town/town.effects';
 import { MapEffects } from '../store/map/map.effects';
 import { RankingsEffects } from './rankings/rankings.effects';
+import { SupportComponent } from './support/support.component';
+import { SupportItemComponent } from './support/support-item/support-item.component';
 
 export const effects = [
   PlayerEffects,
@@ -82,7 +86,8 @@ export const effects = [
     gameRouting,
     NgbModule,
     StoreModule.forFeature('game', reducers),
-    EffectsModule.forFeature(effects)
+    EffectsModule.forFeature(effects),
+    FontAwesomeModule,
   ],
   declarations: [
     gameComponents,
@@ -105,6 +110,8 @@ export const effects = [
     AllianceDiplomacyComponent,
     AllianceOverviewComponent,
     RankingsComponent,
+    SupportComponent,
+    SupportItemComponent,
   ],
   providers: [
     TownService,

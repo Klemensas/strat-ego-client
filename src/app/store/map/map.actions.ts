@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Map } from 'strat-ego-common';
+import { Dict, MapTown } from 'strat-ego-common';
 
 export enum MapActionTypes {
   LoadMap = '[Map] LoadMap',
@@ -12,7 +12,7 @@ export class LoadMap implements Action {
 export class Update implements Action {
   readonly type = MapActionTypes.Update;
 
-  constructor(public payload: Map) {}
+  constructor(public payload: Dict<MapTown>) {}
 }
 
 export type MapActions = LoadMap |

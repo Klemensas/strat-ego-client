@@ -1,11 +1,11 @@
-import { Map } from 'strat-ego-common';
+import { Dict, MapTown } from 'strat-ego-common';
 
 import { MapActions, MapActionTypes } from './map.actions';
 
 export interface MapState {
   inProgress: boolean;
   activeTown: number;
-  mapData: Map;
+  mapData: Dict<MapTown>;
 }
 
 export const initialState: MapState = {

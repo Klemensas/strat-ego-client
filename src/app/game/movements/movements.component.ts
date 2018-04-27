@@ -2,6 +2,9 @@ import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { timestamp, map } from 'rxjs/operators';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCaretRight, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
+
 import { Town } from '../../store/town/town.model';
 import { MovementTypeName } from 'strat-ego-common';
 
@@ -21,6 +24,10 @@ export class MovementsComponent implements OnInit, OnChanges {
   public incoming = [];
   public returning = [];
   public unitTypes = [];
+
+  constructor() {
+    library.add(faCaretRight, faAngleDoubleLeft);
+  }
 
   ngOnInit() {
     const b = this.typeNames[0];

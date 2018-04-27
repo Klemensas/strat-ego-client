@@ -23,6 +23,8 @@ import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/to
 import { PlayerActions, SetSidenav, Restart } from '../../store/player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'game-container',
@@ -54,7 +56,9 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     private store: Store<GameModuleState>,
     private snackBar: MatSnackBar,
     private actions$: Actions,
-  ) {}
+  ) {
+    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt);
+  }
 
   ngOnInit() {
     this.townStateSubscription = this.townState$.subscribe((townState) => {

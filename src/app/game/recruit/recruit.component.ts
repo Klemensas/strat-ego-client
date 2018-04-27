@@ -1,11 +1,13 @@
-import { Component, OnChanges, OnDestroy, Input  } from '@angular/core';
+import { Component, OnChanges, Input  } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { WorldData, Resources } from 'strat-ego-common';
 
-import { GameDataService } from '../../services/game-data.service';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 import { unitData } from '../staticData';
 import { GameModuleState } from '../../store';
 import { Town } from '../../store/town/town.model';
@@ -18,7 +20,7 @@ import { availableResources } from '../utils';
   templateUrl: './recruit.component.html',
   styleUrls: ['./recruit.component.scss'],
 })
-export class RecruitComponent implements OnChanges, OnDestroy {
+export class RecruitComponent implements OnChanges {
   @Input() public town: Town;
   @Input() public worldData: WorldData;
   public unitDetails = unitData;
@@ -45,18 +47,12 @@ export class RecruitComponent implements OnChanges, OnDestroy {
     population: 0,
   };
   public hasRecruitmentQueue = false;
-  public subscriptions = {
-    gameData: null,
-    currentTown: null,
-    recruitEvents: null
-  };
   public queue$: Observable<any>;
   public updateAvailability$: Subscription;
 
-  constructor(
-    private gameData: GameDataService,
-    private store: Store<GameModuleState>,
-  ) {}
+  constructor(private store: Store<GameModuleState>) {
+    library.add(faChevronRight);
+  }
 
   // TODO: update resources, either listen to resource events in an interval or
   // find the time when the next unit is available and update then
@@ -87,12 +83,6 @@ export class RecruitComponent implements OnChanges, OnDestroy {
 
         // this.updateAvailability$ = Observable.timer(soonestAvailable).subscribe(() => this.ngOnChanges);
       });
-  }
-
-  ngOnDestroy() {
-      // this.subscriptions.gameData.unsubscribe();
-      // this.subscriptions.currentTown.unsubscribe();
-      // this.subscriptions.recruitEvents.unsubscribe();
   }
 
   unitAmountUpdate($event, type) {

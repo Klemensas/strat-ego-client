@@ -3,13 +3,13 @@
   <div *ngFor="let queue of queue$ | async">
     <div class="row">
       <div class="col">
-        <i class="fa" *ngIf="queue.units" [ngClass]="{ 'fa-caret-right': !queue.isVisible, 'fa-caret-down': queue.isVisible }" (click)="queue.isVisible = !queue.isVisible"></i>
+        <fa-icon *ngIf="queue.units" [icon]="['fas', 'caret-right']" [rotate]="queue.isVisible ? 90 : 0" (click)="queue.isVisible = !queue.isVisible"></fa-icon>
         {{ queue.originTownId }}
       </div>
       <div class="col">{{ queue.timeLeft | countdown:'HH:mm:ss' }}</div>
       <div class="col">
         {{ typeNames[queue.type] }}
-        <i class="fa fa-angle-double-left"></i>
+        <fa-icon [icon]="['fas', 'angle-double-left']"></fa-icon>
       </div>
     </div>
     <div class="row" [hidden]="!queue.isVisible">
