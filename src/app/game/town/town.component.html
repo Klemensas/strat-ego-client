@@ -12,7 +12,7 @@
     <div class="col-md-3">
        <div class="py-1">Population: <b>{{town.population.used}}/{{town.population.total}}</b></div>
        <resources [town]="town"></resources>
-       <units [units]="town.units"></units>
+       <units [units]="town.units" [originMovements]="town.originMovements" [targetMovements]="town.targetMovements" [originSupport]="town.originSupport" [targetSupport]="town.targetSupport"></units>
        <building-queue [buildingQueue]="town.buildingQueues"></building-queue>
     </div>
   </div>
