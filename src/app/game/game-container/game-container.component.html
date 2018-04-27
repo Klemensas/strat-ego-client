@@ -12,6 +12,7 @@
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
+    <support *ngSwitchCase="'support'" [town]="activeTown" [worldData]="worldData$ | async"></support>
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
   </mat-sidenav>
 
@@ -45,7 +46,12 @@
             </li>
             <li class="nav-item">
               <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movements')">
-                <i class="fa fa-arrows" aria-hidden="true"></i> Movements
+                <fa-icon [icon]="['fas', 'arrows-alt']" aria-hidden="true"></fa-icon> Movements
+              </a>
+            </li>
+            <li class="nav-item">
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'support')">
+                <fa-icon [icon]="['fas', 'shield-alt']" aria-hidden="true"></fa-icon> Support
               </a>
             </li>
             <li class="nav-item">
