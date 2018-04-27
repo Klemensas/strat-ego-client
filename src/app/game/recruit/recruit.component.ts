@@ -99,13 +99,16 @@ export class RecruitComponent implements OnChanges {
   }
 
   calculateMax(costs) {
-    return Math.min.apply(null, [
-      Math.floor(this.recruitment.resourcesAvailable['wood'] / costs.wood),
-      Math.floor(this.recruitment.resourcesAvailable['clay'] / costs.clay),
-      Math.floor(this.recruitment.resourcesAvailable['iron'] / costs.iron),
-      Math.floor(this.town.population.available - this.recruitment.population),
-    ]);
-  }
+    return Math.max(
+      Math.min.apply(null, [
+        Math.floor(this.recruitment.resourcesAvailable['wood'] / costs.wood),
+        Math.floor(this.recruitment.resourcesAvailable['clay'] / costs.clay),
+        Math.floor(this.recruitment.resourcesAvailable['iron'] / costs.iron),
+        Math.floor(this.town.population.available - this.recruitment.population),
+      ]),
+      0
+    );
+    }
 
   canRecruit(unit) {
     if (this.town._actionState.recruit.inProgress || !this.town.population.available) {
