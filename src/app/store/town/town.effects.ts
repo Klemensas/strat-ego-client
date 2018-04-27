@@ -27,7 +27,16 @@ import {
   RecruitFail,
   MoveTroopsSuccess,
   MoveTroopsFail,
-  MoveTroops
+  MoveTroops,
+  RecallSupport,
+  SendBackSupport,
+  RecallSupportSuccess,
+  RecallSupportFail,
+  SendBackSupportSuccess,
+  SendBackSupportFail,
+  IncomingMovement,
+  SupportRecalled,
+  SupportSentBack
 } from './town.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { GameModuleState, getActiveTown } from '../';
@@ -95,6 +104,20 @@ export class TownEffects {
     map((action) => action.payload),
     withLatestFrom(this.store.select(getActiveTown)),
     map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }))
+  );
+
+  @Effect({ dispatch: false })
+  public recallSupport$: Observable<any> = this.actions$.pipe(
+    ofType<RecallSupport>(TownActionTypes.RecallSupport),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('town:recallSupport', payload))
+  );
+
+  @Effect({ dispatch: false })
+  public sendBackSupport$: Observable<any> = this.actions$.pipe(
+    ofType<SendBackSupport>(TownActionTypes.SendBackSupport),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('town:sendBackSupport', payload))
   );
 
 
@@ -215,6 +238,13 @@ export class TownEffects {
             .subscribe((world) => this.store.dispatch(new MoveTroopsSuccess(this.updateTown(world, payload))))
       ],
       ['town:moveTroopsFail', (payload) => this.store.dispatch(new MoveTroopsFail(payload))],
+      ['town:recallSupportSuccess', (payload) => this.store.dispatch(new RecallSupportSuccess(payload))],
+      ['town:recallSupportFail', (payload) => this.store.dispatch(new RecallSupportFail(payload))],
+      ['town:sendBackSupportSuccess', (payload) => this.store.dispatch(new SendBackSupportSuccess(payload))],
+      ['town:sendBackSupportFail', (payload) => this.store.dispatch(new SendBackSupportFail(payload))],
+      ['town:incomingMovement', (payload) => this.store.dispatch(new IncomingMovement(payload))],
+      ['town:supportRecalled', (payload) => this.store.dispatch(new SupportRecalled(payload))],
+      ['town:supportSentBack', (payload) => this.store.dispatch(new SupportSentBack(payload))],
     ]);
   }
 }
