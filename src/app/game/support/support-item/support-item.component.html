@@ -1,0 +1,14 @@
+<div class="row support-units mb-4">
+  <div class="col-12 pb-2 d-flex align-items-center justify-content-between" *ngIf="isOrigin">
+    <div>Your support for <strong>{{ support.targetTown.name }} ({{ support.targetTown.location }})</strong></div>
+    <button class="btn btn-sm btn-info" (click)="cancelSupport.emit(support.id)">Recall</button>
+  </div>
+  <div class="col-12 pb-2 d-flex align-items-center justify-content-between" *ngIf="!isOrigin">
+    <div>Support from <strong>{{ support.originTown.name }} ({{ support.originTown.location }})</strong></div>
+    <button class="btn btn-sm btn-info" (click)="cancelSupport.emit(support.id)">Send home</button>
+  </div>
+  <div class="col d-flex flex-column align-items-center" *ngFor="let unit of unitList" [ngClass]="{'empty': !support.units[unit.name]}">
+    <div class="unit-icon" [attr.data-unit]="unit.name"></div>
+    <div>{{ support.units[unit.name] || 0 }}</div>
+  </div>
+</div>
