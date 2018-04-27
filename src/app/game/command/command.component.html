@@ -16,7 +16,7 @@
     </div>
     <div *ngIf="!town._actionState.movement.inProgress">
       <button type="button" class="btn btn-danger" (click)="sendCommand(false, commandForm)" [disabled]="commandForm.pristine || commandForm.errors">Attack</button>
-      <!--<button type="button" class="btn btn-success" (click)="sendCommand(true)">Support</button>-->
+      <button type="button" class="btn btn-success" (click)="sendCommand(true, commandForm)">Support</button>
       <span *ngIf="commandForm.errors" class="text-danger">{{commandForm.errors.errorMessage}}</span>
       <span *ngIf="sent" class="text-success">Attack successfully sent.</span>
     </div>
