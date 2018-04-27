@@ -1,8 +1,9 @@
 import { Action } from '@ngrx/store';
-import { Town } from './town.model';
-import { TownError, MovementType } from 'strat-ego-common';
+import { TownError, MovementType, Coords, TownUnit, Dict, RecallPayload, Movement } from 'strat-ego-common';
 
-export enum TownActionTypes {
+import { Town } from './town.model';
+
+export const enum TownActionTypes {
   Update = '[Town] Update',
   Rename = '[Town] Rename',
   RenameSuccess = '[Town] Rename Success',
@@ -16,14 +17,24 @@ export enum TownActionTypes {
   MoveTroops = '[Town] Move Troops',
   MoveTroopsSuccess = '[Town] Move Troops Success',
   MoveTroopsFail = '[Town] Move Troops Fail',
+  RecallSupport = '[Town] Recall Support',
+  RecallSupportSuccess = '[Town] Recall Support Success',
+  RecallSupportFail = '[Town] Recall Support Fail',
+  SendBackSupport = '[Town] Send Back Support',
+  SendBackSupportSuccess = '[Town] Send Back Support Success',
+  SendBackSupportFail = '[Town] Send Back Support Fail',
   // UpdateEvent = '[Town] Update Event',
   // ScheduleUpdate = '[Town] Schedule Update',
   SetPlayerTowns = '[Town] Set Player Towns',
   SetActiveTown = '[Town] Set Active Town',
+
+  IncomingMovement = '[Town] Incoming Movement',
+  SupportRecalled = '[Town] Support Recalled',
+  SupportSentBack = '[Town] Support Sent Back',
 }
 
-// TODO: merge Update and UpdateEvent actions. Consider refactoring logic to update specific parts
-// TODO: specify types better, some i.e. some payloads are not of full town type
+// TODO: once decided on queue implementation change payload accordingly
+// I.e. might need to only send the changes instead of full town payload
 export class Update implements Action {
   readonly type = TownActionTypes.Update;
 
@@ -97,7 +108,7 @@ export class SetActiveTown implements Action {
 export class MoveTroops implements Action {
   readonly type = TownActionTypes.MoveTroops;
 
-  constructor(public payload: { type: MovementType; target: [number, number]; units: [string, number][] }) {}
+  constructor(public payload: { type: MovementType; target: Coords; units: Dict<number> }) {}
 }
 export class MoveTroopsSuccess implements Action {
   readonly type = TownActionTypes.MoveTroopsSuccess;
@@ -109,6 +120,52 @@ export class MoveTroopsFail implements Action {
 
   constructor(public payload: TownError) {}
 }
+export class RecallSupport implements Action {
+  readonly type = TownActionTypes.RecallSupport;
+
+  constructor(public payload: number) {}
+}
+export class RecallSupportSuccess implements Action {
+  readonly type = TownActionTypes.RecallSupportSuccess;
+
+  constructor(public payload: RecallPayload) {}
+}
+export class RecallSupportFail implements Action {
+  readonly type = TownActionTypes.RecallSupportFail;
+
+  constructor(public payload: TownError) {}
+}
+export class SendBackSupport implements Action {
+  readonly type = TownActionTypes.SendBackSupport;
+
+  constructor(public payload: number) {}
+}
+export class SendBackSupportSuccess implements Action {
+  readonly type = TownActionTypes.SendBackSupportSuccess;
+
+  constructor(public payload: number) {}
+}
+export class SendBackSupportFail implements Action {
+  readonly type = TownActionTypes.SendBackSupportFail;
+
+  constructor(public payload: TownError) {}
+}
+export class IncomingMovement implements Action {
+  readonly type = TownActionTypes.IncomingMovement;
+
+  constructor(public payload: Movement) {}
+}
+export class SupportRecalled implements Action {
+  readonly type = TownActionTypes.SupportRecalled;
+
+  constructor(public payload: { support: number; town: number }) {}
+}
+export class SupportSentBack implements Action {
+  readonly type = TownActionTypes.SupportSentBack;
+
+  constructor(public payload: RecallPayload) {}
+}
+
 
 export type TownActions = Update |
   // UpdateEvent |
@@ -124,6 +181,15 @@ export type TownActions = Update |
   MoveTroops |
   MoveTroopsSuccess |
   MoveTroopsFail |
+  RecallSupport |
+  RecallSupportSuccess |
+  RecallSupportFail |
+  SendBackSupport |
+  SendBackSupportSuccess |
+  SendBackSupportFail |
   // ScheduleUpdate |
   SetPlayerTowns |
-  SetActiveTown;
+  SetActiveTown |
+  IncomingMovement |
+  SupportRecalled |
+  SupportSentBack;
