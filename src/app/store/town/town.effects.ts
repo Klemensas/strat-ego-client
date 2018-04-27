@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store, Action } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
-import { WorldData } from 'strat-ego-common';
+import { WorldData, MovementType, RecallPayload } from 'strat-ego-common';
 
 import { Town } from './town.model';
 import {
@@ -27,7 +27,16 @@ import {
   RecruitFail,
   MoveTroopsSuccess,
   MoveTroopsFail,
-  MoveTroops
+  MoveTroops,
+  RecallSupport,
+  SendBackSupport,
+  RecallSupportSuccess,
+  RecallSupportFail,
+  SendBackSupportSuccess,
+  SendBackSupportFail,
+  IncomingMovement,
+  SupportRecalled,
+  SupportSentBack
 } from './town.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { GameModuleState, getActiveTown } from '../';
@@ -37,7 +46,7 @@ import { getActiveWorld, State } from '../../reducers';
 
 @Injectable()
 export class TownEffects {
-  public townTimeouts = {};
+  // public townTimeouts = {};
 
   @Effect()
   public setActiveTown$: Observable<Action> = this.actions$.pipe(
@@ -97,6 +106,20 @@ export class TownEffects {
     map(([payload, town]) => this.socketService.sendEvent('town:moveTroops', { ...payload, town: town.id }))
   );
 
+  @Effect({ dispatch: false })
+  public recallSupport$: Observable<any> = this.actions$.pipe(
+    ofType<RecallSupport>(TownActionTypes.RecallSupport),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('town:recallSupport', payload))
+  );
+
+  @Effect({ dispatch: false })
+  public sendBackSupport$: Observable<any> = this.actions$.pipe(
+    ofType<SendBackSupport>(TownActionTypes.SendBackSupport),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('town:sendBackSupport', payload))
+  );
+
 
   // @Effect({ dispatch: false })
   // public scheduleUpdate$: Observable<any> = this.actions$.pipe(
@@ -131,9 +154,14 @@ export class TownEffects {
 
   public calculatePopulation(town: Town, farmData) {
     const total = farmData[town.buildings.farm.level].population;
-    const used = Object.entries(town.units).reduce((count, [name, unit]) => {
-      return count + unit.inside + unit.outside + unit.queued;
+    const supportPop = town.originSupport.reduce((result, { units }) => result + Object.values(units).reduce((a, b) => a + b, 0), 0);
+    const attackPop = town.originMovements.reduce((result, { units }) => result + Object.values(units).reduce((a, b) => a + b, 0), 0);
+    const returnPop = town.targetMovements.reduce((result, { units, type }) =>
+      result + type === MovementType.return ?  Object.values(units).reduce((a, b) => a + b, 0) : 0, 0);
+    const townPop = Object.entries(town.units).reduce((count, [name, unit]) => {
+      return count + unit.inside + unit.queued;
       }, 0);
+    const used = townPop + supportPop + attackPop + returnPop;
     return {
       total,
       used,
@@ -210,6 +238,13 @@ export class TownEffects {
             .subscribe((world) => this.store.dispatch(new MoveTroopsSuccess(this.updateTown(world, payload))))
       ],
       ['town:moveTroopsFail', (payload) => this.store.dispatch(new MoveTroopsFail(payload))],
+      ['town:recallSupportSuccess', (payload) => this.store.dispatch(new RecallSupportSuccess(payload))],
+      ['town:recallSupportFail', (payload) => this.store.dispatch(new RecallSupportFail(payload))],
+      ['town:sendBackSupportSuccess', (payload) => this.store.dispatch(new SendBackSupportSuccess(payload))],
+      ['town:sendBackSupportFail', (payload) => this.store.dispatch(new SendBackSupportFail(payload))],
+      ['town:incomingMovement', (payload) => this.store.dispatch(new IncomingMovement(payload))],
+      ['town:supportRecalled', (payload) => this.store.dispatch(new SupportRecalled(payload))],
+      ['town:supportSentBack', (payload) => this.store.dispatch(new SupportSentBack(payload))],
     ]);
   }
 }

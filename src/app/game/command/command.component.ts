@@ -56,12 +56,19 @@ export class CommandComponent implements OnInit {
     }
 
     const type = isSupport ? MovementType.support : MovementType.attack;
-    const units = (Object.entries(form.value) as [string, number][]).filter(([unit, amount]) => !!+amount);
-    const validUnits = units.length ?
-      units.every(([unit, amount]) => this.town.units[unit].inside >= amount) :
-      false;
+    const { units, isValid, isEmpty } = Object.entries(form.value).reduce((result, [key, value]) => {
+      if (!!+value) {
+        if (this.town.units[key].inside >= value) {
+          result.units[key] = value;
+          result.isEmpty = false;
+        } else {
+          result.isValid = false;
+        }
+      }
+      return result;
+    }, { isValid: true, isEmpty: true, units: {} });
 
-    if (!validUnits) {
+    if (!isValid || isEmpty) {
       form.form.setErrors({ errorMessage: 'Incorrectly entered units.'});
       return;
     }

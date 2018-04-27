@@ -12,6 +12,10 @@ import { Big } from 'big.js';
 import { Store } from '@ngrx/store';
 import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName, Dict, MapTown } from 'strat-ego-common';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faUsers, faExchangeAlt, faSortAmountUp } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+
 import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../../store';
 import { MapService, CommandService } from '../services';
 import { Town } from '../../store/town/town.model';
@@ -84,6 +88,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     private commandService: CommandService,
     private sanitizer: DomSanitizer
   ) {
+    library.add(faHome, faUserCircle, faUsers, faExchangeAlt, faSortAmountUp);
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
@@ -170,7 +175,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public mapClick(event) {
-    if (this.hoverData === null) {
+    if (this.hoverData === null || this.hoverData.id === this.activeTown.id) {
       this.selected = null;
       return;
     }

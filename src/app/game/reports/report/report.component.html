@@ -5,7 +5,7 @@
       <span>{{report.originTown.name}} ({{report.originTown.location}}) attacks {{ report.targetTown.name}} ({{report.targetTown.location}})</span>
       <span class="text-muted">{{report.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
     </div>
-    <i class="fa fa-chevron-down ml-auto" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report.id"></i>
+    <fa-icon class="ml-auto" [icon]="['fas', 'chevron-down']" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" [attr.aria-controls]="'collapse-' + report.id"></fa-icon>
   </div>
   <div [id]="'collapse-' + report.id" class="col-12 py-2 px-1" [ngbCollapse]="!isCollapsed">
     <section>

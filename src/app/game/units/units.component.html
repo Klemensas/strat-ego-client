@@ -6,3 +6,10 @@
     <span *ngIf="unit.queued">&nbsp;(+{{ unit.queued }})</span>
   </div>
 </div>
+<div *ngIf="townSupport.length">
+  <strong>Support</strong>
+  <div class="unit d-flex" *ngFor="let unit of townSupport">
+    <i class="unit-icon mr-1" [attr.data-unit]="unit.name"></i>
+    <span>{{ unitDetails[unit.name].name }} - {{unit.amount}}</span>
+  </div>
+</div>

@@ -33,7 +33,7 @@
           <ul>
             <li *ngFor="let invitation of alliance.invitations">
               <span>{{ invitation.name }}</span>
-              <i class="fa fa-times"(click)="cancelInvite(invitation.id)"></i>
+              <fa-icon [icon]="['fas', 'times']" (click)="cancelInvite(invitation.id)"></fa-icon>
             </li>
           </ul>
         </div>

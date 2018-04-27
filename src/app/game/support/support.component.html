@@ -1,0 +1,13 @@
+<div class="container-fluid pb-4">
+  <h2>Support</h2>
+  <div>
+    <h3>Stationed support</h3>
+    <support-item *ngFor="let support of town.targetSupport" [support]="support" [unitList]="worldData.units" [isOrigin]="false" (cancelSupport)="sendBackSupport($event)"></support-item>
+    <div *ngIf="!town.targetSupport?.length">No support stationed</div>
+  </div>
+  <div>
+    <h3>Your sent support</h3>
+    <support-item *ngFor="let support of town.originSupport" [support]="support" [unitList]="worldData.units" [isOrigin]="true" (cancelSupport)="recallSupport($event)"></support-item>
+    <div *ngIf="!town.origin?.length">No supporting troops</div>
+  </div>
+</div>

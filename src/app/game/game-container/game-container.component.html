@@ -12,6 +12,7 @@
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
+    <support *ngSwitchCase="'support'" [town]="activeTown" [worldData]="worldData$ | async"></support>
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
   </mat-sidenav>
 
@@ -25,37 +26,42 @@
           <ul class="nav navbar-nav align-items-center">
             <li class="nav-item">
               <a [routerLink]="['./town']" routerLinkActive="active" class="nav-link">
-                <i class="fa fa-home" aria-hidden="true"></i> Town
+                <fa-icon [icon]="['fas', 'home']" aria-hidden="true"></fa-icon> Town
               </a>
             </li>
             <li class="nav-item">
               <a [routerLink]="['./alliance']" routerLinkActive="active" class="nav-link">
-                <i class="fa fa-group" aria-hidden="true"></i> Alliance
+                <fa-icon [icon]="['fas', 'hands-helping']" aria-hidden="true"></fa-icon> Alliance
               </a>
             </li>
             <li class="nav-item">
               <a [routerLink]="['./map']" routerLinkActive="active" class="nav-link">
-                <i class="fa fa-globe" aria-hidden="true"></i> Map
+                <fa-icon [icon]="['fas', 'globe']" aria-hidden="true"></fa-icon> Map
               </a>
             </li>
             <li class="nav-item">
               <a *ngIf="canRecruit" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
-                <i class="fa fa-users" aria-hidden="true"></i> Recruit
+                <fa-icon [icon]="['fas', 'users']" aria-hidden="true"></fa-icon> Recruit
               </a>
             </li>
             <li class="nav-item">
               <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movements')">
-                <i class="fa fa-arrows" aria-hidden="true"></i> Movements
+                <fa-icon [icon]="['fas', 'arrows-alt']" aria-hidden="true"></fa-icon> Movements
+              </a>
+            </li>
+            <li class="nav-item">
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'support')">
+                <fa-icon [icon]="['fas', 'shield-alt']" aria-hidden="true"></fa-icon> Support
               </a>
             </li>
             <li class="nav-item">
               <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'reports')">
-                <i class="fa fa-flag" aria-hidden="true"></i> Reports
+                <fa-icon [icon]="['fas', 'flag']" aria-hidden="true"></fa-icon> Reports
               </a>
             </li>
             <li class="nav-item">
                 <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'rankings')">
-                  <i class="fa fa-flag" aria-hidden="true"></i> Rankings
+                  <fa-icon [icon]="['fas', 'sort-amount-up']" aria-hidden="true"></fa-icon> Rankings
                 </a>
               </li>
             </ul>

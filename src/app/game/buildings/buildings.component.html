@@ -3,7 +3,7 @@
   <div *ngFor="let building of buildings;" class="py-1">
      <div class="row align-items-center">
       <div class="col-sm-4" style="cursor: pointer;" (click)="building.visible = !building.visible">
-        <i class="fa pr-1" [ngClass]="{'fa-chevron-right': !building.visible, 'fa-chevron-down': building.visible}"></i>
+        <fa-icon class="pr-1" [icon]="['fas', 'chevron-right']" [rotate]="building.visible ? 90 : 0"></fa-icon>
         <span class="pr-2">{{buildingDetails[building.name].name}} - {{building.level}}</span>
         <span *ngIf="building.queued">(building {{building.queued}})</span>
       </div>

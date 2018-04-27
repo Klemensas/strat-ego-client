@@ -2,6 +2,9 @@ import { Component, OnChanges, Input, Output, EventEmitter, SimpleChanges } from
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ALLIANCE_PERMISSIONS, Alliance } from 'strat-ego-common';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { PERMISSION_NAMES } from '../alliance.component';
 
 @Component({
@@ -22,7 +25,9 @@ export class EditableRolesComponent implements OnChanges {
     newRoles: this.formBuilder.array([])
   });
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {
+    library.add(faTrash, faPlus);
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     const alliance: Alliance = changes.alliance.currentValue;

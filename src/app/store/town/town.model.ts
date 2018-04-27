@@ -11,6 +11,7 @@ export interface TownActionState {
   build: TownAction;
   movement: TownAction;
   recruit: TownAction;
+  support: TownAction;
 }
 
 export interface TownPopulation {
@@ -20,9 +21,9 @@ export interface TownPopulation {
 }
 
 export interface TownUnit {
-  inside: number;
-  outside: number;
-  queued: number;
+  name: string;
+  inside?: number;
+  queued?: number;
   amount?: number;
 }
 

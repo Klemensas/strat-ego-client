@@ -3,6 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { timestamp, take } from 'rxjs/operators';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 import { resourceTime, availableResources } from '../utils';
 import { buildingData } from '../staticData';
 import { Town } from '../../store/town/town.model';
@@ -20,6 +23,10 @@ export class BuildingsComponent implements OnChanges {
   public buildings = [];
   public buildingDetails = buildingData;
   public updateAvailability$: Subscription;
+
+  constructor() {
+    library.add(faChevronRight);
+  }
 
   public ngOnChanges(changes?) {
     availableResources(this.town).pipe(
