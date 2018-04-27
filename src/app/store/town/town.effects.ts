@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store, Action } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
-import { WorldData } from 'strat-ego-common';
+import { WorldData, MovementType, RecallPayload } from 'strat-ego-common';
 
 import { Town } from './town.model';
 import {
@@ -37,7 +37,7 @@ import { getActiveWorld, State } from '../../reducers';
 
 @Injectable()
 export class TownEffects {
-  public townTimeouts = {};
+  // public townTimeouts = {};
 
   @Effect()
   public setActiveTown$: Observable<Action> = this.actions$.pipe(
@@ -131,9 +131,14 @@ export class TownEffects {
 
   public calculatePopulation(town: Town, farmData) {
     const total = farmData[town.buildings.farm.level].population;
-    const used = Object.entries(town.units).reduce((count, [name, unit]) => {
-      return count + unit.inside + unit.outside + unit.queued;
+    const supportPop = town.originSupport.reduce((result, { units }) => result + Object.values(units).reduce((a, b) => a + b, 0), 0);
+    const attackPop = town.originMovements.reduce((result, { units }) => result + Object.values(units).reduce((a, b) => a + b, 0), 0);
+    const returnPop = town.targetMovements.reduce((result, { units, type }) =>
+      result + type === MovementType.return ?  Object.values(units).reduce((a, b) => a + b, 0) : 0, 0);
+    const townPop = Object.entries(town.units).reduce((count, [name, unit]) => {
+      return count + unit.inside + unit.queued;
       }, 0);
+    const used = townPop + supportPop + attackPop + returnPop;
     return {
       total,
       used,
