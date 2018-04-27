@@ -175,7 +175,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public mapClick(event) {
-    if (this.hoverData === null) {
+    if (this.hoverData === null || this.hoverData.id === this.activeTown.id) {
       this.selected = null;
       return;
     }
