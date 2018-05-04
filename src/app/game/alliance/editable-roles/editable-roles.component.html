@@ -18,8 +18,8 @@
           <mat-hint *ngIf="role.id === alliance.MasterRoleId" align="start"><strong>Master role</strong> </mat-hint>
         </mat-form-field>
       </div>
-      <div class="col text-center" matTooltip="Master and default roles can't be deleted" [matTooltipDisabled]="role.id !== alliance.DefaultRoleId && role.id !== alliance.MasterRoleId"><button (click)="deleteRole(role.id)" mat-raised-button color="warn" [disabled]="role.id === alliance.DefaultRoleId || role.id === alliance.MasterRoleId">Delete</button></div>
-      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions" matTooltip="Can't change master role permissions" [matTooltipDisabled]="role.id !== alliance.MasterRoleId">
+      <div class="col text-center" matTooltip="Master and default roles can't be deleted" [matTooltipDisabled]="role.id !== alliance.defaultRoleId && role.id !== alliance.masterRoleId"><button (click)="deleteRole(role.id)" mat-raised-button color="warn" [disabled]="role.id === alliance.defaultRoleId || role.id === alliance.masterRoleId">Delete</button></div>
+      <div class="col text-center" *ngFor="let permission of alliancePermissions" formGroupName="permissions" matTooltip="Can't change master role permissions" [matTooltipDisabled]="role.id !== alliance.masterRoleId">
         <mat-checkbox [formControlName]="permission"></mat-checkbox>
       </div>
     </div>

@@ -16,9 +16,11 @@
     <div *ngFor="let member of alliance.members; let i = index;" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
     <div class="col d-flex align-items-center justify-content-between">
         <span>{{ member.name }}</span>
-        <button mat-icon-button color="warn" (click)="removePlayer(member.id)">
-          <mat-icon>close</mat-icon>
-        </button>
+        <div matTooltip="Cant't remove players with master role" [matTooltipDisabled]="member.allianceRole.id !== alliance.masterRoleId">
+          <button [disabled]="member.allianceRole.id === alliance.masterRoleId" mat-icon-button color="warn" (click)="removePlayer(member.id)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
       </div>
       <div class="col text-center">
         <mat-form-field floatLabel="never">
