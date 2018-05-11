@@ -7,7 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes, faEye, faEdit, faComments, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelopeOpen, faIdCard, faIdBadge } from '@fortawesome/free-regular-svg-icons';
 
-import { GameModuleState, getPlayerInvitations, getPlayerAllianceData } from '../../store';
+import { GameModuleState, getPlayerInvitations, getPlayerAllianceData, getAllRankings, getPlayerPosition, getRankingEntities } from '../../store';
 import {
   Create,
   AcceptInvite,
@@ -21,6 +21,7 @@ import {
   RemoveRole,
   RemoveMember
 } from '../../store/alliance/alliance.actions';
+import { combineLatest, map, filter } from 'rxjs/operators';
 
 
 export const PERMISSION_NAMES: { [name in PermissionNames] } = {
@@ -48,6 +49,25 @@ export class AllianceComponent implements OnInit {
 
   public invitations$ = this.store.select(getPlayerInvitations);
   public allianceData$ = this.store.select(getPlayerAllianceData);
+  public rankings$ = this.store.select(getRankingEntities);
+  public allianceScored$ = this.allianceData$
+    .pipe(
+      filter(({ alliance }) => !!alliance),
+      combineLatest(this.rankings$),
+      map(([{ alliance }, rankings]) => {
+        alliance.members
+          .map((member) => {
+            const rank = rankings[member.id];
+            const score = rank && rank.score ? rank.score : 0;
+            return {
+              ...member,
+              score,
+            };
+          })
+          .sort((a, b) => b.score - a.score || a.id - b.id);
+        return alliance;
+      })
+    );
 
   constructor(private store: Store<GameModuleState>, private formBuilder: FormBuilder) {
     library.add(faTimes, faEye, faEdit, faEnvelopeOpen, faComments, faIdCard, faIdBadge, faTasks);

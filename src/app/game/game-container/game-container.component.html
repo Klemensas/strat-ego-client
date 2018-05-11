@@ -1,12 +1,13 @@
  <mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
-  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
+  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6 container-fluid" mode="over" align="start" opened="false" (closedStart)="sidenavToggle('left', null)">
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
     </button>
     <movements *ngSwitchCase="'movements'" [town]="activeTown" [worldData]="worldData$ | async"></movements>
     <command *ngSwitchCase="'command'" [town]="activeTown" [worldData]="worldData$ | async"></command>
+    <alliance *ngSwitchCase="'alliance'"></alliance>
   </mat-sidenav>
-  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
+  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false" (closedStart)="sidenavToggle('right', null)">
     <button mat-mini-fab (click)="sidenavToggle('right', null)">
       <mat-icon>&times;</mat-icon>
     </button>
@@ -30,7 +31,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a [routerLink]="['./alliance']" routerLinkActive="active" class="nav-link">
+              <a class="nav-link" (click)="sidenavToggle('left', 'alliance')">
                 <fa-icon [icon]="['fas', 'hands-helping']" aria-hidden="true"></fa-icon> Alliance
               </a>
             </li>

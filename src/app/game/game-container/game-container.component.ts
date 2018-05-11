@@ -4,7 +4,7 @@ import { Effect, Actions } from '@ngrx/effects';
 import { MatSidenav, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { filter, map, distinctUntilChanged } from 'rxjs/operators';
+import { filter, map, distinctUntilChanged, combineLatest } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
 
 import {
@@ -14,7 +14,8 @@ import {
   getPlayerReports,
   getSidenavs,
   getPlayerAlliance,
-  getPositionRankings,
+  getAllRankings,
+  getPlayerPosition,
   getRankingsProgress
 } from '../../store';
 import { ActionWithPayload } from '../../store/util';
@@ -44,7 +45,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
-  public positionRankings$ = this.store.select(getPositionRankings);
+  public positionRankings$ = this.store.select(getAllRankings)
+  .pipe(
+    combineLatest(this.store.select(getPlayerPosition)),
+    map(([rankings, playerPosition]) => ({ rankings, playerPosition })),
+  );
   public noTowns$ = this.townState$.pipe(
     map((state) => !state.inProgress && !state.ids.length)
   );
