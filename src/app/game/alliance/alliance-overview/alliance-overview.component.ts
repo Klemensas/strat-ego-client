@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Alliance, AllianceRole, EventStatus, EventType } from 'strat-ego-common';
 
 @Component({
@@ -6,7 +6,7 @@ import { Alliance, AllianceRole, EventStatus, EventType } from 'strat-ego-common
   templateUrl: './alliance-overview.component.html',
   styleUrls: ['./alliance-overview.component.scss']
 })
-export class AllianceOverviewComponent implements OnInit {
+export class AllianceOverviewComponent {
   @Input() alliance: Alliance;
   @Input() role: AllianceRole;
   @Output() leaveAlliance: EventEmitter<void> = new EventEmitter();
@@ -53,10 +53,4 @@ export class AllianceOverviewComponent implements OnInit {
     'declared war on',
     'aggreed to end war with',
   ];
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }
