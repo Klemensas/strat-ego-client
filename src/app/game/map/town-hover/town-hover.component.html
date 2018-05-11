@@ -1,0 +1,17 @@
+<div>
+  <div><fa-icon class="pr-2" [icon]="['fas', 'home']" [fixedWidth]="true"></fa-icon><span>{{data.name}}</span></div>
+  <div><fa-icon class="pr-2" [icon]="['far', 'user-circle']" [fixedWidth]="true"></fa-icon><span>{{data.owner?.name || '-' }}</span></div>
+  <div>
+    <fa-icon class="pr-2" [icon]="['fas', 'users']" [fixedWidth]="true"></fa-icon><a *ngIf="data.alliance" (click)="oepnAllianceProfile.emit(data.alliance.id)">{{data.alliance.name}}</a><span *ngIf="!data.alliance">-</span>
+  </div>
+  <div><fa-icon class="pr-2" [icon]="['fas', 'sort-amount-up']" [fixedWidth]="true"></fa-icon><span>{{data.score || '-' }}</span></div>
+  <div><fa-icon class="pr-2" [icon]="['fas', 'exchange-alt']" [fixedWidth]="true"></fa-icon><span>{{data.distance}}</span></div>
+    <!--<div *ngIf="selected" class="town-options" [style.transform]="position.click" [style.width.px]="mapSettings.width" [style.height.px]="mapSettings.height" style="visibility: hidden; overflow: hidden;">
+    <div style="width: 100%; height: 100%; visibility: visible; transform: skewY(-30deg) rotate(60deg);" (click)="toggleSidenav('command', data.location)">
+      <a  class="map-icon attack" (click)="toggleSidenav('command', data.location)">A</a>
+      <a class="map-icon village">V</a>
+      <a class="map-icon message">M</a>
+    </div>
+  </div>-->
+
+</div>
