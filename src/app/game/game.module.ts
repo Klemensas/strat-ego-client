@@ -59,6 +59,9 @@ import { MapEffects } from '../store/map/map.effects';
 import { RankingsEffects } from './rankings/rankings.effects';
 import { SupportComponent } from './support/support.component';
 import { SupportItemComponent } from './support/support-item/support-item.component';
+import { AllianceProfileComponent } from './alliance/alliance-profile/alliance-profile.component';
+import { EditProfileComponent } from './alliance/alliance-profile/edit-profile/edit-profile.component';
+import { TownHoverComponent } from './map/town-hover/town-hover.component';
 
 export const effects = [
   PlayerEffects,
@@ -122,6 +125,9 @@ export const effects = [
     RankingsComponent,
     SupportComponent,
     SupportItemComponent,
+    AllianceProfileComponent,
+    EditProfileComponent,
+    TownHoverComponent,
   ],
   providers: [
     TownService,
@@ -130,7 +136,10 @@ export const effects = [
     ReportService,
     NgbTooltipConfig,
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  entryComponents: [
+    EditProfileComponent,
+  ]
 })
 
 export class GameModule {
