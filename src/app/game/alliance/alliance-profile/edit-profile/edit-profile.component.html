@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Edit profile</h1>
+<div mat-dialog-content>
+  <div>
+    <div>Current avatar</div>
+    <div class="avatar-container" style="max-width: 400px; height: 240px;">
+      <img *ngIf="data.avatarUrl || imagePreview" [src]="imagePreview || data.avatarUrl" class="img-fluid" style="max-height: 100%;" />
+      <div *ngIf="!data.avatarUrl && !imagePreview" class="d-flex justify-content-center align-items-center" style="height: 100%; width: 100%; border: 2px dotted rgba(0,0,0,0.6);">No avatar</div>
+    </div>
+    <p>Image size is limited to 400x240. Larger images will be scaled down.</p>
+    <button *ngIf="data.avatarUrl || imagePreview" mat-raised-button color="warn" (click)="removeAvatar()">Remove</button>
+    <div>
+      <input type="file" ng2FileSelect (onFileSelected)="fileSelected($event)" [uploader]="uploader" />
+    </div>
+  </div>
+  <div class="mt-3">
+    <mat-form-field [(ngModel)]="description" ngDefaultControl>
+      <textarea [ngModel]="description" matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [disabled]="!uploader.queue.length && data.description === description" (click)="saveProfile()">Save</button>
+  <button mat-raised-button color="warn" mat-dialog-close class="float-right">Cancel</button>
+</div>
