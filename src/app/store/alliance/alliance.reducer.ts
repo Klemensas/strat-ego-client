@@ -8,19 +8,20 @@ import {
   AllianceMember,
   EventStatus,
   Alliance,
-  DiplomacyStatus
+  DiplomacyStatus,
+  ProfileUpdate,
+  Dict,
 } from 'strat-ego-common';
 
 import { AllianceActionTypes, AllianceActions, EventMembership, EventInvitation, EventRoles } from './alliance.actions';
 
 export interface AllianceState {
   playerAlliance: number;
-  alliances: {
-    [name: string]: Alliance;
-  };
+  alliances: Dict<Alliance>;
   role: AllianceRole;
   invitations: Profile[];
   inProgress: boolean;
+  viewedProfile: number;
   error: any;
 }
 
@@ -30,6 +31,7 @@ export const initialState: AllianceState = {
   role: null,
   invitations: [],
   inProgress: false,
+  viewedProfile: null,
   error: null,
 };
 
@@ -144,6 +146,15 @@ export function reducer(
       return eventDiplomacy(action.payload, state);
     }
 
+    case AllianceActionTypes.UpdateProfileSuccess:
+    case AllianceActionTypes.RemoveAvatarSuccess: {
+      return eventProfile(action.payload, state, { inProgress: false });
+    }
+
+    case AllianceActionTypes.EventProfile: {
+      return eventProfile(action.payload, state);
+    }
+
     case AllianceActionTypes.ProposeAllianceSuccess:
     case AllianceActionTypes.ProposeNapSuccess:
     case AllianceActionTypes.CancelAllianceSuccess:
@@ -173,7 +184,9 @@ export function reducer(
     case AllianceActionTypes.AcceptNap:
     case AllianceActionTypes.EndAlliance:
     case AllianceActionTypes.EndNap:
-    case AllianceActionTypes.DeclareWar: {
+    case AllianceActionTypes.DeclareWar:
+    case AllianceActionTypes.UpdateProfile:
+    case AllianceActionTypes.RemoveAvatar: {
       return { ...state, error: null, inProgress: true };
     }
 
@@ -226,7 +239,7 @@ const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | nu
       ...state.alliances,
       [state.playerAlliance]: {
         ...alliance,
-        eventOrigin: [payload.event, ...alliance.eventOrigin],
+        events: [payload.event, ...alliance.events],
         invitations: isJoin ?
           alliance.invitations.filter(({ id }) => id !== (payload.data as AllianceMember).id) :
           alliance.invitations,
@@ -247,7 +260,7 @@ const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, 
       ...state.alliances,
       [state.playerAlliance]: {
         ...alliance,
-        eventOrigin: [payload.event, ...alliance.eventOrigin],
+        events: [payload.event, ...alliance.events],
         invitations: isCreated ?
           [payload.data, ...alliance.invitations] :
           alliance.invitations.filter(({ id }) => id !== payload.data)
@@ -301,7 +314,7 @@ const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayloa
         members,
         roles,
         defaultRole,
-        eventOrigin: [payload.event, ...alliance.eventOrigin],
+        events: [payload.event, ...alliance.events],
       }
     }
   };
@@ -337,7 +350,22 @@ const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | 
       [state.playerAlliance]: {
         ...alliance,
         ...diplomacy,
-        eventOrigin: [payload.event, ...alliance.eventOrigin],
+        events: [payload.event, ...alliance.events],
+      }
+    }
+  };
+};
+
+const eventProfile = (payload: AllianceEventSocketMessage<ProfileUpdate>, state: AllianceState, stateParams = {}): AllianceState => {
+  const alliance = state.alliances[state.playerAlliance];
+  return {
+    ...state,
+    alliances: {
+      ...state.alliances,
+      [state.playerAlliance]: {
+        ...alliance,
+        ...payload.data,
+        events: [payload.event, ...alliance.events],
       }
     }
   };

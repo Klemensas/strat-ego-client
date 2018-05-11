@@ -103,13 +103,17 @@ export const getRankingsState = createSelector(
   getState,
   (state: State) => state.rankings
 );
-export const getRankings = createSelector(
+export const getAllRankings = createSelector(
   getRankingsState,
-  rankings.getRankings
+  rankings.getAllRankings
 );
-export const getPositionRankings = createSelector(
+export const getRankingEntities = createSelector(
   getRankingsState,
-  rankings.getPositionRankings
+  rankings.getRankingEntities
+);
+export const getPlayerPosition = createSelector(
+  getRankingsState,
+  rankings.getPlayerPosition
 );
 export const getRankingsUpdate = createSelector(
   getRankingsState,

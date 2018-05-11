@@ -192,6 +192,19 @@ export class Allianceffects {
     map((payload) => this.socketService.sendEvent('alliance:declareWar', payload))
   );
 
+  @Effect({ dispatch: false })
+  public updateProfile$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.UpdateProfile>(allianceActions.AllianceActionTypes.UpdateProfile),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('alliance:updateProfile', payload))
+  );
+
+  @Effect({ dispatch: false })
+  public removeAvatar$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.RemoveAvatar>(allianceActions.AllianceActionTypes.RemoveAvatar),
+    map(() => this.socketService.sendEvent('alliance:removeAvatar'))
+  );
+
   // @Effect({ dispatch: false })
   // public createForumCategory$: Observable<any> = this.actions$
   //   .ofType(allianceActions.AllianceActionTypes.CreateForumCategory)
@@ -237,6 +250,8 @@ export class Allianceffects {
       ['alliance:endNapSuccess', (payload) => this.store.dispatch(new allianceActions.EndNapSuccess(payload))],
       ['alliance:declareWarSuccess', (payload) => this.store.dispatch(new allianceActions.DeclareWarSuccess(payload))],
       ['alliance:acceptInviteSuccess', (payload) => this.store.dispatch(new allianceActions.AcceptInviteSuccess(payload))],
+      ['alliance:updateProfileSuccess', (payload) => this.store.dispatch(new allianceActions.UpdateProfileSuccess(payload))],
+      ['alliance:removeAvatarSuccess', (payload) => this.store.dispatch(new allianceActions.RemoveAvatarSuccess(payload))],
       // ['alliance', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.UPDATE, payload))],
       // ['alliance:createForumCategory', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.CREATE_FORUM_CATEGORY_SUCCESS, payload))],
     ]);

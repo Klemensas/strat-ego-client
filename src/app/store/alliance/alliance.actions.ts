@@ -1,5 +1,14 @@
 import { Action } from '@ngrx/store';
-import { Alliance, AllianceRole, Profile, AllianceDiplomacy, AllianceEventSocketMessage, AllianceMember, AllianceRoleSocketPayload } from 'strat-ego-common';
+import {
+  Alliance,
+  AllianceRole,
+  Profile,
+  AllianceDiplomacy,
+  AllianceEventSocketMessage,
+  AllianceMember,
+  AllianceRoleSocketPayload,
+  ProfileUpdate,
+} from 'strat-ego-common';
 
 // TODO: consider separatig alliance from player and require a separate query to fetch player alliance
 // TODO: fail actions, handling failure, success, progress
@@ -11,6 +20,7 @@ export enum AllianceActionTypes {
   DestroySuccess = '[Alliance] Destroy Success',
   LeaveAlliance = '[Alliance] Leave Alliance',
   LeaveAllianceSuccess = '[Alliance] Leave Alliance Success',
+  ViewProfile = '[Alliance] View Profile',
 
   // Alliance specific events
   EventInvitation = '[Alliance][Event] Invitation',
@@ -18,6 +28,7 @@ export enum AllianceActionTypes {
   // EventManagement = '[Alliance][Event] Management',
   EventRoles = '[Alliance][Event] Roles',
   EventDiplomacy = '[Alliance][Event] Diplomacy',
+  EventProfile = '[Alliance][Event] Profile',
 
   // Alliance management
   CreateInvite = '[Alliance][Management] Create Invite',
@@ -59,6 +70,10 @@ export enum AllianceActionTypes {
   EndNapSuccess = '[Alliance][Management] End Nap Success',
   DeclareWar = '[Alliance][Management] Declare War',
   DeclareWarSuccess = '[Alliance][Management] Declare War Success',
+  UpdateProfile = '[Alliance][Management] Update Profile',
+  UpdateProfileSuccess = '[Alliance][Management] Update Profile Success',
+  RemoveAvatar = '[Alliance][Management] Remove Avatar',
+  RemoveAvatarSuccess = '[Alliance][Management] Remove Avatar Success',
 
   // Non self generated actions
   Invited = '[Alliance][Affected] Invited',
@@ -117,6 +132,11 @@ export class EventDiplomacy implements Action {
   readonly type = AllianceActionTypes.EventDiplomacy;
 
   constructor(public payload: AllianceEventSocketMessage<AllianceDiplomacy | number>) {}
+}
+export class EventProfile implements Action {
+  readonly type = AllianceActionTypes.EventProfile;
+
+  constructor(public payload: AllianceEventSocketMessage<ProfileUpdate>) {}
 }
 export class CreateInvite implements Action {
   readonly type = AllianceActionTypes.CreateInvite;
@@ -326,6 +346,24 @@ export class DeclareWarSuccess implements Action {
 
   constructor(public payload: AllianceEventSocketMessage<AllianceDiplomacy>) {}
 }
+export class UpdateProfile implements Action {
+  readonly type = AllianceActionTypes.UpdateProfile;
+
+  constructor(public payload: ProfileUpdate) {}
+}
+export class UpdateProfileSuccess implements Action {
+  readonly type = AllianceActionTypes.UpdateProfileSuccess;
+
+  constructor(public payload: AllianceEventSocketMessage<ProfileUpdate>) {}
+}
+export class RemoveAvatar implements Action {
+  readonly type = AllianceActionTypes.RemoveAvatar;
+}
+export class RemoveAvatarSuccess implements Action {
+  readonly type = AllianceActionTypes.RemoveAvatarSuccess;
+
+  constructor(public payload: AllianceEventSocketMessage<ProfileUpdate>) {}
+}
 
 export type AllianceActions = SetData |
   Create |
@@ -338,6 +376,7 @@ export type AllianceActions = SetData |
   EventMembership |
   EventRoles |
   EventDiplomacy |
+  EventProfile |
   CreateInvite |
   CreateInviteSuccess |
   CancelInvite |
@@ -379,12 +418,18 @@ export type AllianceActions = SetData |
   EndNap |
   EndNapSuccess |
   DeclareWar |
-  DeclareWarSuccess;
+  DeclareWarSuccess |
+  UpdateProfile |
+  UpdateProfileSuccess |
+  RemoveAvatar |
+  RemoveAvatarSuccess |
+  ViewProfile;
 
 export type AllianceEventActionTypes = EventInvitation |
   EventMembership |
   EventRoles |
-  EventDiplomacy;
+  EventDiplomacy |
+  EventProfile;
 
 // TODO: use actual constructors here
 export const AllianceEventActions = [
@@ -392,5 +437,6 @@ export const AllianceEventActions = [
   'EventInvitation',
   'EventMembership',
   'EventRoles',
-  // EventManagement,
+  'EventManagement',
+  'EventProfile',
 ];
