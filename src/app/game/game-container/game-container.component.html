@@ -15,6 +15,7 @@
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
     <support *ngSwitchCase="'support'" [town]="activeTown" [worldData]="worldData$ | async"></support>
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
+    <alliance-profile *ngSwitchCase="'allianceProfile'"></alliance-profile>
   </mat-sidenav>
 
   <mat-sidenav-content>

@@ -13,6 +13,7 @@
     user-select: none;
   }
   .town-hover {
+    min-width: 180px;
     // height: 14vh;
     padding: 8px;
     position: absolute;
@@ -23,74 +24,5 @@
     i {
       margin-right: 6px;
     }
-  }
-  .town-options {
-    position: absolute;
-    top: 0;
-    left: 0;
-    div {
-    }
-    .map-icon {
-      border-radius: 50%;
-      width: 5vh;
-      height: 5vh;
-      position: absolute;
-      &.attack {
-        left: 50%;
-        top: 15%;
-        margin-left: -2.5vh;
-        background-color: red;
-      }
-      &.village {
-        left: 10%;
-        top: 45%;
-        background-color: green;
-      }
-      &.message {
-        right: 10%;
-        top: 45%;
-        background-color: yellow;
-      }
-    }
-  }
-}
-
-.svg-hex {
-  .svg-icon {
-    font-family: FontAwesome;
-    text-anchor: middle;
-  }
-  polygon {
-    // stroke: rgb(255,255,255);
-    // opacity: 0.9;
-    stroke-width: 0;
-    // stroke-opacity: 0.9;
-  }
-  g:nth-child(1) polygon {
-    fill: rgb(255,255,255);
-  }
-  g:nth-child(2) polygon {
-    fill: rgb(235,235,235);
-    // stroke: rgb(245,245,245);
-  }
-  g:nth-child(3) polygon {
-    fill: rgb(215,215,215);
-    // stroke: rgb(235,235,235);
-  }
-  g:nth-child(4) polygon {
-    fill: rgb(195,195,195);
-    // stroke: rgb(225,225,225);
-  }
-  g:nth-child(5) polygon {
-    fill: rgb(175,175,175);
-    // stroke: rgb(215,215,215);
-  }
-  g:nth-child(6) polygon {
-    fill: rgb(155,155,155);
-    // stroke: rgb(205,205,205);
-  }
-  g:hover polygon {
-      stroke-opacity: 1;
-      opacity: 1;
   }
 }

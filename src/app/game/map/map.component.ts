@@ -161,6 +161,10 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     }
   }
 
+  onOpenProfile(id: number, type: string) {
+    this.toggleSidenav('right', 'allianceProfile');
+  }
+
   onResize(event) {
     this.setMapSettings({
       x: this.map.nativeElement.offsetWidth,
@@ -169,9 +173,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     this.mapSettings.shouldDraw = true;
   }
 
-  toggleSidenav(target, data) {
-    this.commandService.targeting.next(data);
-    this.store.dispatch(new SetSidenav([{ side: 'left', name: 'command' }]));
+  toggleSidenav(side, name) {
+    this.store.dispatch(new SetSidenav([{ side, name }]));
   }
 
   public mapClick(event) {
@@ -179,7 +182,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       this.selected = null;
       return;
     }
-    this.toggleSidenav('command', this.hoverData.location);
+    this.commandService.targeting.next(this.hoverData.location);
+    this.toggleSidenav('left', 'command');
     this.selected = this.hoverData;
     // this.position.click =
     // this.sanitizer.bypassSecurityTrustStyle(`translate3d(${this.selected.pos.x}px,${this.selected.pos.y}px,0) rotate(-60deg) skewY(30deg)`);
