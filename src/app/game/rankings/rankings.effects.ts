@@ -21,7 +21,7 @@ export class RankingsEffects {
   @Effect()
   public sidenavOpen$: Observable<any> = this.actions$.pipe(
     ofType<SetSidenav>(PlayerActionTypes.SetSidenav),
-    filter((action) => action.payload.some(({ name }) => name === 'rankings')),
+    filter((action) => action.payload.some(({ name }) => name === 'rankings' || name === 'alliance')),
     map(() => new CheckForUpdate())
   );
 

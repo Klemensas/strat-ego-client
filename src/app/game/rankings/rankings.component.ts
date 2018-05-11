@@ -1,17 +1,18 @@
 import { Component, Input, OnChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatPaginatorIntl } from '@angular/material';
-import { RankProfile } from 'strat-ego-common';
+import { PlayerProfile } from 'strat-ego-common';
 
+// TODO: abstract rank table into a component and reuse between rankings and alliance profile
 @Component({
   selector: 'rankings',
   templateUrl: './rankings.component.html',
   styleUrls: ['./rankings.component.scss']
 })
 export class RankingsComponent implements OnChanges, AfterViewInit {
-  @Input() public positionRankings: { rankings: RankProfile[], playerPosition: number };
+  @Input() public positionRankings: { rankings: PlayerProfile[], playerPosition: number };
 
   displayedColumns = ['rank', 'name', 'score'];
-  dataSource = new MatTableDataSource<RankProfile>([]);
+  dataSource = new MatTableDataSource<PlayerProfile>([]);
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngAfterViewInit() {

@@ -1,4 +1,4 @@
-import { RankProfile } from 'strat-ego-common';
+import { PlayerProfile, Dict } from 'strat-ego-common';
 
 import { environment } from '../../../environments/environment';
 import { RankingsActions, RankingsActionTypes } from './rankings.actions';
@@ -8,7 +8,8 @@ export interface RankingsState {
   error: any;
   lastUpdate: number;
   updateFrequencey: number;
-  rankings: RankProfile[];
+  ids: number[];
+  entities: Dict<PlayerProfile>;
   playerPosition: number;
 }
 
@@ -17,7 +18,8 @@ export const initialState: RankingsState = {
   lastUpdate: null,
   error: null,
   updateFrequencey: environment.rankingUpdateFrequency,
-  rankings: [],
+  ids: [],
+  entities: {},
   playerPosition: null,
 };
 
@@ -34,12 +36,18 @@ export function reducer(
       };
     }
     case RankingsActionTypes.LoadSuccess: {
+      const items = action.payload.rankings.reduce((result, item) => {
+        result.ids.push(item.id);
+        result.entities[item.id] = item;
+        return result;
+      }, { ids: [], entities: {} });
       return {
         ...state,
+        ...items,
         inProgress: false,
         lastUpdate: Date.now(),
         rankings: action.payload.rankings,
-        playerPosition: action.payload.rankings.findIndex(({ id }) => id === action.payload.playerId)
+        playerPosition: items.ids.indexOf(action.payload.playerId)
       };
     }
     case RankingsActionTypes.LoadFail: {
@@ -64,7 +72,8 @@ export function reducer(
   }
 }
 
-export const getRankings = (state: RankingsState) => state.rankings;
-export const getPositionRankings = ({ rankings, playerPosition }: RankingsState) => ({ rankings, playerPosition });
+export const getAllRankings = (state: RankingsState) => state.ids.map((id) => state.entities[id]);
+export const getRankingEntities = (state: RankingsState) => state.entities;
+export const getPlayerPosition = ({ playerPosition }: RankingsState) => playerPosition;
 export const getRankingsUpdate = ({ lastUpdate, updateFrequencey }: RankingsState) => ({ lastUpdate, updateFrequencey });
 export const getRankingsProgress = (state: RankingsState) => state.inProgress;
