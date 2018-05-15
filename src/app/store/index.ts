@@ -47,9 +47,9 @@ export const getPlayerState = createSelector(
   getState,
   (state: State) => state.player
 );
-export const getPlayerData = createSelector(
+export const getCurrentPlayer = createSelector(
   getPlayerState,
-  player.getPlayerData
+  player.getCurrentPlayer
 );
 export const getPlayerReports = createSelector(
   getPlayerState,

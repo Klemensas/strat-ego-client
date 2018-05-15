@@ -7,7 +7,7 @@ import { map, withLatestFrom, filter, take } from 'rxjs/operators';
 
 import { SocketService } from '../../game/services/socket.service';
 import { Load, RankingsActionTypes, LoadSuccess, LoadFail, CheckForUpdate, LoadStagnated } from './rankings.actions';
-import { GameModuleState, getRankingsUpdate, getPlayerData } from '../../store';
+import { GameModuleState, getRankingsUpdate, getCurrentPlayer } from '../../store';
 import { SetSidenav, PlayerActionTypes } from '../../store/player/player.actions';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class RankingsEffects {
   ) {
     this.socketService.registerEvents([
       ['rankings:loadSuccess', (payload) =>
-        this.store.select(getPlayerData)
+        this.store.select(getCurrentPlayer)
           .pipe(take(1))
           .subscribe((player) => this.store.dispatch(new LoadSuccess({ rankings: payload, playerId: player.id })))
       ],

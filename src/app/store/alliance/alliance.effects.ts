@@ -9,7 +9,7 @@ import { AllianceEventSocketMessage } from 'strat-ego-common';
 
 import * as allianceActions from './alliance.actions';
 import { TownActions } from '../town/town.actions';
-import { GameModuleState, getPlayerData } from '../';
+import { GameModuleState, getCurrentPlayer, getRankingEntities, getAlliances } from '../';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as UpdatePlayer } from '../player/player.actions';
 
@@ -77,7 +77,7 @@ export class Allianceffects {
   public updateSelfRole$: Observable<Action> = this.actions$.pipe(
     ofType<allianceActions.EventRoles>(allianceActions.AllianceActionTypes.EventRoles),
     map((action) => action.payload),
-    withLatestFrom(this.store.select(getPlayerData)),
+    withLatestFrom(this.store.select(getCurrentPlayer)),
     filter(([payload, player]) => payload.data.updatedMember && payload.data.updatedMember.some(({ id }) => id === player.id)),
     map(([payload, player]) => new allianceActions.UpdateSelfRole(payload.data.updatedMember.find(({ id }) => id === player.id).role))
   );

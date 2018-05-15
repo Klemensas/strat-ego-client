@@ -10,7 +10,7 @@ import { ofType } from '@ngrx/effects';
 import {
   GameModuleState,
   getTownState,
-  getPlayerData,
+  getCurrentPlayer,
   getPlayerReports,
   getSidenavs,
   getPlayerAlliance,
@@ -40,7 +40,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public activeTown: Town;
   public canRecruit: boolean;
 
-  public player$ = this.store.select(getPlayerData);
+  public player$ = this.store.select(getCurrentPlayer);
   public alliance$ = this.store.select(getPlayerAlliance);
   public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);

@@ -48,7 +48,7 @@ export class GameDataService {
   //     .cache();
   // }
 
-  // getPlayerData(target = this.authHttp) {
+  // getCurrentPlayer(target = this.authHttp) {
   //   return this.authHttp.get(`${API}world/${target}/player`)
   //     .map(t => t.json())
   //     .cache();
