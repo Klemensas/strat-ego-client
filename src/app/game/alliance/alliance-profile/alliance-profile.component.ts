@@ -24,11 +24,12 @@ export class AllianceProfileComponent implements OnChanges {
   constructor(public dialog: MatDialog) {}
 
   ngOnChanges() {
-    this.dataSource.data = this.alliance.members;
+    this.dataSource.data = this.alliance ? this.alliance.members : [];
     if (this.editDialog) {
       this.editDialog.componentInstance.data = {
         avatarUrl: this.alliance.avatarUrl,
         description: this.alliance.description,
+        type: 'alliance',
       };
     }
   }
@@ -36,13 +37,15 @@ export class AllianceProfileComponent implements OnChanges {
   editProfile(): void {
     this.editDialog = this.dialog.open(EditProfileComponent, {
       width: '80vw',
-      data: this.alliance
+      data: {
+        avatarUrl: this.alliance.avatarUrl,
+        description: this.alliance.description,
+        type: 'alliance',
+      }
     });
 
     this.editDialog.afterClosed().subscribe(result => {
       this.editDialog = null;
     });
   }
-
-
 }

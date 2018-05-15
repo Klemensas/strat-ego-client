@@ -7,8 +7,13 @@ import { first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ProfileUpdate } from 'strat-ego-common';
 
-import { UpdateProfile, RemoveAvatar } from '../../../../store/alliance/alliance.actions';
+import { UpdateProfile as updateAllianceProfile, RemoveAvatar as removeAllianceAvatar } from '../../../../store/alliance/alliance.actions';
+import { UpdateProfile as updatePlayerProfile, RemoveAvatar as removePlayerAvatar } from '../../../../store/player/player.actions';
 import { State } from '../../../../store';
+
+export interface ProfileData extends ProfileUpdate {
+  type: 'player' | 'alliance';
+}
 
 @Component({
   selector: 'edit-profile',
@@ -30,10 +35,9 @@ export class EditProfileComponent  {
     private cloudinary: Cloudinary,
     private store: Store<State>,
     public dialogRef: MatDialogRef<EditProfileComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ProfileUpdate,
+    @Inject(MAT_DIALOG_DATA) public data: ProfileData,
   ) {
     this.description = this.data.description;
-    console.log('wuuut', this.description, this.data.description)
     this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
       if (status !== 200) {
         this.upload.thrownError(status);
@@ -60,7 +64,7 @@ export class EditProfileComponent  {
 
   removeAvatar() {
     if (this.data.avatarUrl) {
-      this.store.dispatch(new RemoveAvatar());
+      this.store.dispatch(this.data.type === 'alliance' ? new removeAllianceAvatar() : new removePlayerAvatar());
     } else if (this.uploader.queue.length) {
       this.uploader.clearQueue();
       this.imagePreview = null;
@@ -74,7 +78,7 @@ export class EditProfileComponent  {
       if (this.description !== this.data.description) { profilePayload.description = this.description; }
 
       if (Object.keys(profilePayload).length) {
-        this.store.dispatch(new UpdateProfile(profilePayload));
+        this.store.dispatch(this.data.type === 'alliance' ? new updateAllianceProfile(profilePayload) : new updatePlayerProfile(profilePayload));
       }
     });
     this.uploadFile();
@@ -89,7 +93,7 @@ export class EditProfileComponent  {
     const file = this.uploader.queue[this.uploader.queue.length - 1];
     file.withCredentials = false;
     file.onBuildForm = (form: FormData) => {
-      form.append('folder', 'test');
+      form.append('folder', this.data.type);
       form.append('upload_preset', this.cloudinary.config().upload_preset);
       return form;
     };
