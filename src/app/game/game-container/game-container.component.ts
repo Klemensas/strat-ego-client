@@ -6,6 +6,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { filter, map, distinctUntilChanged, combineLatest } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import {
   GameModuleState,
@@ -29,8 +32,6 @@ import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/to
 import { PlayerActions, SetSidenav, Restart } from '../../store/player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 
 // TODO: consider using routes for sidenavs, should result in cleaner implementations and also easier linking
 
@@ -77,6 +78,8 @@ export class GameContainerComponent implements OnInit, OnDestroy {
         })
       }))
     );
+  public viewedPlayer$ = this.store.select(getViewedPlayer);
+
   public isVisible;
   public sidenavSubscription: Subscription;
   public townStateSubscription: Subscription;
@@ -86,7 +89,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private actions$: Actions,
   ) {
-    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt);
+    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt, faUserCircle);
   }
 
   ngOnInit() {
