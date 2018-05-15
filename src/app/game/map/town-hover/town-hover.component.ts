@@ -8,4 +8,5 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class TownHoverComponent {
   @Input() data;
   @Output() openAllianceProfile = new EventEmitter();
+  @Output() openPlayerProfile = new EventEmitter();
 }

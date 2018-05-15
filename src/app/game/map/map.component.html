@@ -2,7 +2,7 @@
   <canvas #map (click)="mapClick($event)" (mousedown)="startDrag($event)" (touchstart)="startDrag($event)" (mouseup)="stopDrag()" (touchend)="stopDrag()" (mouseout)="stopDrag()" (touchcancel)="stopDrag()" (mousewheel)="onZoom($event)" [width]="mapSettings.size.x" [height]="mapSettings.size.y">
     <div>Loading map data</div>
   </canvas>
-  <town-hover *ngIf="hoverData" [data]="hoverData" class="town-hover hidden-sm-down" (openAllianceProfile)="onOpenProfile($event, 'alliance')" [style.transform]="position.hover" [style.width]="boxSize.x" [style.height]="boxSize.y"></town-hover>
+  <town-hover *ngIf="hoverData" [data]="hoverData" class="town-hover hidden-sm-down" (openAllianceProfile)="onOpenProfile($event, 'alliance')" (openPlayerProfile)="onOpenProfile($event, 'player')" [style.transform]="position.hover" [style.width]="boxSize.x" [style.height]="boxSize.y"></town-hover>
 </div>
 <!--<div class="overlay">
   <router-outlet name="popup">

@@ -21,6 +21,8 @@ import { MapService, CommandService } from '../services';
 import { Town } from '../../store/town/town.model';
 import { MapActions, LoadMap } from '../../store/map/map.actions';
 import { PlayerActions, SetSidenav } from '../../store/player/player.actions';
+import { ViewProfile as viewAllianceProfile } from '../../store/alliance/alliance.actions';
+import { ViewProfile as viewPlayerProfile } from '../../store/player/player.actions';
 
 // TODO: important https://www.chromestatus.com/feature/5424182347169792
 // will massively improve performance
@@ -162,7 +164,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   onOpenProfile(id: number, type: string) {
-    this.toggleSidenav('right', 'allianceProfile');
+    const action = type === 'alliance' ? viewAllianceProfile : viewPlayerProfile;
+    this.store.dispatch(new action(id));
   }
 
   onResize(event) {
