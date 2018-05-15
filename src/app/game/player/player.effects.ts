@@ -7,7 +7,7 @@ import { map, withLatestFrom } from 'rxjs/operators';
 
 import * as playerActions from './player.actions';
 import { SocketService } from '../../game/services/socket.service';
-import { GameModuleState, getPlayers } from '..';
+import { GameModuleState, getPlayers } from '../reducers';
 
 @Injectable()
 export class PlayerEffects {

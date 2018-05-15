@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
 
-import { TownUnit } from '../../store/town/town.model';
+import { TownUnit } from '../town/town.model';
 import { unitData } from '../staticData';
 import { Dict, Movement, TownSupport, MovementType } from 'strat-ego-common';
 

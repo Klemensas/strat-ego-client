@@ -5,11 +5,10 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'report',
-  templateUrl: './report.component.html',
-  // styleUrls: ['./reports.component.scss'],
+  selector: 'report-item',
+  templateUrl: './report-item.component.html',
 })
-export class ReportComponent implements OnInit, OnDestroy {
+export class ReportItemComponent implements OnInit, OnDestroy {
   @Input() public report: Report;
   @Input() public unitList: Unit[] = [];
   public isCollapsed;

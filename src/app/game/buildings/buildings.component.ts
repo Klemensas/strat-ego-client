@@ -8,7 +8,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import { resourceTime, availableResources } from '../utils';
 import { buildingData } from '../staticData';
-import { Town } from '../../store/town/town.model';
+import { Town } from '../town/town.model';
 
 @Component({
   selector: 'buildings',

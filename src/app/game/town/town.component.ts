@@ -9,10 +9,10 @@ import { Observable } from 'rxjs/Observable';
 
 import { GameDataService } from '../../services/game-data.service';
 import { SocketService } from '../services';
-import { GameModuleState, getActiveTown } from '../../store';
-import { TownActions, Rename, Build } from '../../store/town/town.actions';
 import { getActiveWorld } from '../../reducers';
-import { Town } from '../../store/town/town.model';
+import { GameModuleState, getActiveTown } from '../reducers';
+import { TownActions, Rename, Build } from '../town/town.actions';
+import { Town } from '../town/town.model';
 
 @Component({
   // tslint:disable-next-line:component-selector

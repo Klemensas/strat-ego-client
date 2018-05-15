@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import * as io from 'socket.io-client';
 
 import { environment } from '../../../environments/environment';
-import { GameModuleState } from '../../store';
+import { GameModuleState } from '../reducers';
 
 export type SocketEvent<T = any> = [string, (payload: T) => void];
 

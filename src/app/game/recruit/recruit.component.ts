@@ -9,9 +9,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import { unitData } from '../staticData';
-import { GameModuleState } from '../../store';
-import { Town } from '../../store/town/town.model';
-import { TownActions, Recruit } from '../../store/town/town.actions';
+import { GameModuleState } from '../reducers';
+import { Town } from '../town/town.model';
+import { TownActions, Recruit } from '../town/town.actions';
 import { availableResources } from '../utils';
 
 @Component({

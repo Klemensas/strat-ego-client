@@ -7,9 +7,9 @@ import { first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ProfileUpdate } from 'strat-ego-common';
 
-import { UpdateProfile as updateAllianceProfile, RemoveAvatar as removeAllianceAvatar } from '../../../../store/alliance/alliance.actions';
-import { UpdateProfile as updatePlayerProfile, RemoveAvatar as removePlayerAvatar } from '../../../../store/player/player.actions';
-import { State } from '../../../../store';
+import { UpdateProfile as updateAllianceProfile, RemoveAvatar as removeAllianceAvatar } from '../../alliance.actions';
+import { UpdateProfile as updatePlayerProfile, RemoveAvatar as removePlayerAvatar } from '../../../player/player.actions';
+import { GameModuleState } from '../../../reducers';
 
 export interface ProfileData extends ProfileUpdate {
   type: 'player' | 'alliance';
@@ -33,7 +33,7 @@ export class EditProfileComponent  {
 
   constructor(
     private cloudinary: Cloudinary,
-    private store: Store<State>,
+    private store: Store<GameModuleState>,
     public dialogRef: MatDialogRef<EditProfileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProfileData,
   ) {

@@ -7,7 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes, faEye, faEdit, faComments, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelopeOpen, faIdCard, faIdBadge } from '@fortawesome/free-regular-svg-icons';
 
-import { GameModuleState, getPlayerInvitations, getPlayerAllianceData, getAllRankings, getPlayerPosition, getRankingEntities } from '../../store';
+import { GameModuleState, getPlayerInvitations, getPlayerAllianceData, getAllRankings, getPlayerPosition, getRankingEntities } from '../reducers';
 import {
   Create,
   AcceptInvite,
@@ -21,7 +21,7 @@ import {
   RemoveRole,
   RemoveMember,
   ViewProfile
-} from '../../store/alliance/alliance.actions';
+} from './alliance.actions';
 import { combineLatest, map, filter } from 'rxjs/operators';
 
 

@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Town } from '../../store/town/town.model';
+import { Town } from '../town/town.model';
 import { World } from 'strat-ego-common';
 import { Store } from '@ngrx/store';
 import { State } from '../../reducers';
-import { RecallSupport, SendBackSupport } from '../../store/town/town.actions';
+import { RecallSupport, SendBackSupport } from '../town/town.actions';
 
 @Component({
   selector: 'support',

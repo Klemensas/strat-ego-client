@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Town } from '../../store/town/town.model';
+import { Town } from '../town/town.model';
 
 @Component({
   selector: 'town-loyalty',

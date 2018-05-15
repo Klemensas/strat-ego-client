@@ -6,7 +6,7 @@ import { TownComponent } from './town';
 import { MapComponent } from './map';
 import { RecruitComponent } from './recruit/recruit.component';
 import { CommandComponent } from './command/command.component';
-import { MovementsComponent } from './movements/movements.component';
+import { MovementComponent } from './movement/movement.component';
 
 import { FullGuard } from '../full.guard';
 import { AllianceComponent } from '../game/alliance/alliance.component';
@@ -21,7 +21,7 @@ const gameRoutes: Routes = [
       { path: 'map', component: MapComponent },
       { path: 'recruit', component: RecruitComponent, pathMatch: 'prefix', outlet: 'popupRight'},
       { path: 'command', component: CommandComponent, pathMatch: 'prefix', outlet: 'popupLeft' },
-      { path: 'movements', component: MovementsComponent, pathMatch: 'prefix', outlet: 'popupLeft' },
+      { path: 'movement', component: MovementComponent, pathMatch: 'prefix', outlet: 'popupLeft' },
     ],
   },
 ];

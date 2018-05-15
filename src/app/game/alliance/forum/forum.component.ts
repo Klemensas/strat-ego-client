@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Alliance, AlliancePermissions } from 'strat-ego-common';
 
-import { GameModuleState } from '../../../store/index';
-import { AllianceActions } from '../../../store/alliance/alliance.actions';
+import { GameModuleState } from '../../reducers';
+import { AllianceActions } from '../alliance.actions';
 
 @Component({
   selector: 'forum',

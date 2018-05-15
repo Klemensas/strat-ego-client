@@ -3,7 +3,7 @@
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
     </button>
-    <movements *ngSwitchCase="'movements'" [town]="activeTown" [worldData]="worldData$ | async"></movements>
+    <movement *ngSwitchCase="'movement'" [town]="activeTown" [worldData]="worldData$ | async"></movement>
     <command *ngSwitchCase="'command'" [town]="activeTown" [worldData]="worldData$ | async"></command>
     <alliance *ngSwitchCase="'alliance'" (openAllianceProfile)="onOpenProfile($event, 'alliance')" (openPlayerProfile)="onOpenProfile($event, 'player')"></alliance>
   </mat-sidenav>
@@ -12,7 +12,7 @@
       <mat-icon>&times;</mat-icon>
     </button>
     <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
-    <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
+    <report *ngSwitchCase="'report'" [reports]="reports$ | async" [worldData]="worldData$ | async"></report>
     <support *ngSwitchCase="'support'" [town]="activeTown" [worldData]="worldData$ | async"></support>
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
     <alliance-profile *ngSwitchCase="'allianceProfile'" [alliance]="viewedAlliance$ | async" (openPlayerProfile)="onOpenProfile($event, 'player')"></alliance-profile>
@@ -48,7 +48,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movements')">
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movement')">
                 <fa-icon [icon]="['fas', 'arrows-alt']" aria-hidden="true"></fa-icon> Movements
               </a>
             </li>
@@ -58,7 +58,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'reports')">
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'report')">
                 <fa-icon [icon]="['fas', 'flag']" aria-hidden="true"></fa-icon> Reports
               </a>
             </li>

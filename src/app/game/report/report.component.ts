@@ -8,12 +8,12 @@ export interface ReportMapped extends Report {
 }
 
 @Component({
-  selector: 'reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss'],
+  selector: 'report',
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.scss'],
 })
 
-export class ReportsComponent implements OnChanges, OnDestroy {
+export class ReportComponent implements OnChanges, OnDestroy {
   @Input() public reports: {
     originReports: Report[],
     targetReports: Report[],

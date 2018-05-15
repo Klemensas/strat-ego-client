@@ -7,8 +7,8 @@ import { map, withLatestFrom, filter, take } from 'rxjs/operators';
 
 import { SocketService } from '../../game/services/socket.service';
 import { Load, RankingsActionTypes, LoadSuccess, LoadFail, CheckForUpdate, LoadStagnated } from './rankings.actions';
-import { GameModuleState, getRankingsUpdate, getCurrentPlayer } from '../../store';
-import { SetSidenav, PlayerActionTypes } from '../../store/player/player.actions';
+import { GameModuleState, getRankingsUpdate, getCurrentPlayer } from '../reducers';
+import { SetSidenav, PlayerActionTypes } from '../player/player.actions';
 
 @Injectable()
 export class RankingsEffects {

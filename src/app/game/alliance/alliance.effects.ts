@@ -9,7 +9,7 @@ import { AllianceEventSocketMessage } from 'strat-ego-common';
 
 import * as allianceActions from './alliance.actions';
 import { TownActions } from '../town/town.actions';
-import { GameModuleState, getCurrentPlayer, getRankingEntities, getAlliances } from '../';
+import { GameModuleState, getCurrentPlayer, getRankingEntities, getAlliances } from '../reducers';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as UpdatePlayer, SetSidenav } from '../player/player.actions';
 

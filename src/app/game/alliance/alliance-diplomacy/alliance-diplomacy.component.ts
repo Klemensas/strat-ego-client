@@ -2,7 +2,7 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Alliance, AllianceDiplomacy, DiplomacyStatus, DiplomacyType } from 'strat-ego-common';
 
-import { GameModuleState } from '../../../store';
+import { GameModuleState } from '../../reducers';
 import {
   AcceptNap,
   DeclareWar,
@@ -15,7 +15,7 @@ import {
   EndAlliance,
   RejectNap,
   EndNap
-} from '../../../store/alliance/alliance.actions';
+} from '../alliance.actions';
 
 @Component({
   selector: 'alliance-diplomacy',

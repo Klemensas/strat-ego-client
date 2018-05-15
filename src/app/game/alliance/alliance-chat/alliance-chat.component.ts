@@ -6,10 +6,9 @@ import { map, first } from 'rxjs/operators';
 import * as seedrandom from 'seedrandom';
 import { Player, Profile, AllianceMessage } from 'strat-ego-common';
 
-import { ChatActions, ChatActionTypes, PostMessage, AddMessage, PostMessageSuccess } from '../../../store/chat/chat.actions';
+import { ChatActions, ChatActionTypes, PostMessage, AddMessage, PostMessageSuccess } from '../../chat/chat.actions';
 import { OnInit } from '@angular/core';
-import { ActionWithPayload } from '../../../store/util';
-import { GameModuleState, getChatState } from '../../../store';
+import { GameModuleState, getChatState } from '../../reducers';
 
 export interface ChatMessage {
   id: number;
