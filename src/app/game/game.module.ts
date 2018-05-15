@@ -62,6 +62,7 @@ import { SupportItemComponent } from './support/support-item/support-item.compon
 import { AllianceProfileComponent } from './alliance/alliance-profile/alliance-profile.component';
 import { EditProfileComponent } from './alliance/alliance-profile/edit-profile/edit-profile.component';
 import { TownHoverComponent } from './map/town-hover/town-hover.component';
+import { PlayerProfileComponent } from './player/player-profile/player-profile.component';
 
 export const effects = [
   PlayerEffects,
@@ -128,6 +129,7 @@ export const effects = [
     AllianceProfileComponent,
     EditProfileComponent,
     TownHoverComponent,
+    PlayerProfileComponent,
   ],
   providers: [
     TownService,
