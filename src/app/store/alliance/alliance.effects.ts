@@ -11,7 +11,7 @@ import * as allianceActions from './alliance.actions';
 import { TownActions } from '../town/town.actions';
 import { GameModuleState, getCurrentPlayer, getRankingEntities, getAlliances } from '../';
 import { SocketService } from '../../game/services/socket.service';
-import { PlayerActionTypes, Update as UpdatePlayer } from '../player/player.actions';
+import { PlayerActionTypes, Update as UpdatePlayer, SetSidenav } from '../player/player.actions';
 
 @Injectable()
 export class Allianceffects {
@@ -192,6 +192,18 @@ export class Allianceffects {
     map((payload) => this.socketService.sendEvent('alliance:declareWar', payload))
   );
 
+  @Effect()
+  public viewProfile$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.ViewProfile>(allianceActions.AllianceActionTypes.ViewProfile),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getAlliances)),
+    map(([payload, alliances]) => {
+      const alliance = alliances[payload];
+      if (!alliance) { this.socketService.sendEvent('alliance:loadProfile', payload); }
+      return new SetSidenav([{ side: 'right', name: 'allianceProfile' }]);
+    })
+  );
+
   @Effect({ dispatch: false })
   public updateProfile$: Observable<any> = this.actions$.pipe(
     ofType<allianceActions.UpdateProfile>(allianceActions.AllianceActionTypes.UpdateProfile),
@@ -250,6 +262,7 @@ export class Allianceffects {
       ['alliance:endNapSuccess', (payload) => this.store.dispatch(new allianceActions.EndNapSuccess(payload))],
       ['alliance:declareWarSuccess', (payload) => this.store.dispatch(new allianceActions.DeclareWarSuccess(payload))],
       ['alliance:acceptInviteSuccess', (payload) => this.store.dispatch(new allianceActions.AcceptInviteSuccess(payload))],
+      ['alliance:loadProfileSuccess', (payload) => this.store.dispatch(new allianceActions.LoadProfileSuccess(payload))],
       ['alliance:updateProfileSuccess', (payload) => this.store.dispatch(new allianceActions.UpdateProfileSuccess(payload))],
       ['alliance:removeAvatarSuccess', (payload) => this.store.dispatch(new allianceActions.RemoveAvatarSuccess(payload))],
       // ['alliance', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.UPDATE, payload))],
