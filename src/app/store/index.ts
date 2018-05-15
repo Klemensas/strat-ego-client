@@ -59,6 +59,14 @@ export const getSidenavs = createSelector(
   getPlayerState,
   player.getSidenavs
 );
+export const getViewedPlayer = createSelector(
+  getPlayerState,
+  player.getViewedPlayer
+);
+export const getPlayers = createSelector(
+  getPlayerState,
+  player.getPlayers
+);
 
 // Alliance selectors
 export const getAllianceState = createSelector(
@@ -76,6 +84,14 @@ export const getPlayerInvitations = createSelector(
 export const getPlayerAllianceData = createSelector(
   getAllianceState,
   alliance.getPlayerAllianceData
+);
+export const getViewedAlliance = createSelector(
+  getAllianceState,
+  alliance.getViewedAlliance
+);
+export const getAlliances = createSelector(
+  getAllianceState,
+  alliance.getAlliances
 );
 
 // Chat selectors

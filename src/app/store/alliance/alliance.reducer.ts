@@ -190,6 +190,24 @@ export function reducer(
       return { ...state, error: null, inProgress: true };
     }
 
+    case AllianceActionTypes.ViewProfile: {
+      return { ...state, viewedProfile: action.payload };
+    }
+
+    case AllianceActionTypes.LoadProfile: {
+      return { ...state, error: null, inProgress: true };
+    }
+
+    case AllianceActionTypes.LoadProfileSuccess: {
+      return {
+        ...state,
+        alliances: {
+          ...state.alliances,
+          [action.payload.id]: action.payload,
+        },
+        inProgress: false };
+    }
+
     default: {
       return state;
     }
@@ -228,7 +246,11 @@ export const getPlayerAllianceActiveDiplomacy = (state: AllianceState) => {
   const alliance = state.alliances[state.playerAlliance];
   return !alliance ? [] : [...alliance.diplomacyOrigin, ...alliance.diplomacyTarget].filter(({ status }) => status === DiplomacyStatus.ongoing);
 };
-
+export const getViewedAlliance = (state: AllianceState) => {
+  const alliance = state.alliances[state.viewedProfile];
+  return alliance;
+};
+export const getAlliances = (state: AllianceState) => state.alliances;
 
 const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | number>, state: AllianceState, stateParams = {}): AllianceState => {
   const isJoin = payload.event.status === EventStatus.join;
