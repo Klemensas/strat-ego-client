@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Player, RankProfile } from 'strat-ego-common';
+import { Player, PlayerProfile } from 'strat-ego-common';
 
 export enum RankingsActionTypes {
   Load = '[Rankings] Load',
@@ -17,7 +17,7 @@ export class Load implements Action {
 export class LoadSuccess implements Action {
   readonly type = RankingsActionTypes.LoadSuccess;
 
-  constructor(public payload: { rankings: RankProfile[], playerId: number }) {}
+  constructor(public payload: { rankings: PlayerProfile[], playerId: number }) {}
 }
 export class LoadFail implements Action {
   readonly type = RankingsActionTypes.LoadFail;

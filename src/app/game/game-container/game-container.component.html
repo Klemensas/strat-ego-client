@@ -1,12 +1,13 @@
  <mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
-  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6" mode="over" align="start" opened="false">
+  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6 container-fluid" mode="over" align="start" opened="false" (closedStart)="sidenavToggle('left', null)">
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
     </button>
     <movements *ngSwitchCase="'movements'" [town]="activeTown" [worldData]="worldData$ | async"></movements>
     <command *ngSwitchCase="'command'" [town]="activeTown" [worldData]="worldData$ | async"></command>
+    <alliance *ngSwitchCase="'alliance'" (openAllianceProfile)="onOpenProfile($event, 'alliance')" (openPlayerProfile)="onOpenProfile($event, 'player')"></alliance>
   </mat-sidenav>
-  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false">
+  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false" (closedStart)="sidenavToggle('right', null)">
     <button mat-mini-fab (click)="sidenavToggle('right', null)">
       <mat-icon>&times;</mat-icon>
     </button>
@@ -14,6 +15,8 @@
     <reports *ngSwitchCase="'reports'" [reports]="reports$ | async" [worldData]="worldData$ | async"></reports>
     <support *ngSwitchCase="'support'" [town]="activeTown" [worldData]="worldData$ | async"></support>
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
+    <alliance-profile *ngSwitchCase="'allianceProfile'" [alliance]="viewedAlliance$ | async" (openPlayerProfile)="onOpenProfile($event, 'player')"></alliance-profile>
+    <player-profile *ngSwitchCase="'playerProfile'" [player]="viewedPlayer$ | async" (openAllianceProfile)="onOpenProfile($event, 'alliance')" [currentPlayer]="player$ | async"></player-profile>
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -30,7 +33,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a [routerLink]="['./alliance']" routerLinkActive="active" class="nav-link">
+              <a class="nav-link" (click)="sidenavToggle('left', 'alliance')">
                 <fa-icon [icon]="['fas', 'hands-helping']" aria-hidden="true"></fa-icon> Alliance
               </a>
             </li>
@@ -66,6 +69,8 @@
               </li>
             </ul>
           <div class="d-flex justify-content-center align-items-center">
+            <div *ngIf="player$ | async as player" class="nav-item mr-3">
+              <a class="nav-link" (click)="onOpenProfile(player.id, 'player')"><fa-icon [icon]="['far', 'user-circle']" aria-hidden="true"></fa-icon> Profile</a></div>
             <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
               <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
               <div ngbDropdownMenu aria-labelledby="active-town">

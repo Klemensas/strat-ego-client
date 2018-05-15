@@ -2,20 +2,7 @@
   <canvas #map (click)="mapClick($event)" (mousedown)="startDrag($event)" (touchstart)="startDrag($event)" (mouseup)="stopDrag()" (touchend)="stopDrag()" (mouseout)="stopDrag()" (touchcancel)="stopDrag()" (mousewheel)="onZoom($event)" [width]="mapSettings.size.x" [height]="mapSettings.size.y">
     <div>Loading map data</div>
   </canvas>
-  <div *ngIf="hoverData" class="town-hover hidden-sm-down" [style.transform]="position.hover" [style.width]="boxSize.x" [style.height]="boxSize.y">
-    <div><fa-icon class="pr-2" [icon]="['fas', 'home']" [fixedWidth]="true"></fa-icon><span>{{hoverData.name}}</span></div>
-    <div><fa-icon class="pr-2" [icon]="['far', 'user-circle']" [fixedWidth]="true"></fa-icon><span>{{hoverData.owner?.name || '-' }}</span></div>
-    <div><fa-icon class="pr-2" [icon]="['fas', 'users']" [fixedWidth]="true"></fa-icon><span>{{hoverData.alliance?.name || '-' }}</span></div>
-    <div><fa-icon class="pr-2" [icon]="['fas', 'sort-amount-up']" [fixedWidth]="true"></fa-icon><span>{{hoverData.score || '-' }}</span></div>
-    <div><fa-icon class="pr-2" [icon]="['fas', 'exchange-alt']" [fixedWidth]="true"></fa-icon><span>{{hoverData.distance}}</span></div>
-  </div>
-  <!--<div *ngIf="selected" class="town-options" [style.transform]="position.click" [style.width.px]="mapSettings.width" [style.height.px]="mapSettings.height" style="visibility: hidden; overflow: hidden;">
-    <div style="width: 100%; height: 100%; visibility: visible; transform: skewY(-30deg) rotate(60deg);" (click)="toggleSidenav('command', hoverData.location)">
-      <a  class="map-icon attack" (click)="toggleSidenav('command', hoverData.location)">A</a>
-      <a class="map-icon village">V</a>
-      <a class="map-icon message">M</a>
-    </div>
-  </div>-->
+  <town-hover *ngIf="hoverData" [data]="hoverData" class="town-hover hidden-sm-down" (openAllianceProfile)="onOpenProfile($event, 'alliance')" (openPlayerProfile)="onOpenProfile($event, 'player')" [style.transform]="position.hover" [style.width]="boxSize.x" [style.height]="boxSize.y"></town-hover>
 </div>
 <!--<div class="overlay">
   <router-outlet name="popup">

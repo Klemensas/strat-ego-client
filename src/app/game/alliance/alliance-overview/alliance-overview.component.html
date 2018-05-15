@@ -1,49 +1,56 @@
-<div class="row">
-  <div class="col">
-    <div class="row">
-      <div *ngFor="let event of alliance.eventOrigin" [ngSwitch]="event.type" class="col-12 my-1 py-1 px-4" style="background-color: beige;">
-        <ng-container *ngSwitchCase="eventTypes.invitation">
-          <ng-template [ngIf]="event.status !== eventStatuses.reject">
-              <a href="#">{{ event.targetPlayer.name }}</a> {{ invitationStatus[event.status] }} <a href="#">{{ event.originPlayer.name }}</a>
-          </ng-template>
-          <ng-template [ngIf]="event.status === eventStatuses.reject">
-            <a href="#">{{ event.originPlayer.name }}</a> {{ invitationStatus[event.status] }}
-          </ng-template>
-        </ng-container>
-        <ng-container *ngSwitchCase="eventTypes.membership">
-          <ng-template [ngIf]="event.status !== eventStatuses.remove">
-            <a href="#">{{ event.originPlayer.name }}</a> {{ membershipStatus[event.status] }}
-          </ng-template>
-          <ng-template [ngIf]="event.status === eventStatuses.remove">
-            <a href="#">{{ event.targetPlayer.name }}</a> {{ membershipStatus[event.status] }} <a href="#">{{ event.originPlayer.name }}</a>
-          </ng-template>
-        </ng-container>
-        <ng-container *ngSwitchCase="eventTypes.management">
-          <ng-template [ngIf]="event.status === eventStatuses.create">
-            <a href="#">{{ event.originPlayer.name }}</a> created the alliance
-          </ng-template>
-        </ng-container>
-        <ng-container *ngSwitchCase="eventTypes.roles">
-          <ng-template [ngIf]="event.status === eventStatuses.update">
-            <a href="#">{{ event.originPlayer.name }}</a> updated alliance roles
-          </ng-template>
-          <ng-template [ngIf]="event.status === eventStatuses.updateMember">
-            <a href="#">{{ event.targetPlayer.name }}</a> role was updated by <a href="#">{{ event.originPlayer.name }}</a>
-          </ng-template>
-        </ng-container>
-        <ng-container *ngSwitchCase="eventTypes.diplomacy">
-          <ng-template [ngIf]="!!event.originAlliance">
-            <a href="#">{{ event.originAlliance.name }}</a> {{ diplomacySubjectStatus[event.status] }}
-          </ng-template>
-          <ng-template [ngIf]="!event.originAlliance">
-            <a href="#">{{ event.originPlayer.name }}</a> {{ diplomacyOriginStatus[event.status] }} <a href="#">{{ event.TargetAlliance.name }}</a>
-          </ng-template>
-        </ng-container>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div *ngFor="let event of alliance.events" [ngSwitch]="event.type" class="col-12 my-1 py-1 px-4" style="background-color: beige;">
+          <ng-container *ngSwitchCase="eventTypes.invitation">
+            <ng-template [ngIf]="event.status !== eventStatuses.reject">
+                <a href (click)="!!openPlayerProfile.emit(event.targetPlayer.id)">{{ event.targetPlayer.name }}</a> {{ invitationStatus[event.status] }} <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a>
+            </ng-template>
+            <ng-template [ngIf]="event.status === eventStatuses.reject">
+              <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a> {{ invitationStatus[event.status] }}
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchCase="eventTypes.membership">
+            <ng-template [ngIf]="event.status !== eventStatuses.remove">
+              <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a> {{ membershipStatus[event.status] }}
+            </ng-template>
+            <ng-template [ngIf]="event.status === eventStatuses.remove">
+              <a href (click)="!!openPlayerProfile.emit(event.targetPlayer.id)">{{ event.targetPlayer.name }}</a> {{ membershipStatus[event.status] }} <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a>
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchCase="eventTypes.management">
+            <ng-template [ngIf]="event.status === eventStatuses.create">
+              <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a> created the alliance
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchCase="eventTypes.roles">
+            <ng-template [ngIf]="event.status === eventStatuses.update">
+              <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a> updated alliance roles
+            </ng-template>
+            <ng-template [ngIf]="event.status === eventStatuses.updateMember">
+              <a href (click)="!!openPlayerProfile.emit(event.targetPlayer.id)">{{ event.targetPlayer.name }}</a> role was updated by <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a>
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchCase="eventTypes.diplomacy">
+            <ng-template [ngIf]="event.originAllianceId !== alliance.id">
+              <a href (click)="!!openAllianceProfile.emit(event.originAlliance.id)">{{ event.originAlliance.name }}</a> {{ diplomacySubjectStatus[event.status] }}
+            </ng-template>
+            <ng-template [ngIf]="event.originAllianceId === alliance.id">
+              <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a> {{ diplomacyOriginStatus[event.status] }} <a href (click)="!!openAllianceProfile.emit(event.targetAlliance.id)">{{ event.targetAlliance.name }}</a>
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchCase="eventTypes.profile">
+            <ng-template [ngIf]="event.status === eventStatuses.update">
+              <a href (click)="!!openPlayerProfile.emit(event.originPlayer.id)">{{ event.originPlayer.name }}</a> updated alliance profile
+            </ng-template>
+          </ng-container>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col">
-    <button *ngIf="role.permissions.editProfile" mat-raised-button color="warn" (click)="destroyAlliance.emit()" class="mt-3">Destroy alliance</button>
-    <button *ngIf="role.id !== alliance.masterRoleId" mat-raised-button color="warn" (click)="leaveAlliance.emit()" class="mt-3">Leave alliance</button>
+    <div class="col">
+      <button *ngIf="role.permissions.editProfile" mat-raised-button color="warn" (click)="destroyAlliance.emit()" class="mt-3">Destroy alliance</button>
+      <button *ngIf="role.id !== alliance.masterRoleId" mat-raised-button color="warn" (click)="leaveAlliance.emit()" class="mt-3">Leave alliance</button>
+    </div>
   </div>
 </div>

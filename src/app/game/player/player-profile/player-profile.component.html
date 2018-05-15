@@ -1,0 +1,57 @@
+<div class="container-fluid">
+    <div *ngIf="!player">Loading...</div>
+    <div *ngIf="player">
+      <div class="row mt-3">
+        <div class="col-6">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="m-0">{{ player.name }}</h2>
+            <button type="button" class="btn btn-warning btn-sm" *ngIf="currentPlayer?.id === player?.id" (click)="editProfile()">Edit profile</button>
+          </div>
+          <hr/>
+          <div *ngIf="player.avatarUrl" class="text-center">
+            <img class="img-fluid" [src]="player.avatarUrl">
+          </div>
+          <div class="row mt-2">
+            <div class="col-6">
+              <div>Score</div>
+              <div>Alliance</div>
+              <div>Joined</div>
+            </div>
+            <div class="col-6 text-right">
+              <div>{{ playerScore }}</div>
+              <div>
+                <a *ngIf="player.alliance" href (click)="!!openAllianceProfile.emit(player.alliance.id)">{{ player.alliance.name }}</a>
+                <span *ngIf="!player.alliance">-</span>
+              </div>
+              <div>{{ player.createdAt | date:'short' }}</div>
+            </div>
+          </div>
+          <hr/>
+          <p *ngIf="player.description">{{ player.description }}</p>
+        </div>
+        <div class="col-6">
+          <h2 class="m-0">Towns</h2>
+          <hr/>
+          <mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="location">
+              <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.location}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="score">
+              <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.score}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+      </div>
+    </div>
+  </div>

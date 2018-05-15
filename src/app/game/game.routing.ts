@@ -18,7 +18,6 @@ const gameRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'town', pathMatch: 'full' },
       { path: 'town', component: TownComponent/*, resolve: { player: PlayerResolver }*/}, // should a separate path be used for joining?
-      { path: 'alliance', component: AllianceComponent },
       { path: 'map', component: MapComponent },
       { path: 'recruit', component: RecruitComponent, pathMatch: 'prefix', outlet: 'popupRight'},
       { path: 'command', component: CommandComponent, pathMatch: 'prefix', outlet: 'popupLeft' },

@@ -9,9 +9,9 @@ import { AllianceEventSocketMessage } from 'strat-ego-common';
 
 import * as allianceActions from './alliance.actions';
 import { TownActions } from '../town/town.actions';
-import { GameModuleState, getPlayerData } from '../';
+import { GameModuleState, getCurrentPlayer, getRankingEntities, getAlliances } from '../';
 import { SocketService } from '../../game/services/socket.service';
-import { PlayerActionTypes, Update as UpdatePlayer } from '../player/player.actions';
+import { PlayerActionTypes, Update as UpdatePlayer, SetSidenav } from '../player/player.actions';
 
 @Injectable()
 export class Allianceffects {
@@ -77,7 +77,7 @@ export class Allianceffects {
   public updateSelfRole$: Observable<Action> = this.actions$.pipe(
     ofType<allianceActions.EventRoles>(allianceActions.AllianceActionTypes.EventRoles),
     map((action) => action.payload),
-    withLatestFrom(this.store.select(getPlayerData)),
+    withLatestFrom(this.store.select(getCurrentPlayer)),
     filter(([payload, player]) => payload.data.updatedMember && payload.data.updatedMember.some(({ id }) => id === player.id)),
     map(([payload, player]) => new allianceActions.UpdateSelfRole(payload.data.updatedMember.find(({ id }) => id === player.id).role))
   );
@@ -192,6 +192,31 @@ export class Allianceffects {
     map((payload) => this.socketService.sendEvent('alliance:declareWar', payload))
   );
 
+  @Effect()
+  public viewProfile$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.ViewProfile>(allianceActions.AllianceActionTypes.ViewProfile),
+    map((action) => action.payload),
+    withLatestFrom(this.store.select(getAlliances)),
+    map(([payload, alliances]) => {
+      const alliance = alliances[payload];
+      if (!alliance) { this.socketService.sendEvent('alliance:loadProfile', payload); }
+      return new SetSidenav([{ side: 'right', name: 'allianceProfile' }]);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  public updateProfile$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.UpdateProfile>(allianceActions.AllianceActionTypes.UpdateProfile),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('alliance:updateProfile', payload))
+  );
+
+  @Effect({ dispatch: false })
+  public removeAvatar$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.RemoveAvatar>(allianceActions.AllianceActionTypes.RemoveAvatar),
+    map(() => this.socketService.sendEvent('alliance:removeAvatar'))
+  );
+
   // @Effect({ dispatch: false })
   // public createForumCategory$: Observable<any> = this.actions$
   //   .ofType(allianceActions.AllianceActionTypes.CreateForumCategory)
@@ -237,6 +262,9 @@ export class Allianceffects {
       ['alliance:endNapSuccess', (payload) => this.store.dispatch(new allianceActions.EndNapSuccess(payload))],
       ['alliance:declareWarSuccess', (payload) => this.store.dispatch(new allianceActions.DeclareWarSuccess(payload))],
       ['alliance:acceptInviteSuccess', (payload) => this.store.dispatch(new allianceActions.AcceptInviteSuccess(payload))],
+      ['alliance:loadProfileSuccess', (payload) => this.store.dispatch(new allianceActions.LoadProfileSuccess(payload))],
+      ['alliance:updateProfileSuccess', (payload) => this.store.dispatch(new allianceActions.UpdateProfileSuccess(payload))],
+      ['alliance:removeAvatarSuccess', (payload) => this.store.dispatch(new allianceActions.RemoveAvatarSuccess(payload))],
       // ['alliance', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.UPDATE, payload))],
       // ['alliance:createForumCategory', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.CREATE_FORUM_CATEGORY_SUCCESS, payload))],
     ]);

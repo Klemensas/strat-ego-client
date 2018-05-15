@@ -47,9 +47,9 @@ export const getPlayerState = createSelector(
   getState,
   (state: State) => state.player
 );
-export const getPlayerData = createSelector(
+export const getCurrentPlayer = createSelector(
   getPlayerState,
-  player.getPlayerData
+  player.getCurrentPlayer
 );
 export const getPlayerReports = createSelector(
   getPlayerState,
@@ -58,6 +58,14 @@ export const getPlayerReports = createSelector(
 export const getSidenavs = createSelector(
   getPlayerState,
   player.getSidenavs
+);
+export const getViewedPlayer = createSelector(
+  getPlayerState,
+  player.getViewedPlayer
+);
+export const getPlayers = createSelector(
+  getPlayerState,
+  player.getPlayers
 );
 
 // Alliance selectors
@@ -76,6 +84,14 @@ export const getPlayerInvitations = createSelector(
 export const getPlayerAllianceData = createSelector(
   getAllianceState,
   alliance.getPlayerAllianceData
+);
+export const getViewedAlliance = createSelector(
+  getAllianceState,
+  alliance.getViewedAlliance
+);
+export const getAlliances = createSelector(
+  getAllianceState,
+  alliance.getAlliances
 );
 
 // Chat selectors
@@ -103,13 +119,17 @@ export const getRankingsState = createSelector(
   getState,
   (state: State) => state.rankings
 );
-export const getRankings = createSelector(
+export const getAllRankings = createSelector(
   getRankingsState,
-  rankings.getRankings
+  rankings.getAllRankings
 );
-export const getPositionRankings = createSelector(
+export const getRankingEntities = createSelector(
   getRankingsState,
-  rankings.getPositionRankings
+  rankings.getRankingEntities
+);
+export const getPlayerPosition = createSelector(
+  getRankingsState,
+  rankings.getPlayerPosition
 );
 export const getRankingsUpdate = createSelector(
   getRankingsState,

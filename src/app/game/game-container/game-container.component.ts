@@ -4,27 +4,36 @@ import { Effect, Actions } from '@ngrx/effects';
 import { MatSidenav, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { filter, map, distinctUntilChanged } from 'rxjs/operators';
+import { filter, map, distinctUntilChanged, combineLatest } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import {
   GameModuleState,
   getTownState,
-  getPlayerData,
+  getCurrentPlayer,
   getPlayerReports,
   getSidenavs,
   getPlayerAlliance,
-  getPositionRankings,
-  getRankingsProgress
+  getAllRankings,
+  getPlayerPosition,
+  getRankingsProgress,
+  getViewedAlliance,
+  getRankingEntities,
+  getViewedPlayer
 } from '../../store';
+import { ViewProfile as viewAllianceProfile } from '../../store/alliance/alliance.actions';
+import { ViewProfile as viewPlayerProfile } from '../../store/player/player.actions';
 import { ActionWithPayload } from '../../store/util';
 import { Town } from '../../store/town/town.model';
 import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/town.actions';
 import { PlayerActions, SetSidenav, Restart } from '../../store/player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
+
+// TODO: consider using routes for sidenavs, should result in cleaner implementations and also easier linking
 
 @Component({
   selector: 'game-container',
@@ -39,15 +48,38 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public activeTown: Town;
   public canRecruit: boolean;
 
-  public player$ = this.store.select(getPlayerData);
+  public player$ = this.store.select(getCurrentPlayer);
   public alliance$ = this.store.select(getPlayerAlliance);
   public townState$ = this.store.select(getTownState);
   public reports$ = this.store.select(getPlayerReports);
   public worldData$ = this.store.select(getActiveWorld);
-  public positionRankings$ = this.store.select(getPositionRankings);
-  public noTowns$ = this.townState$.pipe(
-    map((state) => !state.inProgress && !state.ids.length)
-  );
+  public positionRankings$ = this.store.select(getAllRankings)
+    .pipe(
+      combineLatest(this.store.select(getPlayerPosition)),
+      map(([rankings, playerPosition]) => ({ rankings, playerPosition })),
+    );
+  public noTowns$ = this.townState$
+    .pipe(
+      map((state) => !state.inProgress && !state.ids.length)
+    );
+  public viewedAlliance$ = this.store.select(getViewedAlliance)
+    .pipe(
+      combineLatest(this.store.select(getRankingEntities)),
+      filter(([alliance, rankings]) => !!alliance && !!Object.keys(rankings).length),
+      map(([alliance, rankings]) => ({
+        ...alliance,
+        members: alliance.members.map(({ id }) => {
+          const { name, score } = rankings[id];
+          return {
+            id,
+            name,
+            score,
+          };
+        })
+      }))
+    );
+  public viewedPlayer$ = this.store.select(getViewedPlayer);
+
   public isVisible;
   public sidenavSubscription: Subscription;
   public townStateSubscription: Subscription;
@@ -57,7 +89,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private actions$: Actions,
   ) {
-    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt);
+    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt, faUserCircle);
   }
 
   ngOnInit() {
@@ -92,6 +124,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     } else {
       this.sidenavRight.close();
     }
+  }
+
+  onOpenProfile(id: number, type: string) {
+    const action = type === 'alliance' ? viewAllianceProfile : viewPlayerProfile;
+    this.store.dispatch(new action(id));
   }
 
   sidenavToggle(side, name) {
