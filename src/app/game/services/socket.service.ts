@@ -41,20 +41,10 @@ export class SocketService {
 
   public connect(token): Observable<any> {
     const world = 'megapolis'; // replace with target world data
-    // console.log('connecting to socket', this.auth.tokenData)
     this.socket = io.connect(environment.server.base, {
         path: '/socket.io-client',
         query: `token=${token}&world=${world}`,
     });
-
-    // TODO: many listeners vs less with metadata
-    // this.socket.on('report', (payload) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload }));
-    // TODO: cleanup refactoring, remove old events code
-    this.events.set('player', this.socketObservable('player'));
-    this.events.set('town', this.socketObservable('town'));
-    this.events.set('map', this.socketObservable('map'));
-    this.events.set('reports', this.socketObservable('reports'));
-
     this.readyToRegister$.next(true);
 
     // TODO: rework returned value into something valid when working with server side socket authentication
@@ -65,19 +55,11 @@ export class SocketService {
 
   public disconnect() {
     this.socket.close();
+    this.readyToRegister$.next(false);
   }
 
   public sendEvent(event: string, data?: any) {
     console.log(`[Socket emit: ${event}]`, data);
     this.socket.emit(event, data);
-  }
-
-  private socketObservable(event) {
-    return Observable.create((observer: any) => {
-        this.socket.on(event, (data: any) => {
-          observer.next(data);
-        });
-    });
-    // .cache();
   }
 }
