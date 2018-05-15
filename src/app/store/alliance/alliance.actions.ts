@@ -20,7 +20,6 @@ export enum AllianceActionTypes {
   DestroySuccess = '[Alliance] Destroy Success',
   LeaveAlliance = '[Alliance] Leave Alliance',
   LeaveAllianceSuccess = '[Alliance] Leave Alliance Success',
-  ViewProfile = '[Alliance] View Profile',
 
   // Alliance specific events
   EventInvitation = '[Alliance][Event] Invitation',
@@ -70,6 +69,10 @@ export enum AllianceActionTypes {
   EndNapSuccess = '[Alliance][Management] End Nap Success',
   DeclareWar = '[Alliance][Management] Declare War',
   DeclareWarSuccess = '[Alliance][Management] Declare War Success',
+
+  ViewProfile = '[Alliance] View Profile',
+  LoadProfile = '[Alliance] Load Profile',
+  LoadProfileSuccess = '[Alliance] Load Profile Success',
   UpdateProfile = '[Alliance][Management] Update Profile',
   UpdateProfileSuccess = '[Alliance][Management] Update Profile Success',
   RemoveAvatar = '[Alliance][Management] Remove Avatar',
@@ -346,6 +349,21 @@ export class DeclareWarSuccess implements Action {
 
   constructor(public payload: AllianceEventSocketMessage<AllianceDiplomacy>) {}
 }
+export class ViewProfile implements Action {
+  readonly type = AllianceActionTypes.ViewProfile;
+
+  constructor(public payload: number) {}
+}
+export class LoadProfile implements Action {
+  readonly type = AllianceActionTypes.LoadProfile;
+
+  constructor(public payload: number) {}
+}
+export class LoadProfileSuccess implements Action {
+  readonly type = AllianceActionTypes.LoadProfileSuccess;
+
+  constructor(public payload: Partial<Alliance>) {}
+}
 export class UpdateProfile implements Action {
   readonly type = AllianceActionTypes.UpdateProfile;
 
@@ -419,11 +437,13 @@ export type AllianceActions = SetData |
   EndNapSuccess |
   DeclareWar |
   DeclareWarSuccess |
+  ViewProfile |
+  LoadProfile |
+  LoadProfileSuccess |
   UpdateProfile |
   UpdateProfileSuccess |
   RemoveAvatar |
-  RemoveAvatarSuccess |
-  ViewProfile;
+  RemoveAvatarSuccess;
 
 export type AllianceEventActionTypes = EventInvitation |
   EventMembership |
