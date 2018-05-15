@@ -2,7 +2,7 @@
   <div *ngIf="allianceData.alliance as alliance; else noAlliance">
     <mat-tab-group>
       <mat-tab label="Overview">
-        <alliance-overview [alliance]="alliance" [role]="allianceData.role" (leaveAlliance)="leaveAlliance()" (destroyAlliance)="destroyAlliance()"></alliance-overview>
+        <alliance-overview [alliance]="alliance" [role]="allianceData.role" (leaveAlliance)="leaveAlliance()" (destroyAlliance)="destroyAlliance()" (openAllianceProfile)="openAllianceProfile.emit($event)" (openPlayerProfile)="openPlayerProfile.emit($event)"></alliance-overview>
       </mat-tab>
       <mat-tab label="Profile">
         <alliance-profile [alliance]="alliance" [role]="allianceData.role"></alliance-profile>

@@ -11,6 +11,8 @@ export class AllianceOverviewComponent {
   @Input() role: AllianceRole;
   @Output() leaveAlliance: EventEmitter<void> = new EventEmitter();
   @Output() destroyAlliance: EventEmitter<void> = new EventEmitter();
+  @Output() openAllianceProfile: EventEmitter<number> = new EventEmitter();
+  @Output() openPlayerProfile: EventEmitter<number> = new EventEmitter();
 
   public eventStatuses = EventStatus;
   public eventTypes = EventType;

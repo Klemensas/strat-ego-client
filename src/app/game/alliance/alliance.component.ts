@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ALLIANCE_PERMISSIONS, PermissionNames } from 'strat-ego-common';
@@ -19,7 +19,8 @@ import {
   UpdateMemberRole,
   UpdateRolePermissions,
   RemoveRole,
-  RemoveMember
+  RemoveMember,
+  ViewProfile
 } from '../../store/alliance/alliance.actions';
 import { combineLatest, map, filter } from 'rxjs/operators';
 
@@ -42,31 +43,36 @@ export const PERMISSION_NAMES: { [name in PermissionNames] } = {
   styleUrls: ['./alliance.component.scss'],
 })
 export class AllianceComponent implements OnInit {
+  @Output() openAllianceProfile = new EventEmitter();
+  @Output() openPlayerProfile = new EventEmitter();
+
   public alliancePermissions = ALLIANCE_PERMISSIONS;
 
   public allianceName = '';
   public inviteTarget = '';
 
-  public invitations$ = this.store.select(getPlayerInvitations);
-  public allianceData$ = this.store.select(getPlayerAllianceData);
   public rankings$ = this.store.select(getRankingEntities);
-  public allianceScored$ = this.allianceData$
+  public invitations$ = this.store.select(getPlayerInvitations);
+  public allianceData$ = this.store.select(getPlayerAllianceData)
     .pipe(
       filter(({ alliance }) => !!alliance),
       combineLatest(this.rankings$),
-      map(([{ alliance }, rankings]) => {
-        alliance.members
-          .map((member) => {
-            const rank = rankings[member.id];
-            const score = rank && rank.score ? rank.score : 0;
-            return {
-              ...member,
-              score,
-            };
-          })
-          .sort((a, b) => b.score - a.score || a.id - b.id);
-        return alliance;
-      })
+      map(([{ alliance, role }, rankings]) => ({
+        role,
+        alliance: {
+          ...alliance,
+          members: alliance.members
+            .map((member) => {
+              const rank = rankings[member.id];
+              const score = rank && rank.score ? rank.score : 0;
+              return {
+                ...member,
+                score,
+              };
+            })
+            .sort((a, b) => b.score - a.score || a.id - b.id)
+        }
+      }))
     );
 
   constructor(private store: Store<GameModuleState>, private formBuilder: FormBuilder) {
@@ -74,6 +80,10 @@ export class AllianceComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  onOpenAllianceProfile(id: number) {
+    this.store.dispatch(new ViewProfile(id));
+  }
 
   createAlliance() {
     if (this.allianceName.length > 3) {
