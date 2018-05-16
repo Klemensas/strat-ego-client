@@ -23,7 +23,7 @@ export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
 
 export function reset(reducer) {
   return function(state, action) {
-    if (action.type === AuthActionTypes.Logout) { state = undefined; }
+    if (action.type === AuthActionTypes.Logout) { state = { world: state.world }; }
     return reducer(state, action);
   };
 }
