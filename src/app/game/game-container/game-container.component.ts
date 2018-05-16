@@ -23,13 +23,12 @@ import {
   getViewedAlliance,
   getRankingEntities,
   getViewedPlayer
-} from '../../store';
-import { ViewProfile as viewAllianceProfile } from '../../store/alliance/alliance.actions';
-import { ViewProfile as viewPlayerProfile } from '../../store/player/player.actions';
-import { ActionWithPayload } from '../../store/util';
-import { Town } from '../../store/town/town.model';
-import { TownActions, TownActionTypes, SetActiveTown } from '../../store/town/town.actions';
-import { PlayerActions, SetSidenav, Restart } from '../../store/player/player.actions';
+} from '../reducers';
+import { ViewProfile as viewAllianceProfile } from '../alliance/alliance.actions';
+import { ViewProfile as viewPlayerProfile } from '../player/player.actions';
+import { Town } from '../town/town.model';
+import { TownActions, TownActionTypes, SetActiveTown } from '../town/town.actions';
+import { PlayerActions, SetSidenav, Restart } from '../player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
 
@@ -136,7 +135,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.socket.disconnect();
     this.sidenavSubscription.unsubscribe();
     this.townStateSubscription.unsubscribe();
   }

@@ -39,7 +39,7 @@ import {
   SupportSentBack
 } from './town.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
-import { GameModuleState, getActiveTown } from '../';
+import { GameModuleState, getActiveTown } from '../reducers';
 import { SocketService } from '../../game/services/socket.service';
 import { availableResources } from '../../game/utils';
 import { getActiveWorld, State } from '../../reducers';

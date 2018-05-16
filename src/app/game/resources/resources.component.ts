@@ -3,7 +3,7 @@ import { Resources } from 'strat-ego-common';
 import { Observable } from 'rxjs/observable';
 
 import { availableResources } from '../utils';
-import { Town } from '../../store/town/town.model';
+import { Town } from '../town/town.model';
 
 @Component({
   selector: 'resources',

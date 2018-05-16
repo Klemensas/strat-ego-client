@@ -4,9 +4,9 @@ import { Store } from '@ngrx/store';
 import { GameDataService } from '../../services/game-data.service';
 import { CommandService, MapService } from '../services/';
 import { unitData } from '../staticData';
-import { GameModuleState } from '../../store';
-import { Town } from '../../store/town/town.model';
-import { MoveTroops } from '../../store/town/town.actions';
+import { GameModuleState } from '../reducers';
+import { Town } from '../town/town.model';
+import { MoveTroops } from '../town/town.actions';
 import { MovementType } from 'strat-ego-common';
 
 @Component({

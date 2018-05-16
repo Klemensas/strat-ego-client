@@ -27,8 +27,8 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { CloudinaryModule } from '@cloudinary/angular-5.x';
 import * as Cloudinary from 'cloudinary-core';
 
-import { TownService, MapService, CommandService, ReportService } from './services/index';
-import { reducers } from '../store/index';
+import { MapService, CommandService } from './services/index';
+import { reducers } from './reducers';
 import { gameRouting, gameComponents } from './game.routing';
 
 import { ResourcesComponent } from './resources';
@@ -37,9 +37,9 @@ import { BuildingQueueComponent } from './building-queue/building-queue.componen
 import { UnitsComponent } from './units/units.component';
 import { CommandComponent } from './command/command.component';
 import { CountdownPipe } from '../pipes/countdown.pipe';
-import { MovementsComponent } from './movements/movements.component';
-import { ReportsComponent } from './reports/reports.component';
-import { ReportComponent } from './reports/report/report.component';
+import { MovementComponent } from './movement/movement.component';
+import { ReportComponent } from './report/report.component';
+import { ReportItemComponent } from './report/report-item/report-item.component';
 import { UnitQueueComponent } from './unit-queue/unit-queue.component';
 import { TownLoyaltyComponent } from './town-loyalty/town-loyalty.component';
 import { AllianceComponent } from './alliance/alliance.component';
@@ -51,11 +51,11 @@ import { AllianceDiplomacyComponent } from './alliance/alliance-diplomacy/allian
 import { AllianceOverviewComponent } from './alliance/alliance-overview/alliance-overview.component';
 import { RankingsComponent } from './rankings/rankings.component';
 
-import { PlayerEffects } from '../store/player/player.effects';
-import { Allianceffects } from '../store/alliance/alliance.effects';
-import { ChatEffects } from '../store/chat/chat.effects';
-import { TownEffects } from '../store/town/town.effects';
-import { MapEffects } from '../store/map/map.effects';
+import { PlayerEffects } from './player/player.effects';
+import { Allianceffects } from './alliance/alliance.effects';
+import { ChatEffects } from './chat/chat.effects';
+import { TownEffects } from './town/town.effects';
+import { MapEffects } from './map/map.effects';
 import { RankingsEffects } from './rankings/rankings.effects';
 import { SupportComponent } from './support/support.component';
 import { SupportItemComponent } from './support/support-item/support-item.component';
@@ -111,9 +111,9 @@ export const effects = [
     BuildingQueueComponent,
     UnitsComponent,
     CommandComponent,
-    MovementsComponent,
-    ReportsComponent,
+    MovementComponent,
     ReportComponent,
+    ReportItemComponent,
     UnitQueueComponent,
     TownLoyaltyComponent,
     AllianceComponent,
@@ -132,10 +132,8 @@ export const effects = [
     PlayerProfileComponent,
   ],
   providers: [
-    TownService,
     MapService,
     CommandService,
-    ReportService,
     NgbTooltipConfig,
   ],
   exports: [RouterModule],

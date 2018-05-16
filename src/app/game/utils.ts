@@ -3,7 +3,7 @@ import { Resources } from 'strat-ego-common';
 import 'rxjs/add/observable/timer';
 import { timestamp, map, publish, refCount } from 'rxjs/operators';
 
-import { Town } from '../store/town/town.model';
+import { Town } from './town/town.model';
 
 export const enoughResources = (res: Resources, needed: Resources) => res.wood >= needed.wood && res.clay >= needed.clay && res.iron >= needed.iron;
 

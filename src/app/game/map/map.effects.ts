@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { MapActions, MapActionTypes, Update } from './map.actions';
-import { GameModuleState } from '../';
+import { GameModuleState } from '../reducers';
 import { SocketService } from '../../game/services';
 
 @Injectable()

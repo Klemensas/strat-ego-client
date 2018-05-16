@@ -5,15 +5,15 @@ import { timestamp, map } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCaretRight, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 
-import { Town } from '../../store/town/town.model';
+import { Town } from '../town/town.model';
 import { MovementTypeName } from 'strat-ego-common';
 
 @Component({
-  selector: 'movements',
-  templateUrl: './movements.component.html',
-  styleUrls: ['./movements.component.scss']
+  selector: 'movement',
+  templateUrl: './movement.component.html',
+  styleUrls: ['./movement.component.scss']
 })
-export class MovementsComponent implements OnInit, OnChanges {
+export class MovementComponent implements OnInit, OnChanges {
   @Input() public town: Town;
   @Input() public worldData;
 

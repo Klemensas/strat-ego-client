@@ -16,13 +16,13 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faExchangeAlt, faSortAmountUp } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../../store';
+import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../reducers';
 import { MapService, CommandService } from '../services';
-import { Town } from '../../store/town/town.model';
-import { MapActions, LoadMap } from '../../store/map/map.actions';
-import { PlayerActions, SetSidenav } from '../../store/player/player.actions';
-import { ViewProfile as viewAllianceProfile } from '../../store/alliance/alliance.actions';
-import { ViewProfile as viewPlayerProfile } from '../../store/player/player.actions';
+import { Town } from '../town/town.model';
+import { MapActions, LoadMap } from '../map/map.actions';
+import { PlayerActions, SetSidenav } from '../player/player.actions';
+import { ViewProfile as viewAllianceProfile } from '../alliance/alliance.actions';
+import { ViewProfile as viewPlayerProfile } from '../player/player.actions';
 
 // TODO: important https://www.chromestatus.com/feature/5424182347169792
 // will massively improve performance

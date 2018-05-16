@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import * as io from 'socket.io-client';
 
 import { environment } from '../../../environments/environment';
-import { GameModuleState } from '../../store';
+import { GameModuleState } from '../reducers';
 
 export type SocketEvent<T = any> = [string, (payload: T) => void];
 
@@ -21,13 +21,18 @@ export class SocketService {
 // Consider separating game module and lazy loading it with sockets. That could potentially simplify registering logic.
   public eventsToRegister$: BehaviorSubject<SocketEvent[]> = new BehaviorSubject([]);
   private socket: SocketIOClient.Socket;
+  private registeredEvents = [];
   private readyToRegister$: Subject<boolean> = new Subject();
   private registerEventsSubscription = this.eventsToRegister$.pipe(
     combineLatest(this.readyToRegister$),
     filter(([events, ready]) => ready && !!events.length)
   ).subscribe(([events]) => {
-    this.eventsToRegister$.next([]);
-    events.forEach(([event, callback]) => this.socket.on(event, callback));
+    events.forEach(([event, callback]) => {
+      if (this.registeredEvents.includes(event)) { return; }
+
+      this.socket.on(event, callback);
+      this.registeredEvents.push(event);
+    });
   });
 
   public events = new Map();
@@ -41,20 +46,10 @@ export class SocketService {
 
   public connect(token): Observable<any> {
     const world = 'megapolis'; // replace with target world data
-    // console.log('connecting to socket', this.auth.tokenData)
     this.socket = io.connect(environment.server.base, {
         path: '/socket.io-client',
         query: `token=${token}&world=${world}`,
     });
-
-    // TODO: many listeners vs less with metadata
-    // this.socket.on('report', (payload) => this.store.dispatch({ type: PlayerActions.UPDATE_REPORTS, payload }));
-    // TODO: cleanup refactoring, remove old events code
-    this.events.set('player', this.socketObservable('player'));
-    this.events.set('town', this.socketObservable('town'));
-    this.events.set('map', this.socketObservable('map'));
-    this.events.set('reports', this.socketObservable('reports'));
-
     this.readyToRegister$.next(true);
 
     // TODO: rework returned value into something valid when working with server side socket authentication
@@ -65,19 +60,12 @@ export class SocketService {
 
   public disconnect() {
     this.socket.close();
+    this.registeredEvents = [];
+    this.readyToRegister$.next(false);
   }
 
   public sendEvent(event: string, data?: any) {
     console.log(`[Socket emit: ${event}]`, data);
     this.socket.emit(event, data);
-  }
-
-  private socketObservable(event) {
-    return Observable.create((observer: any) => {
-        this.socket.on(event, (data: any) => {
-          observer.next(data);
-        });
-    });
-    // .cache();
   }
 }

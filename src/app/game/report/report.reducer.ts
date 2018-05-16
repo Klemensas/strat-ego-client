@@ -1,7 +1,6 @@
 import { ActionReducer } from '@ngrx/store';
 import { Report } from 'strat-ego-common';
 
-import { ActionWithPayload } from '../util';
 import { ReportActions, ReportActionTypes } from './report.actions';
 
 export interface ReportState {

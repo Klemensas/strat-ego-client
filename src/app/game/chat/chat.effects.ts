@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { Player, AllianceMessage } from 'strat-ego-common';
 
 import { ChatActions, ChatActionTypes, PostMessage, Update, PostMessageSuccess, AddMessage } from './chat.actions';
-import { GameModuleState, getChatMessages } from '../';
+import { GameModuleState, getChatMessages } from '../reducers';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { Action } from '@ngrx/store/src/models';
