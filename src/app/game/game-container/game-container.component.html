@@ -1,4 +1,4 @@
- <mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
+<mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
   <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6 container-fluid" mode="over" align="start" opened="false" (closedStart)="sidenavToggle('left', null)">
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>

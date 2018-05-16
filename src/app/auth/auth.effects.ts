@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import * as authActions from './auth.actions';
 import { Action } from '@ngrx/store';
 import { defer } from 'rxjs/observable/defer';
+import { SocketService } from '../game/services';
 
 @Injectable()
 export class AuthEffects {
@@ -49,6 +50,7 @@ export class AuthEffects {
     ofType(authActions.AuthActionTypes.Logout),
     tap(() => {
       this.authService.removeToken();
+      this.socketService.disconnect();
       this.router.navigate(['/']);
     })
   );
@@ -59,6 +61,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
+    private socketService: SocketService,
     private router: Router,
   ) {}
 }

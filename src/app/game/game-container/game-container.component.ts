@@ -135,7 +135,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.socket.disconnect();
     this.sidenavSubscription.unsubscribe();
     this.townStateSubscription.unsubscribe();
   }
