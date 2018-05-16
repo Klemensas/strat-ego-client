@@ -21,13 +21,18 @@ export class SocketService {
 // Consider separating game module and lazy loading it with sockets. That could potentially simplify registering logic.
   public eventsToRegister$: BehaviorSubject<SocketEvent[]> = new BehaviorSubject([]);
   private socket: SocketIOClient.Socket;
+  private registeredEvents = [];
   private readyToRegister$: Subject<boolean> = new Subject();
   private registerEventsSubscription = this.eventsToRegister$.pipe(
     combineLatest(this.readyToRegister$),
     filter(([events, ready]) => ready && !!events.length)
   ).subscribe(([events]) => {
-    this.eventsToRegister$.next([]);
-    events.forEach(([event, callback]) => this.socket.on(event, callback));
+    events.forEach(([event, callback]) => {
+      if (this.registeredEvents.includes(event)) { return; }
+
+      this.socket.on(event, callback);
+      this.registeredEvents.push(event);
+    });
   });
 
   public events = new Map();
@@ -55,6 +60,7 @@ export class SocketService {
 
   public disconnect() {
     this.socket.close();
+    this.registeredEvents = [];
     this.readyToRegister$.next(false);
   }
 
