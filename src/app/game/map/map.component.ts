@@ -70,7 +70,9 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     points: [],
     shouldDraw: false,
   };
-  public ctx;
+  public ctx: CanvasRenderingContext2D;
+  public offscreenCanvas: HTMLCanvasElement;
+  public offscreenCtx: CanvasRenderingContext2D;
   public rng;
   public hoverPauser = new Subject();
   // public hoverData: Observable;
@@ -96,8 +98,13 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public ngAfterContentInit() {
-    this.ctx = this.map.nativeElement.getContext('2d');
-    this.ctx.lineWidth = 1;
+    this.offscreenCanvas = document.createElement('canvas');
+    this.offscreenCanvas.width = this.map.nativeElement.offsetWidth * 3;
+    this.offscreenCanvas.height = this.map.nativeElement.offsetHeight * 3;
+    this.offscreenCtx = this.offscreenCanvas.getContext('2d', { alpha: false });
+    this.offscreenCtx.imageSmoothingEnabled = false;
+    this.ctx = this.map.nativeElement.getContext('2d', { alpha: false });
+    this.ctx.imageSmoothingEnabled = false;
 
     const moveEvent = Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
@@ -241,13 +248,37 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
     this.hoverData = null;
     this.selected = null;
-    this.mapOffset = this.mapService.pixelToCoord(
-      { x: offset.xPx.plus(difference.x), y: offset.yPx.plus(difference.y) },
-      this.mapSettings,
-      true
-    );
+    const prev = Object.assign({}, this.mapOffset);
+    // this.mapOffset = this.mapService.pixelToCoord(
+    //   { x: offset.xPx.plus(difference.x), y: offset.yPx.plus(difference.y) },
+    //   this.mapSettings,
+    //   true
+    // );
+    // console.log('hmm', {
+    //   x: +difference.x,
+    //   y: +difference.y,
+    // }, prev, this.mapOffset)
     // this.mapSettings.shouldDraw = true;
-    this.drawMap(this.mapOffset);
+    // console.time('draw map drag');
+    const drags = performance.getEntriesByName('draw drag');
+    if (drags.length === 100) {
+      console.log(drags);
+      const times = drags.reduce((result, drag) => {
+        result.max = Math.max(result.max, drag.duration);
+        result.min = Math.min(result.min, drag.duration);
+        result.total += drag.duration;
+        return result;
+      }, { total: 0, max: 0, min: Infinity });
+      times.average = times.total / drags.length;
+      console.table(times);
+      return;
+    }
+
+    performance.mark('draw drag start');
+    this.drawMap(this.mapOffset, difference);
+    performance.mark('draw drag end')
+    performance.measure('draw drag', 'draw drag start', 'draw drag end');
+    // console.timeEnd('draw map drag');
   }
 
   private onHover(event) {
@@ -298,7 +329,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   private setMapSettings(size, zoom = 1) {
-    const width = new Big(size.x).div(13).times(zoom);
+    console.log('size', size);
+    const width = new Big(size.x).div(51).times(zoom);
     const side = width.div(Big(3).sqrt());
     const radius = width.div(2);
     const height = side.times(2);
@@ -338,11 +370,16 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     return this.mapService.pixelToCoord(leftCorner, this.mapSettings, true);
   }
 
-  private drawMap(offset) {
+  private drawMap(offset, change?) {
     const parity = +offset.yCoord % 2;
     const yMax = +Big(this.mapSettings.size.y).minus(offset.y).div(this.mapSettings.aHeight).round(0, 3);
     // console.log(`Drawin y for ${yMax} rows`);
-    this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
+    if (change) {
+      this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
+      this.ctx.drawImage(this.offscreenCanvas, +change.x, +change.y);
+      return;
+    }
+    // this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
     for (let y = 0; y < yMax; y++) {
       const yCoord = offset.yCoord.plus(y);
       const yPos = Big(y).times(this.mapSettings.aHeight).plus(offset.y);
@@ -358,52 +395,54 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       for (; x < xMax; x++) {
         const xCoord = offset.xCoord.plus(x);
         const xPos = Big(x).times(this.mapSettings.width).plus(xOffset);
-        this.drawHex(xPos, yPos, `${xCoord},${yCoord}`);
+        this.drawHex(this.offscreenCtx, xPos, yPos, `${xCoord},${yCoord}`);
       }
     }
+    // console.log('hmm', this.offscreenCanvas)
+    this.ctx.drawImage(this.offscreenCanvas, 0, 0);
     this.mapSettings.shouldDraw = false;
   }
 
-  private drawHex(x, y, coordString) {
+  private drawHex(ctx, x, y, coordString) {
     const data = this.mapData[coordString];
     const image = data ?
       (data.owner ? this.mapTiles.object : this.mapTiles.objectType.abandoned ) :
       this.mapTiles.tiles [Math.round(this.rng(coordString) * (this.mapTiles.tiles.length - 1))];
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(+x.plus(this.mapSettings.width.div(2)), +y);
+    // this.ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(+x.plus(this.mapSettings.width.div(2)), +y);
     this.mapSettings.points.forEach(point => {
-      this.ctx.lineTo(+point.x.plus(x), +point.y.plus(y));
+      ctx.lineTo(+point.x.plus(x), +point.y.plus(y));
     });
-    this.ctx.closePath();
-    this.ctx.clip();
-    this.ctx.drawImage(
+    ctx.closePath();
+    // ctx.clip();
+    ctx.drawImage(
       this.mapTiles.image,
       image[0], image[1],
       this.mapTiles.size[0], this.mapTiles.size[1],
       +x, +y,
       +this.mapSettings.width, +this.mapSettings.height
     );
-    this.ctx.restore();
+    // ctx.restore();
 
     if (data) {
       if (this.playerTownIds.includes(data.id)) {
         const type = this.activeTown.id === data.id ?
           this.mapTiles.objectType.ownedActive : this.mapTiles.objectType.owned;
-        this.ctx.drawImage(
+        ctx.drawImage(
           this.mapTiles.image,
           type[0], type[1],
           this.mapTiles.size[0], this.mapTiles.size[1],
           +x, +y,
           +this.mapSettings.width, +this.mapSettings.height
         );
-        // this.ctx.globalCompositeOperation = 'multiply';
-        // this.ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
-        // this.ctx.fill();
-        // this.ctx.globalCompositeOperation = 'source-over';
+        // ctx.globalCompositeOperation = 'multiply';
+        // ctx.fillStyle = data.owner ? 'yellow': 'rgba(100,100,100,0.4)';
+        // ctx.fill();
+        // ctx.globalCompositeOperation = 'source-over';
       } else if (data.alliance && this.allianceDiplomacy[data.alliance.id]) {
         const target = this.allianceDiplomacy[data.alliance.id];
-        this.ctx.drawImage(
+        ctx.drawImage(
           this.mapTiles.image,
           this.mapTiles.objectType[target][0], this.mapTiles.objectType[target][1],
           this.mapTiles.size[0], this.mapTiles.size[1],
@@ -413,16 +452,16 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       }
     }
 
-    // this.ctx.strokeStyle= 'rgba(0,0,0,0.2)';
-    this.ctx.strokeStyle = '#27ae60';
-    this.ctx.stroke();
+    // ctx.strokeStyle= 'rgba(0,0,0,0.2)';
+    ctx.strokeStyle = '#27ae60';
+    ctx.stroke();
 
     if (this.drawCoords) {
-      this.ctx.font = '14pt Calibri';
-      this.ctx.fillStyle = '#ff0000';
-      this.ctx.lineWidth = 1;
-      this.ctx.strokeText(coordString, +x, +y + this.mapSettings.height / 2);
-      this.ctx.fillText(coordString, +x, +y + this.mapSettings.height / 2);
+      ctx.font = '14pt Calibri';
+      ctx.fillStyle = '#ff0000';
+      ctx.lineWidth = 1;
+      ctx.strokeText(coordString, +x, +y + this.mapSettings.height / 2);
+      ctx.fillText(coordString, +x, +y + this.mapSettings.height / 2);
     }
   }
 }
