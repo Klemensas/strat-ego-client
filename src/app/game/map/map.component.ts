@@ -51,15 +51,21 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     y: 80,
   };
 
-  public drawCoords = false;
+  public drawCoords = true;
   public mapTiles;
 
   public selected;
   public zoom = 1;
+  public offscreenMultiplier = 1;
   public mapData: Dict<MapTown>;
   public mapOffset;
   public mapSettings = {
     size: { x: 100, y: 100 },
+    offscreenSize: { x: 100, y: 100 },
+    screenPosition: {
+      x: 0,
+      y: 0,
+    },
     width: <any>0,
     height: <any>0,
     side: <any>0,
@@ -99,8 +105,9 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
   public ngAfterContentInit() {
     this.offscreenCanvas = document.createElement('canvas');
-    this.offscreenCanvas.width = this.map.nativeElement.offsetWidth * 3;
-    this.offscreenCanvas.height = this.map.nativeElement.offsetHeight * 3;
+    this.offscreenCanvas.width = this.map.nativeElement.offsetWidth * this.offscreenMultiplier;
+    this.offscreenCanvas.height = this.map.nativeElement.offsetHeight * this.offscreenMultiplier;
+    console.log('hmm', this.offscreenCanvas);
     this.offscreenCtx = this.offscreenCanvas.getContext('2d', { alpha: false });
     this.offscreenCtx.imageSmoothingEnabled = false;
     this.ctx = this.map.nativeElement.getContext('2d', { alpha: false });
@@ -137,7 +144,13 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
         x: this.map.nativeElement.offsetWidth,
         y: this.map.nativeElement.offsetHeight
       });
-      this.mapOffset = this.centerOffset({ x: this.activeTown.location[0], y: this.activeTown.location[1] });
+      this.mapOffset = {
+        ...this.centerOffset({ x: this.activeTown.location[0], y: this.activeTown.location[1] }),
+        screenPosition: {
+          x: (this.mapSettings.offscreenSize.x - this.mapSettings.size.x) / 2,
+          y: (this.mapSettings.offscreenSize.y - this.mapSettings.size.y) / 2,
+        }
+      };
       this.mapSettings.shouldDraw = !!this.mapData;
     });
     this.allianceSubscription = this.alliance$.subscribe((alliance) => {
@@ -220,7 +233,6 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     const initialOffset = _.cloneDeep(this.mapOffset);
     this.dragging = 1;
     this.hoverPauser.next(true);
-    console.log('welp da darag should start');
     // Observable.fromEvent(this.map.nativeElement, 'mousemove')
     Observable.merge(
       Observable.fromEvent(this.map.nativeElement, 'mousemove'),
@@ -260,20 +272,22 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     // }, prev, this.mapOffset)
     // this.mapSettings.shouldDraw = true;
     // console.time('draw map drag');
-    const drags = performance.getEntriesByName('draw drag');
-    if (drags.length === 100) {
-      console.log(drags);
-      const times = drags.reduce((result, drag) => {
-        result.max = Math.max(result.max, drag.duration);
-        result.min = Math.min(result.min, drag.duration);
-        result.total += drag.duration;
-        return result;
-      }, { total: 0, max: 0, min: Infinity });
-      times.average = times.total / drags.length;
-      console.table(times);
-      return;
-    }
+    // const drags = performance.getEntriesByName('draw drag');
+    // if (drags.length === 100) {
+    //   console.log(drags);
+    //   const times = drags.reduce((result, drag) => {
+    //     result.max = Math.max(result.max, drag.duration);
+    //     result.min = Math.min(result.min, drag.duration);
+    //     result.total += drag.duration;
+    //     return result;
+    //   }, { total: 0, max: 0, min: Infinity });
+    //   times.average = times.total / drags.length;
+    //   console.table(times);
+    //   return;
+    // }
 
+    // this.mapOffset.screenPosition.x += difference.x;
+    // this.mapOffset.screenPosition.y += difference.y;
     performance.mark('draw drag start');
     this.drawMap(this.mapOffset, difference);
     performance.mark('draw drag end')
@@ -329,8 +343,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   private setMapSettings(size, zoom = 1) {
-    console.log('size', size);
-    const width = new Big(size.x).div(51).times(zoom);
+    const width = new Big(size.x).div(13).times(zoom);
     const side = width.div(Big(3).sqrt());
     const radius = width.div(2);
     const height = side.times(2);
@@ -338,6 +351,14 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     const aHeight = height.times(0.75);
 
     this.mapSettings = {
+      offscreenSize: {
+        x: size.x * this.offscreenMultiplier,
+        y: size.y * this.offscreenMultiplier,
+      },
+      screenPosition: {
+        x: 0,
+        y: 0,
+      },
       size,
       side,
       radius,
@@ -360,8 +381,8 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   private centerOffset(location) {
     const centerLoc = this.mapService.coordToPixel(location, this.mapSettings);
     const center = [
-      this.mapSettings.size.x / 2,
-      this.mapSettings.size.y / 2
+      this.mapSettings.offscreenSize.x / 2,
+      this.mapSettings.offscreenSize.y / 2
     ];
     const leftCorner = {
       x: centerLoc.x.minus(center[0]),
@@ -371,35 +392,137 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   private drawMap(offset, change?) {
-    const parity = +offset.yCoord % 2;
-    const yMax = +Big(this.mapSettings.size.y).minus(offset.y).div(this.mapSettings.aHeight).round(0, 3);
-    // console.log(`Drawin y for ${yMax} rows`);
+    let yMax;
     if (change) {
       this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
-      this.ctx.drawImage(this.offscreenCanvas, +change.x, +change.y);
+      // this.ctx.clearRect(0, Math.abs(Math.min(0, change.y)), this.mapSettings.size.x, Math.abs(change.y));
+      this.ctx.clearRect(Math.abs(Math.min(0, change.x)), 0, Math.abs(change.x), this.mapSettings.size.y);
+
+      offset = this.mapService.pixelToCoord(
+        { x: offset.xPx.plus(change.x), y: offset.yPx.plus(change.y) },
+        this.mapSettings,
+        true,
+      );
+      // console.log('offset', {
+      //   xCoord: +offset.xCoord,
+      //   yCoord: +offset.yCoord,
+      //   x: +offset.x,
+      //   y: +offset.y,
+      //   xPx: +offset.xPx,
+      //   yPx: +offset.yPx
+      // });
+      yMax = +Big(this.mapSettings.offscreenSize.y).minus(offset.y).div(this.mapSettings.aHeight).round(0, 3);
+      const parity = +offset.yCoord % 2;
+      const offsetModifier = parity ? 1 : -1;
+
+      for (let y = 0; y < yMax; y++) {
+        const yCoord = offset.yCoord.plus(y);
+        const yPos = Big(y).times(this.mapSettings.aHeight).plus(offset.y);
+
+        const hexEnd = yPos.plus(this.mapSettings.aHeight);
+        const isFullRow = !!change.y && ((change.y < 0 && Math.abs(change.y) >= +yPos) || (change.y > 0 && this.mapSettings.size.y - change.y <= +hexEnd));
+
+        let x = 0;
+        let xOffset = offset.x;
+        if (+yCoord % 2 !== parity) {
+          x -= parity;
+          xOffset = xOffset.plus(this.mapSettings.radius.times(offsetModifier));
+        }
+        let xMax = +Big(this.mapSettings.offscreenSize.x).minus(xOffset).div(this.mapSettings.width).round(0 , 3);
+
+        if (!isFullRow) {
+          if (change.x < 0) {
+            xMax = Math.ceil((Math.abs(change.x)) / this.mapSettings.width);
+            // console.log('non full row, decrease', +yCoord, +xOffset, x, xMax, change.x);
+          } else if (change.x > 0) {
+            const rowWidth = Big(xMax - x).times(this.mapSettings.width);
+            const renderWidth = rowWidth.minus(this.mapSettings.offscreenSize.x).plus(change.x);
+            x = xMax - +renderWidth.div(this.mapSettings.width).round(0, 3);
+            // console.log('non full row', +yCoord, +xOffset, x, xMax, +rowWidth, +renderWidth, change.x);
+          }
+        }
+
+        for (; x < xMax; x++) {
+          const xCoord = offset.xCoord.plus(x);
+          const xPos = Big(x).times(this.mapSettings.width).plus(xOffset);
+          this.drawHex(this.ctx, xPos, yPos, `${xCoord},${yCoord}`);
+        }
+      }
+      this.ctx.lineWidth = 3;
+      this.ctx.beginPath();
+      this.ctx.rect(
+        change.x > 0 ? this.mapSettings.size.x - change.x : 0,
+        0,
+        Math.abs(change.x),
+        this.mapSettings.size.y,
+      );
+      this.ctx.strokeStyle = 'red';
+      this.ctx.stroke();
+
+      this.ctx.beginPath();
+      this.ctx.rect(
+        0,
+        change.y > 0 ? this.mapSettings.size.y - change.y : 0,
+        this.mapSettings.size.x,
+        Math.abs(change.y),
+      );
+      this.ctx.strokeStyle = 'blue';
+      // this.ctx.stroke();
+
+      this.ctx.beginPath();
+      this.ctx.drawImage(
+        this.offscreenCanvas,
+        // 0, 0,
+        // this.mapSettings.size.x, this.mapSettings.size.y,
+        change.x * -1,
+        change.y * -1,
+        this.mapSettings.size.x - Math.abs(change.x),
+        this.mapSettings.size.y - Math.abs(change.y),
+        change.x * -1,
+        change.y * -1,
+        this.mapSettings.size.x - Math.abs(change.x),
+        this.mapSettings.size.y - Math.abs(change.y),
+      );
+      console.log('lesse', change.x * -1, change.y * -1, this.mapSettings.size.x - Math.abs(change.x), this.mapSettings.size.y - Math.abs(change.y), this.mapSettings.size)
+      this.ctx.strokeStyle = 'pink';
+      this.ctx.strokeRect(
+        change.x * -1, change.y * -1,
+        this.mapSettings.size.x - Math.abs(change.x), this.mapSettings.size.y - Math.abs(change.y),
+      );
+      this.ctx.stroke();
+
+      // console.log('done----------')
       return;
     }
-    // this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
+    yMax = +Big(this.mapSettings.offscreenSize.y).minus(offset.y).div(this.mapSettings.aHeight).round(0, 3);
+    console.log(+offset.y, +offset.x, +offset.yPx, +offset.xPx, +offset.yCoord, +offset.xCoord);
+    const parity = +offset.yCoord % 2;
+    const offsetModifier = parity ? 1 : -1;
     for (let y = 0; y < yMax; y++) {
       const yCoord = offset.yCoord.plus(y);
       const yPos = Big(y).times(this.mapSettings.aHeight).plus(offset.y);
       let xOffset = offset.x;
       let x = 0;
-      if (y && +yCoord % 2 !== parity) {
-        const offsetModifier = parity ? 1 : -1;
-        xOffset = xOffset.plus(this.mapSettings.width.times(offsetModifier).div(2));
+      if (+yCoord % 2 !== parity) {
+        xOffset = xOffset.plus(this.mapSettings.radius.times(offsetModifier));
         x -= parity;
       }
-      const xMax = +Big(this.mapSettings.size.x).minus(offset.x).minus(xOffset).div(this.mapSettings.width);
-      // console.log(`Drawin x for ${xMax} columns, when y is ${yCoord}`);
+      const xMax = +Big(this.mapSettings.offscreenSize.x).minus(xOffset).div(this.mapSettings.width);
+      console.log(`Drawin x for ${xMax} columns, when y is ${yCoord}`);
       for (; x < xMax; x++) {
         const xCoord = offset.xCoord.plus(x);
         const xPos = Big(x).times(this.mapSettings.width).plus(xOffset);
         this.drawHex(this.offscreenCtx, xPos, yPos, `${xCoord},${yCoord}`);
       }
     }
-    // console.log('hmm', this.offscreenCanvas)
-    this.ctx.drawImage(this.offscreenCanvas, 0, 0);
+    // console.log('hmm', offset, +this.mapSettings.size.x, +this.mapSettings.size.y)
+    this.ctx.drawImage(
+      this.offscreenCanvas,
+      offset.screenPosition.x, offset.screenPosition.y,
+      this.mapSettings.size.x, this.mapSettings.size.y,
+      0, 0,
+      this.mapSettings.size.x, this.mapSettings.size.y,
+    );
     this.mapSettings.shouldDraw = false;
   }
 
