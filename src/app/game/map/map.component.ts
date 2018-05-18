@@ -147,8 +147,10 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       this.mapOffset = {
         ...this.centerOffset({ x: this.activeTown.location[0], y: this.activeTown.location[1] }),
         screenPosition: {
-          x: (this.mapSettings.offscreenSize.x - this.mapSettings.size.x) / 2,
-          y: (this.mapSettings.offscreenSize.y - this.mapSettings.size.y) / 2,
+          // x: (this.mapSettings.offscreenSize.x - this.mapSettings.size.x) / 2,
+          // y: (this.mapSettings.offscreenSize.y - this.mapSettings.size.y) / 2,
+          x: 0,
+          y: 0,
         }
       };
       this.mapSettings.shouldDraw = !!this.mapData;
@@ -180,6 +182,14 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   public ngAfterViewChecked() {
     if (this.ctx && this.mapSettings.shouldDraw && this.activeTown && this.mapData) {
       this.drawMap(this.mapOffset);
+      setTimeout(() => {
+        this.mapOffset = this.mapService.pixelToCoord({
+          x: this.mapOffset.xPx.plus(100),
+          y: this.mapOffset.yPx.plus(100),
+        }, this.mapSettings, true);
+        this.drawMap(this.mapOffset, { x: 100, y: 100 });
+
+      }, 2000);
     }
   }
 
@@ -250,22 +260,25 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
   }
 
   public mapDrag(origin, event, offset) {
-    const difference = {
+    const totalDifference = {
       x: origin.x - (event.offsetX || event.touches[0].pageX - event.touches[0].target.offsetLeft),
       y: origin.y - (event.offsetY || event.touches[0].pageY - event.touches[0].target.offsetTop)
     };
     this.dragging = 2;
 
-    if (Math.abs(difference.x) < 5 && Math.abs(difference.y) < 5) { return; }
+    if (Math.abs(totalDifference.x) < 5 && Math.abs(totalDifference.y) < 5) { return; }
 
     this.hoverData = null;
     this.selected = null;
-    const prev = Object.assign({}, this.mapOffset);
-    // this.mapOffset = this.mapService.pixelToCoord(
-    //   { x: offset.xPx.plus(difference.x), y: offset.yPx.plus(difference.y) },
-    //   this.mapSettings,
-    //   true
-    // );
+    const difference = {
+      x: +offset.xPx.plus(totalDifference.x).minus(this.mapOffset.xPx),
+      y: +offset.yPx.plus(totalDifference.y).minus(this.mapOffset.yPx),
+    };
+    this.mapOffset = this.mapService.pixelToCoord(
+      { x: offset.xPx.plus(totalDifference.x), y: offset.yPx.plus(totalDifference.y) },
+      this.mapSettings,
+      true
+    );
     // console.log('hmm', {
     //   x: +difference.x,
     //   y: +difference.y,
@@ -396,21 +409,41 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
     if (change) {
       this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
       // this.ctx.clearRect(0, Math.abs(Math.min(0, change.y)), this.mapSettings.size.x, Math.abs(change.y));
-      this.ctx.clearRect(Math.abs(Math.min(0, change.x)), 0, Math.abs(change.x), this.mapSettings.size.y);
+      // this.ctx.clearRect(Math.abs(Math.min(0, change.x)), 0, Math.abs(change.x), this.mapSettings.size.y);
+      // this.ctx.drawImage(
+      //   this.offscreenCanvas,
+      //   // 0, 0,
+      //   // this.mapSettings.size.x, this.mapSettings.size.y,
+      //   change.x * -1,
+      //   change.y * -1,
+      //   this.mapSettings.size.x - Math.abs(change.x),
+      //   this.mapSettings.size.y - Math.abs(change.y),
+      //   change.x * -1,
+      //   change.y * -1,
+      //   this.mapSettings.size.x - Math.abs(change.x),
+      //   this.mapSettings.size.y - Math.abs(change.y),
+      // );
 
-      offset = this.mapService.pixelToCoord(
-        { x: offset.xPx.plus(change.x), y: offset.yPx.plus(change.y) },
-        this.mapSettings,
-        true,
+      // offset = this.mapService.pixelToCoord(
+      //   { x: offset.xPx.plus(change.x), y: offset.yPx.plus(change.y) },
+      //   this.mapSettings,
+      //   true,
+      // );
+      console.log('offset', {
+        xCoord: +offset.xCoord,
+        yCoord: +offset.yCoord,
+        x: +offset.x,
+        y: +offset.y,
+        xPx: +offset.xPx,
+        yPx: +offset.yPx
+      });
+      this.offscreenCtx.drawImage(
+        this.offscreenCanvas,
+        // offset.screenPosition.x, offset.screenPosition.y,
+        change.x * -1, change.y * -1,
+        // this.mapSettings.size.x, this.mapSettings.size.y,
+        // this.mapSettings.size.x, this.mapSettings.size.y,
       );
-      // console.log('offset', {
-      //   xCoord: +offset.xCoord,
-      //   yCoord: +offset.yCoord,
-      //   x: +offset.x,
-      //   y: +offset.y,
-      //   xPx: +offset.xPx,
-      //   yPx: +offset.yPx
-      // });
       yMax = +Big(this.mapSettings.offscreenSize.y).minus(offset.y).div(this.mapSettings.aHeight).round(0, 3);
       const parity = +offset.yCoord % 2;
       const offsetModifier = parity ? 1 : -1;
@@ -424,6 +457,7 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
 
         let x = 0;
         let xOffset = offset.x;
+        console.log('row', + yCoord, isFullRow)
         if (+yCoord % 2 !== parity) {
           x -= parity;
           xOffset = xOffset.plus(this.mapSettings.radius.times(offsetModifier));
@@ -439,59 +473,59 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
             const renderWidth = rowWidth.minus(this.mapSettings.offscreenSize.x).plus(change.x);
             x = xMax - +renderWidth.div(this.mapSettings.width).round(0, 3);
             // console.log('non full row', +yCoord, +xOffset, x, xMax, +rowWidth, +renderWidth, change.x);
+          } else {
+            xMax = 0;
+            console.log('skip', +xOffset, x, xMax, change.x, change.y);
           }
         }
 
         for (; x < xMax; x++) {
           const xCoord = offset.xCoord.plus(x);
           const xPos = Big(x).times(this.mapSettings.width).plus(xOffset);
-          this.drawHex(this.ctx, xPos, yPos, `${xCoord},${yCoord}`);
+          this.drawHex(this.offscreenCtx, xPos, yPos, `${xCoord},${yCoord}`, 'red');
         }
       }
-      this.ctx.lineWidth = 3;
-      this.ctx.beginPath();
-      this.ctx.rect(
-        change.x > 0 ? this.mapSettings.size.x - change.x : 0,
-        0,
-        Math.abs(change.x),
-        this.mapSettings.size.y,
-      );
-      this.ctx.strokeStyle = 'red';
-      this.ctx.stroke();
-
-      this.ctx.beginPath();
-      this.ctx.rect(
-        0,
-        change.y > 0 ? this.mapSettings.size.y - change.y : 0,
-        this.mapSettings.size.x,
-        Math.abs(change.y),
-      );
-      this.ctx.strokeStyle = 'blue';
-      // this.ctx.stroke();
-
-      this.ctx.beginPath();
+      // this.ctx.clearRect()
       this.ctx.drawImage(
         this.offscreenCanvas,
-        // 0, 0,
+        // offset.screenPosition.x, offset.screenPosition.y,
+        0, 0,
         // this.mapSettings.size.x, this.mapSettings.size.y,
-        change.x * -1,
-        change.y * -1,
-        this.mapSettings.size.x - Math.abs(change.x),
-        this.mapSettings.size.y - Math.abs(change.y),
-        change.x * -1,
-        change.y * -1,
-        this.mapSettings.size.x - Math.abs(change.x),
-        this.mapSettings.size.y - Math.abs(change.y),
+        // this.mapSettings.size.x, this.mapSettings.size.y,
       );
-      console.log('lesse', change.x * -1, change.y * -1, this.mapSettings.size.x - Math.abs(change.x), this.mapSettings.size.y - Math.abs(change.y), this.mapSettings.size)
-      this.ctx.strokeStyle = 'pink';
-      this.ctx.strokeRect(
-        change.x * -1, change.y * -1,
-        this.mapSettings.size.x - Math.abs(change.x), this.mapSettings.size.y - Math.abs(change.y),
-      );
+      this.ctx.lineWidth = 3;
+      // this.ctx.beginPath();
+      // this.ctx.rect(
+      //   change.x > 0 ? this.mapSettings.size.x - change.x : 0,
+      //   0,
+      //   Math.abs(change.x),
+      //   this.mapSettings.size.y,
+      // );
+      // this.ctx.strokeStyle = 'red';
+      // this.ctx.stroke();
+
+      // this.ctx.beginPath();
+      // this.ctx.rect(
+      //   0,
+      //   change.y > 0 ? this.mapSettings.size.y - change.y : 0,
+      //   this.mapSettings.size.x,
+      //   Math.abs(change.y),
+      // );
+      // this.ctx.strokeStyle = 'blue';
+      // this.ctx.stroke();
+
+      // this.ctx.clearRect(0, 0, this.mapSettings.size.x, this.mapSettings.size.y);
+      // this.mapOffset = offset;
+      // this.drawMap(this.mapOffset);
+      // console.log('lesse', change.x * -1, change.y * -1, this.mapSettings.size.x - Math.abs(change.x), this.mapSettings.size.y - Math.abs(change.y), this.mapSettings.size)
+      // this.ctx.strokeStyle = 'pink';
+      // this.ctx.strokeRect(
+      //   change.x * -1, change.y * -1,
+      //   this.mapSettings.size.x - Math.abs(change.x), this.mapSettings.size.y - Math.abs(change.y),
+      // );
       this.ctx.stroke();
 
-      // console.log('done----------')
+      console.log('done----------')
       return;
     }
     yMax = +Big(this.mapSettings.offscreenSize.y).minus(offset.y).div(this.mapSettings.aHeight).round(0, 3);
@@ -512,21 +546,21 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       for (; x < xMax; x++) {
         const xCoord = offset.xCoord.plus(x);
         const xPos = Big(x).times(this.mapSettings.width).plus(xOffset);
-        this.drawHex(this.offscreenCtx, xPos, yPos, `${xCoord},${yCoord}`);
+        this.drawHex(this.offscreenCtx, xPos, yPos, `${xCoord},${yCoord}`, 'blue');
       }
     }
     // console.log('hmm', offset, +this.mapSettings.size.x, +this.mapSettings.size.y)
     this.ctx.drawImage(
       this.offscreenCanvas,
-      offset.screenPosition.x, offset.screenPosition.y,
-      this.mapSettings.size.x, this.mapSettings.size.y,
+      // offset.screenPosition.x, offset.screenPosition.y,
       0, 0,
       this.mapSettings.size.x, this.mapSettings.size.y,
+      // this.mapSettings.size.x, this.mapSettings.size.y,
     );
     this.mapSettings.shouldDraw = false;
   }
 
-  private drawHex(ctx, x, y, coordString) {
+  private drawHex(ctx, x, y, coordString, stroke = null) {
     const data = this.mapData[coordString];
     const image = data ?
       (data.owner ? this.mapTiles.object : this.mapTiles.objectType.abandoned ) :
@@ -575,9 +609,14 @@ export class MapComponent implements AfterContentInit, AfterViewChecked, OnInit,
       }
     }
 
-    // ctx.strokeStyle= 'rgba(0,0,0,0.2)';
-    ctx.strokeStyle = '#27ae60';
-    ctx.stroke();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = '#27ae60';
+      ctx.stroke();
+
+    }
 
     if (this.drawCoords) {
       ctx.font = '14pt Calibri';
