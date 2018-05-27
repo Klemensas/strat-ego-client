@@ -3,7 +3,125 @@ import { SocketService } from './socket.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import * as seedrandom from 'seedrandom';
-import { Big } from 'big.js';
+import { Coords } from 'strat-ego-common';
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export class Hex {
+  constructor(public x: number, public y: number, public z: number) {}
+
+  round() {
+    let xi = Math.round(this.x);
+    let yi = Math.round(this.y);
+    let zi = Math.round(this.z);
+    const xDiff = Math.abs(xi - this.x);
+    const yDiff = Math.abs(yi - this.y);
+    const zDiff = Math.abs(zi - this.z);
+    if (xDiff > yDiff && xDiff > zDiff) {
+      xi = -yi - zi;
+    } else if (yDiff > zDiff) {
+      yi = -xi - zi;
+    } else {
+      zi = -xi - yi;
+    }
+    return new Hex(xi, yi, zi);
+  }
+  distance(target: Hex) {
+      return (Math.abs(this.x - target.x) + Math.abs(this.y - target.y) + Math.abs(this.z - target.z)) / 2;
+  }
+  toString() {
+    return `${this.x},${this.y},${this.z}`;
+  }
+}
+export class Layout {
+  public orientation = {
+    f0: Math.sqrt(3.0),
+    f1: Math.sqrt(3.0) / 2,
+    f2: 0,
+    f3: 1.5,
+    b0: Math.sqrt(3.0) / 3,
+    b1: -1 / 3,
+    b2: 0,
+    b3: 2 / 3,
+    startAngle: 0.5
+  };
+
+  constructor(
+    public origin?: Point,
+    public size?: Point,
+    public centerCoord?: number,
+  ) {}
+
+  coordToHex(coord: Coords) {
+    const offsetCoord = [
+      coord[0] - this.centerCoord,
+      coord[1] - this.centerCoord,
+    ];
+    const x = offsetCoord[0] - (offsetCoord[1] + (offsetCoord[1] & 1)) / 2;
+    const y = offsetCoord[1];
+    const z = -x - y;
+    return new Hex(x, y, z);
+  }
+
+  coordToPixel(coord: Coords) {
+    const hex = this.coordToHex(coord);
+    return this.hexToPixel(hex);
+  }
+
+  hexToCoord(hex: Hex): Coords {
+    return [hex.x + (hex.y + (hex.y & 1)) / 2 + this.centerCoord, hex.y + this.centerCoord];
+  }
+
+  hexToPixel(hex: Hex): Point {
+    const x = (this.orientation.f0 * hex.x + this.orientation.f1 * hex.y) * this.size.x;
+    const y = (this.orientation.f2 * hex.x + this.orientation.f3 * hex.y) * this.size.y;
+    return {
+      x: x + this.origin.x,
+      y: y + this.origin.y
+    };
+  }
+
+  pixelToHex(point: Point) {
+    const pt: Point = {
+      x: (point.x - this.origin.x) / this.size.x,
+      y: (point.y - this.origin.y) / this.size.y
+    };
+    const x = this.orientation.b0 * pt.x + this.orientation.b1 * pt.y;
+    const y = this.orientation.b2 * pt.x + this.orientation.b3 * pt.y;
+    return new Hex(x, y, -x - y);
+  }
+
+  pixelToCoord(point: Point) {
+    const hex = this.pixelToHex(point);
+    return this.hexToCoord(hex.round());
+  }
+
+  hexCornerOffset(corner: number): Point {
+    const angle = 2.0 * Math.PI * (this.orientation.startAngle - corner) / 6;
+    return {
+      x: this.size.x * Math.cos(angle),
+      y: this.size.y * Math.sin(angle)
+    };
+  }
+
+  polygonCorners(target: Hex | Point, mapOffset: Point = { x: 0, y: 0 }) {
+    const corners: Point[] = [];
+    const center = target instanceof Hex ? this.hexToPixel(target) : target;
+    for (let i = 0; i < 6; i++) {
+        const offset = this.hexCornerOffset(i);
+        offset.x -= mapOffset.x;
+        offset.y -= mapOffset.y;
+        corners.push({
+          x: center.x + offset.x,
+          y: center.y + offset.y
+        });
+    }
+    return corners;
+  }
+}
 
 @Injectable()
 export class MapService {
@@ -33,11 +151,6 @@ export class MapService {
     },
     size: [120, 140]
   };
-  // public mapData = {};
-
-  // public queuedPromise = [];
-  // private lastUpdate = null;
-
   private mapImgeLoc = './assets/images/tiles_small.png';
 
   constructor(private socket: SocketService) {
@@ -61,118 +174,5 @@ export class MapService {
     this.mapTiles.image = new Image();
     this.mapTiles.image.src = imageURL;
     this.mapTiles.image.onload = () => this.imagesLoaded.next(true);
-  }
-
-  // public getMapData(coords) {
-  //   return new Promise((resolve, reject) => {
-  //     if (this.lastUpdate) {
-  //       return this.formatMapData(resolve);
-  //     }
-  //     this.queuedPromise.push(resolve);
-  //     this.socket.sendEvent('map', {});
-  //   });
-  // }
-
-  // Returns { x, y } pixels on the center of the coordinate
-  public coordToPixel(location, settings) {
-    const x = Big(location.x);
-    const y = Big(location.y);
-    const xOffset = y.mod(2).times(-0.5);
-    return {
-      x: xOffset.plus(x).times(settings.width),
-      y: y.minus(0.25).times(settings.aHeight)
-    };
-  }
-
-
-  public pixelToCoord(pos, settings, adjust = false) {
-    let coords = {
-      x: Big(pos.x).div(settings.width).plus(1).round(0, 0),
-      y: Big(pos.y).div(settings.aHeight).plus(1).round(0, 0)
-    };
-    const offset = {
-      x: Big(pos.x).mod(settings.width),
-      y: Big(pos.y).mod(settings.aHeight),
-    };
-    const type = +coords.y % 2 ? odd : even;
-    coords = type(coords);
-    const coordOffset = this.coordToPixel(coords, settings);
-    const realOffset = {
-      x: coordOffset.x.minus(pos.x).minus(settings.radius),
-      y: coordOffset.y.minus(pos.y).minus(settings.side),
-    };
-    // Adjust coord if near edge
-    if (adjust && realOffset.y.gt(-settings.hexHeight)) {
-      coords.y = coords.y.minus(1);
-      const parity = +coords.y % 2;
-      realOffset.y = realOffset.y.minus(settings.aHeight);
-      if (realOffset.x.lte(settings.radius.times(-1))) {
-        coords.x = parity ? coords.x.plus(1) : coords.x;
-        realOffset.x = realOffset.x.plus(settings.radius);
-      } else {
-        coords.x = parity ? coords.x : coords.x.minus(1);
-        realOffset.x = realOffset.x.minus(settings.radius);
-      }
-    }
-    // console.log(+coords.x, +coords.y)
-    return {
-      xCoord: coords.x,
-      yCoord: coords.y,
-      x: realOffset.x,
-      y: realOffset.y,
-      xPx: pos.x,
-      yPx: pos.y
-    };
-
-    function odd(coords) { // A
-      const offsetGradient = offset.x.times(settings.edgeGradient);
-      if (offset.y.lt(settings.hexHeight.minus(offsetGradient))) {
-        coords.x = coords.x.minus(1);
-        coords.y = coords.y.minus(1);
-      }
-      if (offset.y.lt(settings.hexHeight.times(-1).plus(offsetGradient))) {
-        coords.y = coords.y.minus(1);
-      }
-      return coords;
-    }
-
-    function even(coords) { // B
-      const offsetGradient = offset.x.times(settings.edgeGradient);
-      // console.log('b', +offset.x, +offset.y, +offsetGradient, +settings.side.minus(offsetGradient));
-      if (offset.x.gte(settings.radius)) {
-        if (offset.y.lt(settings.side.minus(offsetGradient))) {
-        // if (offset.y.lt(settings.side.minus(offset.x).times(settings.edgeGradient))) {
-          coords.y = coords.y.minus(1);
-        }
-        return coords;
-      }
-
-      if (offset.y.lt(offsetGradient)) {
-        coords.y = coords.y.minus(1);
-      } else {
-        coords.x = coords.x.minus(1);
-      }
-      return coords;
-    }
-  }
-
-  public offsetToCube(coords) {
-    const off = 1;
-    const x = coords.x - Math.trunc((coords.y + off * (coords.y % 2)) / 2);
-    const z = coords.y;
-    return {
-      x, z,
-      y: -x - z
-    };
-  }
-
-  public distanceFromCoord(start, end) {
-    const startCube = this.offsetToCube(start);
-    const endCube = this.offsetToCube(end);
-    return Math.max(
-      Math.abs(startCube.x - endCube.x),
-      Math.abs(startCube.y - endCube.y),
-      Math.abs(startCube.z - endCube.z)
-    );
   }
 }

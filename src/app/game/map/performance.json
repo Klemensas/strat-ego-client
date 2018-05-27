@@ -1,0 +1,2445 @@
+{
+  "instances": 100,
+  "tests": {
+    "original": {
+        "times": {
+            "total": 11841.000000029453,
+            "max": 160.00000000349246,
+            "min": 95.99999999045394,
+            "average": 118.41000000029453
+        },
+        "measurements": [
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7845.000000001164,
+                "duration": 137.00000000244472
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8013.000000006286,
+                "duration": 157.99999999580905
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8197.000000000116,
+                "duration": 116.0000000090804
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8347.000000008848,
+                "duration": 140.9999999887077
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8512.000000002445,
+                "duration": 103.00000000279397
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8646.999999997206,
+                "duration": 119.0000000060536
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8794.999999998254,
+                "duration": 122.0000000030268
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8945.999999996275,
+                "duration": 101.00000000966247
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9078.000000008615,
+                "duration": 95.99999999045394
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9197.000000000116,
+                "duration": 101.00000000966247
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9328.000000008615,
+                "duration": 117.99999998765998
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9479.000000006636,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9663.000000000466,
+                "duration": 112.00000000826549
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9804.000000003725,
+                "duration": 127.9999999969732
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9963.000000003376,
+                "duration": 146.99999999720603
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10131.999999997788,
+                "duration": 119.0000000060536
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10278.000000005704,
+                "duration": 114.99999999068677
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10415.000000008149,
+                "duration": 130.9999999939464
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10578.999999997905,
+                "duration": 97.00000000884756
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10698.000000003958,
+                "duration": 101.99999999895226
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10830.000000001746,
+                "duration": 112.99999999755528
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10964.999999996508,
+                "duration": 115.00000000523869
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11112.999999997555,
+                "duration": 114.00000000139698
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11248.000000006869,
+                "duration": 99.99999999126885
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11380.000000004657,
+                "duration": 138.99999999557622
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11548.000000009779,
+                "duration": 103.99999999208376
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11679.000000003725,
+                "duration": 141.99999999254942
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11847.000000008848,
+                "duration": 129.0000000008149
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11998.000000006869,
+                "duration": 118.00000000221189
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12148.000000001048,
+                "duration": 107.00000000360887
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12279.999999998836,
+                "duration": 134.00000000547152
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12445.999999996275,
+                "duration": 124.00000001071021
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12596.000000005006,
+                "duration": 129.0000000008149
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12747.000000003027,
+                "duration": 134.00000000547152
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12913.000000000466,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13046.000000002095,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13404.999999998836,
+                "duration": 126.0000000038417
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13563.999999998487,
+                "duration": 134.00000000547152
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13729.000000006636,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13898.000000001048,
+                "duration": 112.99999999755528
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14048.000000009779,
+                "duration": 134.9999999947613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14214.000000007218,
+                "duration": 135.99999999860302
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14380.000000004657,
+                "duration": 115.99999999452848
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14529.999999998836,
+                "duration": 100.00000000582077
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14663.000000000466,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14807.000000000698,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14948.000000003958,
+                "duration": 119.0000000060536
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15097.000000008848,
+                "duration": 127.9999999969732
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15247.000000003027,
+                "duration": 133.00000000162981
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15430.999999996857,
+                "duration": 131.00000000849832
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15597.999999998137,
+                "duration": 120.0000000098953
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15748.000000006869,
+                "duration": 127.9999999969732
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15896.999999997206,
+                "duration": 130.0000000046566
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16051.999999996042,
+                "duration": 115.00000000523869
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16195.999999996275,
+                "duration": 134.00000000547152
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16362.999999997555,
+                "duration": 112.00000000826549
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16513.000000006286,
+                "duration": 120.99999999918509
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16664.000000004307,
+                "duration": 134.9999999947613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16828.999999997905,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16961.999999999534,
+                "duration": 134.00000000547152
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17130.000000004657,
+                "duration": 103.99999999208376
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17263.000000006286,
+                "duration": 114.99999999068677
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17413.000000000466,
+                "duration": 135.99999999860302
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17581.000000005588,
+                "duration": 111.00000000442378
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17713.000000003376,
+                "duration": 125
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17862.000000008265,
+                "duration": 118.99999999150168
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18013.000000006286,
+                "duration": 118.00000000221189
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18180.999999996857,
+                "duration": 101.00000000966247
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18313.999999998487,
+                "duration": 107.00000000360887
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18445.999999996275,
+                "duration": 151.00000001257285
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18630.000000004657,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18763.000000006286,
+                "duration": 120.99999999918509
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18913.000000000466,
+                "duration": 127.00000000768341
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19067.9999999993,
+                "duration": 125
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19213.000000003376,
+                "duration": 115.00000000523869
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19350.00000000582,
+                "duration": 133.9999999909196
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19514.000000010128,
+                "duration": 98.99999998742715
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19646.000000007916,
+                "duration": 104.99999999592546
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19779.999999998836,
+                "duration": 114.00000000139698
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19930.999999996857,
+                "duration": 104.00000000663567
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20062.000000005355,
+                "duration": 100.99999999511056
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20195.999999996275,
+                "duration": 112.00000000826549
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20331.000000005588,
+                "duration": 103.99999999208376
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20464.000000007218,
+                "duration": 125.99999998928979
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20630.000000004657,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20779.999999998836,
+                "duration": 101.99999999895226
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20911.999999996624,
+                "duration": 100.00000000582077
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21033.99999999965,
+                "duration": 107.00000000360887
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21161.999999996624,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21283.00000001036,
+                "duration": 130.9999999939464
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21445.000000006985,
+                "duration": 99.99999999126885
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21580.000000001746,
+                "duration": 160.00000000349246
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21763.000000006286,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21913.000000000466,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22062.000000005355,
+                "duration": 103.00000000279397
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22195.000000006985,
+                "duration": 125.99999998928979
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22362.000000008265,
+                "duration": 130.9999999939464
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22516.00000000326,
+                "duration": 123.0000000068685
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22663.000000000466,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22794.999999998254,
+                "duration": 119.0000000060536
+            }
+        ]
+    },
+    "noclip": {
+        "times": {
+            "total": 10902.999999962049,
+            "max": 173.99999999906868,
+            "min": 88.99999999266583,
+            "average": 109.02999999962049
+        },
+        "measurements": [
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19629.000000000815,
+                "duration": 173.99999999906868
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19830.000000001746,
+                "duration": 138.00000000628643
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19995.999999999185,
+                "duration": 145.00000000407454
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20161.000000007334,
+                "duration": 96.99999999429565
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20499.00000001071,
+                "duration": 155.99999998812564
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20679.000000003725,
+                "duration": 93.99999999732245
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20794.999999998254,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20913.000000000466,
+                "duration": 130.0000000046566
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21063.000000009197,
+                "duration": 91.99999998963904
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21179.000000003725,
+                "duration": 100.00000000582077
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21312.000000005355,
+                "duration": 97.99999999813735
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21427.999999999884,
+                "duration": 93.99999999732245
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21548.00000000978,
+                "duration": 108.99999999674037
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21677.999999999884,
+                "duration": 93.99999999732245
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21794.999999998254,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 21912.000000011176,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22046.000000002095,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22196.000000010827,
+                "duration": 88.99999999266583
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22311.000000001513,
+                "duration": 134.00000000547152
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22463.000000003376,
+                "duration": 115.99999999452848
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22596.000000005006,
+                "duration": 138.99999999557622
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22760.999999998603,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 22919.000000008964,
+                "duration": 120.99999999918509
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23062.000000005355,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23195.000000006985,
+                "duration": 104.99999999592546
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23328.999999997905,
+                "duration": 127.00000000768341
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23479.000000006636,
+                "duration": 111.00000000442378
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23629.000000000815,
+                "duration": 118.00000000221189
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23779.000000009546,
+                "duration": 104.99999999592546
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 23911.000000007334,
+                "duration": 114.99999999068677
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24044.000000008964,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24180.000000007567,
+                "duration": 127.9999999969732
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24330.000000001746,
+                "duration": 146.99999999720603
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24512.000000002445,
+                "duration": 112.99999999755528
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24646.999999997206,
+                "duration": 146.00000000791624
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24812.000000005355,
+                "duration": 118.00000000221189
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 24945.000000006985,
+                "duration": 110.99999998987187
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25078.999999997905,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25195.000000006985,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25328.000000008615,
+                "duration": 121.99999998847488
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25480.000000010477,
+                "duration": 103.99999999208376
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25612.999999997555,
+                "duration": 96.00000000500586
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25728.000000002794,
+                "duration": 96.00000000500586
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25862.000000008265,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 25994.000000006054,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26111.000000004424,
+                "duration": 96.99999999429565
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26229.000000006636,
+                "duration": 107.00000000360887
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26362.000000008265,
+                "duration": 137.9999999917345
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26529.000000009546,
+                "duration": 114.99999999068677
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26663.000000000466,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26779.000000009546,
+                "duration": 99.99999999126885
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 26894.000000000233,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27010.999999998603,
+                "duration": 115.00000000523869
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27144.000000000233,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27262.000000002445,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27394.000000000233,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27512.000000002445,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27627.999999996973,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27744.000000006054,
+                "duration": 130.0000000046566
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 27894.000000000233,
+                "duration": 93.99999999732245
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28012.000000002445,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28129.000000000815,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28245.000000009895,
+                "duration": 97.99999999813735
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28361.000000004424,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28494.000000006054,
+                "duration": 96.99999999429565
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28611.000000004424,
+                "duration": 89.99999999650754
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28729.000000006636,
+                "duration": 95.99999999045394
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28843.999999997322,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 28961.999999999534,
+                "duration": 108.00000000745058
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29096.000000005006,
+                "duration": 115.99999999452848
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29228.000000002794,
+                "duration": 118.00000000221189
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29379.000000000815,
+                "duration": 122.0000000030268
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29529.999999998836,
+                "duration": 104.00000000663567
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29679.000000003725,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29794.999999998254,
+                "duration": 113.0000000121072
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 29929.000000003725,
+                "duration": 115.00000000523869
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30078.000000008615,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30211.000000010245,
+                "duration": 110.99999998987187
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30346.000000005006,
+                "duration": 108.99999999674037
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30480.000000010477,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30593.999999997322,
+                "duration": 103.00000000279397
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30730.000000010477,
+                "duration": 100.99999999511056
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 30862.000000008265,
+                "duration": 144.00000000023283
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31029.999999998836,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31162.000000011176,
+                "duration": 96.99999999429565
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31294.999999998254,
+                "duration": 98.00000001268927
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31411.000000007334,
+                "duration": 107.00000000360887
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31544.999999998254,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31661.000000007334,
+                "duration": 99.99999999126885
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31779.000000009546,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 31913.000000000466,
+                "duration": 111.00000000442378
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32046.000000002095,
+                "duration": 138.00000000628643
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32213.000000003376,
+                "duration": 97.99999999813735
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32328.999999997905,
+                "duration": 137.00000000244472
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32495.000000009895,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32627.999999996973,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32745.000000009895,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32877.99999999697,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 32995.999999999185,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 33127.99999999697,
+                "duration": 110.00000000058208
+            }
+        ]
+    },
+    "noclip + noalpha + nosmoothing": {
+        "times": {
+            "total": 10767.000000050757,
+            "max": 172.99999999522697,
+            "min": 88.00000000337604,
+            "average": 107.67000000050757
+        },
+        "measurements": [
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7023.000000001048,
+                "duration": 172.99999999522697
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7221.000000005006,
+                "duration": 130.9999999939464
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7373.0000000068685,
+                "duration": 131.9999999977881
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7521.999999997206,
+                "duration": 115.00000000523869
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7653.999999994994,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7788.000000000466,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 7922.999999995227,
+                "duration": 88.00000000337604
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8036.999999996624,
+                "duration": 94.00000001187436
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8153.999999994994,
+                "duration": 120.0000000098953
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8305.000000007567,
+                "duration": 129.9999999901047
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8456.000000005588,
+                "duration": 103.00000000279397
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8588.000000003376,
+                "duration": 116.99999999837019
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8722.000000008848,
+                "duration": 136.9999999878928
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 8887.000000002445,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9006.000000008498,
+                "duration": 102.99999998824205
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9138.000000006286,
+                "duration": 108.99999999674037
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9271.999999997206,
+                "duration": 108.00000000745058
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9403.999999994994,
+                "duration": 108.00000000745058
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9538.000000000466,
+                "duration": 89.99999999650754
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9653.999999994994,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9771.999999997206,
+                "duration": 126.0000000038417
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 9922.999999995227,
+                "duration": 99.00000000197906
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10038.000000000466,
+                "duration": 108.00000000745058
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10172.999999995227,
+                "duration": 140.00000001396984
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10338.000000003376,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10453.999999997905,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10572.000000000116,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10705.000000001746,
+                "duration": 104.99999999592546
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10838.000000003376,
+                "duration": 103.99999999208376
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 10972.000000008848,
+                "duration": 117.99999998765998
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11120.999999999185,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11237.999999997555,
+                "duration": 127.00000000768341
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11388.000000006286,
+                "duration": 89.99999999650754
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11505.000000004657,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11620.999999999185,
+                "duration": 89.00000000721775
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11737.000000008265,
+                "duration": 121.99999998847488
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 11887.000000002445,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12005.000000004657,
+                "duration": 89.99999999650754
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12120.999999999185,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12237.999999997555,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12354.999999995925,
+                "duration": 120.99999999918509
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12505.000000004657,
+                "duration": 93.99999999732245
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12623.000000006869,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12737.999999997555,
+                "duration": 108.00000000745058
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12872.000000003027,
+                "duration": 129.0000000008149
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13021.000000007916,
+                "duration": 121.99999998847488
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13172.999999995227,
+                "duration": 102.00000001350418
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13304.000000003725,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13421.000000002095,
+                "duration": 89.00000000721775
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13538.000000000466,
+                "duration": 127.00000000768341
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13688.999999998487,
+                "duration": 130.0000000046566
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13836.999999999534,
+                "duration": 116.0000000090804
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13972.999999998137,
+                "duration": 139.00000001012813
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14138.000000006286,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14273.000000001048,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14404.999999998836,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14538.000000000466,
+                "duration": 112.00000000826549
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14672.999999995227,
+                "duration": 112.00000000826549
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14805.999999996857,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14922.000000005937,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15057.000000000698,
+                "duration": 123.9999999961583
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15222.999999998137,
+                "duration": 109.00000001129229
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15354.999999995925,
+                "duration": 105.99999999976717
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15487.999999997555,
+                "duration": 112.99999999755528
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15620.999999999185,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15755.000000004657,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15870.999999999185,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15987.999999997555,
+                "duration": 120.0000000098953
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16138.999999995576,
+                "duration": 119.0000000060536
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16288.000000000466,
+                "duration": 114.00000000139698
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16421.000000002095,
+                "duration": 95.00000000116415
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16536.999999996624,
+                "duration": 128.00000001152512
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16688.000000009197,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16804.000000003725,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16921.000000002095,
+                "duration": 108.99999999674037
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17055.000000007567,
+                "duration": 103.99999999208376
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17188.000000009197,
+                "duration": 109.99999998603016
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17320.999999996275,
+                "duration": 92.00000000419095
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17438.000000009197,
+                "duration": 107.99999999289867
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17570.999999996275,
+                "duration": 108.00000000745058
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17706.000000005588,
+                "duration": 99.99999999126885
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17822.000000000116,
+                "duration": 112.99999999755528
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 17971.000000005006,
+                "duration": 120.99999999918509
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18120.999999999185,
+                "duration": 100.00000000582077
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18237.000000008265,
+                "duration": 119.99999999534339
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18372.000000003027,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18504.000000000815,
+                "duration": 104.99999999592546
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18638.000000006286,
+                "duration": 100.99999999511056
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18755.000000004657,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18870.999999999185,
+                "duration": 96.00000000500586
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 18987.000000008265,
+                "duration": 92.99999999348074
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19104.999999995925,
+                "duration": 112.00000000826549
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19239.000000001397,
+                "duration": 104.99999999592546
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19369.999999995343,
+                "duration": 91.00000000034925
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19487.000000008265,
+                "duration": 110.00000000058208
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19620.999999999185,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19737.999999997555,
+                "duration": 93.00000000803266
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19854.000000006636,
+                "duration": 106.99999998905696
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 19987.999999997555,
+                "duration": 103.00000000279397
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 20119.999999995343,
+                "duration": 125
+            }
+        ]
+    },
+    "rework + initial + noalpha + nosmoothing": {
+        "times": {
+            "total": 554.0000000037253,
+            "max": 21.999999997206032,
+            "min": 1.9999999785795808,
+            "average": 5.540000000037253
+        },
+        "measurements": [
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12652.999999991152,
+                "duration": 7.000000041443855
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12687.000000034459,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12722.000000008848,
+                "duration": 9.000000020023435
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12753.000000026077,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12787.000000011176,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12820.999999996275,
+                "duration": 7.000000041443855
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12853.000000002794,
+                "duration": 7.000000041443855
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12888.00000003539,
+                "duration": 21.999999997206032
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12921.0000000312,
+                "duration": 11.999999987892807
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12953.000000037719,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 12987.000000022817,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13021.000000007916,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13054.000000003725,
+                "duration": 9.000000020023435
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13087.999999988824,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13121.00000004284,
+                "duration": 4.999999946448952
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13154.00000003865,
+                "duration": 6.999999983236194
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13188.000000023749,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13221.000000019558,
+                "duration": 10.999999998603016
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13254.000000015367,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13288.000000000466,
+                "duration": 9.000000020023435
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13320.000000006985,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13353.999999992084,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13387.0000000461,
+                "duration": 4.999999946448952
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13420.00000004191,
+                "duration": 4.999999946448952
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13453.000000037719,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13487.000000022817,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13520.000000018626,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13554.000000003725,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13586.999999999534,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13619.999999995343,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13654.00000003865,
+                "duration": 3.9999999571591616
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13688.000000023749,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13721.000000019558,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13753.000000026077,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13788.000000000466,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13820.000000006985,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13853.999999992084,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13887.0000000461,
+                "duration": 4.999999946448952
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13920.00000004191,
+                "duration": 4.999999946448952
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13953.000000037719,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 13988.000000012107,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14021.000000007916,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14053.000000014435,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14087.999999988824,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14119.999999995343,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14152.999999991152,
+                "duration": 6.000000052154064
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14187.000000034459,
+                "duration": 10.000000009313226
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14220.000000030268,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14254.000000015367,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14287.000000011176,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14320.000000006985,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14353.999999992084,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14388.00000003539,
+                "duration": 2.999999967869371
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14420.00000004191,
+                "duration": 3.9999999571591616
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14454.000000027008,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14488.000000012107,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14521.000000007916,
+                "duration": 8.000000030733645
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14554.000000003725,
+                "duration": 3.000000026077032
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14586.999999999534,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14619.999999995343,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14652.999999991152,
+                "duration": 6.000000052154064
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14688.000000023749,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14720.000000030268,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14753.000000026077,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14823.000000033062,
+                "duration": 1.9999999785795808
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14853.999999992084,
+                "duration": 7.000000041443855
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14888.00000003539,
+                "duration": 6.999999983236194
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14921.0000000312,
+                "duration": 3.9999999571591616
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14953.000000037719,
+                "duration": 3.9999999571591616
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 14988.000000012107,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15021.000000007916,
+                "duration": 8.000000030733645
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15053.000000014435,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15087.999999988824,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15119.999999995343,
+                "duration": 2.0000000367872417
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15154.00000003865,
+                "duration": 1.9999999785795808
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15188.000000023749,
+                "duration": 1.9999999785795808
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15220.000000030268,
+                "duration": 1.9999999785795808
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15254.000000015367,
+                "duration": 1.9999999785795808
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15288.000000000466,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15322.000000043772,
+                "duration": 7.999999972525984
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15369.999999995343,
+                "duration": 5.999999993946403
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15405.00000002794,
+                "duration": 6.999999983236194
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15438.000000023749,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15470.000000030268,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 15504.000000015367,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16404.00000003865,
+                "duration": 6.999999983236194
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16436.00000004517,
+                "duration": 7.999999972525984
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16470.000000030268,
+                "duration": 8.999999961815774
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16504.000000015367,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16536.000000021886,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16570.999999996275,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16602.000000013504,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16637.0000000461,
+                "duration": 8.999999961815774
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16671.0000000312,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16704.00000002701,
+                "duration": 7.999999972525984
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16737.000000022817,
+                "duration": 7.999999972525984
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16770.000000018626,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16803.000000014435,
+                "duration": 5.000000004656613
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16836.000000010245,
+                "duration": 4.0000000153668225
+            },
+            {
+                "name": "draw drag",
+                "entryType": "measure",
+                "startTime": 16869.999999995343,
+                "duration": 4.0000000153668225
+            }
+        ]
+    }
+  }
+}

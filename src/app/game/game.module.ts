@@ -63,6 +63,8 @@ import { AllianceProfileComponent } from './alliance/alliance-profile/alliance-p
 import { EditProfileComponent } from './alliance/alliance-profile/edit-profile/edit-profile.component';
 import { TownHoverComponent } from './map/town-hover/town-hover.component';
 import { PlayerProfileComponent } from './player/player-profile/player-profile.component';
+import { MapCanvasComponent } from './map/map-canvas/map-canvas.component';
+import { MinimapComponent } from './map/map-canvas/minimap/minimap.component';
 
 export const effects = [
   PlayerEffects,
@@ -130,6 +132,8 @@ export const effects = [
     EditProfileComponent,
     TownHoverComponent,
     PlayerProfileComponent,
+    MapCanvasComponent,
+    MinimapComponent,
   ],
   providers: [
     MapService,

@@ -1,0 +1,46 @@
+<canvas #map
+  [width]="mapSize.x"
+  [height]="mapSize.y"
+  (click)="onClick($event)"
+  (window:resize)="onResize($event)"
+  (wheel)="onZoom($event)"
+  (mousedown)="onStartDrag($event)"
+  (touchstart)="onStartDrag($event)"
+  (mouseup)="onStopDrag()"
+  (touchend)="onStopDrag()"
+  (mouseout)="onStopDrag()"
+  (touchcancel)="onStopDrag()"
+>
+  <div>Loading map</div>
+</canvas>
+<div class="map-navigation">
+  <div class="d-flex align-items-center p-1">
+    <fa-icon [icon]="['fas', 'search']" class="pl-2 pr-3"></fa-icon>
+    <div style="white-space: nowrap;">
+      <div>Jump to coords</div>
+      <form (ngSubmit)="jumpToCoord(targetCoord)">
+        <input [(ngModel)]="targetCoord[0]" [ngModelOptions]="{standalone: true}" min="0" [max]="worldData.world.size" type="number" placeholder="X-coord" />
+        <input [(ngModel)]="targetCoord[1]" [ngModelOptions]="{standalone: true}" min="0" [max]="worldData.world.size" type="number" placeholder="Y-coord" />
+        <button type="submit" mat-raised-button color="primary">Go</button>
+      </form>
+    </div>
+  </div>
+</div>
+<town-hover *ngIf="hover"
+  [data]="hover.data"
+  (openAllianceProfile)="openAllianceProfile.emit($event)"
+  (openPlayerProfile)="openPlayerProfile.emit($event)"
+  [style.transform]="hover.position"
+  [style.width.px]="boxSize.x"
+  [style.height.px]="boxSize.y"
+  class="town-hover hidden-sm-down"
+></town-hover>
+<!-- <minimap *ngIf="mapData"
+  [townState]="townState"
+  [allianceDiplomacy]="allianceDiplomacy"
+  [mapData]="mapData"
+  [mapViewSize]="mapSize"
+  [mapOffset]="offset"
+  [centerCoord]="layout.centerCoord"
+  [hexSize]="hexSize"
+></minimap> -->
