@@ -1,0 +1,9 @@
+<div class="minimap">
+  <canvas #minimap
+    [width]="minimapSize.x"
+    [height]="minimapSize.y"
+  >
+  </canvas>
+  <div class="minimap-view" [ngStyle]="{ 'top.px': viewOffset.y, 'left.px': viewOffset.x, 'width.px': viewArea.x, 'height.px': viewArea.y }"
+  ></div>
+</div>
