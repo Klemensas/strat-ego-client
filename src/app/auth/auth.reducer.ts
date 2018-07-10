@@ -32,6 +32,7 @@ export function reducer(
       return { ...state, inProgress: false, user: action.payload };
 
     case AuthActionTypes.LoginFail:
+    case AuthActionTypes.RegisterFail:
       return { ...state, inProgress: false, error: action.payload };
 
     case AuthActionTypes.Logout:

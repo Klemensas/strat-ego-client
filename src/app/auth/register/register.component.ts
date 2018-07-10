@@ -28,9 +28,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
         return;
       }
       if (auth.error) {
-        if (auth.error === 422) {
+        if (auth.error.status === 422) {
           const errBody = auth.error.json();
-          const errorMessage = errBody.message;
+          const errorMessage = errBody.message || 'Could not register user';
           this.form.form.setErrors({ errorMessage });
           return;
         }

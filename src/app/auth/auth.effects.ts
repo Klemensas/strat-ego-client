@@ -17,17 +17,23 @@ export class AuthEffects {
   public login$: Observable<Action> = this.actions$.pipe(
     ofType<authActions.Login>(authActions.AuthActionTypes.Login),
     map((action) => action.payload),
-    switchMap((credentials) => this.authService.login(credentials)),
-    map((token) => new authActions.LoginSuccess(token)),
-    catchError((error) => of(new authActions.LoginFail(error)))
+    switchMap((credentials) =>
+      this.authService.login(credentials).pipe(
+        map((token) => new authActions.LoginSuccess(token)),
+        catchError((error) => of(new authActions.LoginFail(error)))
+      )
+    ),
   );
 
   @Effect()
   public profile$: Observable<Action> = this.actions$.pipe(
     ofType<authActions.LoginSuccess | authActions.RegisterSuccess>(authActions.AuthActionTypes.LoginSuccess, authActions.AuthActionTypes.RegisterSuccess),
-    switchMap(() => this.authService.getUser()),
-    map((user) => new authActions.LoadProfileSuccess(user)),
-    catchError((error) => of(new authActions.LoadProfileFail(error)))
+    switchMap(() =>
+      this.authService.getUser().pipe(
+        map((user) => new authActions.LoadProfileSuccess(user)),
+        catchError((error) => of(new authActions.LoadProfileFail(error)))
+      )
+    ),
   );
 
   @Effect({ dispatch: false })
@@ -40,9 +46,12 @@ export class AuthEffects {
   public register$: Observable<any> = this.actions$.pipe(
     ofType<authActions.Register>(authActions.AuthActionTypes.Register),
     map((action) => action.payload),
-    switchMap((credentials) => this.authService.register(credentials)),
-    map((token) => new authActions.RegisterSuccess(token)),
-    catchError((error) => of(new authActions.RegisterFail(error)))
+    switchMap((credentials) =>
+      this.authService.register(credentials).pipe(
+        map((token) => new authActions.RegisterSuccess(token)),
+        catchError((error) => of(new authActions.RegisterFail(error)))
+      ),
+    ),
   );
 
   @Effect({ dispatch: false })
