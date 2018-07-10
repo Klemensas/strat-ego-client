@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Effect, Actions, ROOT_EFFECTS_INIT, ofType } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Store, Action } from '@ngrx/store';
 
@@ -17,9 +17,12 @@ export class WorldEffects {
   @Effect()
   public load$: Observable<Action> = this.actions$.pipe(
     ofType<Load>(WorldActionTypes.Load),
-    switchMap(() => this.dataService.getActiveWorlds()),
-    map((data) => new Loadsuccess(data)),
-    catchError((error) => of(new LoadFail(error)))
+    switchMap(() =>
+      this.dataService.getActiveWorlds().pipe(
+        map((data) => new Loadsuccess(data)),
+        catchError((error) => of(new LoadFail(error)))
+      )
+    ),
   );
 
   @Effect({ dispatch: false })

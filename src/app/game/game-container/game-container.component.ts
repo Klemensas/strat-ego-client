@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
-import { MatSidenav, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { filter, map, distinctUntilChanged, combineLatest } from 'rxjs/operators';
-import { ofType } from '@ngrx/effects';
+import { filter, map, combineLatest } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
@@ -27,8 +25,8 @@ import {
 import { ViewProfile as viewAllianceProfile } from '../alliance/alliance.actions';
 import { ViewProfile as viewPlayerProfile } from '../player/player.actions';
 import { Town } from '../town/town.model';
-import { TownActions, TownActionTypes, SetActiveTown } from '../town/town.actions';
-import { PlayerActions, SetSidenav, Restart } from '../player/player.actions';
+import { SetActiveTown } from '../town/town.actions';
+import { SetSidenav, Restart } from '../player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
 
