@@ -36,10 +36,7 @@ import { WorldEffects } from './world/world.effects';
     JwtModule.forRoot({
       config: {
         headerName: 'Authorization',
-        tokenGetter: (() => {
-          console.log('get token', localStorage.getItem('jwt'))
-          return localStorage.getItem('jwt')
-        }),
+        tokenGetter: (() => localStorage.getItem('jwt')),
         whitelistedDomains: ['localhost:9000']
       }
     }),
