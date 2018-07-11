@@ -1,7 +1,7 @@
 <header>
   <nav class="navbar navbar-expand-md navbar-light bg-faded" ngbDropdown>
     <a class="navbar-brand" href="#">Strat-ego</a>
-    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarCollapse">
+    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarCollapse" ngbDropdownToggle>
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-lg-between" [ngbCollapse]="isCollapsed">
