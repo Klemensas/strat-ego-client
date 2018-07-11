@@ -1,5 +1,5 @@
 <mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
-  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6 container-fluid" mode="over" align="start" opened="false" (closedStart)="sidenavToggle('left', null)">
+  <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6 container-fluid" mode="over" position="start" opened="false" (closedStart)="sidenavToggle('left', null)">
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
     </button>
@@ -7,7 +7,7 @@
     <command *ngSwitchCase="'command'" [town]="activeTown" [worldData]="worldData$ | async"></command>
     <alliance *ngSwitchCase="'alliance'" (openAllianceProfile)="onOpenProfile($event, 'alliance')" (openPlayerProfile)="onOpenProfile($event, 'player')"></alliance>
   </mat-sidenav>
-  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" align="end" opened="false" (closedStart)="sidenavToggle('right', null)">
+  <mat-sidenav #sidenavRight [ngSwitch]="sidenavRight.comp" class="col-xl-6" mode="over" position="end" opened="false" (closedStart)="sidenavToggle('right', null)">
     <button mat-mini-fab (click)="sidenavToggle('right', null)">
       <mat-icon>&times;</mat-icon>
     </button>

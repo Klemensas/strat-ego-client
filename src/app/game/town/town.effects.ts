@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  of } from 'rxjs';
 import { Store, Action } from '@ngrx/store';
-import { of } from 'rxjs/observable/of';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
 import { WorldData, MovementType, RecallPayload } from 'strat-ego-common';
 

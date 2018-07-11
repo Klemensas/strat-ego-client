@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 import * as seedrandom from 'seedrandom';
 import { Coords } from 'strat-ego-common';

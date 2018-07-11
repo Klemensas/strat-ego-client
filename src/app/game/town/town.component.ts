@@ -1,9 +1,8 @@
 // TODO: refactor some town elements in to simple presentation components
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription ,  Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/observable/of';
 // import 'rxjs/add/observable/timer';
 

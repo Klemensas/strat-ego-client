@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ROOT_EFFECTS_INIT, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of ,  defer } from 'rxjs';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 import * as authActions from './auth.actions';
 import { Action } from '@ngrx/store';
-import { defer } from 'rxjs/observable/defer';
 import { SocketService } from '../game/services';
 
 @Injectable()

@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of, defer } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { Store, Action } from '@ngrx/store';
 
-import { WorldActions, Load, WorldActionTypes, Loadsuccess, LoadFail } from './world.actions';
+import { Load, WorldActionTypes, Loadsuccess, LoadFail } from './world.actions';
 import { GameDataService } from '../services/game-data.service';
 import { State } from '../reducers';
-import { defer } from 'rxjs/observable/defer';
 
 @Injectable()
 export class WorldEffects {

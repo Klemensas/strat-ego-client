@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Subscription ,  Observable ,  of } from 'rxjs';
 import { filter, switchMap, map } from 'rxjs/operators';
 
 import { SocketService } from './game/services';

@@ -1,25 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { AuthHttp, JwtHelper } from 'angular2-jwt';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { User } from 'strat-ego-common';
 
-import { AuthActions, LoginSuccess, Logout } from './auth.actions';
+import { LoginSuccess, Logout } from './auth.actions';
 import { environment } from '../../environments/environment';
 import { AuthModuleState } from './reducers';
+import { JwtHelperService } from '@auth0/angular-jwt';
+
+export interface AuthResponse { token: string; }
 
 @Injectable()
 export class AuthService {
-  jwtHelper: JwtHelper;
+  jwtHelper: JwtHelperService;
   tokenExpirationTimeout;
   user = new BehaviorSubject(null);
 
-  constructor(private http: Http, private authHttp: AuthHttp, private router: Router, private store: Store<AuthModuleState>) {
-    this.jwtHelper = new JwtHelper();
+  constructor(private http: HttpClient, private router: Router, private store: Store<AuthModuleState>) {
+    this.jwtHelper = new JwtHelperService();
   }
 
   getToken() {
@@ -45,17 +46,17 @@ export class AuthService {
     localStorage.removeItem('jwt');
   }
 
-  login(data): Observable<string> {
-    return this.http.post(`${environment.server.auth}local`, data).pipe(
-      map(token => token.json().token),
-      tap(token => this.storeToken(token))
+  login(data) {
+    return this.http.post<AuthResponse>(`${environment.server.auth}local`, data).pipe(
+      map((response) => response.token),
+      tap((token) => this.storeToken(token))
     );
   }
 
-  register(data): Observable<string> {
-    return this.http.post(`${environment.server.api}users`, data).pipe(
-      map(token => token.json().token),
-      tap(token => this.storeToken(token))
+  register(data) {
+    return this.http.post<AuthResponse>(`${environment.server.api}users`, data).pipe(
+      map((response) => response.token),
+      tap((token) => this.storeToken(token))
     );
   }
 
@@ -64,10 +65,8 @@ export class AuthService {
     this.store.dispatch(new Logout());
   }
 
-  getUser(): Observable<User> {
-    return this.authHttp.get(`${environment.server.api}users/me`).pipe(
-      map(data => data.json())
-    );
+  getUser() {
+    return this.http.get<User>(`${environment.server.api}users/me`);
       // .cache();
 
       // user$.subscribe(

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, timer } from 'rxjs';
 import { timestamp, map } from 'rxjs/operators';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -31,7 +31,7 @@ export class MovementComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     const b = this.typeNames[0];
-    this.queue$ = Observable.timer(0, 1000).pipe(
+    this.queue$ = timer(0, 1000).pipe(
       timestamp(),
       map((time) => this.movements.map(queue => {
         queue.timeLeft = +queue.endsAt - time.timestamp;

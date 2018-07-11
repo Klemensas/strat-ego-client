@@ -1,7 +1,6 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { timestamp, take } from 'rxjs/operators';
+import { Subscription, timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -58,7 +57,7 @@ export class BuildingsComponent implements OnChanges {
           if (this.updateAvailability$) {
             this.updateAvailability$.unsubscribe();
           }
-        this.updateAvailability$ = Observable.timer(soonestAvailable).subscribe(() => this.ngOnChanges());
+        this.updateAvailability$ = timer(soonestAvailable).subscribe(() => this.ngOnChanges());
         }
       });
   }

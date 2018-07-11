@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { AuthHttp, JwtHelper } from 'angular2-jwt';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { WorldData } from 'strat-ego-common';
 // import 'rxjs/add/operator/cache';
 
 import { environment } from '../../environments/environment';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map } from 'rxjs/operators';
 
 // TODO: split this service into world and player services
@@ -18,10 +16,10 @@ export class GameDataService {
   //   activeWorld: new BehaviorSubject(null)
   // };
 
-  constructor(private http: Http, private authHttp: AuthHttp) {}
+  constructor(private http: HttpClient) {}
 
-  getActiveWorlds(): Observable<WorldData[]> {
-    return this.http.get(`${environment.server.api}world`).pipe(map(t => t.json()));
+  getActiveWorlds() {
+    return this.http.get<WorldData[]>(`${environment.server.api}world`);
   }
 // .cache();
       // .map(this.mapBuildings)

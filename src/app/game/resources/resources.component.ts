@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Resources } from 'strat-ego-common';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs';
 
 import { availableResources } from '../utils';
 import { Town } from '../town/town.model';

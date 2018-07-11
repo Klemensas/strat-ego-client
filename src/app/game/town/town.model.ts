@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Town as BaseTown, TownError, Report } from 'strat-ego-common';
 
 export interface TownAction {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, timer } from 'rxjs';
 import { timestamp, map } from 'rxjs/operators';
 import { BuildingQueue } from 'strat-ego-common';
 
@@ -17,7 +17,7 @@ export class BuildingQueueComponent implements OnInit, OnChanges {
   public buildingDetails = buildingData;
 
   public ngOnInit() {
-    this.queue$ = Observable.timer(0, 1000).pipe(
+    this.queue$ = timer(0, 1000).pipe(
       timestamp(),
       map((time) => this.buildingQueue.map((queue) => ({
         ...queue,

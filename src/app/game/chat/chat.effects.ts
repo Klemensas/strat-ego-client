@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  of } from 'rxjs';
 import { map, withLatestFrom, filter } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 import { Player, AllianceMessage } from 'strat-ego-common';
 

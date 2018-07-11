@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, timer } from 'rxjs';
 import { map, timestamp } from 'rxjs/operators';
 
 import { unitData } from '../staticData';
@@ -16,7 +16,7 @@ export class UnitQueueComponent implements OnInit, OnChanges {
   public unitDetails = unitData;
 
   public ngOnInit() {
-    this.queue$ = Observable.timer(0, 1000).pipe(
+    this.queue$ = timer(0, 1000).pipe(
       timestamp(),
       map(({ timestamp }) => this.unitQueue.map((queue) => ({
         ...queue,
