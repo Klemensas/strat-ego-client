@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { TownError, MovementType, Coords, TownUnit, Dict, RecallPayload, Movement } from 'strat-ego-common';
+import { ActionError, MovementType, Coords, TownUnit, Dict, RecallPayload, Movement } from 'strat-ego-common';
 
 import { Town } from './town.model';
 
@@ -33,6 +33,23 @@ export const enum TownActionTypes {
   SupportSentBack = '[Town] Support Sent Back',
 }
 
+export const TownSuccessActions = [
+  TownActionTypes.RenameSuccess,
+  TownActionTypes.BuildSuccess,
+  TownActionTypes.RecruitSuccess,
+  TownActionTypes.MoveTroopsSuccess,
+  TownActionTypes.RecallSupportSuccess,
+  TownActionTypes.SendBackSupportSuccess
+];
+export const TownFailActions = [
+  TownActionTypes.RenameFail,
+  TownActionTypes.BuildFail,
+  TownActionTypes.RecruitFail,
+  TownActionTypes.MoveTroopsFail,
+  TownActionTypes.RecallSupportFail,
+  TownActionTypes.SendBackSupportFail
+];
+
 // TODO: once decided on queue implementation change payload accordingly
 // I.e. might need to only send the changes instead of full town payload
 export class Update implements Action {
@@ -53,7 +70,7 @@ export class RenameSuccess implements Action {
 export class RenameFail implements Action {
   readonly type = TownActionTypes.RenameFail;
 
-  constructor(public payload: TownError) {}
+  constructor(public payload: ActionError) {}
 }
 export class Build implements Action {
   readonly type = TownActionTypes.Build;
@@ -68,7 +85,7 @@ export class BuildSuccess implements Action {
 export class BuildFail implements Action {
   readonly type = TownActionTypes.BuildFail;
 
-  constructor(public payload: TownError) {}
+  constructor(public payload: ActionError) {}
 }
 export class Recruit implements Action {
   readonly type = TownActionTypes.Recruit;
@@ -83,7 +100,7 @@ export class RecruitSuccess implements Action {
 export class RecruitFail implements Action {
   readonly type = TownActionTypes.RecruitFail;
 
-  constructor(public payload: TownError) {}
+  constructor(public payload: ActionError) {}
 }
 // export class UpdateEvent implements Action {
 //   readonly type = TownActionTypes.UpdateEvent;
@@ -118,7 +135,7 @@ export class MoveTroopsSuccess implements Action {
 export class MoveTroopsFail implements Action {
   readonly type = TownActionTypes.MoveTroopsFail;
 
-  constructor(public payload: TownError) {}
+  constructor(public payload: ActionError) {}
 }
 export class RecallSupport implements Action {
   readonly type = TownActionTypes.RecallSupport;
@@ -133,7 +150,7 @@ export class RecallSupportSuccess implements Action {
 export class RecallSupportFail implements Action {
   readonly type = TownActionTypes.RecallSupportFail;
 
-  constructor(public payload: TownError) {}
+  constructor(public payload: ActionError) {}
 }
 export class SendBackSupport implements Action {
   readonly type = TownActionTypes.SendBackSupport;
@@ -148,7 +165,7 @@ export class SendBackSupportSuccess implements Action {
 export class SendBackSupportFail implements Action {
   readonly type = TownActionTypes.SendBackSupportFail;
 
-  constructor(public payload: TownError) {}
+  constructor(public payload: ActionError) {}
 }
 export class IncomingMovement implements Action {
   readonly type = TownActionTypes.IncomingMovement;

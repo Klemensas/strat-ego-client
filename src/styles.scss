@@ -92,6 +92,19 @@ game-container .mat-sidenav-content {
   overflow: inherit;
 }
 
+.mat-snack-bar-container.snackbar-event {
+  width: 100vw;
+  max-width: 100%;
+
+  &.snackbar-success {
+    background-color: var(--success);
+  }
+
+  &.snackbar-fail {
+    background-color: var(--danger);
+  }
+}
+
 // TODO: consider default width for mobile,
 .mat-form-field-infix {
   width: auto !important;

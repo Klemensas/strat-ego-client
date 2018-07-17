@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Player, ProfileUpdate } from 'strat-ego-common';
+import { Player, ProfileUpdate, ActionError } from 'strat-ego-common';
 
 // TODO: move sidenav to a dedicated game state
 export enum PlayerActionTypes {
@@ -10,13 +10,27 @@ export enum PlayerActionTypes {
   ViewProfile = '[Player] View Profile',
   LoadProfile = '[Player] Load Profile',
   LoadProfileSuccess = '[Player] Load Profile Success',
+  LoadProfileFail = '[Player] Load Profile Fail',
   UpdateProfile = '[Player] Update Profile',
   UpdateProfileSuccess = '[Player] Update Profile Success',
+  UpdateProfileFail = '[Player] Update Profile Fail',
   RemoveAvatar = '[Player] Remove Avatar',
   RemoveAvatarSuccess = '[Player] Remove Avatar Success',
+  RemoveAvatarFail = '[Player] Remove Avatar Fail',
 
   // UpdateReports = '[Player] Update Reports',
 }
+
+export const PlayerSuccessActions = [
+  PlayerActionTypes.LoadProfileSuccess,
+  PlayerActionTypes.UpdateProfileSuccess,
+  PlayerActionTypes.RemoveAvatarSuccess,
+];
+export const PlayerFailActions = [
+  PlayerActionTypes.LoadProfileFail,
+  PlayerActionTypes.UpdateProfileFail,
+  PlayerActionTypes.RemoveAvatarFail,
+];
 
 export class Update implements Action {
   readonly type = PlayerActionTypes.Update;
@@ -46,6 +60,11 @@ export class LoadProfileSuccess implements Action {
 
   constructor(public payload: Partial<Player>) {}
 }
+export class LoadProfileFail implements Action {
+  readonly type = PlayerActionTypes.LoadProfileFail;
+
+  constructor(public payload: ActionError) {}
+}
 export class UpdateProfile implements Action {
   readonly type = PlayerActionTypes.UpdateProfile;
 
@@ -56,6 +75,11 @@ export class UpdateProfileSuccess implements Action {
 
   constructor(public payload: ProfileUpdate) {}
 }
+export class UpdateProfileFail implements Action {
+  readonly type = PlayerActionTypes.UpdateProfileFail;
+
+  constructor(public payload: ActionError) {}
+}
 export class RemoveAvatar implements Action {
   readonly type = PlayerActionTypes.RemoveAvatar;
 }
@@ -63,6 +87,11 @@ export class RemoveAvatarSuccess implements Action {
   readonly type = PlayerActionTypes.RemoveAvatarSuccess;
 
   constructor(public payload: ProfileUpdate) {}
+}
+export class RemoveAvatarFail implements Action {
+  readonly type = PlayerActionTypes.RemoveAvatarFail;
+
+  constructor(public payload: ActionError) {}
 }
 // export class UpdateReports implements Action {
 //   readonly type = PlayerActionTypes.UpdateReports;
@@ -76,7 +105,10 @@ export type PlayerActions = Update |
   ViewProfile |
   LoadProfile |
   LoadProfileSuccess |
+  LoadProfileFail |
   UpdateProfile |
   UpdateProfileSuccess |
+  UpdateProfileFail |
   RemoveAvatar |
-  RemoveAvatarSuccess;
+  RemoveAvatarSuccess |
+  RemoveAvatarFail;
