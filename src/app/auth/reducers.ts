@@ -22,12 +22,3 @@ export const getUser = createSelector(
   getAuthState,
   auth.getUser,
 );
-
-// TODO: enable state reset
-// Reset state on logout
-// export function productionReducer(state, action) {
-//   if (action.type === auth.AuthActions.LOGOUT) {
-//     state = undefined;
-//   }
-//   return rootReducer(state, action);
-// }

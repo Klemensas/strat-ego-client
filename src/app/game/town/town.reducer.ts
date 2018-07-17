@@ -1,6 +1,3 @@
-import { createSelector } from '@ngrx/store';
-import { TownError } from 'strat-ego-common';
-
 import { Town, TownActionState } from './town.model';
 import { TownActions, TownActionTypes, SendBackSupportSuccess } from './town.actions';
 
