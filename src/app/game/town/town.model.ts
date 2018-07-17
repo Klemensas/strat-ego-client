@@ -1,9 +1,8 @@
-import { Observable } from 'rxjs/Observable';
-import { Town as BaseTown, TownError, Report } from 'strat-ego-common';
+import { Town as BaseTown, ActionError } from 'strat-ego-common';
 
 export interface TownAction {
   inProgress: boolean;
-  error: TownError;
+  error: ActionError;
 }
 
 export interface TownActionState {

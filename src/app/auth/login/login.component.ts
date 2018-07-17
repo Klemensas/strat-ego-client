@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Login } from '../auth.actions';
 import { AuthModuleState, getAuthState } from '../reducers';
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
       if (auth.error) {
         if (auth.error.status === 401) {
-          const errorMessage = auth.error.message || 'Unauthorized';
+          const errBody = auth.error.json();
+          const errorMessage = errBody.message || 'Unauthorized';
           this.form.form.setErrors({ errorMessage: errorMessage });
           return;
         }

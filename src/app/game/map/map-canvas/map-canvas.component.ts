@@ -1,17 +1,14 @@
 import { Component, OnChanges, ViewChild, ElementRef, AfterContentInit, Input, SimpleChanges, AfterViewChecked, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable , Subject, Subscription, never, merge, fromEvent } from 'rxjs';
 import { takeWhile, throttleTime, switchMap } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faExchangeAlt, faSortAmountUp, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import { MapService } from '../../services';
-import { Alliance, MapTown, WorldData, Dict, Coords } from 'strat-ego-common';
+import { MapTown, WorldData, Dict, Coords } from 'strat-ego-common';
 import { Hex, Layout, Point } from '../../services/map.service';
 import { TownState } from '../../town/town.reducer';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
-import { Town } from '../../town/town.model';
 
 export interface HexSize {
   width: number;
@@ -91,7 +88,7 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
 
   public moveEvent: Observable<MouseEvent>;
   public pausableMove = this.hoverPauser.pipe(
-    switchMap(paused => paused ? Observable.never() : this.moveEvent)
+    switchMap(paused => paused ? never() : this.moveEvent)
   );
   public hoverSubscription: Subscription;
 
@@ -151,9 +148,9 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
     this.setCenterCoordOffset(activeTown.location);
     this.elementReady = true;
     this.shouldDraw = true;
-    this.moveEvent = Observable.merge(
-      Observable.fromEvent<MouseEvent>(this.map.nativeElement, 'mousemove'),
-      Observable.fromEvent<MouseEvent>(this.map.nativeElement, 'touchmove')
+    this.moveEvent = merge(
+      fromEvent<MouseEvent>(this.map.nativeElement, 'mousemove'),
+      fromEvent<MouseEvent>(this.map.nativeElement, 'touchmove')
     ).pipe(
       throttleTime(50)
     );
@@ -294,9 +291,9 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
     };
     const initialOffset: Point = { x: this.offset.x, y: this.offset.y };
     this.dragging = 1;
-    Observable.merge(
-      Observable.fromEvent(this.map.nativeElement, 'mousemove'),
-      Observable.fromEvent(this.map.nativeElement, 'touchmove')
+    merge(
+      fromEvent(this.map.nativeElement, 'mousemove'),
+      fromEvent(this.map.nativeElement, 'touchmove')
     ).pipe(
       takeWhile(() => !!this.dragging),
       throttleTime(10),

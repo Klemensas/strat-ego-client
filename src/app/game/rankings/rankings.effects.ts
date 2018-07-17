@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Store, Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
 
 import { SocketService } from '../../game/services/socket.service';

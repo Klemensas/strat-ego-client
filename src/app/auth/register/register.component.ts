@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { AuthModuleState, getAuthState } from '../reducers';
 import { AuthState } from '../auth.reducer';
@@ -28,9 +28,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
         return;
       }
       if (auth.error) {
-        if (auth.error === 422) {
+        if (auth.error.status === 422) {
           const errBody = auth.error.json();
-          const errorMessage = errBody.message;
+          const errorMessage = errBody.message || 'Could not register user';
           this.form.form.setErrors({ errorMessage });
           return;
         }

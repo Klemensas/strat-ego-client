@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
-import { MatSidenav, MatSnackBar } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { filter, map, distinctUntilChanged, combineLatest } from 'rxjs/operators';
-import { ofType } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
+import { MatSnackBar } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { filter, map, combineLatest } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
@@ -19,21 +17,97 @@ import {
   getPlayerAlliance,
   getAllRankings,
   getPlayerPosition,
-  getRankingsProgress,
   getViewedAlliance,
   getRankingEntities,
   getViewedPlayer
 } from '../reducers';
-import { ViewProfile as viewAllianceProfile } from '../alliance/alliance.actions';
-import { ViewProfile as viewPlayerProfile } from '../player/player.actions';
+import {
+  ViewProfile as viewAllianceProfile,
+  AllianceActionTypes,
+  AllianceSuccessActions,
+  AllianceFailActions } from '../alliance/alliance.actions';
+import { ViewProfile as viewPlayerProfile, PlayerActionTypes, PlayerSuccessActions, PlayerFailActions } from '../player/player.actions';
 import { Town } from '../town/town.model';
-import { TownActions, TownActionTypes, SetActiveTown } from '../town/town.actions';
-import { PlayerActions, SetSidenav, Restart } from '../player/player.actions';
+import { SetActiveTown, TownActionTypes, TownSuccessActions, TownFailActions } from '../town/town.actions';
+import { SetSidenav, Restart } from '../player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
 
-// TODO: consider using routes for sidenavs, should result in cleaner implementations and also easier linking
+export const actionMessages = {
+  [PlayerActionTypes.LoadProfileSuccess]: 'Player profile loaded successfully',
+  [PlayerActionTypes.UpdateProfileSuccess]: 'Profile updated successfully',
+  [PlayerActionTypes.RemoveAvatarSuccess]: 'Avatar removed successfully',
 
+  [PlayerActionTypes.LoadProfileFail]: 'Failed to load profile, please retry',
+  [PlayerActionTypes.UpdateProfileFail]: 'Failed to update profile, pleae retry',
+  [PlayerActionTypes.RemoveAvatarFail]: 'Failed to remove avatar, please retry',
+
+  [TownActionTypes.RenameSuccess]: 'Town renamed successfully',
+  [TownActionTypes.BuildSuccess]: 'Building queued successfully',
+  [TownActionTypes.RecruitSuccess]: 'Recruitment queued successfully',
+  [TownActionTypes.MoveTroopsSuccess]: 'Troops sent successfully',
+  [TownActionTypes.RecallSupportSuccess]: 'Supporting troops recalled successfully',
+  [TownActionTypes.SendBackSupportSuccess]: 'Supporting troops sent back successfully',
+
+  [TownActionTypes.RenameFail]: 'Failed to rename town, please retry',
+  [TownActionTypes.BuildFail]: 'Failed to queue building, please retry',
+  [TownActionTypes.RecruitFail]: 'Failed to queue recruitment, please retry',
+  [TownActionTypes.MoveTroopsFail]: 'Failed to send troops, please retry',
+  [TownActionTypes.RecallSupportFail]: 'Failed recall supporting troops, please retry',
+  [TownActionTypes.SendBackSupportFail]: 'Failed to send back supporting troops, please retry',
+
+  [AllianceActionTypes.CreateSuccess]: 'Alliance created successfully',
+  [AllianceActionTypes.CreateInviteSuccess]: 'Player invited successfully',
+  [AllianceActionTypes.CancelInviteSuccess]: 'Invite canceled successfully',
+  [AllianceActionTypes.RemoveMemberSuccess]: 'Member removed successfully',
+  [AllianceActionTypes.UpdateRolePermissionsSuccess]: 'Updated roles successfully',
+  [AllianceActionTypes.RemoveRoleSuccess]: 'Removed role successfully',
+  [AllianceActionTypes.UpdateMemberRoleSuccess]: 'Updated member role successfully',
+  [AllianceActionTypes.RejectInviteSuccess]: 'Rejected alliance invite successfully',
+  [AllianceActionTypes.LeaveAllianceSuccess]: 'Left alliance successfully',
+  [AllianceActionTypes.DestroySuccess]: 'Destroyed alliance successfully',
+  [AllianceActionTypes.ProposeAllianceSuccess]: 'Proposed alliance successfully',
+  [AllianceActionTypes.ProposeNapSuccess]: 'Proposed NAP successfully',
+  [AllianceActionTypes.CancelAllianceSuccess]: 'Canceled alliance proposal successfully',
+  [AllianceActionTypes.CancelNapSuccess]: 'Canceled NAP proposal successfully',
+  [AllianceActionTypes.RejectAllianceSuccess]: 'Rejected alliance proposal successfully',
+  [AllianceActionTypes.RejectNapSuccess]: 'Rejected NAP proposal successfully',
+  [AllianceActionTypes.AcceptAllianceSuccess]: 'Accepted alliance proposal successfully',
+  [AllianceActionTypes.AcceptNapSuccess]: 'Accepted NAP proposal successfully',
+  [AllianceActionTypes.EndAllianceSuccess]: 'Ended alliance successfully',
+  [AllianceActionTypes.EndNapSuccess]: 'Ended NAP successfully',
+  [AllianceActionTypes.DeclareWarSuccess]: 'Declared war successfully',
+  [AllianceActionTypes.LoadProfileSuccess]: 'Loaded alliance profile successfully',
+  [AllianceActionTypes.UpdateProfileSuccess]: 'Updated alliance profile successfully',
+  [AllianceActionTypes.RemoveAvatarSuccess]: 'Removed alliance avatar successfully',
+
+  [AllianceActionTypes.CreateFail]: 'Failed to create an alliance, please retry',
+  [AllianceActionTypes.CreateInviteFail]: 'Failed to invite target player, please retry',
+  [AllianceActionTypes.CancelInviteFail]: 'Failed to cancel invite, please retry',
+  [AllianceActionTypes.RemoveMemberFail]: 'Failed to remove member, please retry',
+  [AllianceActionTypes.UpdateRolePermissionsFail]: 'Failed to update roles, please retry',
+  [AllianceActionTypes.RemoveRoleFail]: 'Failed to remove role, please retry',
+  [AllianceActionTypes.UpdateMemberRoleFail]: 'Failed to update member role, please retry',
+  [AllianceActionTypes.RejectInviteFail]: 'Failed to reject invite, please retry',
+  [AllianceActionTypes.LeaveAllianceFail]: 'Failed to leave alliance, please retry',
+  [AllianceActionTypes.DestroyFail]: 'Failed to destroy alliance, please retry',
+  [AllianceActionTypes.ProposeAllianceFail]: 'Failed to propose alliance, please retry',
+  [AllianceActionTypes.ProposeNapFail]: 'Failed to to propose NAP, please retry',
+  [AllianceActionTypes.CancelAllianceFail]: 'Failed to cancel alliance proposal, please retry',
+  [AllianceActionTypes.CancelNapFail]: 'Failed to cancel NAP proposal, please retry',
+  [AllianceActionTypes.RejectAllianceFail]: 'Failed to reject alliance proposal, please retry',
+  [AllianceActionTypes.RejectNapFail]: 'Failed to reject NAP proposal, please retry',
+  [AllianceActionTypes.AcceptAllianceFail]: 'Failed to accept alliance proposal, please retry',
+  [AllianceActionTypes.AcceptNapFail]: 'Failed to accept NAP proposal, please retry',
+  [AllianceActionTypes.EndAllianceFail]: 'Failed to end alliance, please retry',
+  [AllianceActionTypes.EndNapFail]: 'Failed to end NAP, please retry',
+  [AllianceActionTypes.DeclareWarFail]: 'Failed to declare war, please retry',
+  [AllianceActionTypes.LoadProfileFail]: 'Failed to load alliance profile, please retry',
+  [AllianceActionTypes.UpdateProfileFail]: 'Failed to update alliance profile, please retry',
+  [AllianceActionTypes.RemoveAvatarFail]: 'Failed to remove alliance avatar, please retry',
+};
+
+// TODO: consider using routes for sidenavs, should result in cleaner implementations and also easier linking
 @Component({
   selector: 'game-container',
   templateUrl: './game-container.component.html',
@@ -82,6 +156,27 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public isVisible;
   public sidenavSubscription: Subscription;
   public townStateSubscription: Subscription;
+  public updates = this.actions$.pipe(
+    ofType(
+      ...PlayerSuccessActions, ...PlayerFailActions,
+      ...TownSuccessActions, ...TownFailActions,
+      ...AllianceSuccessActions, ...AllianceFailActions,
+    ),
+    map((action) => {
+      let type = 'info';
+      if (action.type.includes('Success')) {
+        type = 'success';
+      } else if (action.type.includes('Fail')) {
+        type = 'fail';
+      }
+      return {
+        type,
+        message: actionMessages[action.type]
+      };
+    })
+  ).subscribe((event) => {
+    this.snackBar.open(event.message, null, { panelClass: ['snackbar-event', `snackbar-${event.type}`], duration: 2400 });
+  });
 
   constructor(
     private store: Store<GameModuleState>,

@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable, timer } from 'rxjs';
 import { Resources } from 'strat-ego-common';
-import 'rxjs/add/observable/timer';
+
 import { timestamp, map, publish, refCount } from 'rxjs/operators';
 
 import { Town } from './town/town.model';
@@ -15,7 +15,7 @@ export const resourceTime = (res: Resources, needed: Resources, production: Reso
 };
 
 export const availableResources = (town: Town) => {
-  return Observable.timer(0, 1000).pipe(
+  return timer(0, 1000).pipe(
     timestamp(),
     map((time) => {
       const timePast = (time.timestamp - +town.updatedAt) / 3600000;

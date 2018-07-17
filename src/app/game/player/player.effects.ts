@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 
 import * as playerActions from './player.actions';
@@ -51,8 +51,11 @@ export class PlayerEffects {
     this.socketService.registerEvents([
       ['player', (payload) => this.store.dispatch(new playerActions.Update(payload))],
       ['player:loadProfileSuccess', (payload) => this.store.dispatch(new playerActions.LoadProfileSuccess(payload))],
+      ['player:loadProfileFail', (payload) => this.store.dispatch(new playerActions.LoadProfileFail(payload))],
       ['player:updateProfileSuccess', (payload) => this.store.dispatch(new playerActions.UpdateProfileSuccess(payload))],
+      ['player:updateProfileFail', (payload) => this.store.dispatch(new playerActions.UpdateProfileFail(payload))],
       ['player:removeAvatarSuccess', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
+      ['player:removeAvatarFail', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
     ]);
   }
 }

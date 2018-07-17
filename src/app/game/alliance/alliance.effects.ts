@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 import { map, withLatestFrom, filter, first } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
 import { AllianceEventSocketMessage } from 'strat-ego-common';
@@ -249,7 +248,7 @@ export class Allianceffects {
       ['alliance:inviteCanceled', (payload) => this.store.dispatch(new allianceActions.InviteCanceled(payload))],
       ['alliance:rejectInviteSuccess', (payload) => this.store.dispatch(new allianceActions.RejectInviteSuccess(payload))],
       ['alliance:leaveAllianceSuccess', () => this.store.dispatch(new allianceActions.LeaveAllianceSuccess())],
-      ['alliance:destroyed', () => this.store.dispatch(new allianceActions.DestroySuccess())],
+      ['alliance:destroySuccess', () => this.store.dispatch(new allianceActions.DestroySuccess())],
       ['alliance:proposeAllianceSuccess', (payload) => this.store.dispatch(new allianceActions.ProposeAllianceSuccess(payload))],
       ['alliance:proposeNapSuccess', (payload) => this.store.dispatch(new allianceActions.ProposeNapSuccess(payload))],
       ['alliance:cancelAllianceSuccess', (payload) => this.store.dispatch(new allianceActions.CancelAllianceSuccess(payload))],
@@ -265,6 +264,33 @@ export class Allianceffects {
       ['alliance:loadProfileSuccess', (payload) => this.store.dispatch(new allianceActions.LoadProfileSuccess(payload))],
       ['alliance:updateProfileSuccess', (payload) => this.store.dispatch(new allianceActions.UpdateProfileSuccess(payload))],
       ['alliance:removeAvatarSuccess', (payload) => this.store.dispatch(new allianceActions.RemoveAvatarSuccess(payload))],
+
+      ['alliance:createFail', (payload) => this.store.dispatch(new allianceActions.CreateFail(payload))],
+      ['alliance:createInviteFail', (payload) => this.store.dispatch(new allianceActions.CreateInviteFail(payload))],
+      ['alliance:cancelInviteFail', (payload) => this.store.dispatch(new allianceActions.CancelInviteFail(payload))],
+      ['alliance:removeMemberFail', (payload) => this.store.dispatch(new allianceActions.RemoveMemberFail(payload))],
+      ['alliance:updateRolePermissionsFail', (payload) => this.store.dispatch(new allianceActions.UpdateRolePermissionsFail(payload))],
+      ['alliance:removeRoleFail', (payload) => this.store.dispatch(new allianceActions.RemoveRoleFail(payload))],
+      ['alliance:updateMemberRoleFail', (payload) => this.store.dispatch(new allianceActions.UpdateMemberRoleFail(payload))],
+      ['alliance:rejectInviteFail', (payload) => this.store.dispatch(new allianceActions.RejectInviteFail(payload))],
+      ['alliance:leaveAllianceFail', (payload) => this.store.dispatch(new allianceActions.LeaveAllianceFail(payload))],
+      ['alliance:destroyFail', (payload) => this.store.dispatch(new allianceActions.DestroyFail(payload))],
+      ['alliance:proposeAllianceFail', (payload) => this.store.dispatch(new allianceActions.ProposeAllianceFail(payload))],
+      ['alliance:proposeNapFail', (payload) => this.store.dispatch(new allianceActions.ProposeNapFail(payload))],
+      ['alliance:cancelAllianceFail', (payload) => this.store.dispatch(new allianceActions.CancelAllianceFail(payload))],
+      ['alliance:cancelNapFail', (payload) => this.store.dispatch(new allianceActions.CancelNapFail(payload))],
+      ['alliance:rejectAllianceFail', (payload) => this.store.dispatch(new allianceActions.RejectAllianceFail(payload))],
+      ['alliance:rejectNapFail', (payload) => this.store.dispatch(new allianceActions.RejectNapFail(payload))],
+      ['alliance:acceptAllianceFail', (payload) => this.store.dispatch(new allianceActions.AcceptAllianceFail(payload))],
+      ['alliance:acceptNapFail', (payload) => this.store.dispatch(new allianceActions.AcceptNapFail(payload))],
+      ['alliance:endAllianceFail', (payload) => this.store.dispatch(new allianceActions.EndAllianceFail(payload))],
+      ['alliance:endNapFail', (payload) => this.store.dispatch(new allianceActions.EndNapFail(payload))],
+      ['alliance:declareWarFail', (payload) => this.store.dispatch(new allianceActions.DeclareWarFail(payload))],
+      ['alliance:acceptInviteFail', (payload) => this.store.dispatch(new allianceActions.AcceptInviteFail(payload))],
+      ['alliance:loadProfileFail', (payload) => this.store.dispatch(new allianceActions.LoadProfileFail(payload))],
+      ['alliance:updateProfileFail', (payload) => this.store.dispatch(new allianceActions.UpdateProfileFail(payload))],
+      ['alliance:removeAvatarFail', (payload) => this.store.dispatch(new allianceActions.RemoveAvatarFail(payload))],
+
       // ['alliance', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.UPDATE, payload))],
       // ['alliance:createForumCategory', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.CREATE_FORUM_CATEGORY_SUCCESS, payload))],
     ]);

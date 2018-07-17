@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import {
   AllianceRole,
   Profile,
@@ -13,7 +12,7 @@ import {
   Dict,
 } from 'strat-ego-common';
 
-import { AllianceActionTypes, AllianceActions, EventMembership, EventInvitation, EventRoles } from './alliance.actions';
+import { AllianceActionTypes, AllianceActions } from './alliance.actions';
 
 export interface AllianceState {
   playerAlliance: number;
@@ -188,6 +187,33 @@ export function reducer(
     case AllianceActionTypes.UpdateProfile:
     case AllianceActionTypes.RemoveAvatar: {
       return { ...state, error: null, inProgress: true };
+    }
+
+    case AllianceActionTypes.CreateFail:
+    case AllianceActionTypes.CreateInviteFail:
+    case AllianceActionTypes.CancelInviteFail:
+    case AllianceActionTypes.RemoveMemberFail:
+    case AllianceActionTypes.UpdateRolePermissionsFail:
+    case AllianceActionTypes.RemoveRoleFail:
+    case AllianceActionTypes.UpdateMemberRoleFail:
+    case AllianceActionTypes.RejectInviteFail:
+    case AllianceActionTypes.LeaveAllianceFail:
+    case AllianceActionTypes.DestroyFail:
+    case AllianceActionTypes.ProposeAllianceFail:
+    case AllianceActionTypes.ProposeNapFail:
+    case AllianceActionTypes.CancelAllianceFail:
+    case AllianceActionTypes.CancelNapFail:
+    case AllianceActionTypes.RejectAllianceFail:
+    case AllianceActionTypes.RejectNapFail:
+    case AllianceActionTypes.AcceptAllianceFail:
+    case AllianceActionTypes.AcceptNapFail:
+    case AllianceActionTypes.EndAllianceFail:
+    case AllianceActionTypes.EndNapFail:
+    case AllianceActionTypes.DeclareWarFail:
+    case AllianceActionTypes.LoadProfileFail:
+    case AllianceActionTypes.UpdateProfileFail:
+    case AllianceActionTypes.RemoveAvatarFail: {
+      return { ...state, error: action.payload, inProgress: false };
     }
 
     case AllianceActionTypes.ViewProfile: {

@@ -36,6 +36,10 @@ export const getWorlds = createSelector(
   getWorldState,
   fromWorld.getWorlds
 );
+export const getWorldError = createSelector(
+  getWorldState,
+  fromWorld.getWorldError
+);
 export const getActiveWorld = createSelector(
   getWorldState,
   fromWorld.getActiveWorld

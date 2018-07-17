@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { Logout } from '../auth/auth.actions';
 import { getUser, AuthModuleState } from '../auth/reducers';
-import { getWorlds } from '../reducers';
+import { getWorlds, getWorldError } from '../reducers';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'home',
@@ -18,6 +18,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   public user;
   public userSubscription$: Subscription;
   public worlds$ = this.store.select(getWorlds);
+  public worldError$ = this.store.select(getWorldError).pipe(
+    filter((error) => !!error),
+    map((error) => 'Could not connect to the server.')
+  );
   public userSubScription: Subscription;
   public isCollapsed = true;
 

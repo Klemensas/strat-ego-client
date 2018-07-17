@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  BehaviorSubject ,  Subject } from 'rxjs';
 import { combineLatest, filter } from 'rxjs/operators';
-import 'rxjs/add/operator/combineLatest';
+
 // import 'rxjs/add/operator/cache';
 import { Store } from '@ngrx/store';
 import * as io from 'socket.io-client';

@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  Subscription ,  Subject } from 'rxjs';
 import { combineLatest, throttleTime, takeWhile, filter, switchMap, map } from 'rxjs/operators';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/never';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
 import { Store } from '@ngrx/store';
 import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName, Dict, MapTown } from 'strat-ego-common';
 

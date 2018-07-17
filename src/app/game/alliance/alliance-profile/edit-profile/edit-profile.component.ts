@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload';
 import { Cloudinary } from '@cloudinary/angular-5.x';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ProfileUpdate } from 'strat-ego-common';

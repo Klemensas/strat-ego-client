@@ -38,8 +38,8 @@ export class AllianceProfileComponent implements OnChanges {
     this.editDialog = this.dialog.open(EditProfileComponent, {
       width: '80vw',
       data: {
-        avatarUrl: this.alliance.avatarUrl,
         description: this.alliance.description,
+        avatarUrl: this.alliance.avatarUrl,
         type: 'alliance',
       }
     });
