@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -8,6 +8,10 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
+import { Angulartics2Module } from 'angulartics2';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule, MatDialogModule, MatSelectModule, MatSlideToggleModule, MatInputModule, MatFormFieldModule, MatSnackBarModule } from '@angular/material';
 
 import { environment } from '../environments/environment';
 
@@ -20,7 +24,9 @@ import { SocketService } from './game/services/socket.service';
 import { AuthModule } from './auth/auth.module';
 import { reducers, metaReducers } from './reducers';
 import { WorldEffects } from './world/world.effects';
-
+import { RollbarErrorHandler, RollbarService } from './rollbar';
+import { ReportErrorComponent } from './report-error/report-error.component';
+import { ReportDialogComponent } from './report-error/report-dialog/report-dialog.component';
 
 @NgModule({
   imports: [
@@ -40,22 +46,38 @@ import { WorldEffects } from './world/world.effects';
         whitelistedDomains: ['localhost:9000']
       }
     }),
+    FontAwesomeModule,
     AuthModule,
+    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
+    MatButtonModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
   ],
   declarations: [
     AppComponent,
     routedComponents,
+    ReportErrorComponent,
+    ReportDialogComponent,
   ],
   providers: [
     SocketService,
     AuthGuard,
     FullGuard,
-    GameDataService
+    GameDataService,
+    RollbarService.provider(),
+    { provide: ErrorHandler, useClass: RollbarErrorHandler },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ReportDialogComponent,
+  ]
 })
 export class AppModule {
-  constructor() {
+  constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
     (window.screen as any).orientation.lock('landscape')
       .then(() => {})
       .catch(() => {});
