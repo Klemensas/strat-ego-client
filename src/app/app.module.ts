@@ -8,6 +8,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
+import { Angulartics2Module } from 'angulartics2';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 
 import { environment } from '../environments/environment';
 
@@ -41,6 +43,7 @@ import { WorldEffects } from './world/world.effects';
       }
     }),
     AuthModule,
+    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
   ],
   declarations: [
     AppComponent,
@@ -55,7 +58,7 @@ import { WorldEffects } from './world/world.effects';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
+  constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
     (window.screen as any).orientation.lock('landscape')
       .then(() => {})
       .catch(() => {});
