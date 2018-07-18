@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Give feedback</h1>
+<mat-dialog-content>
+  <p>Here you can give feedback or reprot bugs, please select the corresponding category.</p>
+  <div>
+    <mat-form-field>
+      <mat-select [(value)]="category" placeholder="Category">
+        <mat-option *ngFor="let category of categories" [value]="category">
+          {{category}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="mb-2">
+      <mat-slide-toggle color="primary" [(checked)]="canContact">Contact me for further discussion via registered email</mat-slide-toggle>
+    </div>
+    <mat-form-field [(ngModel)]="description" ngDefaultControl style="width: 100%;">
+      <textarea [ngModel]="description" matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" [disabled]="!description || !category" (click)="sendReport()">Send</button>
+  <button mat-raised-button color="warn" mat-dialog-close class="float-right">Cancel</button>
+</mat-dialog-actions>
