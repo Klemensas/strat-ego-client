@@ -175,7 +175,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
       };
     })
   ).subscribe((event) => {
-    this.snackBar.open(event.message, null, { panelClass: ['snackbar-event', `snackbar-${event.type}`], duration: 2400 });
+    this.snackBar.open(event.message, null, { panelClass: ['snackbar-event', `snackbar-${event.type}`], duration: 1800 });
   });
 
   constructor(

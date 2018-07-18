@@ -10,6 +10,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule, MatDialogModule, MatSelectModule, MatSlideToggleModule, MatInputModule, MatFormFieldModule, MatSnackBarModule } from '@angular/material';
 
 import { environment } from '../environments/environment';
 
@@ -23,6 +25,8 @@ import { AuthModule } from './auth/auth.module';
 import { reducers, metaReducers } from './reducers';
 import { WorldEffects } from './world/world.effects';
 import { RollbarErrorHandler, RollbarService } from './rollbar';
+import { ReportErrorComponent } from './report-error/report-error.component';
+import { ReportDialogComponent } from './report-error/report-dialog/report-dialog.component';
 
 @NgModule({
   imports: [
@@ -42,12 +46,22 @@ import { RollbarErrorHandler, RollbarService } from './rollbar';
         whitelistedDomains: ['localhost:9000']
       }
     }),
+    FontAwesomeModule,
     AuthModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
+    MatButtonModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
   ],
   declarations: [
     AppComponent,
     routedComponents,
+    ReportErrorComponent,
+    ReportDialogComponent,
   ],
   providers: [
     SocketService,
@@ -57,7 +71,10 @@ import { RollbarErrorHandler, RollbarService } from './rollbar';
     RollbarService.provider(),
     { provide: ErrorHandler, useClass: RollbarErrorHandler },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ReportDialogComponent,
+  ]
 })
 export class AppModule {
   constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
