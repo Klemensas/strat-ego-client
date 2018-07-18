@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
+  rollbarToken: 'a11b482162fc4f729661b4549b943a0f',
   rankingUpdateFrequency: 600000,
   server: {
     base: 'http://localhost:9000',
