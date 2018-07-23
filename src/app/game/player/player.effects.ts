@@ -42,6 +42,12 @@ export class PlayerEffects {
     map(() => this.socketService.sendEvent('player:removeAvatar'))
   );
 
+  @Effect({ dispatch: false })
+  public progressTutorial$: Observable<any> = this.actions$.pipe(
+    ofType<playerActions.ProgressTutorial>(playerActions.PlayerActionTypes.ProgressTutorial),
+    map(() => this.socketService.sendEvent('player:progressTutorial'))
+  );
+
   constructor(
     private actions$: Actions,
     private router: Router,
@@ -56,6 +62,8 @@ export class PlayerEffects {
       ['player:updateProfileFail', (payload) => this.store.dispatch(new playerActions.UpdateProfileFail(payload))],
       ['player:removeAvatarSuccess', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
       ['player:removeAvatarFail', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
+      ['player:progressTutorialSuccess', () => this.store.dispatch(new playerActions.ProgressTutorialSuccess())],
+      ['player:progressTutorialFail', (payload) => this.store.dispatch(new playerActions.ProgressTutorialFail(payload))],
     ]);
   }
 }

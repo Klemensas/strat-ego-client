@@ -17,6 +17,9 @@ export enum PlayerActionTypes {
   RemoveAvatar = '[Player] Remove Avatar',
   RemoveAvatarSuccess = '[Player] Remove Avatar Success',
   RemoveAvatarFail = '[Player] Remove Avatar Fail',
+  ProgressTutorial = '[Player] Progress Tutorial',
+  ProgressTutorialSuccess = '[Player] Progress Tutorial Success',
+  ProgressTutorialFail = '[Player] Progress Tutorial Fail',
 
   // UpdateReports = '[Player] Update Reports',
 }
@@ -93,6 +96,17 @@ export class RemoveAvatarFail implements Action {
 
   constructor(public payload: ActionError) {}
 }
+export class ProgressTutorial implements Action {
+  readonly type = PlayerActionTypes.ProgressTutorial;
+}
+export class ProgressTutorialSuccess implements Action {
+  readonly type = PlayerActionTypes.ProgressTutorialSuccess;
+}
+export class ProgressTutorialFail implements Action {
+  readonly type = PlayerActionTypes.ProgressTutorialFail;
+
+  constructor(public payload: ActionError) {}
+}
 // export class UpdateReports implements Action {
 //   readonly type = PlayerActionTypes.UpdateReports;
 
@@ -111,4 +125,7 @@ export type PlayerActions = Update |
   UpdateProfileFail |
   RemoveAvatar |
   RemoveAvatarSuccess |
-  RemoveAvatarFail;
+  RemoveAvatarFail |
+  ProgressTutorial |
+  ProgressTutorialSuccess |
+  ProgressTutorialFail;
