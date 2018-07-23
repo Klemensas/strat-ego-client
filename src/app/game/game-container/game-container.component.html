@@ -97,7 +97,7 @@
     <button class="btn btn-primary btn-lg" (click)="restart()">Restart</button>
   </p>
 </div>
-
 <div class="game-chat" *ngIf="alliance$ | async">
   <alliance-chat [player]="player$ | async"></alliance-chat>
 </div>
+<tutorial *ngIf="player$ | async as player" [stage]="player.tutorialStage" (progressTutorial)="progressTutorial()"></tutorial>

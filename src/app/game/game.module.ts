@@ -65,7 +65,8 @@ import { TownHoverComponent } from './map/town-hover/town-hover.component';
 import { PlayerProfileComponent } from './player/player-profile/player-profile.component';
 import { MapCanvasComponent } from './map/map-canvas/map-canvas.component';
 import { MinimapComponent } from './map/map-canvas/minimap/minimap.component';
-
+import { TutorialComponent } from './tutorial/tutorial.component';
+import { TutorialDialogComponent } from './tutorial/tutorial-dialog/tutorial-dialog.component';
 export const effects = [
   PlayerEffects,
   Allianceffects,
@@ -134,6 +135,8 @@ export const effects = [
     PlayerProfileComponent,
     MapCanvasComponent,
     MinimapComponent,
+    TutorialComponent,
+    TutorialDialogComponent,
   ],
   providers: [
     MapService,
@@ -143,6 +146,7 @@ export const effects = [
   exports: [RouterModule],
   entryComponents: [
     EditProfileComponent,
+    TutorialDialogComponent,
   ]
 })
 
