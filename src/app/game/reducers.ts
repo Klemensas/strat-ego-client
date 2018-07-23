@@ -67,6 +67,10 @@ export const getPlayers = createSelector(
   getPlayerState,
   player.getPlayers
 );
+export const getTutorialStage = createSelector(
+  getPlayerState,
+  player.getTutorialStage
+);
 
 // Alliance selectors
 export const getAllianceState = createSelector(

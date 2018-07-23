@@ -83,6 +83,20 @@ export function reducer(
         inProgress: false };
     }
 
+    case PlayerActionTypes.ProgressTutorial: {
+      const player = state.players[state.currentPlayer];
+      return {
+        ...state,
+        player: {
+          ...state.players,
+          [state.currentPlayer]: {
+            ...player,
+            tutorialStage: player.tutorialStage + 1 || 1
+          }
+        }
+      };
+    }
+
     // case PlayerActionTypes.Report: {
     //   const { report, side } = action.payload;
     //   const playerData = { ...state.playerData, [side]: [report, ...state.playerData[side]] };
@@ -100,6 +114,7 @@ export const getPlayerReports = (state: PlayerState) => ({
   originReports: state.players[state.currentPlayer].originReports,
   targetReports: state.players[state.currentPlayer].targetReports,
 });
+export const getTutorialStage = (state: any) => state.players[state.currentPlayer].tutorialStage;
 export const getSidenavs = (state: PlayerState) => state.sidenavs;
 export const getViewedPlayer = (state: PlayerState) => state.players[state.viewedProfile];
 export const getPlayers = (state: PlayerState) => state.players;

@@ -11,7 +11,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { MatButtonModule, MatDialogModule, MatSelectModule, MatSlideToggleModule, MatInputModule, MatFormFieldModule, MatSnackBarModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatDialogModule,
+  MatSelectModule,
+  MatSlideToggleModule,
+  MatInputModule,
+  MatFormFieldModule,
+  MatSnackBarModule
+} from '@angular/material';
 
 import { environment } from '../environments/environment';
 
