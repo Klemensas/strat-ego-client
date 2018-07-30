@@ -18,7 +18,10 @@ import {
   MatSlideToggleModule,
   MatInputModule,
   MatFormFieldModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatCardModule,
+  MatExpansionModule,
+  MatListModule,
 } from '@angular/material';
 
 import { environment } from '../environments/environment';
@@ -64,6 +67,9 @@ import { ReportDialogComponent } from './report-error/report-dialog/report-dialo
     MatInputModule,
     MatFormFieldModule,
     MatSnackBarModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatListModule,
   ],
   declarations: [
     AppComponent,

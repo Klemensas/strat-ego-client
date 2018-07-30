@@ -1,16 +1,53 @@
-.development {
-  .done {
-    text-decoration: line-through;
-    color: green;
-  }
-  .active {
-    font-weight: 800;
-  }
-  .inactive {
-    color: rgba(100, 100, 100, 0.5);
+.roadmap {
+  & > mat-expansion-panel > mat-expansion-panel-header {
+    text-transform: uppercase;
 
-    &.progressed {
-      color: rgba(255, 0, 0, 0.5);
+    mat-panel-title {
+      font-size: 1.3rem;
     }
+  }
+
+  mat-expansion-panel mat-expansion-panel {
+    margin: 0 -24px;
+  }
+
+  mat-panel-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  mat-panel-description {
+    flex-grow: 0;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  /deep/ .mat-content {
+    align-items: center;
+  }
+
+  .roadmap-complete {
+    mat-panel-title,
+    mat-list-item {
+      color: white;
+    }
+
+    color: white;
+    background-color: var(--green);
+  }
+
+  .roadmap-upcoming {
+    background-color: var(--yellow);
+  }
+
+  .roadmap-future {
+    mat-panel-title,
+    mat-list-item {
+      color: white;
+    }
+
+    color: white;
+    background-color: var(--orange);
   }
 }

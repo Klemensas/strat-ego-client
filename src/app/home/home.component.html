@@ -22,56 +22,144 @@
     </div>
   </nav>
 </header>
-<div class="container py-5">
-  <h2>Available worlds</h2>
-  <ul>
-    <li *ngFor="let world of worlds$ | async">
-      <span>{{world.world.name}}</span>
-      <span *ngIf="user">
-         <a [routerLink]="['/world', world.world.name]">
-        Play
-        </a>
-      </span>
-    </li>
-  </ul>
-  <div *ngIf="worldError$ | async as error" class="alert alert-danger">{{ error }}</div>
-  <div class="development row pt-5">
-    <div class="col-12"><h2>Tasks</h2></div>
-    <div class="col-4">
-      <strong>Alliance</strong>
-      <ul>
-        <li class="done">CRUD</li>
-        <li class="done">Member management</li>
-        <li class="inactive progressed">Role management [80/100] (need to prevent deletion of critical roles and more granular management)</li>
-        <li class="done">Chat</li>
-        <li class="inactive progressed">Forum [10/100]</li>
-        <li class="inactive">Profile</li>
-        <li class="active">Diplomacy</li>
-        <li class="inactive">Notifications</li>
-      </ul>
+<div class="container py-5 mb-5">
+  <div class="worlds">
+    <h1>Available worlds</h1>
+    <div class="row mt-5">
+      <div class="col-4" *ngFor="let world of worlds$ | async">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title><h3 class="text-uppercase font-weight-bold">{{world.world.name}}</h3></mat-card-title>
+            <mat-card-subtitle>Started on {{world.world.createdAt | date:'short'}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="mx-2">
+            <div class="d-flex justify-content-between">
+              <div>World speed</div>
+              <div>{{world.world.speed}}</div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div>Current ring</div>
+              <div>{{world.world.currentRing}}</div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div>Barbarian percentage</div>
+              <div>{{world.world.barbPercent | percent}}</div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions class="pb-3 mx-2 d-flex">
+            <button *ngIf="user" mat-raised-button color="primary" class="w-100" [routerLink]="['/world', world.world.name]">Play</button>
+            <button *ngIf="!user" mat-button color="info" class="w-50" [routerLink]="['/login']">Login</button>
+            <button *ngIf="!user" mat-button color="info" class="w-50" [routerLink]="['/register']">Register</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
     </div>
-    <div class="col-4">
-      <strong>Map</strong>
-      <ul>
-        <li class="inactive progressed">Rendering [50/100] (needs optimising)</li>
-        <li class="inactive progressed">Data updating [20/100]</li>
-        <li class="active progressed">Alliance presence [20/100]</li>
-        <li class="inactive">Data caching</li>
-        <li class="inactive">Auto time based expanse</li>
-        <li class="inactive">Region division</li>
-      </ul>
+    <div *ngIf="worldError$ | async as error" class="alert alert-danger">{{ error }}</div>
+  </div>
+  <div class="introduction mt-5">
+    <h2>About</h2>
+    <div class="row">
+      <div class="col-12">
+        <p>Welcome to the alpha play test of <b>Stratego </b><i class="text-muted">(working title)</i>! A free real time MMO strategy game about growing your empire and conquering others.</p>
+        <p>You start out with a small village and must navigate the dangerous political landscape of an unknown world to expand and grow into an empire. With passage of time you'll make trusty allies and find dangerous enemies. Will you band together with your new friends to stand your ground or will you try to survive on your own?</p>
+      </div>
+      <div class="col-12 mt-4">
+        <ngb-alert [dismissible]="false" type="success" class="text-center">
+          <i>Looking for a designer to help shape the games visual identity, if you're interested please contact me at <a href="mailto:hello@klemensas.net?Subject=Designer">hello@klemensas.net</a></i>
+        </ngb-alert>
+      </div>
     </div>
-    <div class="col-4">
-      <strong>Player</strong>
-      <ul>
-        <li class="done">Creation</li>
-        <li class="done">Restarting</li>
-        <li class="inactive">Profile</li>
-        <li class="inactive">Scoring</li>
-        <li class="inactive">Messaging</li>
-      </ul>
+  </div>
+  <div class="development pt-5">
+    <h2>Roadmap</h2>
+    <div class="row">
+      <div class="col-12">
+        <p>Generally each stage consists of base feature implementation, play test and changes according to feedback. After a full cycle work starts on another stages features. Once they are ready the world is completely reset to a clean state and the play testing for the next stage starts. While work goes on between stages the world is still kept in tact and players can continue playing.</p>
+        <p>The current alpha stage will be the most unstable one. This stage only consists of various base features and will be go through a lot of changes including game theme, design, naming revamp. Some features are already planned but various details are still undecided so you can contribute and impact growth of the game. You can contribute your ideas for possible features or just drop in to say hello, everything is appreciated.</p>
+      </div>
+      <div class="col-12 roadmap mt-3">
+        <mat-expansion-panel expanded class="roadmap-current">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Alpha</mat-panel-title>
+            <mat-panel-description>in progress</mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <mat-expansion-panel class="roadmap-complete">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Alpha features</mat-panel-title>
+                <mat-panel-description>complete</mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list>
+                <mat-list-item>Basic interface</mat-list-item>
+                <mat-list-item>Town management</mat-list-item>
+                <mat-list-item>Unit recruitment</mat-list-item>
+                <mat-list-item>Dynamic map</mat-list-item>
+                <mat-list-item>Supporting and attacking</mat-list-item>
+                <mat-list-item>Abandoned town creation and growth</mat-list-item>
+                <mat-list-item>Unit commands</mat-list-item>
+                <mat-list-item>Combat reports</mat-list-item>
+                <mat-list-item>Alliances and management</mat-list-item>
+                <mat-list-item>Alliance chat</mat-list-item>
+                <mat-list-item>Alliance diplomacy</mat-list-item>
+                <mat-list-item>Rankings</mat-list-item>
+              </mat-list>
+                </mat-expansion-panel>
+            <mat-expansion-panel expanded class="roadmap-current">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Alpha play test</mat-panel-title>
+                <mat-panel-description>in progress</mat-panel-description>
+              </mat-expansion-panel-header>
+              <div>
+                <p>Currently the play test is ongoing. It's planned to go on for at least a few months before continuing.</p>
+              </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="roadmap-upcoming">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Alpha feedback</mat-panel-title>
+                <mat-panel-description>upcoming</mat-panel-description>
+              </mat-expansion-panel-header>
+              <div>
+                <p><b>No feedback yet</b></p>
+                <p>Here will be listed various improvements made from player feedback</p>
+              </div>
+            </mat-expansion-panel>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="roadmap-future">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Beta</mat-panel-title>
+            <mat-panel-description>planned</mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <mat-expansion-panel expanded class="roadmap-future">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Beta features</mat-panel-title>
+                <mat-panel-description>planned</mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list>
+                <mat-list-item><b>Apply a game theme</b></mat-list-item>
+                <mat-list-item><b>Create and implement a custom design</b></mat-list-item>
+                <mat-list-item>Reconsider unit resource</mat-list-item>
+                <mat-list-item>More caching</mat-list-item>
+                <mat-list-item>Minimap</mat-list-item>
+                <mat-list-item>Trading</mat-list-item>
+                <mat-list-item>Map districts</mat-list-item>
+                <mat-list-item>More statistics, rankings</mat-list-item>
+                <mat-list-item>Game events</mat-list-item>
+                <mat-list-item>Introduce alternative expansion method</mat-list-item>
+                <mat-list-item>Game administration, moderation</mat-list-item>
+              </mat-list>
+                </mat-expansion-panel>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="roadmap-future">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Release candidate</mat-panel-title>
+            <mat-panel-description>planned</mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>Not detailed yet</div>
+        </mat-expansion-panel>
+      </div>
     </div>
   </div>
 </div>
-
-<div style="position: absolute; bottom: 1vh; right: 0; padding-right: 2vw">Client version: <a target="_blank" href="https://github.com/Klemensas/strat-ego-client/blob/master/CHANGELOG.md">0.1.0</a></div>
