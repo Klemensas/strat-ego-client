@@ -39,6 +39,10 @@ import { RollbarErrorHandler, RollbarService } from './rollbar';
 import { ReportErrorComponent } from './report-error/report-error.component';
 import { ReportDialogComponent } from './report-error/report-dialog/report-dialog.component';
 
+export function tokenGetter() {
+  return localStorage.getItem('jwt');
+}
+
 @NgModule({
   imports: [
     StoreModule.forRoot(reducers, { metaReducers }),
@@ -53,8 +57,8 @@ import { ReportDialogComponent } from './report-error/report-dialog/report-dialo
     JwtModule.forRoot({
       config: {
         headerName: 'Authorization',
-        tokenGetter: (() => localStorage.getItem('jwt')),
-        whitelistedDomains: ['localhost:9000']
+        tokenGetter,
+        whitelistedDomains: ['localhost:9000', '178.128.203.143']
       }
     }),
     FontAwesomeModule,

@@ -121,6 +121,7 @@ export function reducer(
     case TownActionTypes.SendBackSupportFail: {
       const activeTown = state.playerTowns[state.activeTown];
       const type = actionTypeFailState[action.type];
+
       return {
         ...state,
         playerTowns: {
@@ -159,6 +160,7 @@ export function reducer(
     case TownActionTypes.MoveTroopsSuccess: {
       const target = actionTypeSuccessState[action.type];
       const activeTown = action.payload;
+
       return {
         ...state,
         playerTowns: {
@@ -166,7 +168,7 @@ export function reducer(
           [state.activeTown]: {
             ...activeTown,
             _actionState: {
-              ...activeTown._actionState,
+              ...state.playerTowns[activeTown.id]._actionState,
               [target]: { inProgress: false, error: null }
             }
           }

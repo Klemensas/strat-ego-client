@@ -76,7 +76,7 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
   };
   public elementReady = false;
   public shouldDraw = false;
-  public targetCoord = [null, null];
+  public targetCoord: Coords = [null, null];
 
   public boxSize = {
     x: 260,

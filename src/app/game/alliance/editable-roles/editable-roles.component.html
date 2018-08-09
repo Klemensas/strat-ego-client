@@ -24,8 +24,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="rolePermissionForm.controls.newRoles.length" formArrayName="newRoles" class="roles roles-new">
-    <div *ngFor="let role of rolePermissionForm.controls.newRoles.controls; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
+  <div *ngIf="newRoles.length" formArrayName="newRoles" class="roles roles-new">
+    <div *ngFor="let role of newRoles.controls; let i = index" [formGroupName]="i" class="row align-items-center" style="border-bottom: 1px solid var(--secondary);">
       <div class="col">
         <mat-form-field floatLabel="never">
           <input matInput type="text" placeholder="Role name" formControlName="name">
