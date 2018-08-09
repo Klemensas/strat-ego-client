@@ -3,12 +3,41 @@
 <head>
   <meta charset="utf-8">
   <title>StratEgoClient</title>
-  <base href="/strat-ego-client/">
+  <base href="https://klemensas.net/strat-ego-client/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="manifest" href="manifest.json">
-<link href="styles.681a5649d148e0cc607c.bundle.css" rel="stylesheet"/></head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-53880898-6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-53880898-6');
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
+    new Crate({
+      server: '470945472211582976',
+      channel: '470945472211582978',
+      shard: 'https://cl1.widgetbot.io'
+    })
+  </script>
+<link rel="stylesheet" href="styles.17aebdf56e29ea3b0f38.css"></head>
 <body>
-  <app-root><div style="width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;"><i class="fa fa-cog fa-spin fa-5x"></i></div></app-root>
-<script type="text/javascript" src="inline.a2647c10c3fb8c9fa690.bundle.js"></script><script type="text/javascript" src="polyfills.8a72cc42945022244205.bundle.js"></script><script type="text/javascript" src="vendor.5c756ba6b696b5e048f2.bundle.js"></script><script type="text/javascript" src="main.def9e64b1a2a0ebc1ebf.bundle.js"></script></body>
+  <app-root>
+    <div style="width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;"><i class="material-icons" style="font-size: 5em; animation: spin 12s infinite ease-in-out">settings</i>
+    </div>
+    <style>
+      @keyframes spin {
+        0%   {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(3600deg);
+        }
+      }
+    </style>
+  </app-root>
+<script type="text/javascript" src="runtime.fcaed80115b2344165f5.js"></script><script type="text/javascript" src="polyfills.4863a87fc53ba720bd23.js"></script><script type="text/javascript" src="main.a4ab52e2748aaa7c16c6.js"></script></body>
 </html>
