@@ -88,7 +88,7 @@ export class AllianceChatComponent implements OnInit {
       });
   }
 
-  private sendMessage(event: KeyboardEvent, text: string) {
+  sendMessage(event: KeyboardEvent, text: string) {
     event.preventDefault();
     if (text.length < 1) { return; }
 

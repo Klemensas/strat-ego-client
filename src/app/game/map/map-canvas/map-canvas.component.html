@@ -6,10 +6,10 @@
   (wheel)="onZoom($event)"
   (mousedown)="onStartDrag($event)"
   (touchstart)="onStartDrag($event)"
-  (mouseup)="onStopDrag()"
-  (touchend)="onStopDrag()"
-  (mouseout)="onStopDrag()"
-  (touchcancel)="onStopDrag()"
+  (mouseup)="onStopDrag($event)"
+  (touchend)="onStopDrag($event)"
+  (mouseout)="onStopDrag($event)"
+  (touchcancel)="onStopDrag($event)"
 >
   <div>Loading map</div>
 </canvas>

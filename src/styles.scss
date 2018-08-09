@@ -4,9 +4,10 @@
 
 $icon-size: 24px;
 
-.flex {
-  display: flex;
+body {
+  background-color: var(--light);
 }
+
 
 .resource {
   display: flex;
@@ -108,4 +109,9 @@ game-container .mat-sidenav-content {
 // TODO: consider default width for mobile,
 .mat-form-field-infix {
   width: auto !important;
+}
+
+.mat-expansion-indicator::after,
+.mat-expansion-panel-header-description {
+  color: inherit;
 }

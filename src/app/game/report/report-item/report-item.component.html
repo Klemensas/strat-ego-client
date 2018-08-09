@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-12 d-flex">
     <div>
+      {{report | json}}
       <span class="badge" [ngClass]="{'badge-danger': report.result === 'lose', 'badge-success': report.result === 'win'}">{{report.result}}</span>
       <span>{{report.originTown.name}} ({{report.originTown.location}}) attacks {{ report.targetTown.name}} ({{report.targetTown.location}})</span>
       <span class="text-muted">{{report.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>

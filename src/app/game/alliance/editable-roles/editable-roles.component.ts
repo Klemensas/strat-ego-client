@@ -20,10 +20,14 @@ export class EditableRolesComponent implements OnChanges {
   public alliancePermissions = ALLIANCE_PERMISSIONS;
   public permissionNames = PERMISSION_NAMES;
 
-  private rolePermissionForm: FormGroup = this.formBuilder.group({
+  rolePermissionForm: FormGroup = this.formBuilder.group({
     roles: this.formBuilder.array([]),
     newRoles: this.formBuilder.array([])
   });
+
+  get newRoles() {
+    return this.rolePermissionForm.controls.newRoles as FormArray;
+  }
 
   constructor(private formBuilder: FormBuilder) {
     library.add(faTrash, faPlus);

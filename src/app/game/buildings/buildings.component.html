@@ -7,13 +7,13 @@
         <span class="pr-2">{{buildingDetails[building.name].name}} - {{building.level}}</span>
         <span *ngIf="building.queued">(building {{building.queued}})</span>
       </div>
-      <div class="col-sm-5 flex" *ngIf="building.costs">
+      <div class="col-sm-5 d-flex" *ngIf="building.costs">
         <div class="resource"><div class="resource-icon wood"></div>{{building.costs.wood | number:'1.0-0' }}</div>
         <div class="resource"><div class="resource-icon clay"></div>{{building.costs.clay | number:'1.0-0'}}</div>
         <div class="resource"><div class="resource-icon iron"></div>{{building.costs.iron | number:'1.0-0'}}</div>
         <div>time {{building.buildTime | countdown:'HH:mm:ss'}}</div>
       </div>
-      <div class="col-sm-5 flex" *ngIf="!building.available">
+      <div class="col-sm-5 d-flex" *ngIf="!building.available">
         <strong class="text-warning">Requires: {{building.requirements[0].item}} - {{building.requirements[0].level}}</strong>
       </div>
       <div class="col-sm-3" *ngIf="building.available">

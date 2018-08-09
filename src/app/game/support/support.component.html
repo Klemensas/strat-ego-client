@@ -8,6 +8,6 @@
   <div>
     <h3>Your sent support</h3>
     <support-item *ngFor="let support of town.originSupport" [support]="support" [unitList]="worldData.units" [isOrigin]="true" (cancelSupport)="recallSupport($event)"></support-item>
-    <div *ngIf="!town.origin?.length">No supporting troops</div>
+    <div *ngIf="!town.originSupport?.length">No supporting troops</div>
   </div>
 </div>
