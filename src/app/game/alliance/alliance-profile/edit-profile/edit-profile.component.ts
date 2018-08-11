@@ -22,7 +22,7 @@ export interface ProfileData extends ProfileUpdate {
 })
 export class EditProfileComponent  {
   public uploader: FileUploader = new FileUploader({
-    url: `https://api.cloudinary.com/v1_1/${this.cloudinary.config().cloud_name}/upload`,
+    url: `//api.cloudinary.com/v1_1/${this.cloudinary.config().cloud_name}/upload`,
     autoUpload: false,
     isHTML5: true,
     removeAfterUpload: true,
