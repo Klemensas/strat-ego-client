@@ -58,7 +58,7 @@ export function tokenGetter() {
       config: {
         headerName: 'Authorization',
         tokenGetter,
-        whitelistedDomains: ['localhost:9000', '178.128.203.143']
+        whitelistedDomains: ['localhost:9000', 'server.stratego.xyz']
       }
     }),
     FontAwesomeModule,
