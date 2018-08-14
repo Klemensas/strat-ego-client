@@ -112,7 +112,8 @@ export class TutorialComponent implements OnInit {
   constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.nextStage();
+    // TODO: remove timeout after https://github.com/angular/angular/issues/15634 is resolved
+    setTimeout(() => this.nextStage());
   }
 
   nextStage() {
