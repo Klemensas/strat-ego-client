@@ -5,12 +5,14 @@ import { WorldActions, WorldActionTypes } from './world.actions';
 export interface WorldState {
   worlds: WorldData[];
   activeWorld: string;
+  inProgress: boolean;
   error: any;
 }
 
 export const initialState = {
   worlds: [],
   activeWorld: null,
+  inProgress: false,
   error: null,
 };
 
@@ -21,15 +23,17 @@ export function reducer(
 ): WorldState {
   switch (action.type) {
     case WorldActionTypes.Loadsuccess:
-      return { ...state, worlds: [...state.worlds, ...action.payload] };
+      return { ...state, worlds: [...state.worlds, ...action.payload], inProgress: false };
 
-      case WorldActionTypes.SelectWorld:
+    case WorldActionTypes.SelectWorld:
       return { ...state, activeWorld: action.payload };
 
     case WorldActionTypes.LoadFail:
-      return { ...state, error: action.payload };
+      return { ...state, error: action.payload, inProgress: false };
 
     case WorldActionTypes.Load:
+      return { ...state, error: null, inProgress: true };
+
     default: {
       return state;
     }
