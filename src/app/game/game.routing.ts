@@ -9,7 +9,6 @@ import { CommandComponent } from './command/command.component';
 import { MovementComponent } from './movement/movement.component';
 
 import { FullGuard } from '../full.guard';
-import { AllianceComponent } from '../game/alliance/alliance.component';
 
 const gameRoutes: Routes = [
   {
