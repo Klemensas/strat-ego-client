@@ -86,8 +86,10 @@ export function tokenGetter() {
     AuthGuard,
     FullGuard,
     GameDataService,
-    RollbarService.provider(),
-    { provide: ErrorHandler, useClass: RollbarErrorHandler },
+    environment.production ? [
+      RollbarService.provider(),
+      { provide: ErrorHandler, useClass: RollbarErrorHandler },
+    ] : [],
   ],
   bootstrap: [AppComponent],
   entryComponents: [
