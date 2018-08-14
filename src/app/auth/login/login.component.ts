@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
       if (auth.error) {
         if (auth.error.status === 401) {
-          const errBody = auth.error.json();
+          const errBody = auth.error.error;
           const errorMessage = errBody.message || 'Unauthorized';
           this.form.form.setErrors({ errorMessage: errorMessage });
           return;
