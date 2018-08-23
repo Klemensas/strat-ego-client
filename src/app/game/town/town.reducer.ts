@@ -200,7 +200,7 @@ export function reducer(
       const targetMovements = [...activeTown.targetMovements, action.payload.movement].sort((a, b) => +a.endsAt - +b.endsAt);
       const updatedTown: Town = {
         ...activeTown,
-        targetSupport: activeTown.targetSupport.filter((item) => item.id !== action.payload.support),
+        originSupport: activeTown.originSupport.filter((item) => item.id !== action.payload.support),
         targetMovements,
         _actionState: {
           ...state.playerTowns[state.activeTown]._actionState,
