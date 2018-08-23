@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ActionError, MovementType, Coords, TownUnit, Dict, RecallPayload, Movement } from 'strat-ego-common';
+import { ActionError, MovementType, Coords, Dict, RecallPayload, Movement } from 'strat-ego-common';
 
 import { Town } from './town.model';
 
@@ -23,14 +23,14 @@ export const enum TownActionTypes {
   SendBackSupport = '[Town] Send Back Support',
   SendBackSupportSuccess = '[Town] Send Back Support Success',
   SendBackSupportFail = '[Town] Send Back Support Fail',
-  // UpdateEvent = '[Town] Update Event',
-  // ScheduleUpdate = '[Town] Schedule Update',
   SetPlayerTowns = '[Town] Set Player Towns',
   SetActiveTown = '[Town] Set Active Town',
 
-  IncomingMovement = '[Town] Incoming Movement',
-  SupportRecalled = '[Town] Support Recalled',
-  SupportSentBack = '[Town] Support Sent Back',
+  IncomingMovement = '[Town][Affected] Incoming Movement',
+  SupportRecalled = '[Town][Affected] Support Recalled',
+  SupportSentBack = '[Town][Affected] Support Sent Back',
+  Lost = '[Town][Affected] Lost',
+  Conquered = '[Town][Affected] Conquered',
 }
 
 export const TownSuccessActions = [
@@ -102,16 +102,6 @@ export class RecruitFail implements Action {
 
   constructor(public payload: ActionError) {}
 }
-// export class UpdateEvent implements Action {
-//   readonly type = TownActionTypes.UpdateEvent;
-
-//   constructor(public payload: TownUpdatePayload) {}
-// }
-// export class ScheduleUpdate implements Action {
-//   readonly type = TownActionTypes.ScheduleUpdate;
-
-//   constructor(public payload: number) {}
-// }
 export class SetPlayerTowns implements Action {
   readonly type = TownActionTypes.SetPlayerTowns;
 
@@ -182,31 +172,42 @@ export class SupportSentBack implements Action {
 
   constructor(public payload: RecallPayload) {}
 }
+export class Lost implements Action {
+  readonly type = TownActionTypes.Lost;
+
+  constructor(public payload: number) {}
+}
+export class Conquered implements Action {
+  readonly type = TownActionTypes.Conquered;
+
+  constructor(public payload: Town) {}
+}
 
 
-export type TownActions = Update |
-  // UpdateEvent |
-  Rename |
-  RenameSuccess |
-  RenameFail |
-  Build |
-  BuildSuccess |
-  BuildFail |
-  Recruit |
-  RecruitSuccess |
-  RecruitFail |
-  MoveTroops |
-  MoveTroopsSuccess |
-  MoveTroopsFail |
-  RecallSupport |
-  RecallSupportSuccess |
-  RecallSupportFail |
-  SendBackSupport |
-  SendBackSupportSuccess |
-  SendBackSupportFail |
-  // ScheduleUpdate |
-  SetPlayerTowns |
-  SetActiveTown |
-  IncomingMovement |
-  SupportRecalled |
-  SupportSentBack;
+export type TownActions = Update
+  | Rename
+  | RenameSuccess
+  | RenameFail
+  | Build
+  | BuildSuccess
+  | BuildFail
+  | Recruit
+  | RecruitSuccess
+  | RecruitFail
+  | MoveTroops
+  | MoveTroopsSuccess
+  | MoveTroopsFail
+  | RecallSupport
+  | RecallSupportSuccess
+  | RecallSupportFail
+  | SendBackSupport
+  | SendBackSupportSuccess
+  | SendBackSupportFail
+  | SetPlayerTowns
+  | SetActiveTown
+  | IncomingMovement
+  | SupportRecalled
+  | SupportSentBack
+  | Lost
+  | Conquered
+;

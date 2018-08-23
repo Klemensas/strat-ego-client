@@ -263,6 +263,31 @@ export function reducer(
       };
     }
 
+    case TownActionTypes.Lost: {
+      const ids = state.ids.filter((id) => id !== action.payload);
+      const playerTowns = { ...state.playerTowns };
+      delete playerTowns[action.payload];
+
+      return {
+        ...state,
+        ids,
+        playerTowns,
+      };
+    }
+
+    case TownActionTypes.Conquered: {
+      const town = action.payload;
+
+      return {
+        ...state,
+        ids: [...state.ids, town.id],
+        playerTowns: {
+          ...state.playerTowns,
+          [town.id]: town,
+        }
+      };
+    }
+
     // case TownActionTypes.UpdateEvent:
     default: {
       return state;
