@@ -64,6 +64,7 @@ export class PlayerEffects {
       ['player:removeAvatarFail', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
       ['player:progressTutorialSuccess', () => this.store.dispatch(new playerActions.ProgressTutorialSuccess())],
       ['player:progressTutorialFail', (payload) => this.store.dispatch(new playerActions.ProgressTutorialFail(payload))],
+      ['player:addReport', (payload) => this.store.dispatch(new playerActions.AddReport(payload))],
     ]);
   }
 }

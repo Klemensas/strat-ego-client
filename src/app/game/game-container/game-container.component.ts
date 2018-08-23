@@ -239,6 +239,8 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   selectTown(townId: number) {
+    if (this.activeTown && this.activeTown.id === townId) { return false; }
+
     this.store.dispatch(new SetActiveTown(townId));
   }
 
