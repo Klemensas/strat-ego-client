@@ -72,10 +72,11 @@
             <div *ngIf="player$ | async as player" class="nav-item mr-3">
               <a class="nav-link" (click)="onOpenProfile(player.id, 'player')"><fa-icon [icon]="['far', 'user-circle']" aria-hidden="true"></fa-icon> Profile</a></div>
             <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
-              <button class="btn btn-outline-info btn-sm" id="active-town" ngbDropdownToggle>Active town</button>
-              <div ngbDropdownMenu aria-labelledby="active-town">
-                <button *ngFor="let town of townList" [ngClass]="{ 'bg-info text-white' : activeTown.id === town.id }" (click)="activeTown.id !== town.id ? selectTown(town.id) : false" class="dropdown-item">{{town.name}} ({{town.location}})</button>
-              </div>
+              <mat-form-field floatLabel="never" style="max-width: 200px;" >
+                <mat-select placeholder="Active town" [value]="activeTown.id" (selectionChange)="selectTown($event.value)">
+                  <mat-option *ngFor="let town of townList" [value]="town.id">{{town.name}} [{{town.location}}]</mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
             <div class="nav-item">
               <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>

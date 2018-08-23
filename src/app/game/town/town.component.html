@@ -1,9 +1,14 @@
 <div *ngIf="town$ | async; let town" class="px-2 py-2 mb-3">
   <div class="row my-2">
     <div class="col">
-      <strong>{{ town.name }}</strong>
-      <input type="text" placeholder="{{town.name}}" name="town-name" [(ngModel)]="nameChange">
-      <button (click)="rename(nameChange, town.name)" class="btn btn-info">Save</button>
+      <strong>[{{ town.location }}] {{ town.name }}</strong>
+      <mat-form-field class="mx-3">
+        <input matInput
+        type="text"
+        [(ngModel)]="nameChange"
+        placeholder="Town name">
+      </mat-form-field>
+      <button mat-flat-button color="accent" (click)="rename(nameChange, town.name)">Save</button>
       <town-loyalty *ngIf="town.loyalty !== 100" [town]="town" [loyaltyRegeneration]="(worldData$ | async)?.world.loyaltyRegeneration"></town-loyalty>
     </div>
   </div>

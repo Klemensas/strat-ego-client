@@ -200,7 +200,7 @@ export function reducer(
       const targetMovements = [...activeTown.targetMovements, action.payload.movement].sort((a, b) => +a.endsAt - +b.endsAt);
       const updatedTown: Town = {
         ...activeTown,
-        targetSupport: activeTown.targetSupport.filter((item) => item.id !== action.payload.support),
+        originSupport: activeTown.originSupport.filter((item) => item.id !== action.payload.support),
         targetMovements,
         _actionState: {
           ...state.playerTowns[state.activeTown]._actionState,
@@ -259,6 +259,31 @@ export function reducer(
         playerTowns: {
           ...state.playerTowns,
           [state.activeTown]: updatedTown,
+        }
+      };
+    }
+
+    case TownActionTypes.Lost: {
+      const ids = state.ids.filter((id) => id !== action.payload);
+      const playerTowns = { ...state.playerTowns };
+      delete playerTowns[action.payload];
+
+      return {
+        ...state,
+        ids,
+        playerTowns,
+      };
+    }
+
+    case TownActionTypes.Conquered: {
+      const town = action.payload;
+
+      return {
+        ...state,
+        ids: [...state.ids, town.id],
+        playerTowns: {
+          ...state.playerTowns,
+          [town.id]: town,
         }
       };
     }

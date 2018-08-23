@@ -1,0 +1,11 @@
+.command-form {
+  input {
+    min-width: 120px;
+  }
+
+  .command-max-units {
+    display: inline-flex;
+    min-width: 2rem;
+    justify-content: flex-end;
+  }
+}

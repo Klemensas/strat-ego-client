@@ -31,6 +31,9 @@ export function reducer(
     case AuthActionTypes.LoadProfileSuccess:
       return { ...state, inProgress: false, user: action.payload };
 
+      case AuthActionTypes.LoadProfileFail:
+        return { ...state, inProgress: false, error: action.payload, token: null };
+
     case AuthActionTypes.LoginFail:
     case AuthActionTypes.RegisterFail:
       return { ...state, inProgress: false, error: action.payload };

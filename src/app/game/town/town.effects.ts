@@ -4,19 +4,16 @@ import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable ,  of } from 'rxjs';
 import { Store, Action } from '@ngrx/store';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
-import { WorldData, MovementType, RecallPayload } from 'strat-ego-common';
+import { WorldData, MovementType } from 'strat-ego-common';
 
 import { Town } from './town.model';
 import {
-  TownActions,
   TownActionTypes,
   SetActiveTown,
   SetPlayerTowns,
-  // UpdateEvent,
   Update,
   Rename,
   Recruit,
-  // ScheduleUpdate,
   RenameSuccess,
   RenameFail,
   Build,
@@ -35,7 +32,9 @@ import {
   SendBackSupportFail,
   IncomingMovement,
   SupportRecalled,
-  SupportSentBack
+  SupportSentBack,
+  Lost,
+  Conquered
 } from './town.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { GameModuleState, getActiveTown } from '../reducers';
@@ -244,6 +243,8 @@ export class TownEffects {
       ['town:incomingMovement', (payload) => this.store.dispatch(new IncomingMovement(payload))],
       ['town:supportRecalled', (payload) => this.store.dispatch(new SupportRecalled(payload))],
       ['town:supportSentBack', (payload) => this.store.dispatch(new SupportSentBack(payload))],
+      ['town:lost', (payload) => this.store.dispatch(new Lost(payload))],
+      ['town:conquered', (payload) => this.store.dispatch(new Conquered(payload))],
     ]);
   }
 }

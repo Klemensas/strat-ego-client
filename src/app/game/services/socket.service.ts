@@ -42,28 +42,23 @@ export class SocketService {
     this.eventsToRegister$.next([...this.eventsToRegister$.value, ...events]);
   }
 
-  public connect(token): Observable<any> {
+  public connect(token): void {
     const world = 'megapolis'; // replace with target world data
     this.socket = io.connect(environment.server.base, {
         path: '/socket.io-client',
         query: `token=${token}&world=${world}`,
     });
-    this.readyToRegister$.next(true);
 
-    // TODO: rework returned value into something valid when working with server side socket authentication
-    return Observable.create(observer => {
-      this.socket.on('connect', data => observer.next(this.socket));
-    });
+    this.socket.on('connect', () => this.readyToRegister$.next(true));
   }
 
   public disconnect() {
-    this.socket.close();
+    if (this.socket) { this.socket.close(); }
     this.registeredEvents = [];
     this.readyToRegister$.next(false);
   }
 
   public sendEvent(event: string, data?: any) {
-    console.log(`[Socket emit: ${event}]`, data);
     this.socket.emit(event, data);
   }
 }

@@ -97,11 +97,19 @@ export function reducer(
       };
     }
 
-    // case PlayerActionTypes.Report: {
-    //   const { report, side } = action.payload;
-    //   const playerData = { ...state.playerData, [side]: [report, ...state.playerData[side]] };
-    //   return { ...state, playerData };
-    // }
+    case PlayerActionTypes.AddReport: {
+      const { report, side } = action.payload;
+      const reportSide = `${side}Reports`;
+      const player = state.players[state.currentPlayer];
+      const updatedPlayer = { ...player, [reportSide]: [report, ...player[reportSide]] };
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [state.currentPlayer]: updatedPlayer,
+        },
+      };
+    }
 
     default: {
       return state;

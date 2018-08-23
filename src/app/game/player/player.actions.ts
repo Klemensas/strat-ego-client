@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Player, ProfileUpdate, ActionError } from 'strat-ego-common';
+import { Player, ProfileUpdate, ActionError, Report } from 'strat-ego-common';
 
 // TODO: move sidenav to a dedicated game state
 export enum PlayerActionTypes {
@@ -21,7 +21,7 @@ export enum PlayerActionTypes {
   ProgressTutorialSuccess = '[Player] Progress Tutorial Success',
   ProgressTutorialFail = '[Player] Progress Tutorial Fail',
 
-  // UpdateReports = '[Player] Update Reports',
+  AddReport = '[Player][Affected] Add Report',
 }
 
 export const PlayerSuccessActions = [
@@ -107,25 +107,27 @@ export class ProgressTutorialFail implements Action {
 
   constructor(public payload: ActionError) {}
 }
-// export class UpdateReports implements Action {
-//   readonly type = PlayerActionTypes.UpdateReports;
+export class AddReport implements Action {
+  readonly type = PlayerActionTypes.AddReport;
 
-//   constructor(public payload:) {}
-// }
+  constructor(public payload: { side: string, report: Report }) {}
+}
 
-export type PlayerActions = Update |
-  SetSidenav |
-  Restart |
-  ViewProfile |
-  LoadProfile |
-  LoadProfileSuccess |
-  LoadProfileFail |
-  UpdateProfile |
-  UpdateProfileSuccess |
-  UpdateProfileFail |
-  RemoveAvatar |
-  RemoveAvatarSuccess |
-  RemoveAvatarFail |
-  ProgressTutorial |
-  ProgressTutorialSuccess |
-  ProgressTutorialFail;
+export type PlayerActions = Update
+  | SetSidenav
+  | Restart
+  | ViewProfile
+  | LoadProfile
+  | LoadProfileSuccess
+  | LoadProfileFail
+  | UpdateProfile
+  | UpdateProfileSuccess
+  | UpdateProfileFail
+  | RemoveAvatar
+  | RemoveAvatarSuccess
+  | RemoveAvatarFail
+  | ProgressTutorial
+  | ProgressTutorialSuccess
+  | ProgressTutorialFail
+  | AddReport
+;

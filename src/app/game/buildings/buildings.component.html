@@ -17,7 +17,7 @@
         <strong class="text-warning">Requires: {{building.requirements[0].item}} - {{building.requirements[0].level}}</strong>
       </div>
       <div class="col-sm-3" *ngIf="building.available">
-        <button class="btn btn-success" style="cursor: pointer;" *ngIf="!building.availableIn" (click)="upgrade(building)">Upgrade</button>
+        <button mat-flat-button color="primary" style="cursor: pointer;" *ngIf="!building.availableIn" (click)="upgrade(building)">Upgrade</button>
         <strong *ngIf="building.availableIn" class="text-warning">Missing resources.</strong>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { Component, OnChanges, ViewChild, ElementRef, AfterContentInit, Input, S
 import { Observable , Subject, Subscription, never, merge, fromEvent } from 'rxjs';
 import { takeWhile, throttleTime, switchMap } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHome, faUsers, faExchangeAlt, faSortAmountUp, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUsers, faExchangeAlt, faSortAmountUp, faSortAmountDown, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import { MapService } from '../../services';
@@ -93,7 +93,7 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
   public hoverSubscription: Subscription;
 
   constructor(private mapService: MapService) {
-    library.add(faHome, faUserCircle, faUsers, faExchangeAlt, faSortAmountUp, faSearch);
+    library.add(faHome, faUserCircle, faUsers, faExchangeAlt, faSortAmountUp, faSortAmountDown, faSearch);
     this.mapTiles = this.mapService.mapTiles;
     this.rng = this.mapService.rng;
   }
