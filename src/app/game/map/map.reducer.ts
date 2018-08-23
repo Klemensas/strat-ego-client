@@ -26,6 +26,6 @@ export function reducer(
       return state;
     }
   }
-};
+}
 
 export const getMapData = (state: MapState) => state.mapData;
