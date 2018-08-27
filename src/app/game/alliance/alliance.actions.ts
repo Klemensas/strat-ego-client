@@ -149,6 +149,7 @@ export const AllianceFailActions = [
   AllianceActionTypes.UpdateRolePermissionsFail,
   AllianceActionTypes.RemoveRoleFail,
   AllianceActionTypes.UpdateMemberRoleFail,
+  AllianceActionTypes.AcceptInviteFail,
   AllianceActionTypes.RejectInviteFail,
   AllianceActionTypes.LeaveAllianceFail,
   AllianceActionTypes.DestroyFail,
