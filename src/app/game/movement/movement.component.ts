@@ -6,7 +6,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCaretRight, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 
 import { Town } from '../town/town.model';
-import { MovementTypeName } from 'strat-ego-common';
+import { MovementTypeName, Movement } from 'strat-ego-common';
 
 @Component({
   selector: 'movement',
@@ -17,9 +17,10 @@ export class MovementComponent implements OnInit, OnChanges {
   @Input() public town: Town;
   @Input() public worldData;
 
+  public queueTypeColors = ['warn', 'primary', 'accent'];
   public typeNames = MovementTypeName;
   public movements = [];
-  public queue$: Observable<any>;
+  public queue$: Observable<Array<Partial<Movement>>>;
   public outgoing = [];
   public incoming = [];
   public returning = [];
@@ -30,7 +31,6 @@ export class MovementComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    const b = this.typeNames[0];
     this.queue$ = timer(0, 1000).pipe(
       timestamp(),
       map((time) => this.movements.map(queue => {
@@ -38,22 +38,10 @@ export class MovementComponent implements OnInit, OnChanges {
         return queue;
       }))
     );
-    // this.gameData.data.activeWorld.subscribe(world => {
-    //   // this.worldData = world;
-    //   this.unitTypes  = world.units;
-    //   console.log('woosh', world, this.unitTypes);
-    //   // this.buildingData = world.buildingData;
-    //   // this.buildingList = Object.keys(world.buildingData);
-    // });
-  // }
-    // this.townService.currentTown.subscribe(town => {
-    //   if (town) {
-    //     console.log('update', town)
-    //     this.outgoing = town.MovementOriginTown;
-    //     // TODO: separate incoming into attacks and returning
-    //     this.incoming = town.MovementDestinationTown;
-    //   }
-    // });
+  }
+
+  trackById(index: number, queue: Partial<Movement>) {
+    return queue.id;
   }
 
   ngOnChanges(changes) {
