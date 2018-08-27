@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { MatButtonModule, MatInputModule } from '@angular/material';
 
 import { AuthEffects } from './auth.effects';
 import { reducers } from './reducers';
@@ -19,6 +20,8 @@ const pages = [
 @NgModule({
   declarations: pages,
   imports: [
+    MatButtonModule,
+    MatInputModule,
     CommonModule,
     FormsModule,
     RouterModule.forChild([

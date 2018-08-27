@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ActionError, MovementType, Coords, Dict, RecallPayload, Movement } from 'strat-ego-common';
+import { ActionError, MovementType, Coords, Dict, RecallPayload, Movement, TownSupport } from 'strat-ego-common';
 
 import { Town } from './town.model';
 
@@ -31,6 +31,10 @@ export const enum TownActionTypes {
   SupportSentBack = '[Town][Affected] Support Sent Back',
   Lost = '[Town][Affected] Lost',
   Conquered = '[Town][Affected] Conquered',
+  SupportDisbanded = '[Town][Affected] Support Disbanded',
+  MovementDisbanded = '[Town][Affected] Movement Disbanded',
+  SentSupportDestroyed = '[Town][Affected] Sent Support Destroyed',
+  SentSupportUpdated = '[Town][Affected] Sent Support Updated',
 }
 
 export const TownSuccessActions = [
@@ -182,6 +186,30 @@ export class Conquered implements Action {
 
   constructor(public payload: Town) {}
 }
+export class SupportDisbanded implements Action {
+  readonly type = TownActionTypes.SupportDisbanded;
+
+  constructor(public payload: { id: number; townId: number }) {}
+}
+export class SentSupportDestroyed implements Action {
+  readonly type = TownActionTypes.SentSupportDestroyed;
+
+  constructor(public payload: { id: number; townId: number }) {}
+}
+export class SentSupportUpdated implements Action {
+  readonly type = TownActionTypes.SentSupportUpdated;
+
+  constructor(public payload: { id: number; townId: number, changes: Partial<TownSupport> }) {}
+}
+export class MovementDisbanded implements Action {
+  readonly type = TownActionTypes.MovementDisbanded;
+
+  constructor(public payload: { id: number; townId: number }) {}
+}
+// SupportDisbanded = '[Town][Affected] Support Disbanded',
+// MovementDisbanded = '[Town][Affected] Movement Disbanded',
+// SentSupportDestroyed = '[Town][Affected] Sent Support Destroyed',
+// SentSupportUpdated = '[Town][Affected] Sent Support Updated',
 
 
 export type TownActions = Update
@@ -210,4 +238,8 @@ export type TownActions = Update
   | SupportSentBack
   | Lost
   | Conquered
+  | SupportDisbanded
+  | SentSupportDestroyed
+  | SentSupportUpdated
+  | MovementDisbanded
 ;

@@ -11,21 +11,22 @@
         <alliance-diplomacy [alliance]="alliance"></alliance-diplomacy>
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.viewInvites" label="Invitations">
-        <div>
+        <div class="mb-4">
           <p>Invite players to expand your alliance.</p>
           <div>
-            <input type="text" placeholder="Player name" [(ngModel)]="inviteTarget">
-            <button mat-raised-button color="primary" (click)="createInvite()">Invite</button>
+            <mat-form-field class="pt-2">
+              <input matInput
+              type="text"
+              placeholder="Player name"
+              [(ngModel)]="inviteTarget"
+              >
+            </mat-form-field>
+            <button mat-flat-button color="primary" (click)="createInvite()">Invite</button>
           </div>
         </div>
         <div *ngIf="alliance.invitations.length; else noInvitations">
-          <span>Invited players:</span>
-          <ul>
-            <li *ngFor="let invitation of alliance.invitations">
-              <span>{{ invitation.name }}</span>
-              <fa-icon [icon]="['fas', 'times']" (click)="cancelInvite(invitation.id)"></fa-icon>
-            </li>
-          </ul>
+          <p>Invited players:</p>
+          <alliance-invitations [invitations]="alliance.invitations" (cancelInvite)="cancelInvite($event)" isAlliance="true"></alliance-invitations>
         </div>
         <ng-template #noInvitations>
           <p>No pending invitations.</p>
@@ -43,21 +44,23 @@
   <ng-template #noAlliance>
     <div *ngIf="invitations$ | async as invitations">
       <p>You are currently not a part of any alliance.</p>
-      <div *ngIf="invitations.length">
+      <div *ngIf="invitations.length; else noInvites">
         <p>Here are your current invitations:</p>
-        <div *ngFor="let invite of invitations">
-          <span>{{ invite.name }}</span>
-          <span>{{ invite.createdAt | date:'yy-MM-dd HH:mm:ss' }}</span>
-          <button class="btn btn-success" (click)="acceptInvite(invite.id)">Accept</button>
-          <button class="btn btn-danger" (click)="rejectInvite(invite.id)">Reject</button>
-        </div>
-        <ng-template #noInvites>You don't hanve any invitations.</ng-template>
+        <alliance-invitations [invitations]="invitations" (acceptInvite)="acceptInvite($event)" (rejectInvite)="rejectInvite($event)"></alliance-invitations>
       </div>
+      <ng-template #noInvites>You don't hanve any invitations.</ng-template>
     </div>
+    <mat-divider class="my-2"></mat-divider>
     <div>
       <p>Create your own alliance:</p>
-      <input placeholder="Alliance name" type="text" [(ngModel)]="allianceName">
-      <button type="submit" class="btn btn-primary" (click)="createAlliance()">Create</button>
+      <mat-form-field class="pt-2">
+        <input matInput
+        type="text"
+        placeholder="Alliance name"
+        [(ngModel)]="allianceName"
+        >
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="createAlliance()" [disabled]="allianceName.length < 4">Create</button>
     </div>
   </ng-template>
 </div>

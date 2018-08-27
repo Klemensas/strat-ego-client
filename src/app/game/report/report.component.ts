@@ -1,10 +1,9 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Report, CombatOutcome } from 'strat-ego-common';
-// import { WorldData } from 'strat-ego-common';
 
 export interface ReportMapped extends Report {
   type: CombatOutcome;
-  result: string;
+  won: boolean;
 }
 
 @Component({
@@ -13,7 +12,7 @@ export interface ReportMapped extends Report {
   styleUrls: ['./report.component.scss'],
 })
 
-export class ReportComponent implements OnChanges, OnDestroy {
+export class ReportComponent implements OnChanges {
   @Input() public reports: {
     originReports: Report[],
     targetReports: Report[],
@@ -34,9 +33,11 @@ export class ReportComponent implements OnChanges, OnDestroy {
     return reports.map((report) => ({
       ...report,
       type,
-      result: report.outcome === type ? 'win' : 'lose',
+      won: report.outcome === type,
     }));
   }
 
-  ngOnDestroy() {}
+  trackById(index: number, report: Partial<Report>) {
+    return report.id;
+  }
 }

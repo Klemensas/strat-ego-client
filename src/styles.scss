@@ -116,7 +116,7 @@ game-container .mat-sidenav-content {
   color: inherit;
 }
 
-mat-form-field {
+mat-form-field:not(.full-size) {
   // Remove extra padding from material input
   &.mat-form-field-appearance-legacy {
     margin-bottom: -1.25em;
@@ -125,5 +125,28 @@ mat-form-field {
   // Remove extra top space for hidden placeholders
   &.mat-form-field-hide-placeholder .mat-form-field-infix {
     border-top: 0;
+  }
+
+}
+mat-form-field.full-size {
+  &, .mat-form-field-infix {
+    width: 100%;
+  }
+}
+
+button.button-small {
+  min-width: auto;
+  line-height: 2;
+}
+
+.mat-list {
+  .mat-list-item {
+    &.list-between .mat-list-item-content {
+      justify-content: space-between;
+    }
+
+    &.list-p0 .mat-list-item-content {
+      padding: 0;
+    }
   }
 }

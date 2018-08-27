@@ -1,0 +1,12 @@
+<mat-list>
+  <mat-list-item *ngFor="let invite of invitations" class="list-between list-p0">
+    <div>{{ invite.name }}</div>
+    <div *ngIf="!isAlliance">
+      <button mat-flat-button color="primary" (click)="acceptInvite.emit(invite.id)" class="button-small ml-2">Accept</button>
+      <button mat-flat-button color="warn" (click)="rejectInvite.emit(invite.id)" class="button-small ml-2">Reject</button>
+    </div>
+    <div *ngIf="isAlliance">
+      <button mat-flat-button color="warn" (click)="cancelInvite.emit(invite.id)" class="button-small ml-2">Reject</button>
+    </div>
+  </mat-list-item>
+</mat-list>

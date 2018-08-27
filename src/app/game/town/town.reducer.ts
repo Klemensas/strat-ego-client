@@ -228,7 +228,7 @@ export function reducer(
         ...state,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: updatedTown,
+          [targetTown.id]: updatedTown,
         }
       };
     }
@@ -243,7 +243,7 @@ export function reducer(
         ...state,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: updatedTown,
+          [targetTown.id]: updatedTown,
         }
       };
     }
@@ -258,18 +258,20 @@ export function reducer(
         ...state,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: updatedTown,
+          [targetTown.id]: updatedTown,
         }
       };
     }
 
     case TownActionTypes.Lost: {
       const ids = state.ids.filter((id) => id !== action.payload);
+      const activeTown = state.activeTown === action.payload ? ids[0] || null : state.activeTown;
       const playerTowns = { ...state.playerTowns };
       delete playerTowns[action.payload];
 
       return {
         ...state,
+        activeTown,
         ids,
         playerTowns,
       };
@@ -277,6 +279,7 @@ export function reducer(
 
     case TownActionTypes.Conquered: {
       const town = action.payload;
+      town._actionState = TownDefaultActionState;
 
       return {
         ...state,
@@ -285,6 +288,66 @@ export function reducer(
           ...state.playerTowns,
           [town.id]: town,
         }
+      };
+    }
+
+    case TownActionTypes.SupportDisbanded: {
+      const { townId, id } = action.payload;
+
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [townId]: {
+            ...state.playerTowns[townId],
+            targetSupport: state.playerTowns[townId].targetSupport.filter((support) => support.id !== id),
+          },
+        },
+      };
+    }
+
+    case TownActionTypes.SentSupportDestroyed: {
+      const { townId, id } = action.payload;
+
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [townId]: {
+            ...state.playerTowns[townId],
+            originSupport: state.playerTowns[townId].originSupport.filter((support) => support.id !== id),
+          },
+        },
+      };
+    }
+
+    case TownActionTypes.SentSupportUpdated: {
+      const { townId, id, changes } = action.payload;
+
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [townId]: {
+            ...state.playerTowns[townId],
+            originSupport: state.playerTowns[townId].originSupport.map((support) => support.id === id ? { ...support, ...changes } : support),
+          },
+        },
+      };
+    }
+
+    case TownActionTypes.MovementDisbanded: {
+      const { townId, id } = action.payload;
+
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [townId]: {
+            ...state.playerTowns[townId],
+            targetMovements: state.playerTowns[townId].targetMovements.filter((movement) => movement.id !== id),
+          },
+        },
       };
     }
 

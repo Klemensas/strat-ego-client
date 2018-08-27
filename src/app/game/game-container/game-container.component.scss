@@ -19,16 +19,17 @@ nav.navbar {
     .nav-link {
       padding: .5rem;
       background-color: rgba(255,255,255,0);
-      border-top: 3px solid transparent;
+      border-bottom: 2px solid transparent;
       transition: 0.25s;
 
       &:hover {
-        background-color: rgba(255,255,255,0.5);
+        background-color: rgba(220,220,220,0.5);
+        cursor: pointer;
       }
 
       &.active {
-        background-color: rgba(255,255,255,1);
-        border-top: 3px solid #22ff00;
+        color: var(--indigo);
+        border-bottom: 2px solid var(--indigo);
       }
     }
   }

@@ -34,7 +34,11 @@ import {
   SupportRecalled,
   SupportSentBack,
   Lost,
-  Conquered
+  Conquered,
+  SupportDisbanded,
+  SentSupportDestroyed,
+  SentSupportUpdated,
+  MovementDisbanded
 } from './town.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
 import { GameModuleState, getActiveTown } from '../reducers';
@@ -244,7 +248,15 @@ export class TownEffects {
       ['town:supportRecalled', (payload) => this.store.dispatch(new SupportRecalled(payload))],
       ['town:supportSentBack', (payload) => this.store.dispatch(new SupportSentBack(payload))],
       ['town:lost', (payload) => this.store.dispatch(new Lost(payload))],
-      ['town:conquered', (payload) => this.store.dispatch(new Conquered(payload))],
+      ['town:supportDisbanded', (payload) => this.store.dispatch(new SupportDisbanded(payload))],
+      ['town:sentSupportDestroyed', (payload) => this.store.dispatch(new SentSupportDestroyed(payload))],
+      ['town:sentSupportUpdated', (payload) => this.store.dispatch(new SentSupportUpdated(payload))],
+      ['town:movementDisbanded', (payload) => this.store.dispatch(new MovementDisbanded(payload))],
+      ['town:conquered', (payload) =>
+        this.store.select(getActiveWorld)
+        .pipe(take(1))
+        .subscribe((world) => this.store.dispatch(new Conquered(this.updateTown(world, payload))))
+      ],
     ]);
   }
 }

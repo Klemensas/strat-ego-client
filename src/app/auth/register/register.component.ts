@@ -15,7 +15,7 @@ import { Register } from '../auth.actions';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  @ViewChild('loginForm') public form: NgForm;
+  @ViewChild('registerForm') public form: NgForm;
   public userSubscription: Subscription;
 
   constructor(private store: Store<AuthModuleState>, private router: Router) {

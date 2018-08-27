@@ -16,6 +16,10 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatDialogModule,
+  MatBadgeModule,
+  MatChipsModule,
+  MatExpansionModule,
+  MatListModule,
 } from '@angular/material';
 
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -67,6 +71,7 @@ import { MapCanvasComponent } from './map/map-canvas/map-canvas.component';
 import { MinimapComponent } from './map/map-canvas/minimap/minimap.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { TutorialDialogComponent } from './tutorial/tutorial-dialog/tutorial-dialog.component';
+import { AllianceInvitationsComponent } from './alliance/alliance-invitations/alliance-invitations.component';
 export const effects = [
   PlayerEffects,
   Allianceffects,
@@ -92,6 +97,10 @@ export const effects = [
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatBadgeModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatListModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -137,6 +146,7 @@ export const effects = [
     MinimapComponent,
     TutorialComponent,
     TutorialDialogComponent,
+    AllianceInvitationsComponent,
   ],
   providers: [
     MapService,
