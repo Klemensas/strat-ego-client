@@ -49,7 +49,14 @@
             </li>
             <li class="nav-item">
               <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('left', 'movement')">
-                <fa-icon [icon]="['fas', 'arrows-alt']" aria-hidden="true"></fa-icon> Movements
+                <span
+                  [matBadge]="activeTown.originMovements.length + activeTown.targetMovements.length"
+                  [matBadgeHidden]="!(activeTown.originMovements.length + activeTown.targetMovements.length)"
+                  matBadgeColor="accent"
+                  >
+                  <fa-icon [icon]="['fas', 'arrows-alt']" aria-hidden="true"></fa-icon>
+                </span>
+                <span>&nbsp;Movements</span>
               </a>
             </li>
             <li class="nav-item">

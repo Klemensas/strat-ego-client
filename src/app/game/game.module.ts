@@ -16,6 +16,7 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatDialogModule,
+  MatBadgeModule,
   MatListModule,
 } from '@angular/material';
 
@@ -94,6 +95,7 @@ export const effects = [
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatBadgeModule,
     MatListModule,
     CommonModule,
     FormsModule,
