@@ -133,4 +133,15 @@ mat-form-field.full-size {
     width: 100%;
   }
 }
+
+.mat-list {
+  .mat-list-item {
+    &.list-between .mat-list-item-content {
+      justify-content: space-between;
+    }
+
+    &.list-p0 .mat-list-item-content {
+      padding: 0;
+    }
+  }
 }
