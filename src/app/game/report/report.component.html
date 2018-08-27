@@ -1,5 +1,22 @@
 <div class="container-fluid pb-5">
   <h2>Reports</h2>
-  <report-item [report]="report" [unitList]="worldData.units" *ngFor="let report of reportsMapped"></report-item>
+  <mat-accordion class="mt-3" multi>
+    <mat-expansion-panel *ngFor="let report of reportsMapped; trackBy: trackById">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="align-items-center">
+          <strong>{{ report.originTown.name }} [{{ report.originTown.location }}]</strong>
+          <span>&nbsp;attacks&nbsp;</span>
+          <strong>{{ report.targetTown.name }} [{{ report.targetTown.location }}]</strong>
+        </mat-panel-title>
+        <mat-panel-description class="justify-content-end align-items-center">
+          <mat-chip-list>
+            <mat-chip [color]="report.won ? 'primary' : 'warn'" selected>{{ report.won ? 'Won' : 'Lost' }}</mat-chip>
+          </mat-chip-list>
+          <span class="pl-3">{{ report.createdAt | date:'MM-dd HH:mm:ss' }}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <report-item matExpansionPanelContent [report]="report" [unitList]="worldData.units"></report-item>
+    </mat-expansion-panel>
+  </mat-accordion>
   <div *ngIf="!reportsMapped.length">There are no reports.</div>
 </div>

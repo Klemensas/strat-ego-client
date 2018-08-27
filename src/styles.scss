@@ -134,6 +134,11 @@ mat-form-field.full-size {
   }
 }
 
+button.button-small {
+  min-width: auto;
+  line-height: 2;
+}
+
 .mat-list {
   .mat-list-item {
     &.list-between .mat-list-item-content {

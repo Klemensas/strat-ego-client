@@ -17,6 +17,8 @@ import {
   MatPaginatorModule,
   MatDialogModule,
   MatBadgeModule,
+  MatChipsModule,
+  MatExpansionModule,
   MatListModule,
 } from '@angular/material';
 
@@ -96,6 +98,8 @@ export const effects = [
     MatPaginatorModule,
     MatDialogModule,
     MatBadgeModule,
+    MatChipsModule,
+    MatExpansionModule,
     MatListModule,
     CommonModule,
     FormsModule,
