@@ -47,7 +47,7 @@ export class CommandComponent implements OnInit {
       //   form.form.setErrors({ errorMessage: 'Invalid town coordinates.'})
       //   return;
       // }
-    if (this.target === this.town.location) {
+    if (String(this.target) === String(this.town.location)) {
       form.form.setErrors({ errorMessage: 'A town can\'t attack itself.'});
       return;
     }
