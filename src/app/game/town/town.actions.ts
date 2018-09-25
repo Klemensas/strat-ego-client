@@ -1,9 +1,11 @@
 import { Action } from '@ngrx/store';
-import { ActionError, MovementType, Coords, Dict, RecallPayload, Movement, TownSupport } from 'strat-ego-common';
+import { ActionError, MovementType, Coords, Dict, RecallPayload, Movement, TownSupport, TownProfile } from 'strat-ego-common';
 
 import { Town } from './town.model';
 
 export const enum TownActionTypes {
+  Initialize = '[Town] Initialize',
+
   Update = '[Town] Update',
   Rename = '[Town] Rename',
   RenameSuccess = '[Town] Rename Success',
@@ -25,6 +27,8 @@ export const enum TownActionTypes {
   SendBackSupportFail = '[Town] Send Back Support Fail',
   SetPlayerTowns = '[Town] Set Player Towns',
   SetActiveTown = '[Town] Set Active Town',
+
+  LoadProfilesSuccess = '[Town] Load Profiles Success',
 
   IncomingMovement = '[Town][Affected] Incoming Movement',
   SupportRecalled = '[Town][Affected] Support Recalled',
@@ -60,6 +64,11 @@ export class Update implements Action {
   readonly type = TownActionTypes.Update;
 
   constructor(public payload: Town) {}
+}
+export class Initialize implements Action {
+  readonly type = TownActionTypes.Initialize;
+
+  constructor(public payload: Town[]) {}
 }
 export class Rename implements Action {
   readonly type = TownActionTypes.Rename;
@@ -206,6 +215,11 @@ export class MovementDisbanded implements Action {
 
   constructor(public payload: { id: number; townId: number }) {}
 }
+export class LoadProfilesSuccess implements Action {
+  readonly type = TownActionTypes.LoadProfilesSuccess;
+
+  constructor(public payload: Dict<TownProfile>) {}
+}
 // SupportDisbanded = '[Town][Affected] Support Disbanded',
 // MovementDisbanded = '[Town][Affected] Movement Disbanded',
 // SentSupportDestroyed = '[Town][Affected] Sent Support Destroyed',
@@ -213,6 +227,7 @@ export class MovementDisbanded implements Action {
 
 
 export type TownActions = Update
+  | Initialize
   | Rename
   | RenameSuccess
   | RenameFail
@@ -242,4 +257,5 @@ export type TownActions = Update
   | SentSupportDestroyed
   | SentSupportUpdated
   | MovementDisbanded
+  | LoadProfilesSuccess
 ;

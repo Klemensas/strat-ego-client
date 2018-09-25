@@ -1,16 +1,15 @@
 import { Action } from '@ngrx/store';
-import { Player, ProfileUpdate, ActionError, Report } from 'strat-ego-common';
+import { Player, ProfileUpdate, ActionError, Report, PlayerProfile } from 'strat-ego-common';
 
 // TODO: move sidenav to a dedicated game state
 export enum PlayerActionTypes {
+  Initialize = '[Player] Initialize',
+
   Update = '[Player] Update',
   SetSidenav = '[Player] Set Sidenav',
   Restart = '[Player] Restart',
 
   ViewProfile = '[Player] View Profile',
-  LoadProfile = '[Player] Load Profile',
-  LoadProfileSuccess = '[Player] Load Profile Success',
-  LoadProfileFail = '[Player] Load Profile Fail',
   UpdateProfile = '[Player] Update Profile',
   UpdateProfileSuccess = '[Player] Update Profile Success',
   UpdateProfileFail = '[Player] Update Profile Fail',
@@ -21,22 +20,31 @@ export enum PlayerActionTypes {
   ProgressTutorialSuccess = '[Player] Progress Tutorial Success',
   ProgressTutorialFail = '[Player] Progress Tutorial Fail',
 
+  LoadProfiles = '[Player] Load Profiles',
+  LoadProfilesSuccess = '[Player] Load Profiles Success',
+  LoadProfilesFail = '[Player] Load Profiles Fail',
+
   AddReport = '[Player][Affected] Add Report',
 }
 
 export const PlayerSuccessActions = [
-  PlayerActionTypes.LoadProfileSuccess,
+  PlayerActionTypes.LoadProfilesSuccess,
   PlayerActionTypes.UpdateProfileSuccess,
   PlayerActionTypes.RemoveAvatarSuccess,
 ];
 export const PlayerFailActions = [
-  PlayerActionTypes.LoadProfileFail,
+  PlayerActionTypes.LoadProfilesFail,
   PlayerActionTypes.UpdateProfileFail,
   PlayerActionTypes.RemoveAvatarFail,
 ];
 
 export class Update implements Action {
   readonly type = PlayerActionTypes.Update;
+
+  constructor(public payload: Player) {}
+}
+export class Initialize implements Action {
+  readonly type = PlayerActionTypes.Initialize;
 
   constructor(public payload: Player) {}
 }
@@ -53,18 +61,18 @@ export class ViewProfile implements Action {
 
   constructor(public payload: number) {}
 }
-export class LoadProfile implements Action {
-  readonly type = PlayerActionTypes.LoadProfile;
+export class LoadProfiles implements Action {
+  readonly type = PlayerActionTypes.LoadProfiles;
 
-  constructor(public payload: number) {}
+  constructor(public payload: number[]) {}
 }
-export class LoadProfileSuccess implements Action {
-  readonly type = PlayerActionTypes.LoadProfileSuccess;
+export class LoadProfilesSuccess implements Action {
+  readonly type = PlayerActionTypes.LoadProfilesSuccess;
 
-  constructor(public payload: Partial<Player>) {}
+  constructor(public payload: PlayerProfile[]) {}
 }
-export class LoadProfileFail implements Action {
-  readonly type = PlayerActionTypes.LoadProfileFail;
+export class LoadProfilesFail implements Action {
+  readonly type = PlayerActionTypes.LoadProfilesFail;
 
   constructor(public payload: ActionError) {}
 }
@@ -114,12 +122,13 @@ export class AddReport implements Action {
 }
 
 export type PlayerActions = Update
+  | Initialize
   | SetSidenav
   | Restart
   | ViewProfile
-  | LoadProfile
-  | LoadProfileSuccess
-  | LoadProfileFail
+  | LoadProfiles
+  | LoadProfilesSuccess
+  | LoadProfilesFail
   | UpdateProfile
   | UpdateProfileSuccess
   | UpdateProfileFail

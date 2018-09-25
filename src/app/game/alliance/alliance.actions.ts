@@ -9,11 +9,15 @@ import {
   AllianceRoleSocketPayload,
   ProfileUpdate,
   ActionError,
+  AllianceProfile,
+  Player,
+  Dict,
 } from 'strat-ego-common';
 
 // TODO: consider separatig alliance from player and require a separate query to fetch player alliance
 // TODO: fail actions, handling failure, success, progress
 export enum AllianceActionTypes {
+  Initialize = '[Alliance] Initialize',
   SetData = '[Alliance] Set Data',
   Create = '[Alliance] Create',
   CreateSuccess = '[Alliance] Create Success',
@@ -94,15 +98,16 @@ export enum AllianceActionTypes {
   DeclareWarFail = '[Alliance][Management] Declare War Fail',
 
   ViewProfile = '[Alliance] View Profile',
-  LoadProfile = '[Alliance] Load Profile',
-  LoadProfileSuccess = '[Alliance] Load Profile Success',
-  LoadProfileFail = '[Alliance] Load Profile Fail',
   UpdateProfile = '[Alliance][Management] Update Profile',
   UpdateProfileSuccess = '[Alliance][Management] Update Profile Success',
   UpdateProfileFail = '[Alliance][Management] Update Profile Fail',
   RemoveAvatar = '[Alliance][Management] Remove Avatar',
   RemoveAvatarSuccess = '[Alliance][Management] Remove Avatar Success',
   RemoveAvatarFail = '[Alliance][Management] Remove Avatar Fail',
+
+  LoadProfiles = '[Alliance] Load Profiles',
+  LoadProfilesSuccess = '[Alliance] Load Profiles Success',
+  LoadProfilesFail = '[Alliance] Load Profiles Fail',
 
   // Non self generated actions
   Invited = '[Alliance][Affected] Invited',
@@ -138,8 +143,6 @@ export const AllianceSuccessActions = [
   AllianceActionTypes.DeclareWarSuccess,
   AllianceActionTypes.UpdateProfileSuccess,
   AllianceActionTypes.RemoveAvatarSuccess,
-  // Don't notify here -- it's fully visible as is
-  AllianceActionTypes.LoadProfileSuccess,
 ];
 export const AllianceFailActions = [
   AllianceActionTypes.CreateFail,
@@ -164,10 +167,15 @@ export const AllianceFailActions = [
   AllianceActionTypes.EndAllianceFail,
   AllianceActionTypes.EndNapFail,
   AllianceActionTypes.DeclareWarFail,
-  AllianceActionTypes.LoadProfileFail,
   AllianceActionTypes.UpdateProfileFail,
   AllianceActionTypes.RemoveAvatarFail,
 ];
+
+export class Initialize implements Action {
+  readonly type = AllianceActionTypes.Initialize;
+
+  constructor(public payload: { alliance: Alliance, player: Player }) {}
+}
 
 export class SetData implements Action {
   readonly type = AllianceActionTypes.SetData;
@@ -353,6 +361,21 @@ export class RemoveMemberSuccess implements Action {
 }
 export class RemoveMemberFail implements Action {
   readonly type = AllianceActionTypes.RemoveMemberFail;
+
+  constructor(public payload: ActionError) {}
+}
+export class LoadProfiles implements Action {
+  readonly type = AllianceActionTypes.LoadProfiles;
+
+  constructor(public payload: number[]) {}
+}
+export class LoadProfilesSuccess implements Action {
+  readonly type = AllianceActionTypes.LoadProfilesSuccess;
+
+  constructor(public payload: Dict<AllianceProfile>) {}
+}
+export class LoadProfilesFail implements Action {
+  readonly type = AllianceActionTypes.LoadProfilesFail;
 
   constructor(public payload: ActionError) {}
 }
@@ -544,21 +567,6 @@ export class ViewProfile implements Action {
 
   constructor(public payload: number) {}
 }
-export class LoadProfile implements Action {
-  readonly type = AllianceActionTypes.LoadProfile;
-
-  constructor(public payload: number) {}
-}
-export class LoadProfileSuccess implements Action {
-  readonly type = AllianceActionTypes.LoadProfileSuccess;
-
-  constructor(public payload: Partial<Alliance>) {}
-}
-export class LoadProfileFail implements Action {
-  readonly type = AllianceActionTypes.LoadProfileFail;
-
-  constructor(public payload: ActionError) {}
-}
 export class UpdateProfile implements Action {
   readonly type = AllianceActionTypes.UpdateProfile;
 
@@ -588,98 +596,101 @@ export class RemoveAvatarFail implements Action {
   constructor(public payload: ActionError) {}
 }
 
-export type AllianceActions = SetData |
-  Create |
-  CreateSuccess |
-  CreateFail |
-  Destroy |
-  DestroySuccess |
-  DestroyFail |
-  LeaveAlliance |
-  LeaveAllianceSuccess |
-  LeaveAllianceFail |
-  EventInvitation |
-  EventMembership |
-  EventRoles |
-  EventDiplomacy |
-  EventProfile |
-  CreateInvite |
-  CreateInviteSuccess |
-  CreateInviteFail |
-  CancelInvite |
-  CancelInviteSuccess |
-  CancelInviteFail |
-  AcceptInvite |
-  AcceptInviteSuccess |
-  AcceptInviteFail |
-  RejectInvite |
-  RejectInviteSuccess |
-  RejectInviteFail |
-  UpdateRolePermissions |
-  UpdateRolePermissionsSuccess |
-  UpdateRolePermissionsFail |
-  UpdateMemberRole |
-  UpdateMemberRoleSuccess |
-  UpdateMemberRoleFail |
-  RemoveRole |
-  RemoveRoleSuccess |
-  RemoveRoleFail |
-  RemoveMember |
-  RemoveMemberSuccess |
-  RemoveMemberFail |
-  Invited |
-  InviteCanceled |
-  Removed |
-  UpdateSelfRole |
-  ProposeAlliance |
-  ProposeAllianceSuccess |
-  ProposeAllianceFail |
-  RejectAlliance |
-  RejectAllianceSuccess |
-  RejectAllianceFail |
-  CancelAlliance |
-  CancelAllianceSuccess |
-  CancelAllianceFail |
-  AcceptAlliance |
-  AcceptAllianceSuccess |
-  AcceptAllianceFail |
-  EndAlliance |
-  EndAllianceSuccess |
-  EndAllianceFail |
-  ProposeNap |
-  ProposeNapSuccess |
-  ProposeNapFail |
-  RejectNap |
-  RejectNapSuccess |
-  RejectNapFail |
-  CancelNap |
-  CancelNapSuccess |
-  CancelNapFail |
-  AcceptNap |
-  AcceptNapSuccess |
-  AcceptNapFail |
-  EndNap |
-  EndNapSuccess |
-  EndNapFail |
-  DeclareWar |
-  DeclareWarSuccess |
-  DeclareWarFail |
-  ViewProfile |
-  LoadProfile |
-  LoadProfileSuccess |
-  LoadProfileFail |
-  UpdateProfile |
-  UpdateProfileSuccess |
-  UpdateProfileFail |
-  RemoveAvatar |
-  RemoveAvatarSuccess |
-  RemoveAvatarFail;
+export type AllianceActions = Initialize
+  | SetData
+  | Create
+  | CreateSuccess
+  | CreateFail
+  | Destroy
+  | DestroySuccess
+  | DestroyFail
+  | LeaveAlliance
+  | LeaveAllianceSuccess
+  | LeaveAllianceFail
+  | EventInvitation
+  | EventMembership
+  | EventRoles
+  | EventDiplomacy
+  | EventProfile
+  | CreateInvite
+  | CreateInviteSuccess
+  | CreateInviteFail
+  | CancelInvite
+  | CancelInviteSuccess
+  | CancelInviteFail
+  | AcceptInvite
+  | AcceptInviteSuccess
+  | AcceptInviteFail
+  | RejectInvite
+  | RejectInviteSuccess
+  | RejectInviteFail
+  | UpdateRolePermissions
+  | UpdateRolePermissionsSuccess
+  | UpdateRolePermissionsFail
+  | UpdateMemberRole
+  | UpdateMemberRoleSuccess
+  | UpdateMemberRoleFail
+  | RemoveRole
+  | RemoveRoleSuccess
+  | RemoveRoleFail
+  | RemoveMember
+  | RemoveMemberSuccess
+  | RemoveMemberFail
+  | LoadProfiles
+  | LoadProfilesSuccess
+  | LoadProfilesFail
+  | Invited
+  | InviteCanceled
+  | Removed
+  | UpdateSelfRole
+  | ProposeAlliance
+  | ProposeAllianceSuccess
+  | ProposeAllianceFail
+  | RejectAlliance
+  | RejectAllianceSuccess
+  | RejectAllianceFail
+  | CancelAlliance
+  | CancelAllianceSuccess
+  | CancelAllianceFail
+  | AcceptAlliance
+  | AcceptAllianceSuccess
+  | AcceptAllianceFail
+  | EndAlliance
+  | EndAllianceSuccess
+  | EndAllianceFail
+  | ProposeNap
+  | ProposeNapSuccess
+  | ProposeNapFail
+  | RejectNap
+  | RejectNapSuccess
+  | RejectNapFail
+  | CancelNap
+  | CancelNapSuccess
+  | CancelNapFail
+  | AcceptNap
+  | AcceptNapSuccess
+  | AcceptNapFail
+  | EndNap
+  | EndNapSuccess
+  | EndNapFail
+  | DeclareWar
+  | DeclareWarSuccess
+  | DeclareWarFail
+  | ViewProfile
+  | UpdateProfile
+  | UpdateProfileSuccess
+  | UpdateProfileFail
+  | RemoveAvatar
+  | RemoveAvatarSuccess
+  | RemoveAvatarFail
+;
 
-export type AllianceEventActionTypes = EventInvitation |
-  EventMembership |
-  EventRoles |
-  EventDiplomacy |
-  EventProfile;
+export type AllianceEventActionTypes = EventInvitation
+  | EventMembership
+  | EventRoles
+  | EventDiplomacy
+  | EventProfile
+;
 
 // TODO: use actual constructors here
 export const AllianceEventActions = [
