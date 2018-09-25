@@ -5,7 +5,7 @@
         <alliance-overview [alliance]="alliance" [role]="allianceData.role" (leaveAlliance)="leaveAlliance()" (destroyAlliance)="destroyAlliance()" (openAllianceProfile)="openAllianceProfile.emit($event)" (openPlayerProfile)="openPlayerProfile.emit($event)"></alliance-overview>
       </mat-tab>
       <mat-tab label="Profile">
-        <alliance-profile [alliance]="alliance" [role]="allianceData.role"></alliance-profile>
+        <alliance-profile [alliance]="alliance" [role]="allianceData.role" (openPlayerProfile)="openPlayerProfile.emit($event)"></alliance-profile>
       </mat-tab>
       <mat-tab *ngIf="allianceData.role?.permissions.manageAlliance" label="Diplomacy">
         <alliance-diplomacy [alliance]="alliance"></alliance-diplomacy>
