@@ -148,26 +148,9 @@ export class TownEffects {
   public updateTown(world: WorldData, town: Town): Town {
     return {
       ...town,
-      population: this.calculatePopulation(town, world.buildingMap.farm.data),
+      population: TownService.calculatePopulation(town, world.buildingMap.farm.data),
       storage: world.buildingMap.storage.data[town.buildings.storage.level].storage,
       recruitmentModifier: world.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
-    };
-  }
-
-  public calculatePopulation(town: Town, farmData) {
-    const total = farmData[town.buildings.farm.level].population;
-    const supportPop = town.originSupport.reduce((result, { units }) => result + Object.values(units).reduce((a, b) => a + b, 0), 0);
-    const attackPop = town.originMovements.reduce((result, { units }) => result + Object.values(units).reduce((a, b) => a + b, 0), 0);
-    const returnPop = town.targetMovements.reduce((result, { units, type }) =>
-      result + type === MovementType.return ?  Object.values(units).reduce((a, b) => a + b, 0) : 0, 0);
-    const townPop = Object.entries(town.units).reduce((count, [name, unit]) => {
-      return count + unit.inside + unit.queued;
-      }, 0);
-    const used = townPop + supportPop + attackPop + returnPop;
-    return {
-      total,
-      used,
-      available: total - used,
     };
   }
 
