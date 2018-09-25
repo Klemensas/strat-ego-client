@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { filter, map, combineLatest, tap } from 'rxjs/operators';
+import { filter, map, combineLatest, tap, withLatestFrom } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
@@ -17,9 +17,10 @@ import {
   getPlayerAlliance,
   getAllRankings,
   getPlayerPosition,
-  getViewedAlliance,
-  getRankingEntities,
-  getViewedPlayer,
+  getPlayerTownList,
+  getFullViewedPlayer,
+  getFullViewedAlliance,
+  getFullTown,
 } from '../reducers';
 import {
   ViewProfile as viewAllianceProfile,
@@ -27,18 +28,17 @@ import {
   AllianceSuccessActions,
   AllianceFailActions } from '../alliance/alliance.actions';
 import { ViewProfile as viewPlayerProfile, PlayerActionTypes, PlayerSuccessActions, PlayerFailActions, ProgressTutorial } from '../player/player.actions';
-import { Town } from '../town/town.model';
 import { SetActiveTown, TownActionTypes, TownSuccessActions, TownFailActions } from '../town/town.actions';
 import { SetSidenav, Restart } from '../player/player.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
 
 export const actionMessages = {
-  [PlayerActionTypes.LoadProfileSuccess]: 'Player profile loaded successfully',
+  [PlayerActionTypes.LoadProfilesSuccess]: 'Player profile loaded successfully',
   [PlayerActionTypes.UpdateProfileSuccess]: 'Profile updated successfully',
   [PlayerActionTypes.RemoveAvatarSuccess]: 'Avatar removed successfully',
 
-  [PlayerActionTypes.LoadProfileFail]: 'Failed to load profile, please retry',
+  [PlayerActionTypes.LoadProfilesFail]: 'Failed to load profile, please retry',
   [PlayerActionTypes.UpdateProfileFail]: 'Failed to update profile, pleae retry',
   [PlayerActionTypes.RemoveAvatarFail]: 'Failed to remove avatar, please retry',
 
@@ -77,7 +77,6 @@ export const actionMessages = {
   [AllianceActionTypes.EndAllianceSuccess]: 'Ended alliance successfully',
   [AllianceActionTypes.EndNapSuccess]: 'Ended NAP successfully',
   [AllianceActionTypes.DeclareWarSuccess]: 'Declared war successfully',
-  [AllianceActionTypes.LoadProfileSuccess]: 'Loaded alliance profile successfully',
   [AllianceActionTypes.UpdateProfileSuccess]: 'Updated alliance profile successfully',
   [AllianceActionTypes.RemoveAvatarSuccess]: 'Removed alliance avatar successfully',
 
@@ -102,7 +101,6 @@ export const actionMessages = {
   [AllianceActionTypes.EndAllianceFail]: 'Failed to end alliance, please retry',
   [AllianceActionTypes.EndNapFail]: 'Failed to end NAP, please retry',
   [AllianceActionTypes.DeclareWarFail]: 'Failed to declare war, please retry',
-  [AllianceActionTypes.LoadProfileFail]: 'Failed to load alliance profile, please retry',
   [AllianceActionTypes.UpdateProfileFail]: 'Failed to update alliance profile, please retry',
   [AllianceActionTypes.RemoveAvatarFail]: 'Failed to remove alliance avatar, please retry',
 };
@@ -117,9 +115,9 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenavLeft') sidenavLeft;
   @ViewChild('sidenavRight') sidenavRight;
 
-  public townList: Town[];
-  public activeTown: Town;
-  public canRecruit: boolean;
+  public townList$ = this.store.select(getPlayerTownList);
+  // public activeTown: Town;
+  // public canRecruit: boolean;
 
   public player$ = this.store.select(getCurrentPlayer);
   public alliance$ = this.store.select(getPlayerAlliance);
@@ -133,29 +131,15 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     );
   public noTowns$ = this.townState$
     .pipe(
-      map((state) => !state.inProgress && !state.ids.length)
+      map((state) => !state.inProgress && !state.playerIds.length)
     );
-  public viewedAlliance$ = this.store.select(getViewedAlliance)
-    .pipe(
-      combineLatest(this.store.select(getRankingEntities)),
-      filter(([alliance, rankings]) => !!alliance && !!Object.keys(rankings).length),
-      map(([alliance, rankings]) => ({
-        ...alliance,
-        members: alliance.members.map(({ id }) => {
-          const { name, score } = rankings[id];
-          return {
-            id,
-            name,
-            score,
-          };
-        })
-      }))
-    );
-  public viewedPlayer$ = this.store.select(getViewedPlayer);
+  public activeTown$ = this.store.select(getFullTown);
+
+  public viewedPlayer$ = this.store.select(getFullViewedPlayer);
+  public viewedAlliance$ = this.store.select(getFullViewedAlliance).pipe(tap((v) => console.log('see', v)));
 
   public isVisible;
   public sidenavSubscription: Subscription;
-  public townStateSubscription: Subscription;
   public updates = this.actions$.pipe(
     ofType(
       ...PlayerSuccessActions, ...PlayerFailActions,
@@ -187,11 +171,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.townStateSubscription = this.townState$.subscribe((townState) => {
-      this.townList = townState.ids.map((id) => townState.playerTowns[id]);
-      this.activeTown = townState.playerTowns[townState.activeTown];
-      this.canRecruit = this.activeTown && !!this.activeTown.buildings.barracks.level;
-    });
     this.sidenavSubscription = this.store.select(getSidenavs).pipe(
       filter(() => this.sidenavLeft && this.sidenavRight)
     )
@@ -231,7 +210,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sidenavSubscription.unsubscribe();
-    this.townStateSubscription.unsubscribe();
   }
 
   logout() {
@@ -239,8 +217,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   selectTown(townId: number) {
-    if (this.activeTown && this.activeTown.id === townId) { return false; }
-
     this.store.dispatch(new SetActiveTown(townId));
   }
 

@@ -1,17 +1,11 @@
 // TODO: refactor some town elements in to simple presentation components
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription ,  Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-// import 'rxjs/add/observable/of';
-// import 'rxjs/add/observable/timer';
 
-import { GameDataService } from '../../services/game-data.service';
-import { SocketService } from '../services';
 import { getActiveWorld } from '../../reducers';
-import { GameModuleState, getActiveTown } from '../reducers';
-import { TownActions, Rename, Build } from '../town/town.actions';
-import { Town } from '../town/town.model';
+import { GameModuleState, getFullTown } from '../reducers';
+import { Rename, Build } from '../town/town.actions';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -22,13 +16,11 @@ import { Town } from '../town/town.model';
 
 export class TownComponent implements OnInit, OnDestroy {
   private nameChange = '';
-  public town$ = this.store.select(getActiveTown);
+  public town$ = this.store.select(getFullTown);
   public worldData$ = this.store.select(getActiveWorld);
 
   constructor(
-    private socket: SocketService,
-    private gameDataService: GameDataService,
-    private store: Store<GameModuleState>
+    private store: Store<GameModuleState>,
   ) {}
 
   public ngOnInit() {

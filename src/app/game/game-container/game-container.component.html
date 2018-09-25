@@ -1,4 +1,4 @@
-<mat-sidenav-container *ngIf="activeTown" class="backdrop-disabled">
+<mat-sidenav-container *ngIf="activeTown$ | async as activeTown" class="backdrop-disabled">
   <mat-sidenav #sidenavLeft [ngSwitch]="sidenavLeft.comp" class="col-xl-6 container-fluid" mode="over" position="start" opened="false" (closedStart)="sidenavToggle('left', null)">
     <button mat-mini-fab (click)="sidenavToggle('left', null)">
       <mat-icon>&times;</mat-icon>
@@ -11,7 +11,7 @@
     <button mat-mini-fab (click)="sidenavToggle('right', null)">
       <mat-icon>&times;</mat-icon>
     </button>
-    <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async" (upgradeBuilding)="upgradeBuilding($event)"></recruit>
+    <recruit *ngSwitchCase="'recruit'" [town]="activeTown" [worldData]="worldData$ | async"></recruit>
     <report *ngSwitchCase="'report'" [reports]="reports$ | async" [worldData]="worldData$ | async"></report>
     <support *ngSwitchCase="'support'" [town]="activeTown" [worldData]="worldData$ | async"></support>
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
@@ -43,7 +43,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a *ngIf="canRecruit" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
+              <a *ngIf="activeTown.canRecruit" class="nav-link" (click)="sidenavToggle('right', 'recruit')">
                 <fa-icon [icon]="['fas', 'users']" aria-hidden="true"></fa-icon> Recruit
               </a>
             </li>
@@ -77,13 +77,18 @@
             </ul>
           <div class="d-flex justify-content-center align-items-center">
             <div *ngIf="player$ | async as player" class="nav-item mr-3">
-              <a class="nav-link" (click)="onOpenProfile(player.id, 'player')"><fa-icon [icon]="['far', 'user-circle']" aria-hidden="true"></fa-icon> Profile</a></div>
-            <div *ngIf="townList.length > 1" ngbDropdown placement="bottom-right" class="nav-item mr-3">
-              <mat-form-field floatLabel="never" style="max-width: 200px;" >
-                <mat-select placeholder="Active town" [value]="activeTown.id" (selectionChange)="selectTown($event.value)">
-                  <mat-option *ngFor="let town of townList" [value]="town.id">{{town.name}} [{{town.location}}]</mat-option>
-                </mat-select>
-              </mat-form-field>
+              <a class="nav-link" (click)="onOpenProfile(player.id, 'player')">
+                <fa-icon [icon]="['far', 'user-circle']" aria-hidden="true"></fa-icon> Profile
+              </a>
+            </div>
+            <div class="nav-item" *ngIf="townList$ | async as townList">
+              <div *ngIf="townList.length > 1" placement="bottom-right" class="nav-item mr-3">
+                <mat-form-field floatLabel="never" style="max-width: 200px;" >
+                  <mat-select placeholder="Active town" [value]="activeTown.id" (selectionChange)="selectTown($event.value)">
+                    <mat-option *ngFor="let town of townList" [value]="town.id">{{town.name}} [{{town.location}}]</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
             <div class="nav-item">
               <a class="nav-link" [routerLink]="['/']" (click)="logout()">Logout</a>
