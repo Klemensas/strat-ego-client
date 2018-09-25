@@ -22,6 +22,8 @@ import { availableResources } from '../utils';
 export class RecruitComponent implements OnChanges {
   @Input() public town: Town;
   @Input() public worldData: WorldData;
+  // TODO: handle town actions, either by one simple inProgress/error or by town specific aciton state
+  @Input() public actionInProgress = false;
   public unitDetails = unitData;
   public units;
   public unitData;
@@ -110,7 +112,7 @@ export class RecruitComponent implements OnChanges {
     }
 
   canRecruit(unit) {
-    if (this.town._actionState.recruit.inProgress || !this.town.population.available) {
+    if (this.actionInProgress || this.town.population.available <= 0) {
       return false;
     }
     if (!unit.requirements) {

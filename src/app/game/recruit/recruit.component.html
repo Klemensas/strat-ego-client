@@ -1,6 +1,6 @@
 <div class="container-fluid pb-4">
   <h2>Recruitment</h2>
-  <div class="pb-1 text-warning" *ngIf="!town.population.available">Max population reached, upgrade your farm to recruit new troops.</div>
+  <div class="pb-1 text-warning" *ngIf="town.population.available <= 0">Max population reached, upgrade your farm to recruit new troops.</div>
   <div *ngFor="let unit of unitData" class="py-1">
     <div class="row align-items-center">
       <div class="col-sm-6 d-flex" style="cursor: pointer;" (click)="unit.visible = !unit.visible">
