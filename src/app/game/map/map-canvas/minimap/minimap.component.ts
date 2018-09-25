@@ -99,7 +99,7 @@ export class MinimapComponent implements OnChanges, AfterContentInit {
       this.ctx.lineWidth = 1;
       Object.entries(this.mapData).forEach(([location, town]) => {
         let fillColor = '#423f3f';
-        if (this.townState.ids.includes(town.id)) {
+        if (this.townState.playerIds.includes(town.id)) {
           fillColor = this.townState.activeTown === town.id ? 'yellow' : 'white';
         } else if (town.owner) {
           fillColor = 'red';

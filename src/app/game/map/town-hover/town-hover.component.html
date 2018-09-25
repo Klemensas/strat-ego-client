@@ -1,6 +1,6 @@
 <div>
   <div><fa-icon class="pr-2" [icon]="['fas', 'home']" [fixedWidth]="true"></fa-icon><span>{{data.name}}</span></div>
-  <div><fa-icon class="pr-2" [icon]="['far', 'user-circle']" [fixedWidth]="true"></fa-icon><a *ngIf="data.owner" href (click)="!!openPlayerProfile.emit(data.owner.id)">{{data.owner.name}}</a><span *ngIf="!data.owner">-</span></div>
+  <div><fa-icon class="pr-2" [icon]="['far', 'user-circle']" [fixedWidth]="true"></fa-icon><a *ngIf="data.player" href (click)="!!openPlayerProfile.emit(data.player.id)">{{data.player.name}}</a><span *ngIf="!data.player">-</span></div>
   <div>
     <fa-icon class="pr-2" [icon]="['fas', 'users']" [fixedWidth]="true"></fa-icon><a *ngIf="data.alliance" href (click)="!!openAllianceProfile.emit(data.alliance.id)">{{data.alliance.name}}</a><span *ngIf="!data.alliance">-</span>
   </div>

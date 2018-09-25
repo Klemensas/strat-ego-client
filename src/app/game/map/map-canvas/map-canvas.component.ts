@@ -546,7 +546,7 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
 
     ctx.closePath();
     if (town) {
-      const townImage = town.owner ? this.mapTiles.object : this.mapTiles.objectType.abandoned;
+      const townImage = town.player ? this.mapTiles.object : this.mapTiles.objectType.abandoned;
       ctx.drawImage(
         this.mapTiles.image,
         townImage[0], townImage[1],
@@ -557,7 +557,7 @@ export class MapCanvasComponent implements OnChanges, AfterContentInit, AfterVie
 
       // Check if a player town or has related alliance diplomacy
       let type;
-      if (this.townState.ids.includes(town.id)) {
+      if (this.townState.playerIds.includes(town.id)) {
         type = this.townState.activeTown === town.id ? this.mapTiles.objectType.ownedActive : this.mapTiles.objectType.owned;
       } else if (this.allianceDiplomacy && town.alliance && this.allianceDiplomacy[town.alliance.id]) {
         const target = this.allianceDiplomacy[town.alliance.id];

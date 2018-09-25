@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable ,  Subscription ,  Subject } from 'rxjs';
-import { combineLatest, throttleTime, takeWhile, filter, switchMap, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { MapAllianceMark, DiplomacyStatus, diplomacyTypeName, Dict, MapTown } from 'strat-ego-common';
+import { DiplomacyStatus, diplomacyTypeName, Dict, MapTown } from 'strat-ego-common';
 
-import { GameModuleState, getTownState, getPlayerAlliance, getMapData } from '../reducers';
+import {
+  GameModuleState,
+  getTownState,
+  getPlayerAlliance,
+  getMapData,
+  getPlayerEntities,
+  getAllianceEntities,
+  getTownEntities,
+} from '../reducers';
 import { MapService, CommandService } from '../services';
-import { Town } from '../town/town.model';
-import { MapActions, LoadMap } from '../map/map.actions';
-import { PlayerActions, SetSidenav } from '../player/player.actions';
+import { LoadMap } from '../map/map.actions';
+import { SetSidenav } from '../player/player.actions';
 import { ViewProfile as viewAllianceProfile } from '../alliance/alliance.actions';
 import { ViewProfile as viewPlayerProfile } from '../player/player.actions';
 import { getActiveWorld } from '../../reducers';
@@ -43,7 +50,28 @@ export class MapComponent implements OnInit  {
         };
     })
   );
-  public mapData$ = this.store.select(getMapData);
+
+
+  public mapData$ = combineLatest(
+    this.store.select(getMapData),
+    this.store.select(getTownEntities),
+    this.store.select(getPlayerEntities),
+    this.store.select(getAllianceEntities),
+    (mapData, townEntities, playerEntities, allianceEntities) => Object.entries(mapData).reduce((result, [coords, id]) => {
+      const targetTown = { ...townEntities[id] };
+      if (targetTown.playerId) {
+        const player = playerEntities[targetTown.playerId];
+        targetTown.player = player;
+
+        if (player && player.allianceId) {
+          targetTown.alliance = allianceEntities[targetTown.player.allianceId];
+        }
+      }
+
+      result[coords] = targetTown;
+      return result;
+    }, {})
+  ).pipe(tap((d) => console.log('d', d)));
   public imagesLoaded$ = this.mapService.imagesLoaded;
 
   constructor(
