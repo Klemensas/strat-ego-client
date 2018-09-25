@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Observable ,  of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store, Action } from '@ngrx/store';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
 import { WorldData, MovementType } from 'strat-ego-common';
@@ -38,13 +38,18 @@ import {
   SupportDisbanded,
   SentSupportDestroyed,
   SentSupportUpdated,
-  MovementDisbanded
+  MovementDisbanded,
+  Initialize,
+  LoadProfilesSuccess
 } from './town.actions';
+
+import { Update as UpdateMap } from '../map/map.actions';
 import { PlayerActionTypes, Update as PlayerUpdate } from '../player/player.actions';
-import { GameModuleState, getActiveTown } from '../reducers';
+import { GameModuleState, getActiveTown, getTownState } from '../reducers';
 import { SocketService } from '../../game/services/socket.service';
-import { availableResources } from '../../game/utils';
-import { getActiveWorld, State } from '../../reducers';
+import { getActiveWorld } from '../../reducers';
+import { MapActionTypes } from '../map/map.actions';
+import { TownService } from './town.service';
 
 @Injectable()
 export class TownEffects {
@@ -52,7 +57,7 @@ export class TownEffects {
 
   @Effect()
   public setActiveTown$: Observable<Action> = this.actions$.pipe(
-    ofType<SetPlayerTowns>(TownActionTypes.SetPlayerTowns),
+    ofType<SetPlayerTowns>(TownActionTypes.SetPlayerTowns, TownActionTypes.Initialize),
     map((action) => action.payload),
     withLatestFrom(this.store),
     filter(([towns, store]) => (towns.length && !store.game.town.activeTown) || !towns.length),
@@ -120,6 +125,16 @@ export class TownEffects {
     ofType<SendBackSupport>(TownActionTypes.SendBackSupport),
     map((action) => action.payload),
     map((payload) => this.socketService.sendEvent('town:sendBackSupport', payload))
+  );
+
+  // Loads missing map profiles
+  @Effect({ dispatch: false })
+  public loadMissingProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<UpdateMap>(MapActionTypes.Update),
+    withLatestFrom(this.store.select(getTownState)),
+    map(([action, townState]) => Object.values(action.payload).filter((id) => !townState.entities[id] && !townState.playerTowns[id])),
+    filter((missingProfiles) => !!missingProfiles.length),
+    map((payload) => this.socketService.sendEvent('profile:loadTowns', payload))
   );
 
 
@@ -192,6 +207,7 @@ export class TownEffects {
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([
+      ['initialize', (payload) => this.store.dispatch(new Initialize(payload.towns))],
       ['town:update', (payload) =>
       this.store.select(getActiveWorld)
         .pipe(take(1))
@@ -240,6 +256,8 @@ export class TownEffects {
         .pipe(take(1))
         .subscribe((world) => this.store.dispatch(new Conquered(this.updateTown(world, payload))))
       ],
+
+      ['profile:loadTownsSuccess', (payload) => this.store.dispatch(new LoadProfilesSuccess(payload)) ]
     ]);
   }
 }
