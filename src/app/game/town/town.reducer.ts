@@ -1,31 +1,27 @@
-import { Town, TownActionState } from './town.model';
-import { TownActions, TownActionTypes, SendBackSupportSuccess } from './town.actions';
+import { Dict, Town } from 'strat-ego-common';
 
-interface TownDict {
-  [id: number]: Town;
-}
+import { TownActions, TownActionTypes, SendBackSupportSuccess } from './town.actions';
 
 export interface TownState {
   inProgress: boolean;
   activeTown: number;
-  playerTowns: TownDict;
+  playerTowns: Dict<Town>;
+  playerIds: number[];
+  entities: Dict<any>;
   ids: number[];
+  error: any;
 }
 
 export const initialState: TownState = {
   inProgress: true,
+  error: null,
   activeTown: null,
   playerTowns: {},
+  playerIds: [],
+  entities: {},
   ids: [],
 };
 
-export const TownDefaultActionState: TownActionState = {
-  build: { inProgress: false, error: null },
-  name: { inProgress: false, error: null },
-  movement: { inProgress: false, error: null },
-  recruit: { inProgress: false, error: null },
-  support: { inProgress: false, error: null },
-};
 
 export enum actionTypeState {
   '[Town] Rename' = 'name',
@@ -61,29 +57,53 @@ export function reducer(
   action: TownActions
 ): TownState {
   switch (action.type) {
-    case TownActionTypes.SetPlayerTowns: {
-      const { playerTowns, ids } = action.payload.reduce((result, town) => {
-        result.ids.push(town.id);
-        result.playerTowns[town.id] = {
-          ...town,
-          _actionState: TownDefaultActionState,
+    // case TownActionTypes.SetPlayerTowns: {
+    //   const { playerTowns, playerIds } = action.payload.reduce((result, town) => {
+    //     result.playerIds.push(town.id);
+    //     result.playerTowns[town.id] = {
+    //       ...town,
+    //       _actionState: TownDefaultActionState,
+    //     };
+    //     return result;
+    //   }, { playerTowns: {}, playerIds: [] });
+    //   return { ...state, playerTowns, playerIds, inProgress: false };
+    // }
+
+    // case TownActionTypes.Update: {
+    //   const targetTown = state.playerTowns[action.payload.id];
+    //   return {
+    //     ...state,
+    //     playerTowns: {
+    //       ...state.playerTowns,
+    //       [action.payload.id]: {
+    //         ...targetTown,
+    //         ...action.payload,
+    //       }
+    //     }
+    //   };
+    // }
+
+    case TownActionTypes.Initialize: {
+      const { playerIds, playerTowns, entities } = action.payload.reduce((result, town) => {
+        result.playerIds.push(town.id);
+        result.playerTowns[town.id] = town;
+        result.entities[town.id] = {
+          id: town.id,
+          name: town.name,
+          playerId: town.playerId,
+          location: town.location,
+          score: town.score,
+          createdAt: town.createdAt,
         };
         return result;
-      }, { playerTowns: {}, ids: [] });
-      return { ...state, playerTowns, ids, inProgress: false };
-    }
-
-    case TownActionTypes.Update: {
-      const targetTown = state.playerTowns[action.payload.id];
+      }, { playerIds: [], playerTowns: {}, entities: {} });
       return {
         ...state,
-        playerTowns: {
-          ...state.playerTowns,
-          [action.payload.id]: {
-            ...targetTown,
-            ...action.payload,
-          }
-        }
+        inProgress: false,
+        playerIds,
+        playerTowns,
+        ids: [...playerIds],
+        entities,
       };
     }
 
@@ -104,10 +124,10 @@ export function reducer(
           ...state.playerTowns,
           [state.activeTown]: {
             ...activeTown,
-            _actionState: {
-              ...activeTown._actionState,
-              [target]: { inProgress: true, error: null }
-            }
+            // _actionState: {
+            //   ...activeTown._actionState,
+            //   [target]: { inProgress: true, error: null }
+            // }
           }
         }
       };
@@ -128,10 +148,10 @@ export function reducer(
           ...state.playerTowns,
           [state.activeTown]: {
             ...activeTown,
-            _actionState: {
-              ...activeTown._actionState,
-              [type]: { inProgress: false, error: action.payload }
-            }
+            // _actionState: {
+            //   ...activeTown._actionState,
+            //   [type]: { inProgress: false, error: action.payload }
+            // }
           }
         }
       };
@@ -146,10 +166,10 @@ export function reducer(
           [state.activeTown]: {
             ...activeTown,
             name: action.payload,
-            _actionState: {
-              ...activeTown._actionState,
-              name: { inProgress: false, error: null }
-            }
+            // _actionState: {
+            //   ...activeTown._actionState,
+            //   name: { inProgress: false, error: null }
+            // }
           }
         }
       };
@@ -167,10 +187,10 @@ export function reducer(
           ...state.playerTowns,
           [state.activeTown]: {
             ...activeTown,
-            _actionState: {
-              ...state.playerTowns[activeTown.id]._actionState,
-              [target]: { inProgress: false, error: null }
-            }
+            // _actionState: {
+            //   ...state.playerTowns[activeTown.id]._actionState,
+            //   [target]: { inProgress: false, error: null }
+            // }
           }
         }
       };
@@ -181,10 +201,10 @@ export function reducer(
       const updatedTown: Town = {
         ...activeTown,
         targetSupport: activeTown.targetSupport.filter((item) => item.id !== action.payload),
-        _actionState: {
-          ...state.playerTowns[state.activeTown]._actionState,
-          support: { inProgress: false, error: null }
-        }
+        // _actionState: {
+        //   ...state.playerTowns[state.activeTown]._actionState,
+        //   support: { inProgress: false, error: null }
+        // }
       };
       return {
         ...state,
@@ -202,10 +222,10 @@ export function reducer(
         ...activeTown,
         originSupport: activeTown.originSupport.filter((item) => item.id !== action.payload.support),
         targetMovements,
-        _actionState: {
-          ...state.playerTowns[state.activeTown]._actionState,
-          support: { inProgress: false, error: null }
-        }
+        // _actionState: {
+        //   ...state.playerTowns[state.activeTown]._actionState,
+        //   support: { inProgress: false, error: null }
+        // }
       };
       return {
         ...state,
@@ -263,33 +283,33 @@ export function reducer(
       };
     }
 
-    case TownActionTypes.Lost: {
-      const ids = state.ids.filter((id) => id !== action.payload);
-      const activeTown = state.activeTown === action.payload ? ids[0] || null : state.activeTown;
-      const playerTowns = { ...state.playerTowns };
-      delete playerTowns[action.payload];
+    // case TownActionTypes.Lost: {
+    //   const ids = state.ids.filter((id) => id !== action.payload);
+    //   const activeTown = state.activeTown === action.payload ? ids[0] || null : state.activeTown;
+    //   const playerTowns = { ...state.playerTowns };
+    //   delete playerTowns[action.payload];
 
-      return {
-        ...state,
-        activeTown,
-        ids,
-        playerTowns,
-      };
-    }
+    //   return {
+    //     ...state,
+    //     activeTown,
+    //     ids,
+    //     playerTowns,
+    //   };
+    // }
 
-    case TownActionTypes.Conquered: {
-      const town = action.payload;
-      town._actionState = TownDefaultActionState;
+    // case TownActionTypes.Conquered: {
+    //   const town = action.payload;
+    //   town._actionState = TownDefaultActionState;
 
-      return {
-        ...state,
-        ids: [...state.ids, town.id],
-        playerTowns: {
-          ...state.playerTowns,
-          [town.id]: town,
-        }
-      };
-    }
+    //   return {
+    //     ...state,
+    //     ids: [...state.ids, town.id],
+    //     playerTowns: {
+    //       ...state.playerTowns,
+    //       [town.id]: town,
+    //     }
+    //   };
+    // }
 
     case TownActionTypes.SupportDisbanded: {
       const { townId, id } = action.payload;
@@ -351,6 +371,22 @@ export function reducer(
       };
     }
 
+    case TownActionTypes.LoadProfilesSuccess: {
+      const newIds = Object.keys(action.payload).reduce((result, id) => {
+        if (!state.entities[id]) { result.push(+id); }
+        return result;
+      }, []);
+
+      return {
+        ...state,
+        ids: state.ids.concat(newIds),
+        entities: {
+          ...state.entities,
+          ...action.payload
+        },
+      };
+    }
+
     // case TownActionTypes.UpdateEvent:
     default: {
       return state;
@@ -359,4 +395,8 @@ export function reducer(
 }
 
 export const getPlayerTowns = (state: TownState) => state.playerTowns;
+export const getTownIds = (state: TownState) => state.ids;
+// TODO: this is triggered when switching active town, consider different approach
+export const getPlayerTownList = (state: TownState) => state.playerIds.map((id) => state.playerTowns[id]);
 export const getActiveTown = (state: TownState) => state.playerTowns[state.activeTown];
+export const getEntities = (state: TownState) => state.entities;

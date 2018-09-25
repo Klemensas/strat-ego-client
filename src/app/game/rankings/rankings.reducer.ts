@@ -9,7 +9,6 @@ export interface RankingsState {
   lastUpdate: number;
   updateFrequencey: number;
   ids: number[];
-  entities: Dict<PlayerProfile>;
   playerPosition: number;
 }
 
@@ -19,7 +18,6 @@ export const initialState: RankingsState = {
   error: null,
   updateFrequencey: environment.rankingUpdateFrequency,
   ids: [],
-  entities: {},
   playerPosition: null,
 };
 
@@ -35,21 +33,18 @@ export function reducer(
         error: null,
       };
     }
+
     case RankingsActionTypes.LoadSuccess: {
-      const items = action.payload.rankings.reduce((result, item) => {
-        result.ids.push(item.id);
-        result.entities[item.id] = item;
-        return result;
-      }, { ids: [], entities: {} });
       return {
         ...state,
-        ...items,
+        ids: action.payload.rankings,
         inProgress: false,
         lastUpdate: Date.now(),
         rankings: action.payload.rankings,
-        playerPosition: items.ids.indexOf(action.payload.playerId)
+        playerPosition: action.payload.rankings.indexOf(action.payload.playerId)
       };
     }
+
     case RankingsActionTypes.LoadFail: {
       return {
         ...state,
@@ -57,6 +52,7 @@ export function reducer(
         error: action.payload,
       };
     }
+
     case RankingsActionTypes.LoadStagnated: {
       return {
         ...state,
@@ -72,8 +68,7 @@ export function reducer(
   }
 }
 
-export const getAllRankings = (state: RankingsState) => state.ids.map((id) => state.entities[id]);
-export const getRankingEntities = (state: RankingsState) => state.entities;
+export const getRankingIds = (state: RankingsState) => state.ids;
 export const getPlayerPosition = ({ playerPosition }: RankingsState) => playerPosition;
 export const getRankingsUpdate = ({ lastUpdate, updateFrequencey }: RankingsState) => ({ lastUpdate, updateFrequencey });
 export const getRankingsProgress = (state: RankingsState) => state.inProgress;

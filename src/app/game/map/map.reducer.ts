@@ -1,17 +1,15 @@
-import { Dict, MapTown } from 'strat-ego-common';
+import { Dict } from 'strat-ego-common';
 
 import { MapActions, MapActionTypes } from './map.actions';
 
 export interface MapState {
   inProgress: boolean;
-  activeTown: number;
-  mapData: Dict<MapTown>;
+  mapData: Dict<number>;
 }
 
 export const initialState: MapState = {
   inProgress: false,
-  activeTown: null,
-  mapData: null
+  mapData: {}
 };
 
 export function reducer(

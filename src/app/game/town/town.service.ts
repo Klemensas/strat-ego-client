@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { Town, MovementType } from 'strat-ego-common';
 
 export interface TownPopulation {
@@ -13,7 +12,6 @@ export interface FullTown extends Town {
   population?: TownPopulation;
 }
 
-@Injectable()
 export class TownService {
   static calculatePopulation(town: Town, farmData) {
     const total = farmData[town.buildings.farm.level].population;

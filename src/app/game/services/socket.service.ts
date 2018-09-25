@@ -26,8 +26,7 @@ export class SocketService {
     filter(([events, ready]) => ready && !!events.length)
   ).subscribe(([events]) => {
     events.forEach(([event, callback]) => {
-      if (this.registeredEvents.includes(event)) { return; }
-
+      // if (this.registeredEvents.includes(event)) { return; }
       this.socket.on(event, callback);
       this.registeredEvents.push(event);
     });

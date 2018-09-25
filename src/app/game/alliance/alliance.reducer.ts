@@ -10,28 +10,33 @@ import {
   DiplomacyStatus,
   ProfileUpdate,
   Dict,
+  AllianceProfile,
 } from 'strat-ego-common';
 
 import { AllianceActionTypes, AllianceActions } from './alliance.actions';
 
 export interface AllianceState {
-  playerAlliance: number;
-  alliances: Dict<Alliance>;
-  role: AllianceRole;
-  invitations: Profile[];
   inProgress: boolean;
-  viewedProfile: number;
   error: any;
+  viewedProfile: number;
+  playerAlliance: Alliance;
+  alliances: Dict<Alliance>;
+  playerRole: number;
+  invitations: Profile[];
+  ids: number[];
+  entities: Dict<AllianceProfile>;
 }
 
 export const initialState: AllianceState = {
+  inProgress: false,
+  error: null,
+  viewedProfile: null,
   playerAlliance: null,
   alliances: {},
-  role: null,
+  playerRole: null,
   invitations: [],
-  inProgress: false,
-  viewedProfile: null,
-  error: null,
+  ids: [],
+  entities: {},
 };
 
 export function reducer(
@@ -39,24 +44,53 @@ export function reducer(
   action: AllianceActions
 ): AllianceState {
   switch (action.type) {
-    case AllianceActionTypes.SetData: {
-      const alliance = action.payload.allianceId ? { [action.payload.allianceId]: action.payload.alliance } : {};
-      const alliances = { ...state.alliances, ...alliance };
+    // TODO: need to decide what's stored in palyer alliance and what's split away
+    // chat messages already have a reducer
+    // stuff like
+    case AllianceActionTypes.Initialize: {
+      const alliance = action.payload.alliance;
+      if (!alliance) { return state; }
+
+      const ids = [...state.ids, alliance.id];
+      const entities = {
+        ...state.entities,
+        [alliance.id]: {
+          id: alliance.id,
+          name: alliance.name,
+          members: alliance.members.map(({ id }) => ({ id })),
+          avatarUrl: alliance.avatarUrl,
+          description: alliance.description,
+          createdAt: alliance.createdAt,
+        }
+      };
+
       return {
         ...state,
-        alliances,
-        playerAlliance: action.payload.allianceId,
-        invitations: action.payload.invitations,
-        role: action.payload.allianceRole
+        playerAlliance: alliance,
+        playerRole: action.payload.player.allianceRoleId,
+        ids,
+        entities,
+        // role: action.payload.allianceRole
       };
     }
+    // case AllianceActionTypes.SetData: {
+    //   const alliance = action.payload.allianceId ? { [action.payload.allianceId]: action.payload.alliance } : {};
+    //   const alliances = { ...state.alliances, ...alliance };
+    //   return {
+    //     ...state,
+    //     alliances,
+    //     playerAlliance: action.payload.allianceId,
+    //     invitations: action.payload.invitations,
+    //     role: action.payload.allianceRole
+    //   };
+    // }
     case AllianceActionTypes.CreateSuccess: {
       const alliances = { ...state.alliances, [action.payload.id]: action.payload };
       return {
         ...state,
         alliances,
-        playerAlliance: action.payload.id,
-        role: action.payload.masterRole,
+        playerAlliance: action.payload,
+        playerRole: action.payload.masterRoleId,
       };
     }
 
@@ -65,16 +99,16 @@ export function reducer(
       return {
         ...state,
         playerAlliance: null,
-        role: null,
+        playerRole: null,
       };
     }
 
     case AllianceActionTypes.DestroySuccess: {
-      const alliances = { ...state.alliances, [state.playerAlliance]: null };
+      const alliances = { ...state.alliances, [state.playerAlliance.id]: null };
       return {
         ...state,
         ...alliances,
-        role: null,
+        playerRole: null,
         playerAlliance: null,
       };
     }
@@ -96,14 +130,13 @@ export function reducer(
 
     case AllianceActionTypes.AcceptInviteSuccess: {
       const alliances = { ...state.alliances, [action.payload.id]: action.payload };
-      const role = action.payload.defaultRole;
       const invitations = state.invitations.filter(({ id }) => id !== action.payload.id);
       return {
         ...state,
         alliances,
-        role,
         invitations,
-        playerAlliance: action.payload.id,
+        playerAlliance: action.payload,
+        playerRole: action.payload.defaultRoleId,
       };
     }
 
@@ -131,7 +164,7 @@ export function reducer(
     case AllianceActionTypes.UpdateSelfRole: {
       return {
         ...state,
-        role: action.payload,
+        // role: action.payload,
       };
     }
 
@@ -210,7 +243,6 @@ export function reducer(
     case AllianceActionTypes.EndAllianceFail:
     case AllianceActionTypes.EndNapFail:
     case AllianceActionTypes.DeclareWarFail:
-    case AllianceActionTypes.LoadProfileFail:
     case AllianceActionTypes.UpdateProfileFail:
     case AllianceActionTypes.RemoveAvatarFail: {
       return { ...state, error: action.payload, inProgress: false };
@@ -220,18 +252,20 @@ export function reducer(
       return { ...state, viewedProfile: action.payload };
     }
 
-    case AllianceActionTypes.LoadProfile: {
-      return { ...state, error: null, inProgress: true };
-    }
+    case AllianceActionTypes.LoadProfilesSuccess: {
+      const newIds = Object.keys(action.payload).reduce((result, id) => {
+        if (!state.entities[id]) { result.push(+id); }
+        return result;
+      }, []);
 
-    case AllianceActionTypes.LoadProfileSuccess: {
       return {
         ...state,
-        alliances: {
-          ...state.alliances,
-          [action.payload.id]: action.payload,
+        ids: state.ids.concat(newIds),
+        entities: {
+          ...state.entities,
+          ...action.payload
         },
-        inProgress: false };
+      };
     }
 
     default: {
@@ -262,30 +296,31 @@ export function reducer(
   }
 }
 
-export const getPlayerAlliance = (state: AllianceState) => state.alliances[state.playerAlliance];
+export const getPlayerAlliance = (state: AllianceState) => state.playerAlliance;
 export const getPlayerInvitations = (state: AllianceState) => state.invitations;
 export const getPlayerAllianceData = (state: AllianceState) => ({
-  alliance: state.alliances[state.playerAlliance],
-  role: state.role,
+  alliance: state.playerAlliance,
+  role: state.playerAlliance.roles.find(({ id }) => id === state.playerRole),
 });
 export const getPlayerAllianceActiveDiplomacy = (state: AllianceState) => {
-  const alliance = state.alliances[state.playerAlliance];
+  const alliance = state.alliances[state.playerAlliance.id];
   return !alliance ? [] : [...alliance.diplomacyOrigin, ...alliance.diplomacyTarget].filter(({ status }) => status === DiplomacyStatus.ongoing);
 };
 export const getViewedAlliance = (state: AllianceState) => {
-  const alliance = state.alliances[state.viewedProfile];
+  const alliance = state.entities[state.viewedProfile];
   return alliance;
 };
 export const getAlliances = (state: AllianceState) => state.alliances;
+export const getAllianceEntities = (state: AllianceState) => state.entities;
 
 const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | number>, state: AllianceState, stateParams = {}): AllianceState => {
   const isJoin = payload.event.status === EventStatus.join;
-  const alliance = state.alliances[state.playerAlliance];
+  const alliance = state.playerAlliance;
   return {
     ...state,
     alliances: {
       ...state.alliances,
-      [state.playerAlliance]: {
+      [state.playerAlliance.id]: {
         ...alliance,
         events: [payload.event, ...alliance.events],
         invitations: isJoin ?
@@ -301,12 +336,12 @@ const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | nu
 
 const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, state: AllianceState, stateParams = {}): AllianceState => {
   const isCreated = payload.event.status === EventStatus.create;
-  const alliance = state.alliances[state.playerAlliance];
+  const alliance = state.alliances[state.playerAlliance.id];
   return {
     ...state,
     alliances: {
       ...state.alliances,
-      [state.playerAlliance]: {
+      [state.playerAlliance.id]: {
         ...alliance,
         events: [payload.event, ...alliance.events],
         invitations: isCreated ?
@@ -320,25 +355,25 @@ const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, 
 
 const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayload>, state: AllianceState, stateParams = {}): AllianceState => {
   const { created, updated, removed, updatedMember } = payload.data;
-  const alliance = state.alliances[state.playerAlliance];
+  const alliance = state.alliances[state.playerAlliance.id];
   let members = [...alliance.members];
   let roles = [...alliance.roles];
-  let defaultRole = alliance.defaultRole;
-  let playerRole = state.role;
+  let defaultRole = alliance.roles.find(({ id }) => id === alliance.defaultRoleId);
+  let playerRole = state.playerRole;
 
   if (updated) {
     updated.forEach((role) => {
       const roleIndex = roles.findIndex(({ id }) => id === role.id);
       roles[roleIndex] = role;
       if (role.id === alliance.defaultRoleId) { defaultRole = role; }
-      if (playerRole.id === role.id) { playerRole = role; }
+      if (playerRole === role.id) { playerRole = role.id; }
 
       members = members.map((member) =>  member.allianceRole.id === role.id ? { ...member, allianceRole: role } : member);
     });
   }
   if (removed) {
     roles = roles.filter(({ id }) => !removed.includes(id));
-    if (removed.includes(playerRole.id)) { playerRole = defaultRole; }
+    if (removed.includes(playerRole)) { playerRole = defaultRole.id; }
 
     members = members.map((member) => removed.includes(member.allianceRole.id) ? { ...member, allianceRole: defaultRole } : member);
   }
@@ -354,10 +389,10 @@ const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayloa
 
   return {
     ...state,
-    role: playerRole,
+     playerRole,
     alliances: {
       ...state.alliances,
-      [state.playerAlliance]: {
+      [state.playerAlliance.id]: {
         ...alliance,
         members,
         roles,
@@ -370,7 +405,7 @@ const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayloa
 
 const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | number>, state: AllianceState, stateParams = {}): AllianceState => {
   let diplomacy: { diplomacyTarget?: Partial<AllianceDiplomacy>[]; diplomacyOrigin?: Partial<AllianceDiplomacy>[] } = {};
-  const alliance = state.alliances[state.playerAlliance];
+  const alliance = state.alliances[state.playerAlliance.id];
   const hasDiplo = typeof payload.data !== 'number';
   const isDiploStart = !hasDiplo && (payload.event.status === EventStatus.startAlliance || payload.event.status === EventStatus.startNap);
   if (isDiploStart) {
@@ -387,7 +422,7 @@ const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | 
     };
   } else {
     // TODO: shouldn't have to use as here, look into TS
-    const type = (payload.data as AllianceDiplomacy).targetAllianceId === state.playerAlliance ? 'diplomacyTarget' : 'diplomacyOrigin';
+    const type = (payload.data as AllianceDiplomacy).targetAllianceId === state.playerAlliance.id ? 'diplomacyTarget' : 'diplomacyOrigin';
     diplomacy[type] = [payload.data as AllianceDiplomacy, ...alliance[type]];
   }
 
@@ -395,7 +430,7 @@ const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | 
     ...state,
     alliances: {
       ...state.alliances,
-      [state.playerAlliance]: {
+      [state.playerAlliance.id]: {
         ...alliance,
         ...diplomacy,
         events: [payload.event, ...alliance.events],
@@ -405,12 +440,12 @@ const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | 
 };
 
 const eventProfile = (payload: AllianceEventSocketMessage<ProfileUpdate>, state: AllianceState, stateParams = {}): AllianceState => {
-  const alliance = state.alliances[state.playerAlliance];
+  const alliance = state.alliances[state.playerAlliance.id];
   return {
     ...state,
     alliances: {
       ...state.alliances,
-      [state.playerAlliance]: {
+      [state.playerAlliance.id]: {
         ...alliance,
         ...payload.data,
         events: [payload.event, ...alliance.events],
