@@ -6,6 +6,7 @@ import * as allianceReducer from './alliance/alliance.reducer';
 import * as chatReducer from './chat/chat.reducer';
 import * as mapReducer from './map/map.reducer';
 import * as rankingReducer from '../game/rankings/rankings.reducer';
+import * as reportReducer from '../game/report/report.reducer';
 import { getActiveWorld } from '../reducers';
 import { FullTown, TownService } from './town/town.service';
 
@@ -16,6 +17,7 @@ export interface State {
   chat: chatReducer.ChatState;
   map: mapReducer.MapState;
   rankings: rankingReducer.RankingsState;
+  report: reportReducer.ReportState;
 }
 
 export interface GameModuleState {
@@ -29,6 +31,7 @@ export const reducers = {
   town: townReducer.reducer,
   map: mapReducer.reducer,
   rankings: rankingReducer.reducer,
+  report: reportReducer.reducer,
 };
 
 export const getState = createFeatureSelector<State>('game');
@@ -72,9 +75,8 @@ export const getCurrentPlayer = createSelector(
   getPlayerState,
   playerReducer.getCurrentPlayer,
 );
-export const getPlayerReports = createSelector(
+export const getPlayerId = createSelector(
   getPlayerState,
-  playerReducer.getPlayerReports,
 );
 export const getSidenavs = createSelector(
   getPlayerState,
@@ -169,6 +171,16 @@ export const getRankingsProgress = createSelector(
   rankingReducer.getRankingsProgress,
 );
 
+// Report selectors
+export const getReportState = createSelector(
+  getState,
+  (state: State) => state.report,
+);
+export const getReportList = createSelector(
+  getReportState,
+  reportReducer.getReportList,
+);
+
 // Multi state composed selectors
 export const getFullViewedPlayer = createSelector(
   getViewedPlayer,
@@ -221,4 +233,23 @@ export const getFullChatMessages = createSelector(
     ...message,
     player: playerEntities[message.playerId],
   }))
+);
+
+export const getFullReports = createSelector(
+  getReportList,
+  getPlayerEntities,
+  getTownEntities,
+  getPlayerId,
+  (reports, playerEntities, townEntities, playerId) => reports.map((report) => {
+    const type = report.originPlayerId === playerId ? CombatOutcome.attack : CombatOutcome.defense;
+    return {
+      ...report,
+      type,
+      won: report.outcome === type,
+      originTown: townEntities[report.originTownId] || {},
+      targetTown: townEntities[report.targetTownId] || {},
+      originPlayer: playerEntities[report.originPlayerId] || {},
+      targetPlayer: playerEntities[report.targetPlayerId] || {},
+    };
+  })
 );

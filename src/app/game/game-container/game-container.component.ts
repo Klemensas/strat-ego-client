@@ -12,7 +12,6 @@ import {
   GameModuleState,
   getTownState,
   getCurrentPlayer,
-  getPlayerReports,
   getSidenavs,
   getPlayerAlliance,
   getAllRankings,
@@ -21,6 +20,7 @@ import {
   getFullViewedPlayer,
   getFullViewedAlliance,
   getFullTown,
+  getFullReports,
 } from '../reducers';
 import {
   ViewProfile as viewAllianceProfile,
@@ -122,7 +122,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public player$ = this.store.select(getCurrentPlayer);
   public alliance$ = this.store.select(getPlayerAlliance);
   public townState$ = this.store.select(getTownState);
-  public reports$ = this.store.select(getPlayerReports);
+  public reports$ = this.store.select(getFullReports);
   public worldData$ = this.store.select(getActiveWorld);
   public positionRankings$ = this.store.select(getAllRankings)
     .pipe(
@@ -136,7 +136,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   public activeTown$ = this.store.select(getFullTown);
 
   public viewedPlayer$ = this.store.select(getFullViewedPlayer);
-  public viewedAlliance$ = this.store.select(getFullViewedAlliance).pipe(tap((v) => console.log('see', v)));
+  public viewedAlliance$ = this.store.select(getFullViewedAlliance);
 
   public isVisible;
   public sidenavSubscription: Subscription;

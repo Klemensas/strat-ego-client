@@ -146,11 +146,8 @@ export function reducer(
 }
 
 export const getCurrentPlayer = (state: PlayerState) => state.currentPlayer;
+export const getPlayerId = createSelector(getCurrentPlayer, (player) => player ? player.id : null);
 export const getEntities = (state: PlayerState) => state.entities;
-export const getPlayerReports = (state: PlayerState) => ({
-  originReports: state.currentPlayer.originReports,
-  targetReports: state.currentPlayer.targetReports,
-});
 export const getTutorialStage = (state: any) => state.entities[state.currentPlayer].tutorialStage;
 export const getSidenavs = (state: PlayerState) => state.sidenavs;
 export const getPlayers = (state: PlayerState) => state.entities;
