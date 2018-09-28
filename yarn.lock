@@ -6285,7 +6285,7 @@ stdout-stream@^1.4.0:
 
 "strat-ego-common@github:klemensas/strat-ego-common":
   version "0.0.1"
-  resolved "https://codeload.github.com/klemensas/strat-ego-common/tar.gz/4eae0152ab0678707d4dc42fb50c6efcdbf8bc70"
+  resolved "https://codeload.github.com/klemensas/strat-ego-common/tar.gz/5070e1ccfc7d23fdab5e03ec86a035ee9daf4014"
 
 stream-browserify@^2.0.1:
   version "2.0.1"

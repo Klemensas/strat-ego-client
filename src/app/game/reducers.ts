@@ -213,3 +213,12 @@ export const getFullTown = createSelector(
     return fullTown;
   },
 );
+
+export const getFullChatMessages = createSelector(
+  getChatMessages,
+  getPlayerEntities,
+  (messages, playerEntities) => messages.map((message) => ({
+    ...message,
+    player: playerEntities[message.playerId],
+  }))
+);
