@@ -24,7 +24,6 @@ export function reducer(
   action: PlayerActions & any
 ) {
   switch (action.type) {
-    // case PlayerActionTypes.Update:
     case PlayerActionTypes.Initialize:
       const currentPlayer = action.payload;
       return {

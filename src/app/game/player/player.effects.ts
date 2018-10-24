@@ -76,7 +76,6 @@ export class PlayerEffects {
     map((payload) => new playerActions.LoadProfiles(payload)),
   );
 
-
   @Effect({ dispatch: false })
   public loadProfiles$: Observable<any> = this.actions$.pipe(
     ofType<playerActions.LoadProfiles>(playerActions.PlayerActionTypes.LoadProfiles),
@@ -91,7 +90,6 @@ export class PlayerEffects {
   ) {
     this.socketService.registerEvents([
       ['initialize', (payload) => this.store.dispatch(new playerActions.Initialize(payload.player))],
-      ['player', (payload) => this.store.dispatch(new playerActions.Update(payload))],
       ['player:updateProfileSuccess', (payload) => this.store.dispatch(new playerActions.UpdateProfileSuccess(payload))],
       ['player:updateProfileFail', (payload) => this.store.dispatch(new playerActions.UpdateProfileFail(payload))],
       ['player:removeAvatarSuccess', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],

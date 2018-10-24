@@ -4,7 +4,6 @@ import { Player, ProfileUpdate, ActionError, Report, PlayerProfile } from 'strat
 export enum PlayerActionTypes {
   Initialize = '[Player] Initialize',
 
-  Update = '[Player] Update',
   Restart = '[Player] Restart',
 
   ViewProfile = '[Player] View Profile',
@@ -36,11 +35,6 @@ export const PlayerFailActions = [
   PlayerActionTypes.RemoveAvatarFail,
 ];
 
-export class Update implements Action {
-  readonly type = PlayerActionTypes.Update;
-
-  constructor(public payload: Player) {}
-}
 export class Initialize implements Action {
   readonly type = PlayerActionTypes.Initialize;
 
@@ -114,8 +108,7 @@ export class AddReport implements Action {
   constructor(public payload: { side: string, report: Report }) {}
 }
 
-export type PlayerActions = Update
-  | Initialize
+export type PlayerActions = Initialize
   | Restart
   | ViewProfile
   | LoadProfiles
