@@ -1,12 +1,10 @@
 import { Action } from '@ngrx/store';
 import { Player, ProfileUpdate, ActionError, Report, PlayerProfile } from 'strat-ego-common';
 
-// TODO: move sidenav to a dedicated game state
 export enum PlayerActionTypes {
   Initialize = '[Player] Initialize',
 
   Update = '[Player] Update',
-  SetSidenav = '[Player] Set Sidenav',
   Restart = '[Player] Restart',
 
   ViewProfile = '[Player] View Profile',
@@ -47,11 +45,6 @@ export class Initialize implements Action {
   readonly type = PlayerActionTypes.Initialize;
 
   constructor(public payload: Player) {}
-}
-export class SetSidenav implements Action {
-  readonly type = PlayerActionTypes.SetSidenav;
-
-  constructor(public payload: { side: string, name: string }[]) {}
 }
 export class Restart implements Action {
   readonly type = PlayerActionTypes.Restart;
@@ -123,7 +116,6 @@ export class AddReport implements Action {
 
 export type PlayerActions = Update
   | Initialize
-  | SetSidenav
   | Restart
   | ViewProfile
   | LoadProfiles

@@ -29,7 +29,7 @@ import {
   AllianceFailActions } from '../alliance/alliance.actions';
 import { ViewProfile as viewPlayerProfile, PlayerActionTypes, PlayerSuccessActions, PlayerFailActions, ProgressTutorial } from '../player/player.actions';
 import { SetActiveTown, TownActionTypes, TownSuccessActions, TownFailActions } from '../town/town.actions';
-import { SetSidenav, Restart } from '../player/player.actions';
+import { SetSidenav } from '../menu/menu.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
 

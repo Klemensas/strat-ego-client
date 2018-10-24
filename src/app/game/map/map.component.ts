@@ -15,7 +15,7 @@ import {
 } from '../reducers';
 import { MapService, CommandService } from '../services';
 import { LoadMap } from '../map/map.actions';
-import { SetSidenav } from '../player/player.actions';
+import { SetSidenav } from '../menu/menu.actions';
 import { ViewProfile as viewAllianceProfile } from '../alliance/alliance.actions';
 import { ViewProfile as viewPlayerProfile } from '../player/player.actions';
 import { getActiveWorld } from '../../reducers';

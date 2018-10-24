@@ -9,6 +9,7 @@ import { SocketService } from '../../game/services/socket.service';
 import { GameModuleState, getPlayers, getPlayerEntities } from '../reducers';
 import { LoadProfilesSuccess, TownActionTypes } from '../town/town.actions';
 import { RankingsActionTypes, LoadSuccess } from '../rankings/rankings.actions';
+import { SetSidenav } from '../menu/menu.actions';
 
 @Injectable()
 export class PlayerEffects {
@@ -26,7 +27,7 @@ export class PlayerEffects {
     map(([payload, players]) => {
       const player = players[payload];
       if (!player) { this.socketService.sendEvent('player:getProfile', payload); }
-      return new playerActions.SetSidenav([{ side: 'right', name: 'playerProfile' }]);
+      return new SetSidenav([{ side: 'right', name: 'playerProfile' }]);
     })
   );
 

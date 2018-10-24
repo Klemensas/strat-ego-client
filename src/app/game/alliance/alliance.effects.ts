@@ -10,6 +10,7 @@ import * as allianceActions from './alliance.actions';
 import { GameModuleState, getCurrentPlayer, getAlliances, getAllianceEntities, getPlayerEntities } from '../reducers';
 import { SocketService } from '../../game/services/socket.service';
 import { PlayerActionTypes, Update as UpdatePlayer, SetSidenav, LoadProfilesSuccess, LoadProfiles as LoadPlayerProfiles } from '../player/player.actions';
+import { SetSidenav } from '../menu/menu.actions';
 
 @Injectable()
 export class Allianceffects {

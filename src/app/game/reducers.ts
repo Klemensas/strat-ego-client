@@ -7,6 +7,7 @@ import * as chatReducer from './chat/chat.reducer';
 import * as mapReducer from './map/map.reducer';
 import * as rankingReducer from '../game/rankings/rankings.reducer';
 import * as reportReducer from '../game/report/report.reducer';
+import * as menuReducer from '../game/menu/menu.reducer';
 import { getActiveWorld } from '../reducers';
 import { FullTown, TownService } from './town/town.service';
 
@@ -18,6 +19,7 @@ export interface State {
   map: mapReducer.MapState;
   rankings: rankingReducer.RankingsState;
   report: reportReducer.ReportState;
+  menu: menuReducer.MenuState;
 }
 
 export interface GameModuleState {
@@ -32,6 +34,7 @@ export const reducers = {
   map: mapReducer.reducer,
   rankings: rankingReducer.reducer,
   report: reportReducer.reducer,
+  menu: menuReducer.reducer,
 };
 
 export const getState = createFeatureSelector<State>('game');
@@ -77,10 +80,7 @@ export const getCurrentPlayer = createSelector(
 );
 export const getPlayerId = createSelector(
   getPlayerState,
-);
-export const getSidenavs = createSelector(
-  getPlayerState,
-  playerReducer.getSidenavs,
+  playerReducer.getPlayerId,
 );
 export const getPlayers = createSelector(
   getPlayerState,
@@ -179,6 +179,16 @@ export const getReportState = createSelector(
 export const getReportList = createSelector(
   getReportState,
   reportReducer.getReportList,
+);
+
+// Menu selectors
+export const getMenuState = createSelector(
+  getState,
+  (state: State) => state.menu,
+);
+export const getSidenavs = createSelector(
+  getMenuState,
+  menuReducer.getSidenavs,
 );
 
 // Multi state composed selectors

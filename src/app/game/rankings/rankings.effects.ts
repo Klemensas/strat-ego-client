@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Store, Action } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, withLatestFrom, filter, take } from 'rxjs/operators';
 
 import { SocketService } from '../../game/services/socket.service';
 import { Load, RankingsActionTypes, LoadSuccess, LoadFail, CheckForUpdate, LoadStagnated } from './rankings.actions';
 import { GameModuleState, getRankingsUpdate, getCurrentPlayer } from '../reducers';
-import { SetSidenav, PlayerActionTypes } from '../player/player.actions';
+import { SetSidenav, MenuActionTypes } from '../menu/menu.actions';
 
 @Injectable()
 export class RankingsEffects {
@@ -20,7 +19,7 @@ export class RankingsEffects {
 
   @Effect()
   public sidenavOpen$: Observable<any> = this.actions$.pipe(
-    ofType<SetSidenav>(PlayerActionTypes.SetSidenav),
+    ofType<SetSidenav>(MenuActionTypes.SetSidenav),
     filter((action) => action.payload.some(({ name }) => name === 'rankings')),
     map(() => new CheckForUpdate())
   );
@@ -36,7 +35,6 @@ export class RankingsEffects {
 
   constructor(
     private actions$: Actions,
-    private router: Router,
     private socketService: SocketService,
     private store: Store<GameModuleState>
   ) {

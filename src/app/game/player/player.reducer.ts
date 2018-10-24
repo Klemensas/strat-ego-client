@@ -6,10 +6,6 @@ import { TownActionTypes, TownActions } from '../town/town.actions';
 export interface PlayerState {
   inProgress: boolean;
   currentPlayer: Player;
-  sidenavs: {
-    left: string;
-    right: string;
-  };
   viewedProfile: number;
   ids: number[];
   entities: Dict<PlayerProfile>;
@@ -18,10 +14,6 @@ export interface PlayerState {
 export const initialState: PlayerState = {
   inProgress: false,
   currentPlayer: null,
-  sidenavs: {
-    left: null,
-    right: null,
-  },
   viewedProfile: null,
   ids: [],
   entities: {},
@@ -71,12 +63,6 @@ export function reducer(
           }
         }
       };
-    }
-
-    case PlayerActionTypes.SetSidenav: {
-      const sidenavs = { ...state.sidenavs };
-      action.payload.forEach(({ side, name }) => sidenavs[side] = name);
-      return { ...state, sidenavs };
     }
 
     case PlayerActionTypes.ViewProfile: {
