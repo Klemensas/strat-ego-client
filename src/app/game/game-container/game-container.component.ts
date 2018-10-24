@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { filter, map, combineLatest, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, combineLatest, tap  } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
@@ -29,6 +29,7 @@ import {
   AllianceFailActions } from '../alliance/alliance.actions';
 import { ViewProfile as viewPlayerProfile, PlayerActionTypes, PlayerSuccessActions, PlayerFailActions, ProgressTutorial } from '../player/player.actions';
 import { SetActiveTown, TownActionTypes, TownSuccessActions, TownFailActions } from '../town/town.actions';
+import { Restart } from '../player/player.actions';
 import { SetSidenav } from '../menu/menu.actions';
 import { Logout } from '../../auth/auth.actions';
 import { getActiveWorld } from '../../reducers';
