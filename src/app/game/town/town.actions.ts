@@ -6,7 +6,6 @@ import { Town } from './town.model';
 export const enum TownActionTypes {
   Initialize = '[Town] Initialize',
 
-  Update = '[Town] Update',
   Rename = '[Town] Rename',
   RenameSuccess = '[Town] Rename Success',
   RenameFail = '[Town] Rename Fail',
@@ -25,7 +24,6 @@ export const enum TownActionTypes {
   SendBackSupport = '[Town] Send Back Support',
   SendBackSupportSuccess = '[Town] Send Back Support Success',
   SendBackSupportFail = '[Town] Send Back Support Fail',
-  SetPlayerTowns = '[Town] Set Player Towns',
   SetActiveTown = '[Town] Set Active Town',
 
   LoadProfilesSuccess = '[Town] Load Profiles Success',
@@ -60,11 +58,7 @@ export const TownFailActions = [
 
 // TODO: once decided on queue implementation change payload accordingly
 // I.e. might need to only send the changes instead of full town payload
-export class Update implements Action {
-  readonly type = TownActionTypes.Update;
 
-  constructor(public payload: Town) {}
-}
 export class Initialize implements Action {
   readonly type = TownActionTypes.Initialize;
 
@@ -226,8 +220,7 @@ export class LoadProfilesSuccess implements Action {
 // SentSupportUpdated = '[Town][Affected] Sent Support Updated',
 
 
-export type TownActions = Update
-  | Initialize
+export type TownActions = Initialize
   | Rename
   | RenameSuccess
   | RenameFail
@@ -246,7 +239,6 @@ export type TownActions = Update
   | SendBackSupport
   | SendBackSupportSuccess
   | SendBackSupportFail
-  | SetPlayerTowns
   | SetActiveTown
   | IncomingMovement
   | SupportRecalled

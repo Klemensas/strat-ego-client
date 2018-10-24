@@ -10,8 +10,6 @@ import { Town } from './town.model';
 import {
   TownActionTypes,
   SetActiveTown,
-  SetPlayerTowns,
-  Update,
   Rename,
   Recruit,
   RenameSuccess,
@@ -53,33 +51,17 @@ import { TownService } from './town.service';
 
 @Injectable()
 export class TownEffects {
-  // public townTimeouts = {};
-
   @Effect()
   public setActiveTown$: Observable<Action> = this.actions$.pipe(
-    ofType<SetPlayerTowns>(TownActionTypes.SetPlayerTowns, TownActionTypes.Initialize),
+    ofType<Initialize>(TownActionTypes.Initialize),
     map((action) => action.payload),
-    withLatestFrom(this.store),
-    filter(([towns, store]) => (towns.length && !store.game.town.activeTown) || !towns.length),
-    map(([towns, store]) => new SetActiveTown(towns.length ? towns[0].id : null))
+    withLatestFrom(this.store.select(getTownState)),
+    filter(([towns, townState]) => towns.length && !townState.activeTown),
+    map(([towns]) => new SetActiveTown(towns[0].id))
   );
 
   @Effect()
-  public setPlayerTowns$: Observable<Action> = this.actions$.pipe(
-    ofType<PlayerUpdate>(PlayerActionTypes.Update),
-    map((action) => action.payload),
-    map((player) => player.towns),
-    withLatestFrom(this.store.select(getActiveWorld)),
-    map(([towns, world]: [Town[], WorldData]) => new SetPlayerTowns(towns.map((town) => this.updateTown(world, town)))),
   );
-
-  // @Effect()
-  // public townUpdateEvent$: Observable<Action> = this.actions$.pipe(
-  //   ofType<UpdateEvent>(TownActionTypes.UpdateEvent),
-  //   map((action) => action.payload),
-  //   withLatestFrom(this.store.select(getActiveWorld)),
-  //   map(([{ town, event }, world]) => this.updateAction(world, [town], Update, event.type))
-  // );
 
   @Effect({ dispatch: false })
   public changeTownName$: Observable<any> = this.actions$.pipe(

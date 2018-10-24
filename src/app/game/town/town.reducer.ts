@@ -57,32 +57,6 @@ export function reducer(
   action: TownActions
 ): TownState {
   switch (action.type) {
-    // case TownActionTypes.SetPlayerTowns: {
-    //   const { playerTowns, playerIds } = action.payload.reduce((result, town) => {
-    //     result.playerIds.push(town.id);
-    //     result.playerTowns[town.id] = {
-    //       ...town,
-    //       _actionState: TownDefaultActionState,
-    //     };
-    //     return result;
-    //   }, { playerTowns: {}, playerIds: [] });
-    //   return { ...state, playerTowns, playerIds, inProgress: false };
-    // }
-
-    // case TownActionTypes.Update: {
-    //   const targetTown = state.playerTowns[action.payload.id];
-    //   return {
-    //     ...state,
-    //     playerTowns: {
-    //       ...state.playerTowns,
-    //       [action.payload.id]: {
-    //         ...targetTown,
-    //         ...action.payload,
-    //       }
-    //     }
-    //   };
-    // }
-
     case TownActionTypes.Initialize: {
       const { playerIds, playerTowns, entities } = action.payload.reduce((result, town) => {
         result.playerIds.push(town.id);
