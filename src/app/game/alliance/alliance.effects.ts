@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { Observable ,  of } from 'rxjs';
-import { map, withLatestFrom, filter, first } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, withLatestFrom, filter, concatMap } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
 import { AllianceEventSocketMessage } from 'strat-ego-common';
 
 import * as allianceActions from './alliance.actions';
-import { GameModuleState, getCurrentPlayer, getAlliances, getAllianceEntities, getPlayerEntities } from '../reducers';
+import { GameModuleState, getCurrentPlayer, getAllianceEntities, getAllianceState, getPlayerState } from '../reducers';
 import { SocketService } from '../../game/services/socket.service';
-import { PlayerActionTypes, Update as UpdatePlayer, SetSidenav, LoadProfilesSuccess, LoadProfiles as LoadPlayerProfiles } from '../player/player.actions';
+import { PlayerActionTypes, LoadProfilesSuccess, LoadProfiles as LoadPlayerProfiles } from '../player/player.actions';
 import { SetSidenav } from '../menu/menu.actions';
 
 @Injectable()
@@ -217,7 +217,7 @@ export class Allianceffects {
   );
 
   @Effect({ dispatch: false })
-  public loadMissingProfilesFromPlayers$: Observable<any> = this.actions$.pipe(
+  public loadPlayerProfiles$: Observable<any> = this.actions$.pipe(
     ofType<LoadProfilesSuccess>(PlayerActionTypes.LoadProfilesSuccess),
     withLatestFrom(this.store.select(getAllianceEntities)),
     map(([action, entities]) => Object.values(action.payload).reduce((result, { allianceId }) => {
@@ -230,39 +230,49 @@ export class Allianceffects {
     map((payload) => this.socketService.sendEvent('profile:loadAlliances', payload))
   );
 
-  @Effect({ dispatch: false })
-  public loadMissingProfilesFromAlliance$: Observable<any> = this.actions$.pipe(
+  @Effect()
+  public loadAllianceProfiles$: Observable<any> = this.actions$.pipe(
     ofType<allianceActions.Initialize>(allianceActions.AllianceActionTypes.Initialize),
-    withLatestFrom(this.store.select(getAllianceEntities), this.store.select(getPlayerEntities)),
-    map(([action, allianceEntities, playerEntities]) => {
+    withLatestFrom(this.store.select(getAllianceState), this.store.select(getPlayerState)),
+    map(([action, allianceState, playerState]) => {
       const missingAllianceIds = new Set<number>();
       const missingPlayerIds = new Set<number>();
       const alliance = action.payload.alliance;
 
-      if (!alliance) { return; }
+      if (!alliance) {
+        return { missingAllianceIds, missingPlayerIds };
+      }
 
-      alliance.invitations.forEach(({ id }) => !playerEntities[id] ? missingPlayerIds.add(id) : null);
+      alliance.invitations.forEach(({ id }) => !playerState[id] && !playerState[id] ? missingPlayerIds.add(id) : null);
       alliance.events.forEach(missingLoop);
       alliance.diplomacyOrigin.forEach(missingLoop);
       alliance.diplomacyTarget.forEach(missingLoop);
 
-      // const missingPlayerIds = Object.keys(missingPlayerIds);
-      // const missingAllianceIds = Object.keys(missingAllianceIds);
-
-      if (missingPlayerIds.size) {
-        this.store.dispatch(new LoadPlayerProfiles([...missingPlayerIds]));
-      }
-      if (missingAllianceIds.size) {
-        this.store.dispatch(new allianceActions.LoadProfiles([...missingAllianceIds]));
-      }
+      return { missingAllianceIds, missingPlayerIds };
 
       function missingLoop({ originAllianceId, targetAllianceId, originPlayerId, targetPlayerId }) {
-        if (originAllianceId && !allianceEntities[originAllianceId]) { missingAllianceIds.add(originAllianceId); }
-        if (targetAllianceId && !allianceEntities[targetAllianceId]) { missingAllianceIds.add(targetAllianceId); }
-        if (originPlayerId && !playerEntities[originPlayerId]) { missingPlayerIds.add(originPlayerId); }
-        if (targetPlayerId && !playerEntities[targetPlayerId]) { missingPlayerIds.add(targetPlayerId); }
+        if (originAllianceId && !allianceState.entities[originAllianceId] && !allianceState.loadingIds[originAllianceId]) {
+          missingAllianceIds.add(originAllianceId);
+        }
+        if (targetAllianceId && !allianceState.entities[targetAllianceId] && !allianceState.loadingIds[targetAllianceId]) {
+          missingAllianceIds.add(targetAllianceId);
+        }
+        if (originPlayerId && !playerState.entities[originPlayerId] && !playerState.loadingIds[originPlayerId]) {
+          missingPlayerIds.add(originPlayerId);
+        }
+        if (targetPlayerId && !playerState.entities[targetPlayerId] && !playerState.loadingIds[targetPlayerId]) {
+          missingPlayerIds.add(targetPlayerId);
+        }
       }
     }),
+    filter((payload) => !!payload.missingAllianceIds.size || !!payload.missingPlayerIds.size),
+    concatMap((payload) => {
+      const actions = [];
+      if (payload.missingPlayerIds.size) { actions.push(new LoadPlayerProfiles([...payload.missingPlayerIds])); }
+      if (payload.missingAllianceIds.size) { actions.push(new allianceActions.LoadProfiles([...payload.missingAllianceIds])); }
+
+      return actions;
+    })
   );
 
   // @Effect({ dispatch: false })

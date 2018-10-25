@@ -25,6 +25,7 @@ export interface AllianceState {
   invitations: Profile[];
   ids: number[];
   entities: Dict<AllianceProfile>;
+  loadingIds: Dict<number>;
 }
 
 export const initialState: AllianceState = {
@@ -37,6 +38,7 @@ export const initialState: AllianceState = {
   invitations: [],
   ids: [],
   entities: {},
+  loadingIds: {},
 };
 
 export function reducer(
@@ -44,9 +46,6 @@ export function reducer(
   action: AllianceActions
 ): AllianceState {
   switch (action.type) {
-    // TODO: need to decide what's stored in palyer alliance and what's split away
-    // chat messages already have a reducer
-    // stuff like
     case AllianceActionTypes.Initialize: {
       const alliance = action.payload.alliance;
       if (!alliance) { return state; }
@@ -252,11 +251,27 @@ export function reducer(
       return { ...state, viewedProfile: action.payload };
     }
 
+    case AllianceActionTypes.LoadProfiles: {
+      return {
+        ...state,
+        inProgress: true,
+        loadingIds: {
+          ...state.loadingIds,
+          ...action.payload.reduce((result, id) => {
+            result[id] = 1;
+            return result;
+          }, {}),
+        }
+      };
+    }
+
     case AllianceActionTypes.LoadProfilesSuccess: {
-      const newIds = Object.keys(action.payload).reduce((result, id) => {
-        if (!state.entities[id]) { result.push(+id); }
+      const { newIds, loadingIds } = Object.keys(action.payload).reduce((result, id) => {
+        if (!state.entities[id]) { result.newIds.push(+id); }
+        delete result.loadingIds[id];
+
         return result;
-      }, []);
+      }, { newIds: [], loadingIds: { ...state.loadingIds} });
 
       return {
         ...state,
@@ -265,6 +280,8 @@ export function reducer(
           ...state.entities,
           ...action.payload
         },
+        inProgress: false,
+        loadingIds,
       };
     }
 
@@ -300,7 +317,7 @@ export const getPlayerAlliance = (state: AllianceState) => state.playerAlliance;
 export const getPlayerInvitations = (state: AllianceState) => state.invitations;
 export const getPlayerAllianceData = (state: AllianceState) => ({
   alliance: state.playerAlliance,
-  role: state.playerAlliance.roles.find(({ id }) => id === state.playerRole),
+  role: state.playerAlliance ? state.playerAlliance.roles.find(({ id }) => id === state.playerRole) : null,
 });
 export const getPlayerAllianceActiveDiplomacy = (state: AllianceState) => {
   const alliance = state.alliances[state.playerAlliance.id];
