@@ -57,15 +57,16 @@ export class MapComponent implements OnInit  {
     this.store.select(getTownEntities),
     this.store.select(getPlayerEntities),
     this.store.select(getAllianceEntities),
-    (mapData, townEntities, playerEntities, allianceEntities) => Object.entries(mapData).reduce((result, [coords, id]) => {
+    (mapData, townEntities, playerEntities, allianceEntities): Dict<MapTown> => Object.entries(mapData).reduce((result, [coords, id]) => {
       const targetTown = { ...townEntities[id] };
       if (targetTown.playerId) {
+        // TODO: this mutates
         const player = playerEntities[targetTown.playerId];
-        targetTown.player = player;
 
         if (player && player.allianceId) {
-          targetTown.alliance = allianceEntities[targetTown.player.allianceId];
+          player.alliance = allianceEntities[player.allianceId];
         }
+        targetTown.player = player;
       }
 
       result[coords] = targetTown;
