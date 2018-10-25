@@ -10,6 +10,7 @@ import * as reportReducer from '../game/report/report.reducer';
 import * as menuReducer from '../game/menu/menu.reducer';
 import { getActiveWorld } from '../reducers';
 import { FullTown, TownService } from './town/town.service';
+import { CombatOutcome } from 'strat-ego-common';
 
 export interface State {
   player: playerReducer.PlayerState;
@@ -215,7 +216,8 @@ export const getFullViewedAlliance = createSelector(
 export const getFullTown = createSelector(
   getActiveTown,
   getActiveWorld,
-  (town, worldData) => {
+  getTownEntities,
+  (town, worldData, townEntities) => {
     if (!town) { return null; }
     const fullTown: FullTown = {
       ...town,
@@ -223,13 +225,27 @@ export const getFullTown = createSelector(
       storage:  worldData.buildingMap.storage.data[town.buildings.storage.level].storage,
       recruitmentModifier: worldData.buildingMap.barracks.data[town.buildings.barracks.level].recruitment,
 
-      // TODO: fill this in
-      buildingQueues: [],
-      unitQueues: [],
-      originMovements: [],
-      targetMovements: [],
-      originSupport: [],
-      targetSupport: [],
+      // TODO: consider separating these and fill as needed
+      originMovements: town.originMovements.map((movement) => ({
+        ...movement,
+        originTown: townEntities[movement.originTownId] || {},
+        targetTown: townEntities[movement.targetTownId] || {},
+      })),
+      targetMovements: town.targetMovements.map((movement) => ({
+        ...movement,
+        originTown: townEntities[movement.originTownId] || {},
+        targetTown: townEntities[movement.targetTownId] || {},
+      })),
+      originSupport: town.originSupport.map((support) => ({
+        ...support,
+        originTown: townEntities[support.originTownId] || {},
+        targetTown: townEntities[support.targetTownId] || {},
+      })),
+      targetSupport: town.targetSupport.map((support) => ({
+        ...support,
+        originTown: townEntities[support.originTownId] || {},
+        targetTown: townEntities[support.targetTownId] || {},
+      })),
     };
     fullTown.population = TownService.calculatePopulation(fullTown, worldData.buildingMap.farm.data);
     return fullTown;
