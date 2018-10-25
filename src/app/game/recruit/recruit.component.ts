@@ -25,9 +25,6 @@ export class RecruitComponent implements OnChanges {
   // TODO: handle town actions, either by one simple inProgress/error or by town specific aciton state
   @Input() public actionInProgress = false;
   public unitDetails = unitData;
-  public units;
-  public unitData;
-  public unitDataMap;
   public recruitment: {
     resources: Resources,
     resourcesAvailable: Resources,
@@ -47,9 +44,9 @@ export class RecruitComponent implements OnChanges {
     units: {},
     population: 0,
   };
-  public hasRecruitmentQueue = false;
-  public queue$: Observable<any>;
-  public updateAvailability$: Subscription;
+  recruiting = false;
+  availableResources$: Observable<Resources>;
+  resourceSubscription: Subscription;
 
   constructor(private store: Store<GameModuleState>) {
     library.add(faChevronRight);
@@ -58,32 +55,39 @@ export class RecruitComponent implements OnChanges {
   // TODO: update resources, either listen to resource events in an interval or
   // find the time when the next unit is available and update then
   ngOnChanges() {
-    this.unitData = this.worldData.units;
-    this.hasRecruitmentQueue = !!this.town.unitQueues.length;
-    availableResources(this.town).pipe(
-      take(1)
-    ).subscribe((value) => {
-        if (
-          this.recruitment.resources.wood === this.recruitment.resourcesAvailable.wood &&
-          this.recruitment.resources.clay === this.recruitment.resourcesAvailable.clay &&
-          this.recruitment.resources.iron === this.recruitment.resourcesAvailable.iron
-        ) {
-          this.recruitment.resources = value;
-          this.recruitment.resourcesAvailable = value;
-          return;
-        }
-        const diff = {
-          wood: value.wood - this.recruitment.resources.wood,
-          clay: value.clay - this.recruitment.resources.clay,
-          iron: value.iron - this.recruitment.resources.iron,
-        };
-        this.recruitment.resources = value;
-        this.recruitment.resourcesAvailable.wood += diff.wood;
-        this.recruitment.resourcesAvailable.clay += diff.clay;
-        this.recruitment.resourcesAvailable.iron += diff.iron;
+    this.availableResources$ = availableResources(this.town);
+    if (this.resourceSubscription) {
+      this.resourceSubscription.unsubscribe();
+    }
+    this.resourceSubscription = this.availableResources$.subscribe((resources) => this.updateResources(resources, this.recruiting && !this.actionInProgress));
+  }
 
-        // this.updateAvailability$ = Observable.timer(soonestAvailable).subscribe(() => this.ngOnChanges);
-      });
+  updateResources(resources: Resources, shouldReset = false) {
+    // If recruiting flag is set and action finished
+    if (shouldReset) {
+      this.recruitment.units = {};
+      this.recruitment.population = 0;
+      this.recruitment.resourcesAvailable = this.recruitment.resources;
+      this.recruiting = false;
+    }
+    if (
+      this.recruitment.resources.wood === this.recruitment.resourcesAvailable.wood &&
+      this.recruitment.resources.clay === this.recruitment.resourcesAvailable.clay &&
+      this.recruitment.resources.iron === this.recruitment.resourcesAvailable.iron
+    ) {
+      this.recruitment.resources = resources;
+      this.recruitment.resourcesAvailable = { ...resources };
+      return;
+    }
+    const diff = {
+      wood: resources.wood - this.recruitment.resources.wood,
+      clay: resources.clay - this.recruitment.resources.clay,
+      iron: resources.iron - this.recruitment.resources.iron,
+    };
+    this.recruitment.resources = resources;
+    this.recruitment.resourcesAvailable.wood += diff.wood;
+    this.recruitment.resourcesAvailable.clay += diff.clay;
+    this.recruitment.resourcesAvailable.iron += diff.iron;
   }
 
   unitAmountUpdate($event, type) {
@@ -91,9 +95,9 @@ export class RecruitComponent implements OnChanges {
     const change = $event - (this.recruitment.units[type] || 0);
     if (typeof $event === 'number') {
       const unitCosts = this.worldData.unitMap[type].costs;
-      this.recruitment.resourcesAvailable['wood'] -= unitCosts.wood * change;
-      this.recruitment.resourcesAvailable['clay'] -= unitCosts.clay * change;
-      this.recruitment.resourcesAvailable['iron'] -= unitCosts.iron * change;
+      this.recruitment.resourcesAvailable.wood -= unitCosts.wood * change;
+      this.recruitment.resourcesAvailable.clay -= unitCosts.clay * change;
+      this.recruitment.resourcesAvailable.iron -= unitCosts.iron * change;
       this.recruitment.population = Math.max(this.recruitment.population + change, 0);
     }
     this.recruitment.units[type] = $event;
@@ -102,9 +106,9 @@ export class RecruitComponent implements OnChanges {
   calculateMax(costs) {
     return Math.max(
       Math.min.apply(null, [
-        Math.floor(this.recruitment.resourcesAvailable['wood'] / costs.wood),
-        Math.floor(this.recruitment.resourcesAvailable['clay'] / costs.clay),
-        Math.floor(this.recruitment.resourcesAvailable['iron'] / costs.iron),
+        Math.floor(this.recruitment.resourcesAvailable.wood / costs.wood),
+        Math.floor(this.recruitment.resourcesAvailable.clay / costs.clay),
+        Math.floor(this.recruitment.resourcesAvailable.iron / costs.iron),
         Math.floor(this.town.population.available - this.recruitment.population),
       ]),
       0
@@ -123,5 +127,6 @@ export class RecruitComponent implements OnChanges {
 
   recruit(amount, type) {
     this.store.dispatch(new Recruit([{ type, amount }]));
+    this.recruiting = true;
   }
 }

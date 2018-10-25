@@ -1,7 +1,7 @@
 <div class="container-fluid pb-4">
   <h2>Recruitment</h2>
   <div class="pb-1 text-warning" *ngIf="town.population.available <= 0">Max population reached, upgrade your farm to recruit new troops.</div>
-  <div *ngFor="let unit of unitData" class="py-1">
+  <div *ngFor="let unit of worldData?.units" class="py-1">
     <div class="row align-items-center">
       <div class="col-sm-6 d-flex" style="cursor: pointer;" (click)="unit.visible = !unit.visible">
         <fa-icon class="fa pr-1 align-items-center d-flex" [icon]="['fas', 'chevron-right']" [rotate]="unit.visible ? 90 : 0"></fa-icon>
@@ -25,7 +25,7 @@
       </div>
       <div class="col-6">
         <div *ngIf="canRecruit(unit)" class="py-2">
-          <input type="number" (ngModel)="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
+          <input type="number" [ngModel]="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
           <button type="button" class="btn btn-primary btn-sm" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
         </div>
       </div>
@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="hasRecruitmentQueue">
+  <div *ngIf="town.unitQueues.length">
     <h3>Ongoing recruiting</h3>
     <div class="row">
       <div class="col d-flex">Unit</div>
