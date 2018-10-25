@@ -16,12 +16,12 @@ export class SupportComponent {
 
   constructor(private store: Store<State>) { }
 
-  recallSupport(id: number) {
-    this.store.dispatch(new RecallSupport(id));
+  recallSupport(support: number) {
+    this.store.dispatch(new RecallSupport({ town: this.town.id, support }));
   }
 
-  sendBackSupport(id: number) {
-    this.store.dispatch(new SendBackSupport(id));
+  sendBackSupport(support: number) {
+    this.store.dispatch(new SendBackSupport({ town: this.town.id, support }));
   }
 
 }
