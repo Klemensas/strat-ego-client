@@ -60,7 +60,11 @@ export class TownEffects {
     map(([towns]) => new SetActiveTown(towns[0].id))
   );
 
+  // TODO: consider is this efficient, alternatively lod profiles only as needed
   @Effect()
+  public loadAllProfiles$: Observable<Action> = this.actions$.pipe(
+    ofType<Initialize>(TownActionTypes.Initialize),
+    map(() => new LoadProfiles([]))
   );
 
   @Effect({ dispatch: false })
@@ -109,14 +113,13 @@ export class TownEffects {
     map((payload) => this.socketService.sendEvent('town:sendBackSupport', payload))
   );
 
-  // Loads missing map profiles
-  @Effect({ dispatch: false })
-  public loadMissingProfiles$: Observable<any> = this.actions$.pipe(
+  @Effect()
+  public loadPlayerTownProfiles$: Observable<any> = this.actions$.pipe(
     ofType<UpdateMap>(MapActionTypes.Update),
     withLatestFrom(this.store.select(getTownState)),
-    map(([action, townState]) => Object.values(action.payload).filter((id) => !townState.entities[id] && !townState.playerTowns[id])),
+    map(([action, townState]) => Object.values(action.payload).filter((id) => !townState.entities[id] && !townState.loadingIds[id])),
     filter((missingProfiles) => !!missingProfiles.length),
-    map((payload) => this.socketService.sendEvent('profile:loadTowns', payload))
+    map((payload) => new LoadProfiles(payload)),
   );
 
 
@@ -181,6 +184,12 @@ export class TownEffects {
   // public callUpdate(id) {
   //   this.store.dispatch(new ScheduleUpdate(id));
   // }
+  @Effect({ dispatch: false })
+  public loadProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<LoadProfiles>(TownActionTypes.LoadProfiles),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('profile:loadTowns', payload)),
+  );
 
   constructor(
     private actions$: Actions,

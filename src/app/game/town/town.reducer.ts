@@ -1,25 +1,27 @@
-import { Dict, Town } from 'strat-ego-common';
+import { Dict, Town, TownProfile } from 'strat-ego-common';
 
 import { TownActions, TownActionTypes, SendBackSupportSuccess } from './town.actions';
 
 export interface TownState {
-  inProgress: boolean;
   activeTown: number;
   playerTowns: Dict<Town>;
   playerIds: number[];
-  entities: Dict<any>;
+  entities: Dict<TownProfile>;
   ids: number[];
+  loadingIds: Dict<number>;
+  inProgress: boolean;
   error: any;
 }
 
 export const initialState: TownState = {
-  inProgress: true,
-  error: null,
   activeTown: null,
   playerTowns: {},
   playerIds: [],
   entities: {},
   ids: [],
+  loadingIds: {},
+  inProgress: true,
+  error: null,
 };
 
 
@@ -345,11 +347,27 @@ export function reducer(
       };
     }
 
+    case TownActionTypes.LoadProfiles: {
+      return {
+        ...state,
+        inProgress: true,
+        loadingIds: {
+          ...state.loadingIds,
+          ...action.payload.reduce((result, id) => {
+            result[id] = 1;
+            return result;
+          }, {}),
+        }
+      };
+    }
+
     case TownActionTypes.LoadProfilesSuccess: {
-      const newIds = Object.keys(action.payload).reduce((result, id) => {
-        if (!state.entities[id]) { result.push(+id); }
+      const { newIds, loadingIds } = Object.keys(action.payload).reduce((result, id) => {
+        if (!state.entities[id]) { result.newIds.push(+id); }
+        delete result.loadingIds[id];
+
         return result;
-      }, []);
+      }, { newIds: [], loadingIds: { ...state.loadingIds} });
 
       return {
         ...state,
@@ -358,6 +376,8 @@ export function reducer(
           ...state.entities,
           ...action.payload
         },
+        inProgress: false,
+        loadingIds,
       };
     }
 

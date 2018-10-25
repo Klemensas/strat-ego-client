@@ -26,6 +26,7 @@ export const enum TownActionTypes {
   SendBackSupportFail = '[Town] Send Back Support Fail',
   SetActiveTown = '[Town] Set Active Town',
 
+  LoadProfiles = '[Town] Load Profiles',
   LoadProfilesSuccess = '[Town] Load Profiles Success',
 
   IncomingMovement = '[Town][Affected] Incoming Movement',
@@ -209,16 +210,16 @@ export class MovementDisbanded implements Action {
 
   constructor(public payload: { id: number; townId: number }) {}
 }
+export class LoadProfiles implements Action {
+  readonly type = TownActionTypes.LoadProfiles;
+
+  constructor(public payload: number[]) {}
+}
 export class LoadProfilesSuccess implements Action {
   readonly type = TownActionTypes.LoadProfilesSuccess;
 
   constructor(public payload: Dict<TownProfile>) {}
 }
-// SupportDisbanded = '[Town][Affected] Support Disbanded',
-// MovementDisbanded = '[Town][Affected] Movement Disbanded',
-// SentSupportDestroyed = '[Town][Affected] Sent Support Destroyed',
-// SentSupportUpdated = '[Town][Affected] Sent Support Updated',
-
 
 export type TownActions = Initialize
   | Rename
@@ -249,5 +250,6 @@ export type TownActions = Initialize
   | SentSupportDestroyed
   | SentSupportUpdated
   | MovementDisbanded
+  | LoadProfiles
   | LoadProfilesSuccess
 ;
