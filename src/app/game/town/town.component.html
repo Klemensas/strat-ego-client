@@ -8,7 +8,7 @@
         [(ngModel)]="nameChange"
         placeholder="Town name">
       </mat-form-field>
-      <button mat-flat-button color="accent" (click)="rename(nameChange, town.name)" [disabled]="nameChange.length < 4">Save</button>
+      <button mat-flat-button color="accent" (click)="rename(nameChange, town.name, town.id)" [disabled]="nameChange.length < 4">Save</button>
       <town-loyalty *ngIf="town.loyalty !== 100" [town]="town" [loyaltyRegeneration]="(worldData$ | async)?.world.loyaltyRegeneration"></town-loyalty>
     </div>
   </div>
