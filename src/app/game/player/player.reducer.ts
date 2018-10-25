@@ -2,11 +2,13 @@ import { Player, Dict, PlayerProfile, TownProfile } from 'strat-ego-common';
 
 import { PlayerActions, PlayerActionTypes } from './player.actions';
 import { TownActionTypes, TownActions } from '../town/town.actions';
+import { createSelector } from '@ngrx/store';
 
 export interface PlayerState {
   inProgress: boolean;
   currentPlayer: Player;
   viewedProfile: number;
+  loadingIds: Dict<number>;
   ids: number[];
   entities: Dict<PlayerProfile>;
 }
@@ -15,13 +17,14 @@ export const initialState: PlayerState = {
   inProgress: false,
   currentPlayer: null,
   viewedProfile: null,
+  loadingIds: {},
   ids: [],
   entities: {},
 };
 
 export function reducer(
   state = initialState,
-  action: PlayerActions & any
+  action: PlayerActions | TownActions
 ) {
   switch (action.type) {
     case PlayerActionTypes.Initialize:
@@ -68,7 +71,6 @@ export function reducer(
       return { ...state, viewedProfile: action.payload };
     }
 
-    case PlayerActionTypes.LoadProfiles:
     case PlayerActionTypes.UpdateProfile:
     case PlayerActionTypes.RemoveAvatar: {
       return { ...state, error: null, inProgress: true };
@@ -86,11 +88,27 @@ export function reducer(
       };
     }
 
+    case PlayerActionTypes.LoadProfiles: {
+      return {
+        ...state,
+        inProgress: true,
+        loadingIds: {
+          ...state.loadingIds,
+          ...action.payload.reduce((result, id) => {
+            result[id] = 1;
+            return result;
+          }, {}),
+        }
+      };
+    }
+
     case PlayerActionTypes.LoadProfilesSuccess: {
-      const newIds = Object.keys(action.payload).reduce((result, id) => {
-        if (!state.entities[id]) { result.push(+id); }
+      const { newIds, loadingIds } = Object.keys(action.payload).reduce((result, id) => {
+        if (!state.entities[id]) { result.newIds.push(+id); }
+        delete result.loadingIds[id];
+
         return result;
-      }, []);
+      }, { newIds: [], loadingIds: { ...state.loadingIds} });
 
       return {
         ...state,
@@ -99,7 +117,9 @@ export function reducer(
           ...state.entities,
           ...action.payload,
         },
-        inProgress: false };
+        inProgress: false,
+        loadingIds,
+      };
     }
 
     case PlayerActionTypes.ProgressTutorial: {
@@ -108,19 +128,55 @@ export function reducer(
         ...state,
         currentPlayer: {
           ...player,
-          tutorialStag: player.tutorialStage + 1 || 1,
+          tutorialStage: player.tutorialStage + 1 || 1,
         },
       };
     }
 
-    case PlayerActionTypes.AddReport: {
-      const { report, side } = action.payload;
-      const reportSide = `${side}Reports`;
-      const player = state.currentPlayer;
-      const updatedPlayer = { ...player, [reportSide]: [report, ...player[reportSide]] };
+    case TownActionTypes.Lost: {
+      const playerProfile = state.entities[state.currentPlayer.id];
+      const entities = {
+        ...state.entities,
+        [playerProfile.id]: {
+          ...state.entities[playerProfile.id],
+          towns: playerProfile.towns.filter(({ id }) => id !== action.payload.townId)
+        },
+      };
+
+      // Update conquering player profile if present
+      const targetId = action.payload.report.originPlayerId;
+      const conquerorProfile = state.entities[targetId];
+      if (conquerorProfile) {
+        entities[targetId] = {
+          ...conquerorProfile,
+          towns: conquerorProfile.towns.concat({ id: action.payload.townId })
+        };
+      }
+
       return {
         ...state,
-        updatedPlayer,
+        entities,
+      };
+    }
+    case TownActionTypes.Conquered: {
+      const playerProfile = state.entities[state.currentPlayer.id];
+      const entities = {
+        ...state.entities,
+        [playerProfile.id]: {
+          ...playerProfile,
+          towns: playerProfile.towns.concat({ id: action.payload.town.id }),
+        }
+      };
+
+      // Update conquered player profile if present
+      const targetId = action.payload.report.targetPlayerId;
+      const conqueredProfile = state.entities[targetId];
+      if (conqueredProfile) {
+        entities[targetId].towns = entities[targetId].towns.filter(({ id }) => id !== action.payload.town.id);
+      }
+      return {
+        ...state,
+        entities,
       };
     }
 
@@ -134,6 +190,5 @@ export const getCurrentPlayer = (state: PlayerState) => state.currentPlayer;
 export const getPlayerId = createSelector(getCurrentPlayer, (player) => player ? player.id : null);
 export const getEntities = (state: PlayerState) => state.entities;
 export const getTutorialStage = (state: any) => state.entities[state.currentPlayer].tutorialStage;
-export const getSidenavs = (state: PlayerState) => state.sidenavs;
 export const getPlayers = (state: PlayerState) => state.entities;
 export const getViewedPlayer = (state: PlayerState) => state.entities[state.viewedProfile];

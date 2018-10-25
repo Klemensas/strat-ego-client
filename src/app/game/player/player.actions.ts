@@ -20,8 +20,6 @@ export enum PlayerActionTypes {
   LoadProfiles = '[Player] Load Profiles',
   LoadProfilesSuccess = '[Player] Load Profiles Success',
   LoadProfilesFail = '[Player] Load Profiles Fail',
-
-  AddReport = '[Player][Affected] Add Report',
 }
 
 export const PlayerSuccessActions = [
@@ -102,11 +100,6 @@ export class ProgressTutorialFail implements Action {
 
   constructor(public payload: ActionError) {}
 }
-export class AddReport implements Action {
-  readonly type = PlayerActionTypes.AddReport;
-
-  constructor(public payload: { side: string, report: Report }) {}
-}
 
 export type PlayerActions = Initialize
   | Restart
@@ -123,5 +116,4 @@ export type PlayerActions = Initialize
   | ProgressTutorial
   | ProgressTutorialSuccess
   | ProgressTutorialFail
-  | AddReport
 ;

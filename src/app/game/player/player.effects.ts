@@ -6,7 +6,7 @@ import { map, withLatestFrom, filter } from 'rxjs/operators';
 
 import * as playerActions from './player.actions';
 import { SocketService } from '../../game/services/socket.service';
-import { GameModuleState, getPlayers, getPlayerEntities } from '../reducers';
+import { GameModuleState, getPlayers, getPlayerState } from '../reducers';
 import { LoadProfilesSuccess, TownActionTypes } from '../town/town.actions';
 import { RankingsActionTypes, LoadSuccess } from '../rankings/rankings.actions';
 import { SetSidenav } from '../menu/menu.actions';
@@ -51,23 +51,24 @@ export class PlayerEffects {
   );
 
   @Effect()
-  public loadMissingProfilesFromTowns$: Observable<any> = this.actions$.pipe(
+  public loadTownProfiles$: Observable<any> = this.actions$.pipe(
     ofType<LoadProfilesSuccess>(TownActionTypes.LoadProfilesSuccess),
-    withLatestFrom(this.store.select(getPlayerEntities)),
-    map(([action, entities]) => [...Object.values(action.payload).reduce((result, { playerId}) => {
-      if (playerId !== null && !entities[playerId]) { result.add(playerId); }
+    withLatestFrom(this.store.select(getPlayerState)),
+    map(([action, playerState]) => Object.values(action.payload).reduce((result, { playerId }) => {
+      if (playerId !== null && !playerState.entities[playerId] && !playerState.loadingIds[playerId]) { result.add(playerId); }
+
       return result;
-    }, new Set())]),
-    filter((missingProfiles) => !!missingProfiles.length),
-    map((payload) =>  new playerActions.LoadProfiles(payload)),
+    }, new Set())),
+    filter((missingProfiles) => !!missingProfiles.size),
+    map((payload) => new playerActions.LoadProfiles([...payload])),
   );
 
   @Effect()
-  public loadMissingProfilesFromRankings$: Observable<any> = this.actions$.pipe(
+  public loadRankingsProfiles$: Observable<any> = this.actions$.pipe(
     ofType<LoadSuccess>(RankingsActionTypes.LoadSuccess),
-    withLatestFrom(this.store.select(getPlayerEntities)),
-    map(([action, entities]) => Object.values(action.payload.rankings).reduce((result, playerId) => {
-      if (playerId !== null && !entities[playerId]) {
+    withLatestFrom(this.store.select(getPlayerState)),
+    map(([action, playerState]) => Object.values(action.payload.rankings).reduce((result, playerId) => {
+      if (playerId !== null && !playerState.entities[playerId] && !!playerState.loadingIds[playerId]) {
         result.push(playerId);
       }
       return result;
@@ -96,8 +97,6 @@ export class PlayerEffects {
       ['player:removeAvatarFail', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
       ['player:progressTutorialSuccess', () => this.store.dispatch(new playerActions.ProgressTutorialSuccess())],
       ['player:progressTutorialFail', (payload) => this.store.dispatch(new playerActions.ProgressTutorialFail(payload))],
-      ['player:addReport', (payload) => this.store.dispatch(new playerActions.AddReport(payload))],
-
       ['profile:loadPlayersSuccess', (payload) => this.store.dispatch(new playerActions.LoadProfilesSuccess(payload))],
       ['profile:loadPlayersFail', (payload) => this.store.dispatch(new playerActions.LoadProfilesFail(payload))],
       ]);

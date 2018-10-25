@@ -1,6 +1,7 @@
 import { Report, Dict } from 'strat-ego-common';
 
 import { ReportActions, ReportActionTypes } from './report.actions';
+import { TownActionTypes, TownActions } from '../town/town.actions';
 
 export interface ReportState {
   inProgress: boolean;
@@ -17,7 +18,7 @@ export const initialState: ReportState = {
 
 export function reducer(
   state = initialState,
-  action: ReportActions
+  action: ReportActions | TownActions
 ): ReportState {
   switch (action.type) {
     case ReportActionTypes.Initialize: {
@@ -31,6 +32,21 @@ export function reducer(
         ...state,
         ids,
         entities,
+      };
+    }
+
+    case TownActionTypes.AttackOutcome:
+    case TownActionTypes.Attacked:
+    case TownActionTypes.Lost:
+    case TownActionTypes.Conquered: {
+      const report = action.payload.report;
+      return {
+        ...state,
+        ids: [report.id, ...state.ids],
+        entities: {
+          ...state.entities,
+        [report.id]: report,
+        }
       };
     }
 
