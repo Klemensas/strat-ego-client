@@ -1,5 +1,19 @@
 import { Action } from '@ngrx/store';
-import { ActionError, MovementType, Coords, Dict, RecallPayload, Movement, TownSupport, TownProfile } from 'strat-ego-common';
+import {
+  ActionError,
+  MovementType,
+  Coords,
+  Dict,
+  Movement,
+  TownSupport,
+  TownProfile,
+  BuildingQueue,
+  UnitQueue,
+  UpdateSupportPayload,
+  UpdateSupportSuccessPayload,
+  SupportMovementResult,
+  Report,
+} from 'strat-ego-common';
 
 import { Town } from './town.model';
 
@@ -32,8 +46,18 @@ export const enum TownActionTypes {
   IncomingMovement = '[Town][Affected] Incoming Movement',
   SupportRecalled = '[Town][Affected] Support Recalled',
   SupportSentBack = '[Town][Affected] Support Sent Back',
+  SupportArrived = '[Town][Affected] Support Arrived',
+  SupportStationed = '[Town][Affected] Support Stationed',
+  TroopsReturned = '[Town][Affected] Troops Returned',
+
+  BuildingCompleted = '[Town][Affected] Building Completed',
+  RecruitmentCompleted = '[Town][Affected] Recruitment Completed',
+
+  AttackOutcome = '[Town][Affected] AttackOutcome',
+  Attacked = '[Town][Affected] Attacked',
   Lost = '[Town][Affected] Lost',
   Conquered = '[Town][Affected] Conquered',
+
   SupportDisbanded = '[Town][Affected] Support Disbanded',
   MovementDisbanded = '[Town][Affected] Movement Disbanded',
   SentSupportDestroyed = '[Town][Affected] Sent Support Destroyed',
@@ -65,15 +89,16 @@ export class Initialize implements Action {
 
   constructor(public payload: Town[]) {}
 }
+
 export class Rename implements Action {
   readonly type = TownActionTypes.Rename;
 
-  constructor(public payload: string) {}
+  constructor(public payload: { town: number; name: string }) {}
 }
 export class RenameSuccess implements Action {
   readonly type = TownActionTypes.RenameSuccess;
 
-  constructor(public payload: string) {}
+  constructor(public payload: { town: number; name: string }) {}
 }
 export class RenameFail implements Action {
   readonly type = TownActionTypes.RenameFail;
@@ -88,7 +113,7 @@ export class Build implements Action {
 export class BuildSuccess implements Action {
   readonly type = TownActionTypes.BuildSuccess;
 
-  constructor(public payload: Town) {}
+  constructor(public payload: { town: Town, item: BuildingQueue }) {}
 }
 export class BuildFail implements Action {
   readonly type = TownActionTypes.BuildFail;
@@ -103,17 +128,12 @@ export class Recruit implements Action {
 export class RecruitSuccess implements Action {
   readonly type = TownActionTypes.RecruitSuccess;
 
-  constructor(public payload: Town) {}
+  constructor(public payload: { town: Town, item: UnitQueue }) {}
 }
 export class RecruitFail implements Action {
   readonly type = TownActionTypes.RecruitFail;
 
   constructor(public payload: ActionError) {}
-}
-export class SetPlayerTowns implements Action {
-  readonly type = TownActionTypes.SetPlayerTowns;
-
-  constructor(public payload: Town[]) {}
 }
 export class SetActiveTown implements Action {
   readonly type = TownActionTypes.SetActiveTown;
@@ -128,7 +148,7 @@ export class MoveTroops implements Action {
 export class MoveTroopsSuccess implements Action {
   readonly type = TownActionTypes.MoveTroopsSuccess;
 
-  constructor(public payload: Town) {}
+  constructor(public payload: { town: Partial<Town>, item: Movement }) {}
 }
 export class MoveTroopsFail implements Action {
   readonly type = TownActionTypes.MoveTroopsFail;
@@ -138,12 +158,12 @@ export class MoveTroopsFail implements Action {
 export class RecallSupport implements Action {
   readonly type = TownActionTypes.RecallSupport;
 
-  constructor(public payload: number) {}
+  constructor(public payload: UpdateSupportPayload) {}
 }
 export class RecallSupportSuccess implements Action {
   readonly type = TownActionTypes.RecallSupportSuccess;
 
-  constructor(public payload: RecallPayload) {}
+  constructor(public payload: UpdateSupportSuccessPayload) {}
 }
 export class RecallSupportFail implements Action {
   readonly type = TownActionTypes.RecallSupportFail;
@@ -153,12 +173,12 @@ export class RecallSupportFail implements Action {
 export class SendBackSupport implements Action {
   readonly type = TownActionTypes.SendBackSupport;
 
-  constructor(public payload: number) {}
+  constructor(public payload: UpdateSupportPayload) {}
 }
 export class SendBackSupportSuccess implements Action {
   readonly type = TownActionTypes.SendBackSupportSuccess;
 
-  constructor(public payload: number) {}
+  constructor(public payload: UpdateSupportPayload) {}
 }
 export class SendBackSupportFail implements Action {
   readonly type = TownActionTypes.SendBackSupportFail;
@@ -173,22 +193,57 @@ export class IncomingMovement implements Action {
 export class SupportRecalled implements Action {
   readonly type = TownActionTypes.SupportRecalled;
 
-  constructor(public payload: { support: number; town: number }) {}
+  constructor(public payload: UpdateSupportPayload) {}
 }
 export class SupportSentBack implements Action {
   readonly type = TownActionTypes.SupportSentBack;
 
-  constructor(public payload: RecallPayload) {}
+  constructor(public payload: UpdateSupportSuccessPayload) {}
+}
+export class SupportArrived implements Action {
+  readonly type = TownActionTypes.SupportArrived;
+
+  constructor(public payload: SupportMovementResult) {}
+}
+export class SupportStationed implements Action {
+  readonly type = TownActionTypes.SupportStationed;
+
+  constructor(public payload: SupportMovementResult) {}
+}
+export class TroopsReturned implements Action {
+  readonly type = TownActionTypes.TroopsReturned;
+
+  constructor(public payload: { town: Partial<Town>; movement: number; }) {}
+}
+export class BuildingCompleted implements Action {
+  readonly type = TownActionTypes.BuildingCompleted;
+
+  constructor(public payload: { town: Partial<Town>, item: number}) {}
+}
+export class RecruitmentCompleted implements Action {
+  readonly type = TownActionTypes.RecruitmentCompleted;
+
+  constructor(public payload: { town: Partial<Town>, item: number}) {}
+}
+export class AttackOutcome implements Action {
+  readonly type = TownActionTypes.AttackOutcome;
+
+  constructor(public payload: { newMovement: Movement, movement: number, report: Report }) {}
+}
+export class Attacked implements Action {
+  readonly type = TownActionTypes.Attacked;
+
+  constructor(public payload: { town: Partial<Town>, movement: number, report: Report }) {}
 }
 export class Lost implements Action {
   readonly type = TownActionTypes.Lost;
 
-  constructor(public payload: number) {}
+  constructor(public payload: { townId: number, report: Report }) {}
 }
 export class Conquered implements Action {
   readonly type = TownActionTypes.Conquered;
 
-  constructor(public payload: Town) {}
+  constructor(public payload: { town: Town, report: Report }) {}
 }
 export class SupportDisbanded implements Action {
   readonly type = TownActionTypes.SupportDisbanded;
@@ -244,8 +299,15 @@ export type TownActions = Initialize
   | IncomingMovement
   | SupportRecalled
   | SupportSentBack
+  | TroopsReturned
+  | AttackOutcome
+  | Attacked
   | Lost
   | Conquered
+  | SupportArrived
+  | SupportStationed
+  | BuildingCompleted
+  | RecruitmentCompleted
   | SupportDisbanded
   | SentSupportDestroyed
   | SentSupportUpdated

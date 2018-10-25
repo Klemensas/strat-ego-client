@@ -43,6 +43,14 @@ export enum actionTypeSuccessState {
   '[Town] Send Back Support Success' = 'support',
 }
 
+export enum actionPropertyType {
+  '[Town] Build Success' = 'buildingQueues',
+  '[Town] Recruit Success' = 'unitQueues',
+  '[Town] Move Troops Success' = 'originMovements',
+  // '[Town] Recall Support Success' = 'support',
+  // '[Town] Send Back Support Success' = 'support',
+}
+
 export enum actionTypeFailState {
   '[Town] Rename Fail' = 'name',
   '[Town] Build Fail' = 'build',
@@ -92,20 +100,9 @@ export function reducer(
     case TownActionTypes.Build:
     case TownActionTypes.RecallSupport:
     case TownActionTypes.SendBackSupport: {
-      const activeTown = state.playerTowns[state.activeTown];
-      const target = actionTypeState[action.type];
       return {
         ...state,
-        playerTowns: {
-          ...state.playerTowns,
-          [state.activeTown]: {
-            ...activeTown,
-            // _actionState: {
-            //   ...activeTown._actionState,
-            //   [target]: { inProgress: true, error: null }
-            // }
-          }
-        }
+        inProgress: true,
       };
     }
 
@@ -115,37 +112,32 @@ export function reducer(
     case TownActionTypes.MoveTroopsFail:
     case TownActionTypes.RecallSupportFail:
     case TownActionTypes.SendBackSupportFail: {
-      const activeTown = state.playerTowns[state.activeTown];
-      const type = actionTypeFailState[action.type];
-
       return {
         ...state,
-        playerTowns: {
-          ...state.playerTowns,
-          [state.activeTown]: {
-            ...activeTown,
-            // _actionState: {
-            //   ...activeTown._actionState,
-            //   [type]: { inProgress: false, error: action.payload }
-            // }
-          }
-        }
+        inProgress: false,
+        error: action.payload,
       };
     }
 
     case TownActionTypes.RenameSuccess: {
-      const activeTown = state.playerTowns[state.activeTown];
+      const target = action.payload.town;
+      const name = action.payload.name;
+      const activeTown = state.playerTowns[target];
       return {
         ...state,
+        inProgress: false,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: {
+          [target]: {
             ...activeTown,
-            name: action.payload,
-            // _actionState: {
-            //   ...activeTown._actionState,
-            //   name: { inProgress: false, error: null }
-            // }
+            name,
+          }
+        },
+        entities: {
+          ...state.entities,
+          [target]: {
+            ...state.entities[target],
+            name,
           }
         }
       };
@@ -154,60 +146,54 @@ export function reducer(
     case TownActionTypes.RecruitSuccess:
     case TownActionTypes.BuildSuccess:
     case TownActionTypes.MoveTroopsSuccess: {
-      const target = actionTypeSuccessState[action.type];
-      const activeTown = action.payload;
+      const queue = actionPropertyType[action.type];
+      const currentTown = state.playerTowns[action.payload.town.id];
+      const newTown = {
+        ...currentTown,
+        ...action.payload.town,
+        // TODO: find a solution to avoid casting to any
+        [queue]: currentTown[<any>queue].concat(action.payload.item),
+      };
 
       return {
         ...state,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: {
-            ...activeTown,
-            // _actionState: {
-            //   ...state.playerTowns[activeTown.id]._actionState,
-            //   [target]: { inProgress: false, error: null }
-            // }
-          }
+          [currentTown.id]: newTown
         }
       };
     }
 
     case TownActionTypes.SendBackSupportSuccess: {
-      const activeTown = state.playerTowns[state.activeTown];
+      const activeTown = state.playerTowns[action.payload.town];
       const updatedTown: Town = {
         ...activeTown,
-        targetSupport: activeTown.targetSupport.filter((item) => item.id !== action.payload),
-        // _actionState: {
-        //   ...state.playerTowns[state.activeTown]._actionState,
-        //   support: { inProgress: false, error: null }
-        // }
+        targetSupport: activeTown.targetSupport.filter((item) => item.id !== action.payload.support),
       };
       return {
         ...state,
+        inProgress: false,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: updatedTown,
+          [updatedTown.id]: updatedTown,
         }
       };
     }
 
     case TownActionTypes.RecallSupportSuccess: {
-      const activeTown = state.playerTowns[state.activeTown];
-      const targetMovements = [...activeTown.targetMovements, action.payload.movement].sort((a, b) => +a.endsAt - +b.endsAt);
+      const activeTown = state.playerTowns[action.payload.town];
+      const targetMovements = activeTown.targetMovements.concat(action.payload.movement).sort((a, b) => +a.endsAt - +b.endsAt);
       const updatedTown: Town = {
         ...activeTown,
         originSupport: activeTown.originSupport.filter((item) => item.id !== action.payload.support),
         targetMovements,
-        // _actionState: {
-        //   ...state.playerTowns[state.activeTown]._actionState,
-        //   support: { inProgress: false, error: null }
-        // }
       };
       return {
         ...state,
+        inProgress: false,
         playerTowns: {
           ...state.playerTowns,
-          [state.activeTown]: updatedTown,
+          [updatedTown.id]: updatedTown,
         }
       };
     }
@@ -259,33 +245,149 @@ export function reducer(
       };
     }
 
-    // case TownActionTypes.Lost: {
-    //   const ids = state.ids.filter((id) => id !== action.payload);
-    //   const activeTown = state.activeTown === action.payload ? ids[0] || null : state.activeTown;
-    //   const playerTowns = { ...state.playerTowns };
-    //   delete playerTowns[action.payload];
+    case TownActionTypes.SupportArrived:
+    case TownActionTypes.SupportStationed: {
+      const supportType = action.type === TownActionTypes.SupportArrived ? 'originSupport' : 'targetSupport';
+      const movementType = action.type === TownActionTypes.SupportArrived ? 'originMovements' : 'targetMovements';
+      const town = state.playerTowns[action.payload.town];
+      const newTown = {
+        ...town,
+        [supportType]: town[supportType].concat(action.payload.support),
+        [movementType]: town[movementType].filter(({ id }) => id !== action.payload.movement),
+      };
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [town.id]: newTown,
+        }
+      };
+    }
 
-    //   return {
-    //     ...state,
-    //     activeTown,
-    //     ids,
-    //     playerTowns,
-    //   };
-    // }
+    case TownActionTypes.TroopsReturned: {
+      const targetTown = state.playerTowns[action.payload.town.id];
+      const newTown = {
+        ...targetTown,
+        ...action.payload.town,
+        targetMovements: targetTown.targetMovements.filter(({ id }) => id !== action.payload.movement),
+      };
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [newTown.id]: newTown,
+        }
+      };
+    }
 
-    // case TownActionTypes.Conquered: {
-    //   const town = action.payload;
-    //   town._actionState = TownDefaultActionState;
+    case TownActionTypes.RecruitmentCompleted:
+    case TownActionTypes.BuildingCompleted: {
+      const queueType = action.type === TownActionTypes.RecruitmentCompleted ? 'unitQueues' : 'buildingQueues';
+      const currentTown = state.playerTowns[action.payload.town.id];
+      const queue = currentTown[queueType] as { id: number }[];
+      const newTown = {
+        ...currentTown,
+        ...action.payload.town,
+        [queueType]: queue.filter(({ id }) => id !== action.payload.item),
+      };
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [newTown.id]: newTown,
+        }
+      };
+    }
 
-    //   return {
-    //     ...state,
-    //     ids: [...state.ids, town.id],
-    //     playerTowns: {
-    //       ...state.playerTowns,
-    //       [town.id]: town,
-    //     }
-    //   };
-    // }
+    case TownActionTypes.AttackOutcome: {
+      const town = state.playerTowns[action.payload.report.originTownId];
+      const updatedTown = {
+        ...town,
+        originMovements: town.originMovements.filter(({ id }) => id !== action.payload.movement),
+      };
+      if (action.payload.newMovement) {
+        updatedTown.targetMovements.push(action.payload.newMovement);
+      }
+
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [town.id]: updatedTown,
+        },
+      };
+    }
+
+    case TownActionTypes.Attacked: {
+      const targetTown = state.playerTowns[action.payload.town.id];
+      const updatedTown = {
+        ...targetTown,
+        ...action.payload.town,
+        targetMovements: targetTown.targetMovements.filter(({ id }) => id !== action.payload.movement),
+      };
+
+      return {
+        ...state,
+        playerTowns: {
+          ...state.playerTowns,
+          [updatedTown.id]: updatedTown,
+        },
+      };
+    }
+
+    case TownActionTypes.Lost: {
+      const playerIds = state.playerIds.filter((id) => id !== action.payload.townId);
+      const activeTown = state.activeTown === action.payload.townId ? playerIds[0] || null : state.activeTown;
+      const playerTowns = { ...state.playerTowns };
+
+      delete playerTowns[action.payload.townId];
+      const entities = {
+        ...state.entities,
+        [action.payload.townId]: {
+          ...state.entities[action.payload.townId],
+            playerId: action.payload.report.originPlayerId,
+        }
+      };
+
+      return {
+        ...state,
+        activeTown,
+        playerIds,
+        playerTowns,
+        entities,
+      };
+    }
+
+    case TownActionTypes.Conquered: {
+      const town = action.payload.town;
+      const newId = [];
+
+      // Add id only if entity not present already
+      if (!state.entities[town.id]) {
+        newId.push(town.id);
+      }
+
+      return {
+        ...state,
+        playerIds: state.playerIds.concat(town.id),
+        playerTowns: {
+          ...state.playerTowns,
+          [town.id]: town,
+        },
+        ids: state.ids.concat(newId),
+        entities: {
+          ...state.entities,
+          [town.id]: {
+            id: town.id,
+            name: town.name,
+            playerId: town.playerId,
+            location: town.location,
+            score: town.score,
+            createdAt: town.createdAt,
+          }
+        }
+      };
+    }
 
     case TownActionTypes.SupportDisbanded: {
       const { townId, id } = action.payload;
