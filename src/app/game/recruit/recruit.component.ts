@@ -2,7 +2,7 @@ import { Component, OnChanges, Input  } from '@angular/core';
 import { Observable ,  Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { WorldData, Resources } from 'strat-ego-common';
+import { WorldData, Resources, Unit } from 'strat-ego-common';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -95,21 +95,22 @@ export class RecruitComponent implements OnChanges {
     const change = $event - (this.recruitment.units[type] || 0);
     if (typeof $event === 'number') {
       const unitCosts = this.worldData.unitMap[type].costs;
+      const population = this.worldData.unitMap[type].farmSpace * change;
       this.recruitment.resourcesAvailable.wood -= unitCosts.wood * change;
       this.recruitment.resourcesAvailable.clay -= unitCosts.clay * change;
       this.recruitment.resourcesAvailable.iron -= unitCosts.iron * change;
-      this.recruitment.population = Math.max(this.recruitment.population + change, 0);
+      this.recruitment.population = Math.max(this.recruitment.population + population, 0);
     }
     this.recruitment.units[type] = $event;
   }
 
-  calculateMax(costs) {
+  calculateMax(unit: Unit) {
     return Math.max(
       Math.min.apply(null, [
-        Math.floor(this.recruitment.resourcesAvailable.wood / costs.wood),
-        Math.floor(this.recruitment.resourcesAvailable.clay / costs.clay),
-        Math.floor(this.recruitment.resourcesAvailable.iron / costs.iron),
-        Math.floor(this.town.population.available - this.recruitment.population),
+        Math.floor(this.recruitment.resourcesAvailable.wood / unit.costs.wood),
+        Math.floor(this.recruitment.resourcesAvailable.clay / unit.costs.clay),
+        Math.floor(this.recruitment.resourcesAvailable.iron / unit.costs.iron),
+        Math.floor((this.town.population.available - this.recruitment.population) / unit.farmSpace),
       ]),
       0
     );

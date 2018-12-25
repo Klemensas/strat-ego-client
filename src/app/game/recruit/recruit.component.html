@@ -25,7 +25,7 @@
       </div>
       <div class="col-6">
         <div *ngIf="canRecruit(unit)" class="py-2">
-          <input type="number" [ngModel]="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit.costs) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit.costs)}}
+          <input type="number" [ngModel]="recruitment.units[unit.name]" min="0" [max]="calculateMax(unit) + recruitment.units[unit.name]" name="{{unit.name}}" (ngModelChange)="unitAmountUpdate($event, unit.name)"> / {{calculateMax(unit)}} ... {{unit.farmSpace}}
           <button type="button" class="btn btn-primary btn-sm" (click)="recruit(recruitment.units[unit.name], unit.name)">recruit</button>
         </div>
       </div>
@@ -35,6 +35,10 @@
         <div class="card p-3" *ngIf="unitDetails[unit.name]">
           <div>{{unitDetails[unit.name].description}}</div>
           <div class="row">
+            <div *ngIf="unit.requirements" class="col-xl-12">
+              Recruitment requirements:
+              <span *ngFor="let req of unit.requirements">{{ req.item }} level   {{ req.level }}</span>
+            </div>
             <div class="col-xl-6">Attack: {{worldData.unitMap[[unit.name]].combat.attack}} {{worldData.unitMap[unit.name].attackType}}</div>
             <div class="col-xl-6">
               Defense: {{worldData.unitMap[[unit.name]].combat.defense.general}} general, {{worldData.unitMap[[unit.name]].combat.defense.cavalry}} cavalry, {{worldData.unitMap[[unit.name]].combat.defense.archer}} archer</div>
