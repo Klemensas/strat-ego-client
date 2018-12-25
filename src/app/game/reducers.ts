@@ -247,7 +247,7 @@ export const getFullTown = createSelector(
         targetTown: townEntities[support.targetTownId] || {},
       })),
     };
-    fullTown.population = TownService.calculatePopulation(fullTown, worldData.buildingMap.farm.data);
+    fullTown.population = TownService.calculatePopulation(fullTown, worldData.buildingMap.farm.data, worldData.unitMap);
     return fullTown;
   },
 );
