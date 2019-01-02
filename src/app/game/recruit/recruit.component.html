@@ -33,17 +33,18 @@
     <div class="row my-1" [ngbCollapse]="!unit.visible">
       <div class="col">
         <div class="card p-3" *ngIf="unitDetails[unit.name]">
-          <div>{{unitDetails[unit.name].description}}</div>
+          <div>{{ unitDetails[unit.name].description }}</div>
           <div class="row">
             <div *ngIf="unit.requirements" class="col-xl-12">
               Recruitment requirements:
-              <span *ngFor="let req of unit.requirements">{{ req.item }} level   {{ req.level }}</span>
+              <span *ngFor="let req of unit.requirements">{{ req.item }} level {{ req.level }}</span>
             </div>
-            <div class="col-xl-6">Attack: {{worldData.unitMap[[unit.name]].combat.attack}} {{worldData.unitMap[unit.name].attackType}}</div>
+            <div class="col-xl-12">Farm space: {{ worldData.unitMap[unit.name].farmSpace }}</div>
+            <div class="col-xl-6">Attack: {{ worldData.unitMap[unit.name].combat.attack }} {{ worldData.unitMap[unit.name].attackType }}</div>
             <div class="col-xl-6">
-              Defense: {{worldData.unitMap[[unit.name]].combat.defense.general}} general, {{worldData.unitMap[[unit.name]].combat.defense.cavalry}} cavalry, {{worldData.unitMap[[unit.name]].combat.defense.archer}} archer</div>
-            <div class="col-xl-6">Haul: {{worldData.unitMap[[unit.name]].haul}}</div>
-            <div class="col-xl-6">Speed per field: {{worldData.unitMap[[unit.name]].speed}}</div>
+              Defense: {{ worldData.unitMap[unit.name].combat.defense.general }} general, {{ worldData.unitMap[unit.name].combat.defense.cavalry }} cavalry, {{ worldData.unitMap[unit.name].combat.defense.archer }} archer</div>
+            <div class="col-xl-6">Haul: {{ worldData.unitMap[unit.name].haul }}</div>
+            <div class="col-xl-6">Speed per field: {{ worldData.unitMap[unit.name].speed }}</div>
           </div>
         </div>
       </div>
