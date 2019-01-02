@@ -18,7 +18,7 @@
               <div>Joined</div>
             </div>
             <div class="col-6 text-right">
-              <div>{{ playerScore }}</div>
+              <div>{{ player.score }}</div>
               <div>
                 <a *ngIf="player.alliance" href (click)="!!openAllianceProfile.emit(player.alliance.id)">{{ player.alliance.name }}</a>
                 <span *ngIf="!player.alliance">-</span>

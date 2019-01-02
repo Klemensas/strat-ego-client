@@ -43,7 +43,7 @@
         <span matPrefix>Y&nbsp;</span>
       </mat-form-field>
     </div>
-    <div *ngIf="!town._actionState.movement.inProgress">
+    <div *ngIf="!actionInProgress">
       <button mat-raised-button
         color="warn"
         (click)="sendCommand(false, commandForm)"

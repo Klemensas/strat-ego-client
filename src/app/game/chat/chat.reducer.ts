@@ -17,6 +17,15 @@ export function reducer(
   action: ChatActions | AllianceActions
 ) {
   switch (action.type) {
+    case AllianceActionTypes.Initialize: {
+      const alliance = action.payload.alliance;
+      if (!alliance) { return state; }
+
+      return {
+        messages: alliance.messages,
+      };
+    }
+
     case AllianceActionTypes.LeaveAllianceSuccess:
     case AllianceActionTypes.DestroySuccess: {
       return initialState;

@@ -17,7 +17,7 @@ export class Load implements Action {
 export class LoadSuccess implements Action {
   readonly type = RankingsActionTypes.LoadSuccess;
 
-  constructor(public payload: { rankings: PlayerProfile[], playerId: number }) {}
+  constructor(public payload: { rankings: number[], playerId: number }) {}
 }
 export class LoadFail implements Action {
   readonly type = RankingsActionTypes.LoadFail;

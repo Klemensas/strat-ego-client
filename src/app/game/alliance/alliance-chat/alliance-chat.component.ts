@@ -4,11 +4,11 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { map, first } from 'rxjs/operators';
 import * as seedrandom from 'seedrandom';
-import { Player, Profile, AllianceMessage } from 'strat-ego-common';
+import { Player, Profile, AllianceMessage, PlayerProfile } from 'strat-ego-common';
 
 import { ChatActions, ChatActionTypes, PostMessage, AddMessage, PostMessageSuccess } from '../../chat/chat.actions';
 import { OnInit } from '@angular/core';
-import { GameModuleState, getChatState } from '../../reducers';
+import { GameModuleState, getChatState, getChatMessages, getFullChatMessages } from '../../reducers';
 
 export interface ChatMessage {
   id: number;
@@ -19,7 +19,7 @@ export interface ChatMessage {
 
 export interface ChatEntry {
   playerId: number;
-  player: Profile;
+  player: PlayerProfile;
   messages: ChatMessage[];
   color: string;
 }
@@ -46,10 +46,10 @@ export class AllianceChatComponent implements OnInit {
   constructor(private store: Store<GameModuleState>, private actions$: Actions) {}
 
   ngOnInit() {
-    this.store.select(getChatState)
+    this.store.select(getFullChatMessages)
       .pipe(first())
-      .subscribe((chatState) => {
-        this.entries = this.formatEntries(chatState.messages);
+      .subscribe((messages) => {
+        this.entries = this.formatEntries(messages);
         this.scrollChat(this.chatScrollPosition);
       });
 
@@ -108,7 +108,7 @@ export class AllianceChatComponent implements OnInit {
     if (lastEntry && lastEntry.playerId === this.player.id) {
       lastEntry.messages.push(message);
     } else {
-      this.entries.push(this.formatEntry(this.player.id, { name: this.player.name }, message));
+      this.entries.push(this.formatEntry(this.player.id, { id: this.player.id, name: this.player.name }, message));
     }
     this.progressingMessages[messageStamp] = message;
     this.scrollChat(this.chatScrollPosition);
@@ -135,10 +135,10 @@ export class AllianceChatComponent implements OnInit {
     }, []);
   }
 
-  private formatEntry(playerId: number, profile: Profile, entry: ChatMessage): ChatEntry {
+  private formatEntry(playerId: number, profile: Partial<PlayerProfile>, entry: ChatMessage): ChatEntry {
     return {
       playerId,
-      player: { name: profile.name },
+      player: { id: playerId, name: profile.name },
       messages: [entry],
       color: this.getPlayerColor(profile.name, playerId),
     };

@@ -72,6 +72,8 @@ import { MinimapComponent } from './map/map-canvas/minimap/minimap.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { TutorialDialogComponent } from './tutorial/tutorial-dialog/tutorial-dialog.component';
 import { AllianceInvitationsComponent } from './alliance/alliance-invitations/alliance-invitations.component';
+import { ReportEffects } from './report/report.effects';
+
 export const effects = [
   PlayerEffects,
   Allianceffects,
@@ -79,6 +81,7 @@ export const effects = [
   TownEffects,
   MapEffects,
   RankingsEffects,
+  ReportEffects,
 ];
 
 @NgModule({

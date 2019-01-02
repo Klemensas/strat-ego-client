@@ -16,6 +16,7 @@ import { MoveTroops } from '../town/town.actions';
 export class CommandComponent implements OnInit {
   @Input() public town: Town;
   @Input() public worldData;
+  @Input() public actionInProgress = false;
   // TODO: convert this to a real form with validation
   // public townUnits;
   public unitDetails = unitData;

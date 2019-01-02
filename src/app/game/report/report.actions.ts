@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
+import { Report } from 'strat-ego-common';
 
 export enum ReportActionTypes {
-  Update = '[Report] Update',
+  Initialize = '[Report] Initialize',
 }
 
-export class Update implements Action {
-  readonly type = ReportActionTypes.Update;
+export class Initialize implements Action {
+  readonly type = ReportActionTypes.Initialize;
 
-  constructor(public payload: any) {}
+  constructor(public payload: Report[]) {}
 }
 
-export type ReportActions = Update;
+export type ReportActions = Initialize
+;

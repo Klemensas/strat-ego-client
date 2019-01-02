@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { map, withLatestFrom, filter } from 'rxjs/operators';
 
 import * as playerActions from './player.actions';
 import { SocketService } from '../../game/services/socket.service';
-import { GameModuleState, getPlayers } from '../reducers';
+import { GameModuleState, getPlayers, getPlayerState } from '../reducers';
+import { LoadProfilesSuccess, TownActionTypes } from '../town/town.actions';
+import { RankingsActionTypes, LoadSuccess } from '../rankings/rankings.actions';
+import { SetSidenav } from '../menu/menu.actions';
 
 @Injectable()
 export class PlayerEffects {
@@ -24,8 +26,8 @@ export class PlayerEffects {
     withLatestFrom(this.store.select(getPlayers)),
     map(([payload, players]) => {
       const player = players[payload];
-      if (!player) { this.socketService.sendEvent('player:loadProfile', payload); }
-      return new playerActions.SetSidenav([{ side: 'right', name: 'playerProfile' }]);
+      if (!player) { this.socketService.sendEvent('player:getProfile', payload); }
+      return new SetSidenav([{ side: 'right', name: 'playerProfile' }]);
     })
   );
 
@@ -48,23 +50,56 @@ export class PlayerEffects {
     map(() => this.socketService.sendEvent('player:progressTutorial'))
   );
 
+  @Effect()
+  public loadTownProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<LoadProfilesSuccess>(TownActionTypes.LoadProfilesSuccess),
+    withLatestFrom(this.store.select(getPlayerState)),
+    map(([action, playerState]) => Object.values(action.payload).reduce((result, { playerId }) => {
+      if (playerId !== null && !playerState.entities[playerId] && !playerState.loadingIds[playerId]) { result.add(playerId); }
+
+      return result;
+    }, new Set())),
+    filter((missingProfiles) => !!missingProfiles.size),
+    map((payload) => new playerActions.LoadProfiles([...payload])),
+  );
+
+  @Effect()
+  public loadRankingsProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<LoadSuccess>(RankingsActionTypes.LoadSuccess),
+    withLatestFrom(this.store.select(getPlayerState)),
+    map(([action, playerState]) => Object.values(action.payload.rankings).reduce((result, playerId) => {
+      if (playerId !== null && !playerState.entities[playerId] && !!playerState.loadingIds[playerId]) {
+        result.push(playerId);
+      }
+      return result;
+    }, [])),
+    filter((missingProfiles) => !!missingProfiles.length),
+    map((payload) => new playerActions.LoadProfiles(payload)),
+  );
+
+  @Effect({ dispatch: false })
+  public loadProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<playerActions.LoadProfiles>(playerActions.PlayerActionTypes.LoadProfiles),
+    map((action) => action.payload),
+    map((payload) => this.socketService.sendEvent('profile:loadPlayers', payload)),
+  );
+
   constructor(
     private actions$: Actions,
-    private router: Router,
     private socketService: SocketService,
     private store: Store<GameModuleState>
   ) {
     this.socketService.registerEvents([
-      ['player', (payload) => this.store.dispatch(new playerActions.Update(payload))],
-      ['player:loadProfileSuccess', (payload) => this.store.dispatch(new playerActions.LoadProfileSuccess(payload))],
-      ['player:loadProfileFail', (payload) => this.store.dispatch(new playerActions.LoadProfileFail(payload))],
+      ['initialize', (payload) => this.store.dispatch(new playerActions.Initialize(payload.player))],
       ['player:updateProfileSuccess', (payload) => this.store.dispatch(new playerActions.UpdateProfileSuccess(payload))],
       ['player:updateProfileFail', (payload) => this.store.dispatch(new playerActions.UpdateProfileFail(payload))],
       ['player:removeAvatarSuccess', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
       ['player:removeAvatarFail', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
       ['player:progressTutorialSuccess', () => this.store.dispatch(new playerActions.ProgressTutorialSuccess())],
       ['player:progressTutorialFail', (payload) => this.store.dispatch(new playerActions.ProgressTutorialFail(payload))],
-      ['player:addReport', (payload) => this.store.dispatch(new playerActions.AddReport(payload))],
-    ]);
+      ['profile:loadPlayersSuccess', (payload) => this.store.dispatch(new playerActions.LoadProfilesSuccess(payload))],
+      ['profile:loadPlayersFail', (payload) => this.store.dispatch(new playerActions.LoadProfilesFail(payload))],
+      ]);
+
   }
 }

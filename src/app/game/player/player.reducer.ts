@@ -1,58 +1,76 @@
-import { Player, Dict } from 'strat-ego-common';
+import { Player, Dict, PlayerProfile, TownProfile } from 'strat-ego-common';
 
 import { PlayerActions, PlayerActionTypes } from './player.actions';
+import { TownActionTypes, TownActions } from '../town/town.actions';
+import { createSelector } from '@ngrx/store';
 
 export interface PlayerState {
   inProgress: boolean;
-  activeTown: number;
-  currentPlayer: number;
-  sidenavs: {
-    left: string;
-    right: string;
-  };
-  players: Dict<Partial<Player>>;
+  currentPlayer: Player;
   viewedProfile: number;
+  loadingIds: Dict<number>;
+  ids: number[];
+  entities: Dict<PlayerProfile>;
 }
 
 export const initialState: PlayerState = {
   inProgress: false,
-  activeTown: null,
   currentPlayer: null,
-  sidenavs: {
-    left: null,
-    right: null,
-  },
-  players: {},
   viewedProfile: null,
+  loadingIds: {},
+  ids: [],
+  entities: {},
 };
 
 export function reducer(
   state = initialState,
-  action: PlayerActions
+  action: PlayerActions | TownActions
 ) {
   switch (action.type) {
-    case PlayerActionTypes.Update:
-      const currentPlayer = action.payload.id;
+    case PlayerActionTypes.Initialize:
+      const currentPlayer = action.payload;
       return {
         ...state,
         inProgress: false,
         currentPlayer,
-        players: {
-          [currentPlayer]: action.payload,
+        ids: [currentPlayer.id],
+        entities: {
+          [currentPlayer.id]: {
+            id: currentPlayer.id,
+            name: currentPlayer.name,
+            allianceId: currentPlayer.allianceId,
+            towns: [],
+            description: currentPlayer.description,
+            avatarUrl: currentPlayer.avatarUrl,
+            createdAt: currentPlayer.createdAt,
+          }
         }
       };
 
-    case PlayerActionTypes.SetSidenav: {
-      const sidenavs = { ...state.sidenavs };
-      action.payload.forEach(({ side, name }) => sidenavs[side] = name);
-      return { ...state, sidenavs };
+    case TownActionTypes.Initialize: {
+      const playerProfile = state.entities[state.currentPlayer.id];
+      const { towns, playerScore }: { playerScore: number, towns: Array<Partial<TownProfile>> } = action.payload.reduce((result, { id, score }) => {
+        result.towns.push({ id });
+        result.playerScore += score;
+        return result;
+      }, { towns: [], playerScore: 0 });
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          [playerProfile.id]: {
+            ...playerProfile,
+            towns,
+            score: playerScore
+          }
+        }
+      };
     }
 
     case PlayerActionTypes.ViewProfile: {
       return { ...state, viewedProfile: action.payload };
     }
 
-    case PlayerActionTypes.LoadProfile:
     case PlayerActionTypes.UpdateProfile:
     case PlayerActionTypes.RemoveAvatar: {
       return { ...state, error: null, inProgress: true };
@@ -63,51 +81,102 @@ export function reducer(
       return {
         ...state,
         inProgress: false,
-        players: {
-          ...state.players,
-          [state.currentPlayer]: {
-            ...state.players[state.currentPlayer],
-            ...action.payload,
-          }
+        currentPlayer: {
+          ...state.currentPlayer,
+          ...action.payload
+        },
+      };
+    }
+
+    case PlayerActionTypes.LoadProfiles: {
+      return {
+        ...state,
+        inProgress: true,
+        loadingIds: {
+          ...state.loadingIds,
+          ...action.payload.reduce((result, id) => {
+            result[id] = 1;
+            return result;
+          }, {}),
         }
       };
     }
 
-    case PlayerActionTypes.LoadProfileSuccess: {
+    case PlayerActionTypes.LoadProfilesSuccess: {
+      const { newIds, loadingIds } = Object.keys(action.payload).reduce((result, id) => {
+        if (!state.entities[id]) { result.newIds.push(+id); }
+        delete result.loadingIds[id];
+
+        return result;
+      }, { newIds: [], loadingIds: { ...state.loadingIds} });
+
       return {
         ...state,
-        players: {
-          ...state.players,
-          [action.payload.id]: action.payload,
+        ids: state.ids.concat(newIds),
+        entities: {
+          ...state.entities,
+          ...action.payload,
         },
-        inProgress: false };
+        inProgress: false,
+        loadingIds,
+      };
     }
 
     case PlayerActionTypes.ProgressTutorial: {
-      const player = state.players[state.currentPlayer];
+      const player = state.currentPlayer;
       return {
         ...state,
-        player: {
-          ...state.players,
-          [state.currentPlayer]: {
-            ...player,
-            tutorialStage: player.tutorialStage + 1 || 1
-          }
-        }
+        currentPlayer: {
+          ...player,
+          tutorialStage: player.tutorialStage + 1 || 1,
+        },
       };
     }
 
-    case PlayerActionTypes.AddReport: {
-      const { report, side } = action.payload;
-      const reportSide = `${side}Reports`;
-      const player = state.players[state.currentPlayer];
-      const updatedPlayer = { ...player, [reportSide]: [report, ...player[reportSide]] };
+    case TownActionTypes.Lost: {
+      const playerProfile = state.entities[state.currentPlayer.id];
+      const entities = {
+        ...state.entities,
+        [playerProfile.id]: {
+          ...state.entities[playerProfile.id],
+          towns: playerProfile.towns.filter(({ id }) => id !== action.payload.townId)
+        },
+      };
+
+      // Update conquering player profile if present
+      const targetId = action.payload.report.originPlayerId;
+      const conquerorProfile = state.entities[targetId];
+      if (conquerorProfile) {
+        entities[targetId] = {
+          ...conquerorProfile,
+          towns: conquerorProfile.towns.concat({ id: action.payload.townId })
+        };
+      }
+
       return {
         ...state,
-        players: {
-          ...state.players,
-          [state.currentPlayer]: updatedPlayer,
-        },
+        entities,
+      };
+    }
+    case TownActionTypes.Conquered: {
+      const playerProfile = state.entities[state.currentPlayer.id];
+      const entities = {
+        ...state.entities,
+        [playerProfile.id]: {
+          ...playerProfile,
+          towns: playerProfile.towns.concat({ id: action.payload.town.id }),
+        }
+      };
+
+      // Update conquered player profile if present
+      const targetId = action.payload.report.targetPlayerId;
+      const conqueredProfile = state.entities[targetId];
+      if (conqueredProfile) {
+        entities[targetId].towns = entities[targetId].towns.filter(({ id }) => id !== action.payload.town.id);
+      }
+      return {
+        ...state,
+        entities,
       };
     }
 
@@ -117,12 +186,9 @@ export function reducer(
   }
 }
 
-export const getCurrentPlayer = (state: PlayerState) => state.players[state.currentPlayer];
-export const getPlayerReports = (state: PlayerState) => ({
-  originReports: state.players[state.currentPlayer].originReports,
-  targetReports: state.players[state.currentPlayer].targetReports,
-});
-export const getTutorialStage = (state: any) => state.players[state.currentPlayer].tutorialStage;
-export const getSidenavs = (state: PlayerState) => state.sidenavs;
-export const getViewedPlayer = (state: PlayerState) => state.players[state.viewedProfile];
-export const getPlayers = (state: PlayerState) => state.players;
+export const getCurrentPlayer = (state: PlayerState) => state.currentPlayer;
+export const getPlayerId = createSelector(getCurrentPlayer, (player) => player ? player.id : null);
+export const getEntities = (state: PlayerState) => state.entities;
+export const getTutorialStage = (state: any) => state.entities[state.currentPlayer].tutorialStage;
+export const getPlayers = (state: PlayerState) => state.entities;
+export const getViewedPlayer = (state: PlayerState) => state.entities[state.viewedProfile];

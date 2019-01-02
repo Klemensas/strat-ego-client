@@ -114,8 +114,8 @@
     tslib "^1.9.0"
 
 "@angular/cdk@^6.3.3":
-  version "6.4.3"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-6.4.3.tgz#4881276b25ab91e7cb8378bc94ea36dbaa0da987"
+  version "6.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-6.4.7.tgz#1549b304dd412e82bd854cc55a7d5c6772ee0411"
   dependencies:
     tslib "^1.7.1"
 
@@ -174,8 +174,8 @@
     tslib "^1.9.0"
 
 "@angular/material@^6.3.3":
-  version "6.4.3"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-6.4.3.tgz#a3c8a9e423bdbf2507193a9ce6eed8a4f57d369a"
+  version "6.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-6.4.7.tgz#3c8f2d6a6a7904d97be29e06a84ffb62a8da6c16"
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:
@@ -4929,8 +4929,8 @@ parse5@^4.0.0:
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-4.0.0.tgz#6d78656e3da8d78b4ec0b906f7c08ef1dfe3f608"
 
 parse5@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/parse5/-/parse5-5.0.0.tgz#4d02710d44f3c3846197a11e205d4ef17842b81a"
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-5.1.0.tgz#c59341c9723f414c452975564c7c00a68d58acd2"
 
 parseqs@0.0.5:
   version "0.0.5"
@@ -6285,7 +6285,7 @@ stdout-stream@^1.4.0:
 
 "strat-ego-common@github:klemensas/strat-ego-common":
   version "0.0.1"
-  resolved "https://codeload.github.com/klemensas/strat-ego-common/tar.gz/a50c7627923a9385beb57f32076b7ae764e7b6f6"
+  resolved "https://codeload.github.com/klemensas/strat-ego-common/tar.gz/8b753ed1f7136b9c22a9a2f1a673ae6702dfef74"
 
 stream-browserify@^2.0.1:
   version "2.0.1"

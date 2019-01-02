@@ -17,10 +17,6 @@ export class PlayerProfileComponent implements OnChanges {
   dataSource = new MatTableDataSource<Partial<Player>>([]);
   editDialog: MatDialogRef<EditProfileComponent>;
 
-  get playerScore() {
-    return this.player.towns.reduce((result, { score }) => result + score, 0);
-  }
-
   constructor(public dialog: MatDialog) {}
 
   ngOnChanges() {
