@@ -18,7 +18,6 @@ import {
 // TODO: fail actions, handling failure, success, progress
 export enum AllianceActionTypes {
   Initialize = '[Alliance] Initialize',
-  SetData = '[Alliance] Set Data',
   Create = '[Alliance] Create',
   CreateSuccess = '[Alliance] Create Success',
   CreateFail = '[Alliance] Create Fail',
@@ -174,13 +173,7 @@ export const AllianceFailActions = [
 export class Initialize implements Action {
   readonly type = AllianceActionTypes.Initialize;
 
-  constructor(public payload: { alliance: Alliance, player: Player }) {}
-}
-
-export class SetData implements Action {
-  readonly type = AllianceActionTypes.SetData;
-
-  constructor(public payload: { allianceId: number; alliance: Partial<Alliance>; allianceRole: AllianceRole; invitations: Profile[] }) {}
+  constructor(public payload: { alliance: Alliance, player: Player, invitations: Profile[]  }) {}
 }
 export class Create implements Action {
   readonly type = AllianceActionTypes.Create;
@@ -597,7 +590,6 @@ export class RemoveAvatarFail implements Action {
 }
 
 export type AllianceActions = Initialize
-  | SetData
   | Create
   | CreateSuccess
   | CreateFail

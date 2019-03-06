@@ -8,6 +8,7 @@ import * as mapReducer from './map/map.reducer';
 import * as rankingReducer from '../game/rankings/rankings.reducer';
 import * as reportReducer from '../game/report/report.reducer';
 import * as menuReducer from '../game/menu/menu.reducer';
+import * as messageReducer from './message/message.reducer';
 import { getActiveWorld } from '../reducers';
 import { FullTown, TownService } from './town/town.service';
 import { CombatOutcome } from 'strat-ego-common';
@@ -21,6 +22,7 @@ export interface State {
   rankings: rankingReducer.RankingsState;
   report: reportReducer.ReportState;
   menu: menuReducer.MenuState;
+  message: messageReducer.MessageState;
 }
 
 export interface GameModuleState {
@@ -36,6 +38,7 @@ export const reducers = {
   rankings: rankingReducer.reducer,
   report: reportReducer.reducer,
   menu: menuReducer.reducer,
+  message: messageReducer.reducer,
 };
 
 export const getState = createFeatureSelector<State>('game');
@@ -190,6 +193,20 @@ export const getMenuState = createSelector(
 export const getSidenavs = createSelector(
   getMenuState,
   menuReducer.getSidenavs,
+);
+
+// Message selectors
+export const getMessageState = createSelector(
+  getState,
+  (state: State) => state.message,
+);
+export const getList = createSelector(
+  getMessageState,
+  messageReducer.getList,
+);
+export const getPageList = createSelector(
+  getMessageState,
+  messageReducer.getPageList,
 );
 
 // Multi state composed selectors

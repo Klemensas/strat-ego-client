@@ -4,7 +4,7 @@ import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { map, withLatestFrom, filter, concatMap } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
-import { AllianceEventSocketMessage } from 'strat-ego-common';
+import { AllianceEventSocketMessage, Dict } from 'strat-ego-common';
 
 import * as allianceActions from './alliance.actions';
 import { GameModuleState, getCurrentPlayer, getAllianceEntities, getAllianceState, getPlayerState } from '../reducers';
@@ -14,20 +14,6 @@ import { SetSidenav } from '../menu/menu.actions';
 
 @Injectable()
 export class Allianceffects {
-  // @Effect()
-  // public setAllianceData$$: Observable<Action> = this.actions$.pipe(
-  //   ofType<UpdatePlayer>(PlayerActionTypes.Update),
-  //   first(),
-  //   map((action) => action.payload),
-  //   map(({ allianceId, alliance, invitations, allianceRole }) => new allianceActions.SetData({
-  //       allianceId,
-  //       alliance,
-  //       allianceRole,
-  //       invitations,
-  //     })
-  //   )
-  // );
-
   @Effect({ dispatch: false })
   public create$: Observable<any> = this.actions$.pipe(
     ofType<allianceActions.Create>(allianceActions.AllianceActionTypes.Create),
@@ -216,18 +202,18 @@ export class Allianceffects {
     map(() => this.socketService.sendEvent('alliance:removeAvatar'))
   );
 
-  @Effect({ dispatch: false })
-  public loadPlayerProfiles$: Observable<any> = this.actions$.pipe(
+  @Effect()
+  public loadPlayerAllianceProfiles$: Observable<any> = this.actions$.pipe(
     ofType<LoadProfilesSuccess>(PlayerActionTypes.LoadProfilesSuccess),
-    withLatestFrom(this.store.select(getAllianceEntities)),
-    map(([action, entities]) => Object.values(action.payload).reduce((result, { allianceId }) => {
-      if (allianceId !== null && !entities[allianceId]) {
+    withLatestFrom(this.store.select(getAllianceState)),
+    map(([action, { entities, loadingIds }]) => Object.values(action.payload).reduce((result, { allianceId }) => {
+      if (allianceId !== null && !entities[allianceId] && !loadingIds[allianceId]) {
         result.push(allianceId);
       }
       return result;
     }, [])),
     filter((missingProfiles) => !!missingProfiles.length),
-    map((payload) => this.socketService.sendEvent('profile:loadAlliances', payload))
+    map((payload) => new allianceActions.LoadProfiles(payload)),
   );
 
   @Effect()
@@ -243,7 +229,7 @@ export class Allianceffects {
         return { missingAllianceIds, missingPlayerIds };
       }
 
-      alliance.invitations.forEach(({ id }) => !playerState[id] && !playerState[id] ? missingPlayerIds.add(id) : null);
+      alliance.invitations.forEach(({ id }) => !playerState.entities[id] ? missingPlayerIds.add(id) : null);
       alliance.events.forEach(missingLoop);
       alliance.diplomacyOrigin.forEach(missingLoop);
       alliance.diplomacyTarget.forEach(missingLoop);
@@ -275,22 +261,53 @@ export class Allianceffects {
     })
   );
 
+  @Effect()
+  public loadEventProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<{ type: string, payload: AllianceEventSocketMessage<any> }>(...allianceActions.AllianceEventActions),
+    withLatestFrom(this.store.select(getAllianceState), this.store.select(getPlayerState)),
+    map(([action, allianceState, playerState]) => {
+      const event = action.payload.event;
+      const missingPlayerIds = this.missingItems(playerState.entities, playerState.loadingIds, event.originPlayerId, event.targetPlayerId);
+      const missingAllianceIds = this.missingItems(allianceState.entities, allianceState.loadingIds, event.originAllianceId, event.targetAllianceId);
+
+      return { missingPlayerIds, missingAllianceIds };
+    }),
+    filter(({ missingAllianceIds, missingPlayerIds }) => !!missingAllianceIds.length || !!missingPlayerIds.length),
+    concatMap(({ missingPlayerIds, missingAllianceIds }) => {
+      const actions = [];
+      if (missingPlayerIds.length) { actions.push(new LoadPlayerProfiles(missingPlayerIds)); }
+      if (missingAllianceIds.length) { actions.push(new allianceActions.LoadProfiles(missingAllianceIds)); }
+
+      return actions;
+    }),
+  );
+
+  @Effect({ dispatch: false })
+  public loadProfiles$: Observable<any> = this.actions$.pipe(
+    ofType<allianceActions.LoadProfiles>(allianceActions.AllianceActionTypes.LoadProfiles),
+    map(({ payload }) => this.socketService.sendEvent('profile:loadAlliances', payload)),
+  );
+
   // @Effect({ dispatch: false })
   // public createForumCategory$: Observable<any> = this.actions$
   //   .ofType(allianceActions.AllianceActionTypes.CreateForumCategory)
   //   .map((action) => action.payload)
   //   .map((payload) => this.socketService.sendEvent('alliance:createForumCategory', payload));
 
+  missingItems(targetDict: Dict<any>, loadingDict: Dict<any>, ...items: number[]) {
+    return items.filter((item) => item !== null && !targetDict[item] && !loadingDict[item]);
+  }
+
   constructor(
     private actions$: Actions,
-    private router: Router,
     private store: Store<GameModuleState>,
     private socketService: SocketService,
   ) {
     this.socketService.registerEvents([
       ['initialize', (payload) => this.store.dispatch(new allianceActions.Initialize({
         player: payload.player,
-        alliance: payload.alliance
+        alliance: payload.alliance,
+        invitations: payload.invitations,
       }))],
       [
         'alliance:event',
@@ -352,8 +369,8 @@ export class Allianceffects {
       ['alliance:updateProfileFail', (payload) => this.store.dispatch(new allianceActions.UpdateProfileFail(payload))],
       ['alliance:removeAvatarFail', (payload) => this.store.dispatch(new allianceActions.RemoveAvatarFail(payload))],
 
-      ['profile:loadAllianceSuccess', (payload) => this.store.dispatch(new allianceActions.LoadProfilesSuccess(payload))],
-      ['profile:loadAllianceFail', (payload) => this.store.dispatch(new allianceActions.LoadProfilesFail(payload))],
+      ['profile:loadAlliancesSuccess', (payload) => this.store.dispatch(new allianceActions.LoadProfilesSuccess(payload))],
+      ['profile:loadAlliancesFail', (payload) => this.store.dispatch(new allianceActions.LoadProfilesFail(payload))],
       // ['alliance', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.UPDATE, payload))],
       // ['alliance:createForumCategory', (payload) => this.store.dispatch({ type: allianceActions.AllianceActionTypes.CREATE_FORUM_CATEGORY_SUCCESS, payload))],
     ]);

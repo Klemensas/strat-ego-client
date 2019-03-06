@@ -1,0 +1,21 @@
+<div class="p-4">
+  <div *ngIf="!isComposing">
+    <h3 mat-subheader>Messages</h3>
+    <div *ngIf="pagedThreads$ | async as threads">
+      <mat-card *ngFor="let thread of threads" class="mb-4 p-3 d-flex">
+        <div>
+          <h5>{{ thread.title }}</h5>
+          <span>{{ thread.messages[0].createdAt | date:'HH:mm:ss MMM dd yyyy' }}</span>
+        </div>
+        <mat-chip-list>
+            <mat-chip selectable="false" color="primary" selected="true">{{ thread.messages.length }} unread</mat-chip>
+          </mat-chip-list>
+
+      </mat-card>
+    </div>
+    <button mat-raised-button color="primary" (click)="isComposing = !isComposing">New message</button>
+  </div>
+  <new-message *ngIf="isComposing"
+    (sendMessage)="onSendMessage($event)"
+  ></new-message>
+</div>

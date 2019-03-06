@@ -17,6 +17,7 @@
     <rankings *ngSwitchCase="'rankings'" [positionRankings]="positionRankings$ | async"></rankings>
     <alliance-profile *ngSwitchCase="'allianceProfile'" [alliance]="viewedAlliance$ | async" (openPlayerProfile)="onOpenProfile($event, 'player')"></alliance-profile>
     <player-profile *ngSwitchCase="'playerProfile'" [player]="viewedPlayer$ | async" (openAllianceProfile)="onOpenProfile($event, 'alliance')" [currentPlayer]="player$ | async"></player-profile>
+    <message *ngSwitchCase="'message'"></message>
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -70,11 +71,11 @@
               </a>
             </li>
             <li class="nav-item">
-                <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'rankings')">
-                  <fa-icon [icon]="['fas', 'sort-amount-up']" aria-hidden="true"></fa-icon> Rankings
-                </a>
-              </li>
-            </ul>
+              <a routerLinkActive="active" class="nav-link" (click)="sidenavToggle('right', 'message')">
+                <fa-icon [icon]="['far', 'envelope']" aria-hidden="true"></fa-icon> Messages
+              </a>
+            </li>
+          </ul>
           <div class="d-flex justify-content-center align-items-center">
             <div *ngIf="player$ | async as player" class="nav-item mr-3">
               <a class="nav-link" (click)="onOpenProfile(player.id, 'player')">

@@ -20,6 +20,7 @@ import {
   MatChipsModule,
   MatExpansionModule,
   MatListModule,
+  MatCardModule,
 } from '@angular/material';
 
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -73,6 +74,10 @@ import { TutorialComponent } from './tutorial/tutorial.component';
 import { TutorialDialogComponent } from './tutorial/tutorial-dialog/tutorial-dialog.component';
 import { AllianceInvitationsComponent } from './alliance/alliance-invitations/alliance-invitations.component';
 import { ReportEffects } from './report/report.effects';
+import { MessageComponent } from './message/message.component';
+import { NewMessageComponent } from './message/new-message/new-message.component';
+import { ViewMessageComponent } from './message/view-message/view-message.component';
+import { MessageEffects } from './message/message.effects';
 
 export const effects = [
   PlayerEffects,
@@ -82,6 +87,7 @@ export const effects = [
   MapEffects,
   RankingsEffects,
   ReportEffects,
+  MessageEffects,
 ];
 
 @NgModule({
@@ -104,6 +110,7 @@ export const effects = [
     MatChipsModule,
     MatExpansionModule,
     MatListModule,
+    MatCardModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -150,6 +157,9 @@ export const effects = [
     TutorialComponent,
     TutorialDialogComponent,
     AllianceInvitationsComponent,
+    MessageComponent,
+    NewMessageComponent,
+    ViewMessageComponent,
   ],
   providers: [
     MapService,

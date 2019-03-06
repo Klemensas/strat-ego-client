@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { filter, map, combineLatest, tap  } from 'rxjs/operators';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faSortAmountUp, faFlag, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
-import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faUserCircle, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 
 import {
   GameModuleState,
@@ -168,7 +168,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private actions$: Actions,
   ) {
-    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt, faUserCircle);
+    library.add(faHome, faUsers, faGlobe, faArrowsAlt, faHandsHelping, faFlag, faSortAmountUp, faShieldAlt, faUserCircle, faEnvelope);
   }
 
   ngOnInit() {

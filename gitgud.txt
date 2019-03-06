@@ -1,3 +1,49 @@
-ngrx/store vs behavioursubject ? -- investiage store further and how is it superior: https://gist.github.com/btroncone/a6e4347326749f938510#overview
+TODO: check loading profiles, why does it load same profiles multiple time if there's a list of already loading profiles?
 
 Alliance data not reflected in map?
+
+Town
+  ? Update
+  Initialize
+
+  Rename
+  Build
+  Recruit
+  SetActiveTown
+  Move
+  Recall
+  SendBackSupport
+  IncomingMovement
+  SupportRecalled
+  SupportSentBack
+  Lost
+  Conquered
+  SupportDisbanded
+  SentSupportDestroyed
+  SentSupportUpdated
+  MovementDisbanded
+  LoadProfiles
+
+Player
+  Initialize
+
+  Restart
+  ViewProfile
+  UpdateProfile
+  RemoveAvatar
+  ProgressTutorial
+  LoadProfiles
+
+
+Separating movement from town, is it worth it?
+
+Pros
+  easier lookup
+Cons
+
+
+Movements
+  Origin
+  Target
+BuildingQueues
+UnitQueues

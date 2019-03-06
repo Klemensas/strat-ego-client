@@ -97,6 +97,7 @@ export class PlayerEffects {
       ['player:removeAvatarFail', (payload) => this.store.dispatch(new playerActions.RemoveAvatarSuccess(payload))],
       ['player:progressTutorialSuccess', () => this.store.dispatch(new playerActions.ProgressTutorialSuccess())],
       ['player:progressTutorialFail', (payload) => this.store.dispatch(new playerActions.ProgressTutorialFail(payload))],
+
       ['profile:loadPlayersSuccess', (payload) => this.store.dispatch(new playerActions.LoadProfilesSuccess(payload))],
       ['profile:loadPlayersFail', (payload) => this.store.dispatch(new playerActions.LoadProfilesFail(payload))],
       ]);

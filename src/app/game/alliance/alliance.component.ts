@@ -78,6 +78,10 @@ export class AllianceComponent implements OnInit {
               ...diplomacy,
               targetAlliance: allianceProfiles[diplomacy.targetAllianceId]
             })),
+            diplomacyTarget: alliance.diplomacyTarget.map((diplomacy) => ({
+              ...diplomacy,
+              originAlliance: allianceProfiles[diplomacy.originAllianceId]
+            })),
             members: alliance.members.map((member) => {
               const profile = playerProfiles[member.id];
               return {
@@ -89,7 +93,7 @@ export class AllianceComponent implements OnInit {
             .sort((a, b) => b.score - a.score || a.id - b.id)
           }
         };
-      })
+      }),
     );
 
   constructor(private store: Store<GameModuleState>, private formBuilder: FormBuilder) {

@@ -2,13 +2,13 @@
   <div>Alliances:</div>
   <div *ngFor="let ally of alliances">
     <ng-container *ngIf="ally.originAllianceId === alliance.id">
-      <span>{{ ally.targetAlliance.name }}</span>
+      <span>{{ ally.targetAlliance?.name }}</span>
       <span *ngIf="ally.status === diplomacyStatus.pending"> pending request </span>
       <button *ngIf="ally.status === diplomacyStatus.pending" mat-raised-button color="warn" (click)="cancelAlliance(ally.id)" class="button-small ml-2">Cancel</button>
       <button *ngIf="ally.status === diplomacyStatus.ongoing" mat-raised-button color="warn" (click)="endAlliance(ally.id)" class="button-small ml-2">End</button>
     </ng-container>
     <ng-container *ngIf="ally.targetAllianceId === alliance.id">
-      <span>{{ ally.originAlliance.name }}</span>
+      <span>{{ ally.originAlliance?.name }}</span>
       <span *ngIf="ally.status === diplomacyStatus.pending"> pending request </span>
       <button *ngIf="ally.status === diplomacyStatus.pending" mat-raised-button color="primary" (click)="acceptAlliance(ally.id)" class="button-small ml-2">Accept</button>
       <button *ngIf="ally.status === diplomacyStatus.pending" mat-raised-button color="accent" (click)="rejectAlliance(ally.id)" class="button-small ml-2">Reject</button>
@@ -29,13 +29,13 @@
   <div>Non Aggression Pacts:</div>
   <div *ngFor="let nap of naps">
     <ng-container *ngIf="nap.originAllianceId === alliance.id">
-      <span>{{ nap.targetAlliance.name }}</span>
+      <span>{{ nap.targetAlliance?.name }}</span>
       <span *ngIf="nap.status === diplomacyStatus.pending"> pending request </span>
       <button *ngIf="nap.status === diplomacyStatus.pending" mat-raised-button color="warn" (click)="cancelNap(nap.id)" class="button-small ml-2">Cancel</button>
       <button *ngIf="nap.status === diplomacyStatus.ongoing" mat-raised-button color="warn" (click)="endNap(nap.id)" class="button-small ml-2">Cancel</button>
     </ng-container>
     <ng-container *ngIf="nap.targetAllianceId === alliance.id">
-      <span>{{ nap.originAlliance.name }}</span>
+      <span>{{ nap.originAlliance?.name }}</span>
       <span *ngIf="nap.status === diplomacyStatus.pending"> pending request </span>
       <button *ngIf="nap.status === diplomacyStatus.pending" mat-raised-button color="primary" (click)="acceptNap(nap.id)" class="button-small ml-2">Accept</button>
       <button *ngIf="nap.status === diplomacyStatus.pending" mat-raised-button color="accent" (click)="rejectNap(nap.id)" class="button-small ml-2">Reject</button>
@@ -55,8 +55,8 @@
 <div class="pb-3">
   <div>Wars:<div>
   <div *ngFor="let war of wars">
-    <span>{{ war.originAlliance ? war.originAlliance.name : war.targetAlliance.name }}</span>
-    <span>{{ war.data.reason }}</span>
+    <span>{{ war.originAlliance ? war.originAlliance?.name : war.targetAlliance?.name }}</span>
+    <span class="mx-4">{{ war.data.reason }}</span>
     <button mat-raised-button color="primary" (click)="negotiatePeace(war)" class="button-small ml-2">Negotiate peace</button>
   </div>
   <div *ngIf="!wars.length">None</div>

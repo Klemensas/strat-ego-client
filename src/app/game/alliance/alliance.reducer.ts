@@ -48,7 +48,11 @@ export function reducer(
   switch (action.type) {
     case AllianceActionTypes.Initialize: {
       const alliance = action.payload.alliance;
-      if (!alliance) { return state; }
+      const newState = { ...state };
+
+      newState.invitations = action.payload.invitations;
+
+      if (!alliance) { return newState; }
 
       const ids = [...state.ids, alliance.id];
       const entities = {
@@ -62,27 +66,14 @@ export function reducer(
           createdAt: alliance.createdAt,
         }
       };
+      newState.playerAlliance = alliance;
+      newState.playerRole = action.payload.player.allianceRoleId;
+      newState.ids = ids;
+      newState.entities = entities;
 
-      return {
-        ...state,
-        playerAlliance: alliance,
-        playerRole: action.payload.player.allianceRoleId,
-        ids,
-        entities,
-        // role: action.payload.allianceRole
-      };
+      return newState;
     }
-    // case AllianceActionTypes.SetData: {
-    //   const alliance = action.payload.allianceId ? { [action.payload.allianceId]: action.payload.alliance } : {};
-    //   const alliances = { ...state.alliances, ...alliance };
-    //   return {
-    //     ...state,
-    //     alliances,
-    //     playerAlliance: action.payload.allianceId,
-    //     invitations: action.payload.invitations,
-    //     role: action.payload.allianceRole
-    //   };
-    // }
+
     case AllianceActionTypes.CreateSuccess: {
       const alliances = { ...state.alliances, [action.payload.id]: action.payload };
       return {
@@ -288,28 +279,6 @@ export function reducer(
     default: {
       return state;
     }
-
-    // case AllianceActionTypes.Update: {
-    //   return {
-    //     ...state,
-    //     alliances: {
-    //       ...state.alliances,
-    //       [state.playerAlliance]: action.payload
-    //     }
-    //   };
-    // }
-
-    // case AllianceActionTypes.CreateForumCategorySuccess: {
-    //   const Forum = [ ...state.alliances[state.playerAlliance].Forum, action.payload];
-    //   const alliance = { ...state.alliances[state.playerAlliance], Forum };
-    //   return {
-    //     ...state,
-    //     alliances: {
-    //       ...state.alliances,
-    //       [state.playerAlliance]: alliance
-    //     },
-    //   };
-    // }
   }
 }
 
@@ -335,36 +304,30 @@ const eventMembership = (payload: AllianceEventSocketMessage<AllianceMember | nu
   const alliance = state.playerAlliance;
   return {
     ...state,
-    alliances: {
-      ...state.alliances,
-      [state.playerAlliance.id]: {
-        ...alliance,
-        events: [payload.event, ...alliance.events],
-        invitations: isJoin ?
-          alliance.invitations.filter(({ id }) => id !== (payload.data as AllianceMember).id) :
-          alliance.invitations,
-        members: isJoin ?
-          [payload.data, ...alliance.members] :
-          alliance.members.filter(({ id }) => id !== payload.data)
-      }
+    playerAlliance: {
+      ...alliance,
+      events: [payload.event, ...alliance.events],
+      invitations: isJoin ?
+        alliance.invitations.filter(({ id }) => id !== (payload.data as AllianceMember).id) :
+        alliance.invitations,
+      members: isJoin ?
+        [{ ...payload.data as AllianceMember, allianceRoleId: alliance.defaultRoleId }, ...alliance.members] :
+        alliance.members.filter(({ id }) => id !== payload.data)
     }
   };
 };
 
 const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, state: AllianceState, stateParams = {}): AllianceState => {
   const isCreated = payload.event.status === EventStatus.create;
-  const alliance = state.alliances[state.playerAlliance.id];
+  const alliance = state.playerAlliance;
   return {
     ...state,
-    alliances: {
-      ...state.alliances,
-      [state.playerAlliance.id]: {
-        ...alliance,
-        events: [payload.event, ...alliance.events],
-        invitations: isCreated ?
-          [payload.data, ...alliance.invitations] :
-          alliance.invitations.filter(({ id }) => id !== payload.data)
-      }
+    playerAlliance: {
+      ...alliance,
+      events: [payload.event, ...alliance.events],
+      invitations: isCreated ?
+        [payload.data as Profile, ...alliance.invitations] :
+        alliance.invitations.filter(({ id }) => id !== payload.data)
     },
     ...stateParams
   };
@@ -372,7 +335,7 @@ const eventInvitation = (payload: AllianceEventSocketMessage<Profile | number>, 
 
 const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayload>, state: AllianceState, stateParams = {}): AllianceState => {
   const { created, updated, removed, updatedMember } = payload.data;
-  const alliance = state.alliances[state.playerAlliance.id];
+  const alliance = state.playerAlliance;
   let members = [...alliance.members];
   let roles = [...alliance.roles];
   let defaultRole = alliance.roles.find(({ id }) => id === alliance.defaultRoleId);
@@ -407,22 +370,19 @@ const eventRoles = (payload: AllianceEventSocketMessage<AllianceRoleSocketPayloa
   return {
     ...state,
      playerRole,
-    alliances: {
-      ...state.alliances,
-      [state.playerAlliance.id]: {
-        ...alliance,
-        members,
-        roles,
-        defaultRole,
-        events: [payload.event, ...alliance.events],
-      }
-    }
+    playerAlliance: {
+      ...alliance,
+      members,
+      roles,
+      defaultRole,
+      events: [payload.event, ...alliance.events],
+    },
   };
 };
 
 const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | number>, state: AllianceState, stateParams = {}): AllianceState => {
   let diplomacy: { diplomacyTarget?: Partial<AllianceDiplomacy>[]; diplomacyOrigin?: Partial<AllianceDiplomacy>[] } = {};
-  const alliance = state.alliances[state.playerAlliance.id];
+  const alliance = state.playerAlliance;
   const hasDiplo = typeof payload.data !== 'number';
   const isDiploStart = !hasDiplo && (payload.event.status === EventStatus.startAlliance || payload.event.status === EventStatus.startNap);
   if (isDiploStart) {
@@ -445,28 +405,22 @@ const eventDiplomacy = (payload: AllianceEventSocketMessage<AllianceDiplomacy | 
 
   return {
     ...state,
-    alliances: {
-      ...state.alliances,
-      [state.playerAlliance.id]: {
-        ...alliance,
-        ...diplomacy,
-        events: [payload.event, ...alliance.events],
-      }
-    }
+    playerAlliance: {
+      ...alliance,
+      ...diplomacy,
+      events: [payload.event, ...alliance.events],
+    },
   };
 };
 
 const eventProfile = (payload: AllianceEventSocketMessage<ProfileUpdate>, state: AllianceState, stateParams = {}): AllianceState => {
-  const alliance = state.alliances[state.playerAlliance.id];
+  const alliance = state.playerAlliance;
   return {
     ...state,
-    alliances: {
-      ...state.alliances,
-      [state.playerAlliance.id]: {
-        ...alliance,
-        ...payload.data,
-        events: [payload.event, ...alliance.events],
-      }
-    }
+    playerAlliance: {
+      ...alliance,
+      ...payload.data,
+      events: [payload.event, ...alliance.events],
+    },
   };
 };

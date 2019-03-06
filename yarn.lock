@@ -6283,9 +6283,9 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
-"strat-ego-common@github:klemensas/strat-ego-common":
+"strat-ego-common@ssh://git@github.com:klemensas/strat-ego-common":
   version "0.0.1"
-  resolved "https://codeload.github.com/klemensas/strat-ego-common/tar.gz/8b753ed1f7136b9c22a9a2f1a673ae6702dfef74"
+  resolved "ssh://git@github.com:klemensas/strat-ego-common#0f7f9a99a3f358fa13df6e6283c0a2446dc31e86"
 
 stream-browserify@^2.0.1:
   version "2.0.1"
